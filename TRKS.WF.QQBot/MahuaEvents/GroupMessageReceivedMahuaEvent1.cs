@@ -20,10 +20,36 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            // todo 填充处理逻辑
-            throw new NotImplementedException();
-
-            // 不要忘记在MahuaModule中注册
+            if (context.Message == "添加群")
+            {
+                if (_mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
+                    GroupMemberAuthority.Manager ||
+                    _mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
+                    GroupMemberAuthority.Leader)
+                {
+                    Config.Instance.WFGroupList.Add(context.FromGroup);
+                    _mahuaApi.SendGroupMessage(context.FromGroup, "Done.");
+                }
+                else
+                {
+                    _mahuaApi.SendGroupMessage(context.FromGroup, "Permission Denied.");
+                }
+            }
+            if (context.Message == "移除群")
+            {
+                if (_mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
+                    GroupMemberAuthority.Manager ||
+                    _mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
+                    GroupMemberAuthority.Leader)
+                {
+                    Config.Instance.WFGroupList.Remove(context.FromGroup);
+                    _mahuaApi.SendGroupMessage(context.FromGroup, "Done.");
+                }
+                else
+                {
+                    _mahuaApi.SendGroupMessage(context.FromGroup, "Permission Denied.");
+                }
+            }
         }
     }
 }
