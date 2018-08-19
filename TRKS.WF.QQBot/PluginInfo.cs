@@ -1,4 +1,6 @@
-﻿namespace TRKS.WF.QQBot
+﻿using Newbe.Mahua;
+
+namespace TRKS.WF.QQBot
 {
     /// <summary>
     /// 本插件的基本信息

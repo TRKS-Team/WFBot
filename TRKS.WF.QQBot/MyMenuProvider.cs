@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newbe.Mahua;
 
 namespace TRKS.WF.QQBot
 {

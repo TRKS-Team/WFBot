@@ -47,6 +47,9 @@
     <Reference Include="Newbe.Mahua.PluginLoader, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Newbe.Mahua.PluginLoader.1.10.0\lib\net452\Newbe.Mahua.PluginLoader.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ReachFramework" />
@@ -63,6 +66,7 @@
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,6 +76,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cylib.cs" />
+    <Compile Include="WFAlertHandler.cs" />
+    <Compile Include="MahuaEvents\GroupMessageReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaModule.cs" />
     <Compile Include="MyMenuProvider.cs" />
     <Compile Include="PluginInfo.cs" />
@@ -81,8 +88,6 @@
     <None Include="build.bat" />
     <None Include="build.ps1" />
     <None Include="buildTools\packages.config" />
-    <None Include="MahuaApis\readme.md" />
-    <None Include="MahuaEvents\readme.md" />
     <None Include="NewbeLibs\Framework\NLog.config" />
     <None Include="NewbeLibs\Platform\CQP\Content\Newbe.Mahua.CQP.json" />
     <None Include="packages.config" />
@@ -119,6 +124,8 @@
     <Content Include="NewbeLibs\Platform\MPQ\CLR\Newbe.Mahua.MPQ.pdb" />
     <Content Include="NewbeLibs\Platform\MPQ\Native\Newbe.Mahua.MPQ.Native.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="MahuaApis\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

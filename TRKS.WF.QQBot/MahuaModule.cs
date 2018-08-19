@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Newbe.Mahua;
+using TRKS.WF.QQBot.MahuaEvents;
 
 namespace TRKS.WF.QQBot
 {
