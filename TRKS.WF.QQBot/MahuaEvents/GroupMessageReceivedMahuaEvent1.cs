@@ -12,6 +12,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
     {
         private readonly IMahuaApi _mahuaApi;
 
+        private readonly WFAlertHandler _wFAlert = new WFAlertHandler();
+
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
         {
@@ -20,34 +22,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            if (context.Message == "添加群")
+            if (context.Message.StartsWith("/"))
             {
-                if (_mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
-                    GroupMemberAuthority.Manager ||
-                    _mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
-                    GroupMemberAuthority.Leader)
+                if (context.Message.Contains("警报"))
                 {
-                    Config.Instance.WFGroupList.Add(context.FromGroup);
-                    _mahuaApi.SendGroupMessage(context.FromGroup, "Done.");
-                }
-                else
-                {
-                    _mahuaApi.SendGroupMessage(context.FromGroup, "Permission Denied.");
-                }
-            }
-            if (context.Message == "移除群")
-            {
-                if (_mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
-                    GroupMemberAuthority.Manager ||
-                    _mahuaApi.GetGroupMemberInfo(context.FromGroup, context.FromQq).Authority ==
-                    GroupMemberAuthority.Leader)
-                {
-                    Config.Instance.WFGroupList.Remove(context.FromGroup);
-                    _mahuaApi.SendGroupMessage(context.FromGroup, "Done.");
-                }
-                else
-                {
-                    _mahuaApi.SendGroupMessage(context.FromGroup, "Permission Denied.");
+                    _wFAlert.SendAllAlerts(context.FromGroup);
                 }
             }
         }

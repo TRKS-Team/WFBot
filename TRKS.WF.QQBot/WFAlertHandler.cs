@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -9,10 +10,12 @@ using Newbe.Mahua;
 
 namespace TRKS.WF.QQBot
 {
-    [Configuration("Config")]
+    [Configuration("WFConfig")]
     class Config : Configuration<Config>
     {
         public List<string> WFGroupList = new List<string>();
+
+        public string Code;
     }
     public class WFApi
     {
@@ -223,11 +226,29 @@ namespace TRKS.WF.QQBot
                 using (var robotSession = MahuaRobotManager.Instance.CreateSession())
                 {
                     var api = robotSession.MahuaApi;
-                    api.SendPrivateMessage("1141946313", e.ToString());
+                    api.SendPrivateMessage("1141946313", e.ToString());// 这是我自己的qq号.
                 }
 
             }
 
+        }
+
+        public void SendAllAlerts(string group)
+        {
+            var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
+                .JsonDeserialize<WFAlerts[]>();
+            var result = "指挥官,下面是太阳系内所有的警报任务,供您挑选.";
+            foreach (var alert in alerts)
+            {
+                result += Environment.NewLine + MissionsDic[alert.Id];
+            }
+            var path = Path.Combine("alert", Path.GetRandomFileName() + ".jpg");
+            RenderAlert(result, path);
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            {
+                var api = robotSession.MahuaApi;
+                api.SendGroupMessage(group, $@"[QQ:pic={path}]");
+            }
         }
 
         public void SendWFAlert(WFAlerts[] alerts)
@@ -243,11 +264,12 @@ namespace TRKS.WF.QQBot
                         {
                             var result =
                                 $@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?{Environment.NewLine}{MissionsDic[alert.Id]}";
-                            RenderAlert(result);
+                            var path = Path.Combine("alert", Path.GetRandomFileName() + ".jpg");
+                            RenderAlert(result, path);
                             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
                             {
                                 var api = robotSession.MahuaApi;
-                                api.SendGroupMessage(group, @"[QQ:pic=alert\alert.jpg]");
+                                api.SendGroupMessage(group, $@"[QQ:pic={path}]");
                             }
                         }
 
@@ -256,7 +278,7 @@ namespace TRKS.WF.QQBot
                 }
             }
         }
-        public void RenderAlert(string content)
+        public void RenderAlert(string content, string path)
         {
             var strs = content.Split(Environment.NewLine.ToCharArray());
             var height = 60;
@@ -272,11 +294,11 @@ namespace TRKS.WF.QQBot
             graphics.Clear(Color.DimGray);
             foreach (var str in strs)
             {
-                TextRenderer.DrawText(graphics, str, font, p, Color.Lavender);
+                TextRenderer.DrawText(graphics, str, font, p, Color.Gray);
                 p.Y += TextRenderer.MeasureText(str, font).Height + 10;
             }
 
-            bitmap.Save(@"alert\alert.jpg");
+            bitmap.Save(path);
         }
 
         public int GetlongestWidth(string[] strs, Font font)
