@@ -166,10 +166,10 @@ namespace TRKS.WF.QQBot
         }
         public void UpdateAlertDic(WFAlerts[] wfAlerts, WFApi wfApi)
         {
-            var itemString = "";
             foreach (var alert in wfAlerts)
             {
-                foreach (var api in wfApi.Dict)
+                var itemString = "";
+                foreach (var api in wfApi.Alert)
                 {
                     if (alert.Mission.Reward.Items.Length != 0)
                     {
@@ -178,7 +178,6 @@ namespace TRKS.WF.QQBot
                             itemString += api.Zh + ",";
                         }
                     }
-
                     if (alert.Mission.Reward.CountedItems.Length != 0)
                     {
                         if (alert.Mission.Reward.CountedItems[0].Type == api.En)
@@ -186,18 +185,20 @@ namespace TRKS.WF.QQBot
                             itemString += $"{alert.Mission.Reward.CountedItems[0].Count}个{api.Zh}";
                         }
                     }
+                }
+
+                foreach (var api in wfApi.Dict)
+                {                
                     if (alert.Mission.Type == api.En)
                     {
                         alert.Mission.Type = api.Zh;
                     }
-
                     alert.Mission.Node = alert.Mission.Node.Replace(api.En, api.Zh);
                 }
 
                 MissionsDic[alert.Id] = $@"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}
 {alert.Mission.Type}-{alert.Mission.Faction}
 奖励:{alert.Mission.Reward.Credits}+{itemString}";
-                itemString = "";
             }
         }
 
@@ -237,17 +238,19 @@ namespace TRKS.WF.QQBot
         {
             var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
                 .JsonDeserialize<WFAlerts[]>();
+            UpdateAlerts();
             var result = "指挥官,下面是太阳系内所有的警报任务,供您挑选.";
             foreach (var alert in alerts)
             {
                 result += Environment.NewLine + MissionsDic[alert.Id];
             }
-            var path = Path.Combine("alert", Path.GetRandomFileName() + ".jpg");
+
+            var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
             RenderAlert(result, path);
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
-                api.SendGroupMessage(group, $@"[QQ:pic={path}]");
+                api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
             }
         }
 
@@ -260,16 +263,16 @@ namespace TRKS.WF.QQBot
                 {
                     if (!SendedAlertsSet.Contains(alert.Id))
                     {
+                        var result =
+                            $@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?{Environment.NewLine}{MissionsDic[alert.Id]}";
+                        var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
+                        RenderAlert(result, path);
                         foreach (var group in Config.Instance.WFGroupList)
                         {
-                            var result =
-                                $@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?{Environment.NewLine}{MissionsDic[alert.Id]}";
-                            var path = Path.Combine("alert", Path.GetRandomFileName() + ".jpg");
-                            RenderAlert(result, path);
                             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
                             {
                                 var api = robotSession.MahuaApi;
-                                api.SendGroupMessage(group, $@"[QQ:pic={path}]");
+                                api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
                             }
                         }
 
@@ -291,10 +294,10 @@ namespace TRKS.WF.QQBot
             var bitmap = new Bitmap(width, height);
             var graphics = Graphics.FromImage(bitmap);
             var p = new Point(30, 30);
-            graphics.Clear(Color.DimGray);
+            graphics.Clear(Color.Gray);
             foreach (var str in strs)
             {
-                TextRenderer.DrawText(graphics, str, font, p, Color.Gray);
+                TextRenderer.DrawText(graphics, str, font, p, Color.Lavender);
                 p.Y += TextRenderer.MeasureText(str, font).Height + 10;
             }
 

@@ -23,7 +23,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (context.Menu.Id == "menu1")
             {
-                var thread = new Thread(() => new Settings.Settings().Show());
+                var thread = new Thread(() => new Settings.Settings().ShowDialog());
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
             }
