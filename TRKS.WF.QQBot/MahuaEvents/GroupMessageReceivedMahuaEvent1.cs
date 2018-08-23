@@ -1,5 +1,6 @@
 ﻿using Newbe.Mahua.MahuaEvents;
 using System;
+using System.Net;
 using Newbe.Mahua;
 
 namespace TRKS.WF.QQBot.MahuaEvents
@@ -27,6 +28,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 if (context.Message.Contains("警报"))
                 {
                     _wFAlert.SendAllAlerts(context.FromGroup);
+                }
+
+                if (context.Message.Contains("平原"))
+                {
+                    WFStatus.SendCetusCycle(context.FromGroup);
                 }
             }
         }

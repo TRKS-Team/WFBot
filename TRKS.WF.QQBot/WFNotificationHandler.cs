@@ -175,14 +175,14 @@ namespace TRKS.WF.QQBot
                     {
                         if (alert.Mission.Reward.Items[0] == api.En)
                         {
-                            itemString += api.Zh + ",";
+                            itemString += $"+{api.Zh}";
                         }
                     }
                     if (alert.Mission.Reward.CountedItems.Length != 0)
                     {
                         if (alert.Mission.Reward.CountedItems[0].Type == api.En)
                         {
-                            itemString += $"{alert.Mission.Reward.CountedItems[0].Count}个{api.Zh}";
+                            itemString += $"+{alert.Mission.Reward.CountedItems[0].Count}个{api.Zh}";
                         }
                     }
                 }
@@ -198,7 +198,7 @@ namespace TRKS.WF.QQBot
 
                 MissionsDic[alert.Id] = $@"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}
 {alert.Mission.Type}-{alert.Mission.Faction}
-奖励:{alert.Mission.Reward.Credits}+{itemString}";
+奖励:{alert.Mission.Reward.Credits}{itemString}";
             }
         }
 
@@ -207,7 +207,7 @@ namespace TRKS.WF.QQBot
             try
             {
                 var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
-                    .JsonDeserialize<WFAlerts[]>();
+                    .JsonDeserialize<WFAlerts[]>(); 
                 foreach (var alert in alerts)
                 {
                     if (!MissionsDic.ContainsKey(alert.Id))
@@ -286,7 +286,7 @@ namespace TRKS.WF.QQBot
             var strs = content.Split(Environment.NewLine.ToCharArray());
             var height = 60;
             var width = 60;
-            var font = new Font("Microsoft YaHei", 16);
+            var font = new Font("Microsoft YaHei", 16);// 雅黑还挺好看的
             var size = TextRenderer.MeasureText(strs[0], font);
             width += GetlongestWidth(strs, font);
             height += size.Height * strs.Length;
