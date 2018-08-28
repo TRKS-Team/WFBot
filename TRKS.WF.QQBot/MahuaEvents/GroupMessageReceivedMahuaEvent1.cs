@@ -1,6 +1,7 @@
 ﻿using Newbe.Mahua.MahuaEvents;
 using System;
 using System.Net;
+using System.Runtime.CompilerServices;
 using Newbe.Mahua;
 
 namespace TRKS.WF.QQBot.MahuaEvents
@@ -12,8 +13,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-
-        private readonly WFAlertHandler _wFAlert = new WFAlertHandler();
+        private readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
@@ -23,18 +23,26 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            if (context.Message.StartsWith("/"))
+            try
             {
-                if (context.Message.Contains("警报"))
+                if (context.Message.StartsWith("/"))
                 {
-                    _wFAlert.SendAllAlerts(context.FromGroup);
-                }
+                    if (context.Message.Contains("警报"))
+                    {
+                        _wFAlert.SendAllAlerts(context.FromGroup);
+                    }
 
-                if (context.Message.Contains("平原"))
-                {
-                    WFStatus.SendCetusCycle(context.FromGroup);
+                    if (context.Message.Contains("平原"))
+                    {
+                        WFStatus.SendCetusCycle(context.FromGroup);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                _mahuaApi.SendPrivateMessage("1141946313", e.ToString());
+            }
+
         }
     }
 }

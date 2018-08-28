@@ -15,8 +15,69 @@ namespace TRKS.WF.QQBot
     {
         public List<string> WFGroupList = new List<string>();
 
+        public List<string> InvationRewardList = new List<string>();
+
         public string Code;
     }
+
+    public class Invasions
+    {
+        public Class1[] Property1 { get; set; }
+    }
+
+    public class Class1
+    {
+        public string id { get; set; }
+        public string node { get; set; }
+        public string desc { get; set; }
+        public Attackerreward attackerReward { get; set; }
+        public string attackingFaction { get; set; }
+        public Defenderreward defenderReward { get; set; }
+        public string defendingFaction { get; set; }
+        public bool vsInfestation { get; set; }
+        public DateTime activation { get; set; }
+        public int count { get; set; }
+        public int requiredRuns { get; set; }
+        public float completion { get; set; }
+        public bool completed { get; set; }
+        public string eta { get; set; }
+        public string[] rewardTypes { get; set; }
+    }
+
+    public class Attackerreward
+    {
+        public object[] items { get; set; }
+        public Counteditem[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
+    public class Counteditem
+    {
+        public int count { get; set; }
+        public string type { get; set; }
+    }
+
+    public class Defenderreward
+    {
+        public object[] items { get; set; }
+        public Counteditem1[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
+    public class Counteditem1
+    {
+        public int count { get; set; }
+        public string type { get; set; }
+    }
+
     public class WFApi
     {
         public Dict[] Dict { get; set; }
@@ -131,9 +192,9 @@ namespace TRKS.WF.QQBot
         public int Count { get; set; }
         public string Type { get; set; }
     }
-    class WFAlertHandler
+    class WFNotificationHandler
     {
-        public WFAlertHandler()
+        public WFNotificationHandler()
         {
             InitWFAlert();
         }
@@ -143,6 +204,29 @@ namespace TRKS.WF.QQBot
         private static bool inited;
         public static WFApi WfApi = GetWfApi();
         public static System.Timers.Timer Timer = new System.Timers.Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+
+        public void SendInvasions(Invasions invasions)
+        {
+
+        }
+
+        public void UpdateInvasions()
+        {
+            var wc = new WebClient();
+            var inva = wc.DownloadString("https://api.warframestat.us/pc/invasions").JsonDeserialize<Invasions>();
+            UpdateInvasionsDic(inva);
+            SendInvasions(inva);
+        }
+
+        public void UpdateInvasionsDic(Invasions invasions)
+        {
+            
+        }
+
+        public void SendAllInvasions(string group)
+        {
+
+        }
         public void InitWFAlert()
         {
             if (inited) return;
@@ -169,6 +253,10 @@ namespace TRKS.WF.QQBot
             foreach (var alert in wfAlerts)
             {
                 var itemString = "";
+                if (alert.RewardTypes[0] == "endo")
+                {
+                    itemString += $"+{alert.Mission.Reward.ItemString.Replace("Endo", "内融核心")}";
+                }// 我就这么写 不服的发pr 能用就好(
                 foreach (var api in wfApi.Alert)
                 {
                     if (alert.Mission.Reward.Items.Length != 0)
@@ -188,17 +276,22 @@ namespace TRKS.WF.QQBot
                 }
 
                 foreach (var api in wfApi.Dict)
-                {                
+                {
                     if (alert.Mission.Type == api.En)
                     {
                         alert.Mission.Type = api.Zh;
                     }
-                    alert.Mission.Node = alert.Mission.Node.Replace(api.En, api.Zh);
+
+                    if (api.Type == "Star")
+                    {
+                        alert.Mission.Node = alert.Mission.Node.Replace(api.En, api.Zh);
+                    }
                 }
 
                 MissionsDic[alert.Id] = $@"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}
 {alert.Mission.Type}-{alert.Mission.Faction}
-奖励:{alert.Mission.Reward.Credits}{itemString}";
+奖励:{alert.Mission.Reward.Credits}{itemString}
+ETA:{alert.Expiry + TimeSpan.FromHours(8)}";
             }
         }
 
@@ -207,7 +300,7 @@ namespace TRKS.WF.QQBot
             try
             {
                 var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
-                    .JsonDeserialize<WFAlerts[]>(); 
+                    .JsonDeserialize<WFAlerts[]>();
                 foreach (var alert in alerts)
                 {
                     if (!MissionsDic.ContainsKey(alert.Id))
@@ -242,15 +335,16 @@ namespace TRKS.WF.QQBot
             var result = "指挥官,下面是太阳系内所有的警报任务,供您挑选.";
             foreach (var alert in alerts)
             {
-                result += Environment.NewLine + MissionsDic[alert.Id];
+                result += Environment.NewLine +Environment.NewLine + MissionsDic[alert.Id];
             }
 
-            var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
-            RenderAlert(result, path);
+            // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
+            // RenderAlert(result, path);
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
-                api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
+                // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
+                api.SendGroupMessage(group, result);
             }
         }
 
@@ -265,14 +359,15 @@ namespace TRKS.WF.QQBot
                     {
                         var result =
                             $@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?{Environment.NewLine}{MissionsDic[alert.Id]}";
-                        var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
-                        RenderAlert(result, path);
+                        // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
+                        // RenderAlert(result, path);
                         foreach (var group in Config.Instance.WFGroupList)
                         {
                             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
                             {
                                 var api = robotSession.MahuaApi;
-                                api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
+                                // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");// 图片渲染还是问题太多 文字好一点吧...
+                                api.SendGroupMessage(group, result);
                             }
                         }
 

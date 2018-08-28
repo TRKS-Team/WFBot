@@ -27,7 +27,7 @@ namespace TRKS.WF.QQBot
             var cycle = wc.DownloadString("https://api.warframestat.us/pc/cetusCycle").JsonDeserialize<CetusCycle>();
             var status = "";
             var nexttime = "";
-            var time = (cycle.expiry + TimeSpan.FromHours(8) - DateTime.Now).Humanize(int.MaxValue, CultureInfo.CurrentCulture, TimeUnit.Hour, TimeUnit.Millisecond, " ");
+            var time = (cycle.expiry + TimeSpan.FromHours(8) - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Hour, TimeUnit.Millisecond, " ");
             if (cycle.isDay)
             {
                 status = "白天";
@@ -41,7 +41,7 @@ namespace TRKS.WF.QQBot
 
             var result = $@"现在平原的时间是: {status}
 距离 {nexttime} 还有 {time}
-在 {cycle.expiry + TimeSpan.FromHours(8)}";
+在 {(cycle.expiry + TimeSpan.FromHours(8))}";
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;

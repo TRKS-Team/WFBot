@@ -93,7 +93,7 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="WFAlertHandler.cs" />
+    <Compile Include="WFNotificationHandler.cs" />
     <Compile Include="MahuaEvents\GroupMessageReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaModule.cs" />
     <Compile Include="MyMenuProvider.cs" />
