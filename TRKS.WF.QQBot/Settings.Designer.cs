@@ -68,11 +68,11 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(440, 83);
+            this.label1.Size = new System.Drawing.Size(382, 92);
             this.label1.TabIndex = 2;
-            this.label1.Text = "此处修改用于添加或者删除会自动通知警报的口令,格式为私聊机器人：添加群 口令 群号   以及   删除群 口令 群号.";
+            this.label1.Text = "用于修改机器人的口令\r\n格式为私聊机器人：添加群 口令 群号\r\n删除群 口令 群号.";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
@@ -80,7 +80,7 @@
             this.label2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(12, 101);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(440, 37);
+            this.label2.Size = new System.Drawing.Size(382, 37);
             this.label2.TabIndex = 3;
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
@@ -88,46 +88,50 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox1.Location = new System.Drawing.Point(44, 273);
+            this.checkBox1.Location = new System.Drawing.Point(17, 233);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(99, 21);
             this.checkBox1.TabIndex = 4;
+            this.checkBox1.Tag = "Fieldron";
             this.checkBox1.Text = "电磁力场装置";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
             this.checkBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox2.Location = new System.Drawing.Point(44, 295);
+            this.checkBox2.Location = new System.Drawing.Point(17, 255);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(87, 21);
             this.checkBox2.TabIndex = 5;
+            this.checkBox2.Tag = "Detonite Injector";
             this.checkBox2.Text = "爆燃喷射器";
             this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
             this.checkBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox3.Location = new System.Drawing.Point(44, 317);
+            this.checkBox3.Location = new System.Drawing.Point(17, 277);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(99, 21);
             this.checkBox3.TabIndex = 6;
+            this.checkBox3.Tag = "Mutagen Mass";
             this.checkBox3.Text = "突变原聚合物";
             this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
             this.checkBox4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox4.Location = new System.Drawing.Point(44, 339);
+            this.checkBox4.Location = new System.Drawing.Point(17, 299);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(75, 21);
             this.checkBox4.TabIndex = 7;
+            this.checkBox4.Tag = resources.GetString("checkBox4.Tag");
             this.checkBox4.Text = "武器部件";
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
@@ -136,65 +140,70 @@
             // 
             this.checkBox5.AutoSize = true;
             this.checkBox5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox5.Location = new System.Drawing.Point(176, 273);
+            this.checkBox5.Location = new System.Drawing.Point(149, 233);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(176, 21);
             this.checkBox5.TabIndex = 8;
+            this.checkBox5.Tag = "{\"Orokin Catalyst Blueprint\", \"Orokin Reactor Blueprint\"}";
             this.checkBox5.Text = "Orokin 催化剂/反应堆 蓝图";
             this.checkBox5.UseVisualStyleBackColor = true;
-            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox6
             // 
             this.checkBox6.AutoSize = true;
             this.checkBox6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox6.Location = new System.Drawing.Point(176, 295);
+            this.checkBox6.Location = new System.Drawing.Point(149, 255);
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(137, 21);
             this.checkBox6.TabIndex = 9;
+            this.checkBox6.Tag = "Mutalist Alad V Nav Coordinate";
             this.checkBox6.Text = "异融Alad V导航坐标";
             this.checkBox6.UseVisualStyleBackColor = true;
-            this.checkBox6.CheckedChanged += new System.EventHandler(this.checkBox6_CheckedChanged);
+            this.checkBox6.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox7
             // 
             this.checkBox7.AutoSize = true;
             this.checkBox7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox7.Location = new System.Drawing.Point(176, 317);
+            this.checkBox7.Location = new System.Drawing.Point(149, 277);
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(92, 21);
             this.checkBox7.TabIndex = 10;
+            this.checkBox7.Tag = "Forma Blueprint";
             this.checkBox7.Text = "Forma 蓝图";
             this.checkBox7.UseVisualStyleBackColor = true;
-            this.checkBox7.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
+            this.checkBox7.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox8
             // 
             this.checkBox8.AutoSize = true;
             this.checkBox8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox8.Location = new System.Drawing.Point(176, 339);
+            this.checkBox8.Location = new System.Drawing.Point(149, 299);
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(151, 21);
             this.checkBox8.TabIndex = 11;
+            this.checkBox8.Tag = "Exilus Adapter Blueprint";
             this.checkBox8.Text = "特殊功能槽连接器 蓝图";
             this.checkBox8.UseVisualStyleBackColor = true;
-            this.checkBox8.CheckedChanged += new System.EventHandler(this.checkBox8_CheckedChanged);
+            this.checkBox8.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(33, 236);
+            this.label3.Location = new System.Drawing.Point(3, 188);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(349, 19);
             this.label3.TabIndex = 12;
             this.label3.Text = "提醒到群里的入侵任务所需含有的奖励";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(509, 431);
+            this.ClientSize = new System.Drawing.Size(406, 337);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox8);
             this.Controls.Add(this.checkBox7);
@@ -210,7 +219,7 @@
             this.Controls.Add(this.textBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Settings";
-            this.Text = "Form1";
+            this.Text = "设置";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

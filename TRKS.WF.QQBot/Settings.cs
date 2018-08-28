@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using TRKS.WF.QQBot;
 
@@ -16,14 +17,13 @@ namespace Settings
         {
             Config.Instance.Code = textBox1.Text;
             Config.Save();
-            var formattableString = $"当前的口令为:{Config.Instance.Code}";
-            label2.Text = formattableString;
+            label2.Text = $"当前的口令为:{Config.Instance.Code}";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var formattableString = $"当前的口令为:{Config.Instance.Code}";
-            label2.Text = formattableString;
+            label2.Text = $"当前的口令为:{Config.Instance.Code}";
+            UpdateCheckBox();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -43,45 +43,91 @@ namespace Settings
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
+            var types = new List<string> { "vandal", "wraith", "other" };
             if (checkBox4.Checked)
             {
-                var types = new List<string> {"vandal", "wraith", "other"};
+                foreach (var type in types)
+                {
+                    Config.Instance.InvationRewardList.Add(type);
+                }
+                Config.Save();
+            }
+            else
+            {
+                foreach (var type in types)
+                {
+                    Config.Instance.InvationRewardList.Remove(type);
+                }
+                Config.Save();
             }
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        public void InvasionsCheck(object sender, EventArgs e)
         {
-
+            var checkbox = (CheckBox) sender;
+            if (checkbox.Tag is List<string>)
+            {
+                if (checkbox.Checked)
+                {
+                    foreach (var item in (List<string>) checkbox.Tag)
+                    {
+                        Config.Instance.InvationRewardList.Add(item);
+                        Config.Save();
+                    }
+                }
+                else
+                {
+                    foreach (var item in (List<string>) checkbox.Tag)
+                    {
+                        Config.Instance.InvationRewardList.Remove(item);
+                        Config.Save();
+                    }
+                }
+            }
+            else
+            {
+                if (checkbox.Checked)
+                {
+                    Config.Instance.InvationRewardList.Add((string)checkbox.Tag);
+                    Config.Save();
+                }
+                else
+                {
+                    Config.Instance.InvationRewardList.Remove((string) checkbox.Tag);
+                    Config.Save();
+                }
+            }
         }
 
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        public void UpdateCheckBox()
         {
-
-        }
-
-        private void checkBox5_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox6_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox7_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox8_CheckedChanged(object sender, EventArgs e)
-        {
-
+            foreach (var control in Controls)
+            {
+                if (control is CheckBox)
+                {
+                    var checkbox = (CheckBox) control;
+                    if (checkbox.Tag is List<string>)
+                    {
+                        foreach (var item in (List<string>)checkbox.Tag)
+                        {
+                            checkbox.Checked = Config.Instance.InvationRewardList.Contains(item);
+                            if (checkbox.Checked)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        checkbox.Checked = Config.Instance.InvationRewardList.Contains((string)checkbox.Tag);
+                    }
+                }
+            }
         }
     }
 }

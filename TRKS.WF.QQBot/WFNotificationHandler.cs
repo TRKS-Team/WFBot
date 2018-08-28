@@ -259,39 +259,35 @@ namespace TRKS.WF.QQBot
                 }// 我就这么写 不服的发pr 能用就好(
                 foreach (var api in wfApi.Alert)
                 {
-                    if (alert.Mission.Reward.Items.Length != 0)
+                    foreach (var item in alert.Mission.Reward.Items)
                     {
-                        if (alert.Mission.Reward.Items[0] == api.En)
+                        if (item == api.En)
                         {
                             itemString += $"+{api.Zh}";
                         }
                     }
-                    if (alert.Mission.Reward.CountedItems.Length != 0)
+
+                    foreach (var countedItem in alert.Mission.Reward.CountedItems)
                     {
-                        if (alert.Mission.Reward.CountedItems[0].Type == api.En)
+                        if (countedItem.Type == api.En)
                         {
                             itemString += $"+{alert.Mission.Reward.CountedItems[0].Count}个{api.Zh}";
                         }
-                    }
+                    }                   
                 }
 
                 foreach (var api in wfApi.Dict)
                 {
-                    if (alert.Mission.Type == api.En)
-                    {
-                        alert.Mission.Type = api.Zh;
-                    }
+                    if (alert.Mission.Type == api.En)alert.Mission.Type = api.Zh;                   
 
-                    if (api.Type == "Star")
-                    {
-                        alert.Mission.Node = alert.Mission.Node.Replace(api.En, api.Zh);
-                    }
+                    if (api.Type == "Star")alert.Mission.Node = alert.Mission.Node.Replace(api.En, api.Zh);
                 }
-
-                MissionsDic[alert.Id] = $@"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}
-{alert.Mission.Type}-{alert.Mission.Faction}
-奖励:{alert.Mission.Reward.Credits}{itemString}
-ETA:{alert.Expiry + TimeSpan.FromHours(8)}";
+                var sb = new StringBuilder();
+                sb.AppendLine($"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}");
+                sb.AppendLine($"{alert.Mission.Type}-{alert.Mission.Faction}");
+                sb.AppendLine($"奖励:{alert.Mission.Reward.Credits}{itemString}");
+                sb.AppendLine($"过期时间:{alert.Expiry + TimeSpan.FromHours(8)}");
+                MissionsDic[alert.Id] = sb.ToString();
             }
         }
 
