@@ -247,13 +247,14 @@ namespace TRKS.WF.QQBot
 
         public void UpdateInvasions()
         {
-            var inv = WebHelper.DownloadJson<Invasions>("https://api.warframestat.us/pc/invasions");
-            UpdateInvasionsDic(inv, WfApi);
+            var inv = GetInvasions();
+            UpdateInvasionsDic(inv);
             SendInvasions(inv);
         }
 
-        public void UpdateInvasionsDic(Invasions invasions, WFApi wfApi)
+        public void UpdateInvasionsDic(Invasions invasions)
         {
+            var wfApi = WfApi;
             foreach (var inv in invasions.Property1)
             {
                 if (!inv.completed)
@@ -384,6 +385,11 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        private static Invasions GetInvasions()
+        {
+            return WebHelper.DownloadJson<Invasions>("https://api.warframestat.us/pc/invasions");
+        }
+
         private static WFApi GetWfApi()
         {
             return WebHelper.DownloadJson<WFApi>("https://api.richasy.cn/api/lib/localdb/tables");
@@ -470,6 +476,7 @@ namespace TRKS.WF.QQBot
             // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
             // RenderAlert(result, path);
         }
+
         public void RenderAlert(string content, string path)// 废弃了呀...
         {
             var strs = content.Split(Environment.NewLine.ToCharArray());
