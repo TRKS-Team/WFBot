@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
+using System.Text;
 using Humanizer;
 using Humanizer.Localisation;
 using Newbe.Mahua;
@@ -16,6 +17,11 @@ namespace TRKS.WF.QQBot
         public string timeLeft { get; set; }
         public bool isCetus { get; set; }
         public string shortString { get; set; }
+
+        public DateTime GetRealTime()
+        {
+            return expiry + TimeSpan.FromHours(8);
+        }
     }
 
 
@@ -25,27 +31,17 @@ namespace TRKS.WF.QQBot
         {
             var wc = new WebClient();
             var cycle = wc.DownloadString("https://api.warframestat.us/pc/cetusCycle").JsonDeserialize<CetusCycle>();
-            var status = "";
-            var nexttime = "";
             var time = (cycle.expiry + TimeSpan.FromHours(8) - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Hour, TimeUnit.Millisecond, " ");
-            if (cycle.isDay)
-            {
-                status = "白天";
-                nexttime = "晚上";
-            }
-            else
-            {
-                status = "晚上";
-                nexttime = "白天";
-            }
-
-            var result = $@"现在平原的时间是: {status}
-距离 {nexttime} 还有 {time}
-在 {(cycle.expiry + TimeSpan.FromHours(8))}";
+            var status = cycle.isDay ? "白天" : "夜晚";
+            var nexttime = cycle.isDay ? "夜晚" : "白天";
+            var sb = new StringBuilder();
+            sb.AppendLine($"现在平原的时间是: {status}");
+            sb.AppendLine($"距离 {nexttime} 还有 {time}");
+            sb.Append($"在 {cycle.GetRealTime()}");
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
-                api.SendGroupMessage(group, result);
+                api.SendGroupMessage(group, sb.ToString());
             }
         }
     }

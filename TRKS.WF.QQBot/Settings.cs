@@ -72,35 +72,30 @@ namespace Settings
             var checkbox = (CheckBox) sender;
             if (checkbox.Tag is List<string>)
             {
-                if (checkbox.Checked)
+                foreach (var item in (List<string>)checkbox.Tag)
                 {
-                    foreach (var item in (List<string>) checkbox.Tag)
+                    if (checkbox.Checked)
                     {
                         Config.Instance.InvationRewardList.Add(item);
-                        Config.Save();
                     }
-                }
-                else
-                {
-                    foreach (var item in (List<string>) checkbox.Tag)
+                    else
                     {
                         Config.Instance.InvationRewardList.Remove(item);
-                        Config.Save();
                     }
                 }
+                Config.Save();
             }
             else
             {
                 if (checkbox.Checked)
                 {
                     Config.Instance.InvationRewardList.Add((string)checkbox.Tag);
-                    Config.Save();
                 }
                 else
                 {
                     Config.Instance.InvationRewardList.Remove((string) checkbox.Tag);
-                    Config.Save();
                 }
+                Config.Save();
             }
         }
 

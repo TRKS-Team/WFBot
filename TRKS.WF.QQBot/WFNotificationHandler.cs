@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Windows.Forms;
+using Humanizer;
 using Newbe.Mahua;
 
 namespace TRKS.WF.QQBot
@@ -160,6 +163,10 @@ namespace TRKS.WF.QQBot
         public bool Expired { get; set; }
         public string Eta { get; set; }
         public string[] RewardTypes { get; set; }
+        public DateTime GetRealTime()
+        {
+            return Expiry + TimeSpan.FromHours(8);
+        }
     }
 
     public class Mission
@@ -196,38 +203,121 @@ namespace TRKS.WF.QQBot
     {
         public WFNotificationHandler()
         {
-            InitWFAlert();
+            InitWFNotification();
         }
 
         public static Dictionary<string, string> MissionsDic = new Dictionary<string, string>();
+        public static Dictionary<string, string> InvDic = new Dictionary<string, string>();
         public static HashSet<string> SendedAlertsSet = new HashSet<string>();
         private static bool inited;
         public static WFApi WfApi = GetWfApi();
-        public static System.Timers.Timer Timer = new System.Timers.Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+        public static System.Timers.Timer timer = new System.Timers.Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
 
+        public void SendGroupMessage(string group, string content)
+        {
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            {
+                var api = robotSession.MahuaApi;
+                api.SendGroupMessage(group, content);
+            }
+        }
         public void SendInvasions(Invasions invasions)
         {
+            foreach (var inv in invasions.Property1)
+            {
+                if (!inv.completed)
+                {
+                    var typeSet = new HashSet<string>();
+                    foreach (var reward in inv.attackerReward.countedItems)
+                    {
+                        typeSet.Add(reward.type);
+                    }
 
+                    foreach (var reward in inv.defenderReward.countedItems)
+                    {
+                        typeSet.Add(reward.type);
+                    }
+
+                    foreach (var item in Config.Instance.InvationRewardList)
+                    {
+                        if (typeSet.Contains(item))
+                        {
+                            var sb = new StringBuilder();
+                            sb.AppendLine("指挥官,太阳系陷入了一片混乱,查看你的星图");
+                            sb.Append(InvDic[inv.id]);
+                            foreach (var group in Config.Instance.WFGroupList)
+                            {
+                                SendGroupMessage(group, sb.ToString());
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public void UpdateInvasions()
         {
             var wc = new WebClient();
-            var inva = wc.DownloadString("https://api.warframestat.us/pc/invasions").JsonDeserialize<Invasions>();
-            UpdateInvasionsDic(inva);
-            SendInvasions(inva);
+            var inv = wc.DownloadString("https://api.warframestat.us/pc/invasions").JsonDeserialize<Invasions>();
+            UpdateInvasionsDic(inv, WfApi);
+            SendInvasions(inv);
         }
 
-        public void UpdateInvasionsDic(Invasions invasions)
+        public void UpdateInvasionsDic(Invasions invasions, WFApi wfApi)
         {
-            
+            foreach (var inv in invasions.Property1)
+            {
+                if (!inv.completed)
+                {
+                    var attackeritemstring = "";
+                    var defenderitemstring = "";
+                    var completion = Math.Ceiling(inv.completion);
+                    foreach (var api in wfApi.Invasion)
+                    {
+                        foreach (var item in inv.attackerReward.countedItems)
+                        {
+                            if (item.type == api.En)
+                            {
+                                attackeritemstring += $"{item.count}个{api.Zh}";
+                            }
+                        }
+
+                        foreach (var item in inv.defenderReward.countedItems)
+                        {
+                            if (item.type == api.En)
+                            {
+                                defenderitemstring += $"{item.count}个{api.Zh}";
+                            }
+                        }
+                    }
+
+                    foreach (var api in wfApi.Dict.Where(api => api.Type == "Star").Where(api => inv.node.Contains(api.En)))
+                    {
+                        inv.node = inv.node.Replace(api.En, api.Zh);
+                    }
+                    var sb = new StringBuilder();
+                    sb.AppendLine($"地点:{inv.node}");
+                    sb.AppendLine($"进攻方:{inv.attackingFaction}");
+                    if (!inv.vsInfestation)
+                    {
+                        sb.AppendLine($"奖励:{attackeritemstring}");
+                    }
+
+                    sb.AppendLine($"进度:{completion}%");
+                    sb.AppendLine($"防守方:{inv.defendingFaction}");
+                    sb.AppendLine($"奖励:{defenderitemstring}");
+                    sb.Append($"进度{100 - completion}%");
+                    InvDic[inv.id] = sb.ToString();
+                }
+            }
         }
 
         public void SendAllInvasions(string group)
         {
 
         }
-        public void InitWFAlert()
+        public void InitWFNotification()
         {
             if (inited) return;
             var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
@@ -236,8 +326,9 @@ namespace TRKS.WF.QQBot
             {
                 SendedAlertsSet.Add(alert.Id);
             }
-            Timer.Elapsed += (sender, eventArgs) => UpdateAlerts();
-            Timer.Start();
+            timer.Elapsed += (sender, eventArgs) => UpdateAlerts();
+            timer.Elapsed += (sender, eventArgs) => UpdateInvasions();
+            timer.Start();
         }
         public static WFApi GetWfApi()
         {
@@ -286,7 +377,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine($"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}");
                 sb.AppendLine($"{alert.Mission.Type}-{alert.Mission.Faction}");
                 sb.AppendLine($"奖励:{alert.Mission.Reward.Credits}{itemString}");
-                sb.AppendLine($"过期时间:{alert.Expiry + TimeSpan.FromHours(8)}");
+                sb.Append($"过期时间:{alert.GetRealTime()}");
                 MissionsDic[alert.Id] = sb.ToString();
             }
         }
@@ -328,20 +419,20 @@ namespace TRKS.WF.QQBot
             var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
                 .JsonDeserialize<WFAlerts[]>();
             UpdateAlerts();
-            var result = "指挥官,下面是太阳系内所有的警报任务,供您挑选.";
+            var sb = new StringBuilder();
+            sb.AppendLine("指挥官,下面是太阳系内所有的警报任务,供您挑选.");
             foreach (var alert in alerts)
             {
-                result += Environment.NewLine +Environment.NewLine + MissionsDic[alert.Id];
+                sb.AppendLine(MissionsDic[alert.Id]);
+                sb.AppendLine();
+
             }
 
             // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
             // RenderAlert(result, path);
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-            {
-                var api = robotSession.MahuaApi;
-                // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
-                api.SendGroupMessage(group, result);
-            }
+            // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
+            SendGroupMessage(group, sb.ToString().Trim());
+
         }
 
         public void SendWFAlert(WFAlerts[] alerts)
@@ -353,18 +444,15 @@ namespace TRKS.WF.QQBot
                 {
                     if (!SendedAlertsSet.Contains(alert.Id))
                     {
-                        var result =
-                            $@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?{Environment.NewLine}{MissionsDic[alert.Id]}";
+                        var sb = new StringBuilder();
+                        sb.AppendLine($@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?");
+                        sb.Append(MissionsDic[alert.Id]);
                         // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
                         // RenderAlert(result, path);
                         foreach (var group in Config.Instance.WFGroupList)
                         {
-                            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-                            {
-                                var api = robotSession.MahuaApi;
-                                // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");// 图片渲染还是问题太多 文字好一点吧...
-                                api.SendGroupMessage(group, result);
-                            }
+                            // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");// 图片渲染还是问题太多 文字好一点吧...
+                            SendGroupMessage(group, sb.ToString());
                         }
 
                         SendedAlertsSet.Add(alert.Id);
@@ -372,7 +460,7 @@ namespace TRKS.WF.QQBot
                 }
             }
         }
-        public void RenderAlert(string content, string path)
+        public void RenderAlert(string content, string path)// 废弃了呀...
         {
             var strs = content.Split(Environment.NewLine.ToCharArray());
             var height = 60;
