@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Newbe.Mahua;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Windows.Forms;
-using Humanizer;
-using Newbe.Mahua;
+using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot
 {
@@ -209,18 +206,10 @@ namespace TRKS.WF.QQBot
         public Dictionary<string, string> MissionsDic = new Dictionary<string, string>();
         public Dictionary<string, string> InvDic = new Dictionary<string, string>();
         public HashSet<string> SendedAlertsSet = new HashSet<string>();
-        private bool inited;
+        private readonly bool inited;
         public WFApi WfApi = GetWfApi();
-        public System.Timers.Timer timer = new System.Timers.Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
-
-        public void SendGroupMessage(string group, string content)
-        {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-            {
-                var api = robotSession.MahuaApi;
-                api.SendGroupMessage(group, content);
-            }
-        }
+        public Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+        
         public void SendInvasions(Invasions invasions)
         {
             foreach (var inv in invasions.Property1)
@@ -247,7 +236,7 @@ namespace TRKS.WF.QQBot
                             sb.Append(InvDic[inv.id]);
                             foreach (var group in Config.Instance.WFGroupList)
                             {
-                                SendGroupMessage(group, sb.ToString());
+                                Messenger.SendGroup(group, sb.ToString());
                             }
                             break;
                         }
@@ -258,8 +247,7 @@ namespace TRKS.WF.QQBot
 
         public void UpdateInvasions()
         {
-            var wc = new WebClient();
-            var inv = wc.DownloadString("https://api.warframestat.us/pc/invasions").JsonDeserialize<Invasions>();
+            var inv = WebHelper.DownloadJson<Invasions>("https://api.warframestat.us/pc/invasions");
             UpdateInvasionsDic(inv, WfApi);
             SendInvasions(inv);
         }
@@ -296,6 +284,7 @@ namespace TRKS.WF.QQBot
                     {
                         inv.node = inv.node.Replace(api.En, api.Zh);
                     }
+
                     var sb = new StringBuilder();
                     sb.AppendLine($"地点:{inv.node}");
                     sb.AppendLine($"进攻方:{inv.attackingFaction}");
@@ -308,6 +297,7 @@ namespace TRKS.WF.QQBot
                     sb.AppendLine($"防守方:{inv.defendingFaction}");
                     sb.AppendLine($"奖励:{defenderitemstring}");
                     sb.Append($"进度{100 - completion}%");
+
                     InvDic[inv.id] = sb.ToString();
                 }
             }
@@ -317,6 +307,7 @@ namespace TRKS.WF.QQBot
         {
 
         }
+
         public void InitWFNotification()
         {
             if (inited) return;
@@ -333,71 +324,89 @@ namespace TRKS.WF.QQBot
             };
             timer.Start();
         }
-        public static WFApi GetWfApi()
-        {
-            var wc = new WebClient
-            {
-                Encoding = Encoding.UTF8
-            };
-            return wc.DownloadString("https://api.richasy.cn/api/lib/localdb/tables").JsonDeserialize<WFApi>();
 
-        }
-        public void UpdateAlertDic(WFAlerts[] wfAlerts, WFApi wfApi)
+        public void UpdateAlertDic(WFAlerts[] wfAlerts)
         {
+            var wfApi = WfApi;
             foreach (var alert in wfAlerts)
             {
                 var itemString = "";
+                var mission = alert.Mission;
+                var reward = mission.Reward;
+
                 if (alert.RewardTypes[0] == "endo")
                 {
-                    itemString += $"+{alert.Mission.Reward.ItemString.Replace("Endo", "内融核心")}";
-                }// 我就这么写 不服的发pr 能用就好(
+                    Concat($"+{reward.ItemString.Replace("Endo", "内融核心")}");
+                } 
+                // 我就这么写 不服的发pr 能用就好(
+
+                // translate item
                 foreach (var api in wfApi.Alert)
                 {
-                    foreach (var item in alert.Mission.Reward.Items)
+                    foreach (var item in reward.Items)
                     {
                         if (item == api.En)
                         {
-                            itemString += $"+{api.Zh}";
+                            Concat($"{api.Zh}");
                         }
                     }
 
-                    foreach (var countedItem in alert.Mission.Reward.CountedItems)
+                    foreach (var countedItem in reward.CountedItems)
                     {
                         if (countedItem.Type == api.En)
                         {
-                            itemString += $"+{alert.Mission.Reward.CountedItems[0].Count}个{api.Zh}";
+                            Concat($"{reward.CountedItems[0].Count}个{api.Zh}");
                         }
-                    }                   
+                    }
                 }
 
+                // translate mission
                 foreach (var api in wfApi.Dict)
                 {
-                    if (alert.Mission.Type == api.En)alert.Mission.Type = api.Zh;                   
+                    if (mission.Type == api.En) mission.Type = api.Zh;
 
-                    if (api.Type == "Star")alert.Mission.Node = alert.Mission.Node.Replace(api.En, api.Zh);
+                    if (api.Type == "Star") mission.Node = mission.Node.Replace(api.En, api.Zh);
                 }
+
+                // build string
                 var sb = new StringBuilder();
-                sb.AppendLine($"{alert.Mission.Node} 等级{alert.Mission.MinEnemyLevel}-{alert.Mission.MaxEnemyLevel}");
-                sb.AppendLine($"{alert.Mission.Type}-{alert.Mission.Faction}");
-                sb.AppendLine($"奖励:{alert.Mission.Reward.Credits}{itemString}");
+                sb.AppendLine($"{mission.Node} 等级{mission.MinEnemyLevel}-{mission.MaxEnemyLevel}");
+                sb.AppendLine($"{mission.Type}-{mission.Faction}");
+                sb.AppendLine($"奖励:{reward.Credits}{itemString}");
                 sb.Append($"过期时间:{alert.GetRealTime()}");
+
                 MissionsDic[alert.Id] = sb.ToString();
+
+                void Concat(string content)
+                {
+                    itemString += $"+{content}"; // 其实更推荐使用 StringBuilder, 这么用不爽你可以回滚(
+                }
             }
+        }
+
+        private static WFApi GetWfApi()
+        {
+            return WebHelper.DownloadJson<WFApi>("https://api.richasy.cn/api/lib/localdb/tables");
+        }
+
+        private static WFAlerts[] GetWFAlerts()
+        {
+            return WebHelper.DownloadJson<WFAlerts[]>("https://api.warframestat.us/pc/alerts");
         }
 
         public void UpdateAlerts()
         {
             try
             {
-                var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
-                    .JsonDeserialize<WFAlerts[]>();
+                var alerts = GetWFAlerts();
                 foreach (var alert in alerts)
                 {
                     if (!MissionsDic.ContainsKey(alert.Id))
                     {
-                        UpdateAlertDic(alerts, WfApi);
+                        UpdateAlertDic(alerts);
                         SendWFAlert(alerts);
-                        break;
+                        // break;
+                        // 疑问: break 的意义是啥?
                     }
                 }
             }
@@ -407,63 +416,59 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-                {
-                    var api = robotSession.MahuaApi;
-                    api.SendPrivateMessage("1141946313", e.ToString());// 这是我自己的qq号.
-                }
-
+                const string qq = "1141946313"; // 这是我自己的qq号.
+                Messenger.SendPrivate(qq, e.ToString());
+                //TODO 写配置文件
             }
 
         }
 
         public void SendAllAlerts(string group)
         {
-            var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
-                .JsonDeserialize<WFAlerts[]>();
+            var alerts = GetWFAlerts();
             UpdateAlerts();
+
             var sb = new StringBuilder();
             sb.AppendLine("指挥官,下面是太阳系内所有的警报任务,供您挑选.");
             foreach (var alert in alerts)
             {
                 sb.AppendLine(MissionsDic[alert.Id]);
                 sb.AppendLine();
-
             }
 
             // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
             // RenderAlert(result, path);
             // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
-            var result = sb.ToString();
-            SendGroupMessage(group, result);
+            Messenger.SendGroup(group, sb.ToString());
 
         }
 
         public void SendWFAlert(WFAlerts[] alerts)
         {
-
             foreach (var alert in alerts)
             {
-                if (alert.Mission.Reward.Items.Length != 0 || alert.Mission.Reward.CountedItems.Length != 0)
+                var reward = alert.Mission.Reward;
+                if ((reward.Items.Length > 0 || reward.CountedItems.Length > 0)
+                    && (!SendedAlertsSet.Contains(alert.Id)))
                 {
-                    if (!SendedAlertsSet.Contains(alert.Id))
-                    {
-                        var sb = new StringBuilder();
-                        sb.AppendLine($@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?");
-                        sb.Append(MissionsDic[alert.Id]);
-                        // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
-                        // RenderAlert(result, path);
-                        foreach (var group in Config.Instance.WFGroupList)
-                        {
-                            // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");// 图片渲染还是问题太多 文字好一点吧...
-                            var result = sb.ToString();
-                            SendGroupMessage(group, result);
-                        }
+                    var sb = new StringBuilder();
+                    sb.AppendLine($@"指挥官,Ordis拦截到了一条警报,您要开始另一项光荣的打砸抢任务了吗?");
+                    sb.Append(MissionsDic[alert.Id]);
 
-                        SendedAlertsSet.Add(alert.Id);
+                    var result = sb.ToString();
+                    foreach (var group in Config.Instance.WFGroupList)
+                    {
+                        Messenger.SendGroup(group, result);
                     }
+
+                    SendedAlertsSet.Add(alert.Id);
                 }
             }
+
+            // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");// 图片渲染还是问题太多 文字好一点吧...
+
+            // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
+            // RenderAlert(result, path);
         }
         public void RenderAlert(string content, string path)// 废弃了呀...
         {

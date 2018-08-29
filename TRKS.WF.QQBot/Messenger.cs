@@ -27,6 +27,7 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        /* 当麻理解不了下面的代码
         public static void SendToGroup(this string content, string qq)
         {
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
@@ -35,5 +36,15 @@ namespace TRKS.WF.QQBot
                 api.SendGroupMessage(qq, content);
             }
         }
+
+        public static void SendToPrivate(this string content, string qq)
+        {
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            {
+                var api = robotSession.MahuaApi;
+                api.SendPrivateMessage(qq, content);
+            }
+        }
+        */
     }
 }

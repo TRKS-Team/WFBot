@@ -30,8 +30,15 @@ namespace TRKS.WF.QQBot
         public void SendCetusCycle(string group)
         {
             var cycle = WebHelper.DownloadJson<CetusCycle>("https://api.warframestat.us/pc/cetusCycle");
+            var msg = GetCetusCycleInfo(cycle);
+            
+            Messenger.SendGroup(msg, group);
+        }
 
-            var time = (cycle.GetRealTime() - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Hour, TimeUnit.Millisecond, " ");
+        private static string GetCetusCycleInfo(CetusCycle cycle)
+        {
+            var time = (cycle.GetRealTime() - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
+                TimeUnit.Hour, TimeUnit.Millisecond, " ");
             var status = cycle.isDay ? "白天" : "夜晚";
             var nexttime = cycle.isDay ? "夜晚" : "白天";
 
@@ -39,8 +46,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"现在平原的时间是: {status}");
             sb.AppendLine($"距离 {nexttime} 还有 {time}");
             sb.Append($"在 {cycle.GetRealTime()}");
-            
-            sb.ToString().SendToGroup(group);
+            return sb.ToString();
         }
     }
 }

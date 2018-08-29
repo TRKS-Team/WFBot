@@ -9,7 +9,7 @@ namespace TRKS.WF.QQBot
 {
     public static class WebHelper
     {
-        private static WebClient webClient = new WebClient();
+        private static WebClient webClient = new WebClient {Encoding = Encoding.UTF8};
 
         public static T DownloadJson<T>(string url)
         {
