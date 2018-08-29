@@ -206,12 +206,12 @@ namespace TRKS.WF.QQBot
             InitWFNotification();
         }
 
-        public static Dictionary<string, string> MissionsDic = new Dictionary<string, string>();
-        public static Dictionary<string, string> InvDic = new Dictionary<string, string>();
-        public static HashSet<string> SendedAlertsSet = new HashSet<string>();
-        private static bool inited;
-        public static WFApi WfApi = GetWfApi();
-        public static System.Timers.Timer timer = new System.Timers.Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+        public Dictionary<string, string> MissionsDic = new Dictionary<string, string>();
+        public Dictionary<string, string> InvDic = new Dictionary<string, string>();
+        public HashSet<string> SendedAlertsSet = new HashSet<string>();
+        private bool inited;
+        public WFApi WfApi = GetWfApi();
+        public System.Timers.Timer timer = new System.Timers.Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
 
         public void SendGroupMessage(string group, string content)
         {
@@ -326,8 +326,11 @@ namespace TRKS.WF.QQBot
             {
                 SendedAlertsSet.Add(alert.Id);
             }
-            timer.Elapsed += (sender, eventArgs) => UpdateAlerts();
-            timer.Elapsed += (sender, eventArgs) => UpdateInvasions();
+            timer.Elapsed += (sender, eventArgs) =>
+            {
+                UpdateAlerts();
+                UpdateInvasions();
+            };
             timer.Start();
         }
         public static WFApi GetWfApi()
@@ -431,7 +434,8 @@ namespace TRKS.WF.QQBot
             // var path = Path.Combine("alert", Path.GetRandomFileName().Replace(".", "") + ".jpg"); // 我发现amanda会把这种带点的文件识别错误...
             // RenderAlert(result, path);
             // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");
-            SendGroupMessage(group, sb.ToString().Trim());
+            var result = sb.ToString();
+            SendGroupMessage(group, result);
 
         }
 
@@ -452,7 +456,8 @@ namespace TRKS.WF.QQBot
                         foreach (var group in Config.Instance.WFGroupList)
                         {
                             // api.SendGroupMessage(group, $@"[QQ:pic={path.Replace(@"\\", @"\")}]");// 图片渲染还是问题太多 文字好一点吧...
-                            SendGroupMessage(group, sb.ToString());
+                            var result = sb.ToString();
+                            SendGroupMessage(group, result);
                         }
 
                         SendedAlertsSet.Add(alert.Id);

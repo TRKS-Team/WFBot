@@ -14,6 +14,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
     {
         private readonly IMahuaApi _mahuaApi;
         private readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
+        private readonly WFStatus _wFStatus = new WFStatus();
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
@@ -34,7 +35,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                     if (context.Message.Contains("平原"))
                     {
-                        WFStatus.SendCetusCycle(context.FromGroup);
+                        _wFStatus.SendCetusCycle(context.FromGroup);
                     }
                 }
             }

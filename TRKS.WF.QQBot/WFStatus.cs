@@ -27,7 +27,7 @@ namespace TRKS.WF.QQBot
 
     class WFStatus
     {
-        public static void SendCetusCycle(string group)
+        public void SendCetusCycle(string group)
         {
             var cycle = WebHelper.DownloadJson<CetusCycle>("https://api.warframestat.us/pc/cetusCycle");
 
