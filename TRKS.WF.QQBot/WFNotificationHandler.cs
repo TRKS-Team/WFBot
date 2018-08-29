@@ -311,8 +311,8 @@ namespace TRKS.WF.QQBot
         public void InitWFNotification()
         {
             if (inited) return;
-            var alerts = new WebClient().DownloadString("https://api.warframestat.us/pc/alerts")
-                .JsonDeserialize<WFAlerts[]>();
+            var alerts = GetWFAlerts();
+
             foreach (var alert in alerts)
             {
                 SendedAlertsSet.Add(alert.Id);
