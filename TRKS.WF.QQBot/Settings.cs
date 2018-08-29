@@ -44,11 +44,12 @@ namespace Settings
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
             var types = new List<string> { "vandal", "wraith", "other" };
+            var rewardList = Config.Instance.InvationRewardList;
             if (checkBox4.Checked)
             {
                 foreach (var type in types)
                 {
-                    Config.Instance.InvationRewardList.Add(type);
+                    rewardList.Add(type);
                 }
                 Config.Save();
             }
@@ -56,7 +57,7 @@ namespace Settings
             {
                 foreach (var type in types)
                 {
-                    Config.Instance.InvationRewardList.Remove(type);
+                    rewardList.Remove(type);
                 }
                 Config.Save();
             }
@@ -70,17 +71,18 @@ namespace Settings
         public void InvasionsCheck(object sender, EventArgs e)
         {
             var checkbox = (CheckBox) sender;
+            var rewardList = Config.Instance.InvationRewardList;
             if (checkbox.Tag is List<string>)
             {
                 foreach (var item in (List<string>)checkbox.Tag)
                 {
                     if (checkbox.Checked)
                     {
-                        Config.Instance.InvationRewardList.Add(item);
+                        rewardList.Add(item);
                     }
                     else
                     {
-                        Config.Instance.InvationRewardList.Remove(item);
+                        rewardList.Remove(item);
                     }
                 }
                 Config.Save();
@@ -89,11 +91,11 @@ namespace Settings
             {
                 if (checkbox.Checked)
                 {
-                    Config.Instance.InvationRewardList.Add((string)checkbox.Tag);
+                    rewardList.Add((string)checkbox.Tag);
                 }
                 else
                 {
-                    Config.Instance.InvationRewardList.Remove((string) checkbox.Tag);
+                    rewardList.Remove((string) checkbox.Tag);
                 }
                 Config.Save();
             }
