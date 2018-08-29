@@ -87,12 +87,14 @@
     <Compile Include="Cylib.cs" />
     <Compile Include="MahuaEvents\MahuaMenuClickedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\PrivateMessageReceivedMahuaEvent2.cs" />
+    <Compile Include="Messenger.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebHelper.cs" />
     <Compile Include="WFNotificationHandler.cs" />
     <Compile Include="MahuaEvents\GroupMessageReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaModule.cs" />
