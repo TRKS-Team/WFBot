@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
@@ -121,9 +122,14 @@ namespace TRKS.WF.QQBot
                         newAlerts.Add(alert);
                     }
                 }
+
                 SendWFAlert(newAlerts);
             }
             catch (WebException)
+            {
+                // 什么都不做
+            }
+            catch (TaskCanceledException)
             {
                 // 什么都不做
             }
