@@ -1,8 +1,6 @@
-﻿using Newbe.Mahua.MahuaEvents;
+﻿using Newbe.Mahua;
+using Newbe.Mahua.MahuaEvents;
 using System;
-using System.Net;
-using System.Runtime.CompilerServices;
-using Newbe.Mahua;
 
 namespace TRKS.WF.QQBot.MahuaEvents
 {
@@ -26,16 +24,21 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             try
             {
-                if (context.Message.StartsWith("/"))
+                var message = context.Message;
+                if (message.StartsWith("/"))
                 {
-                    if (context.Message.Contains("警报"))
+                    var command = message.Substring(1);
+                    switch (command)
                     {
-                        _wFAlert.SendAllAlerts(context.FromGroup);
-                    }
-
-                    if (context.Message.Contains("平原"))
-                    {
-                        _wFStatus.SendCetusCycle(context.FromGroup);
+                        case "警报":
+                            _wFAlert.SendAllAlerts(context.FromGroup);
+                            break;
+                        case "平原":
+                            _wFStatus.SendCetusCycle(context.FromGroup);
+                            break;
+                        case "入侵":
+                            _wFAlert.SendAllInvasions(context.FromGroup);
+                            break;
                     }
                 }
             }
