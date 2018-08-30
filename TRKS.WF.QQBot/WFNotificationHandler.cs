@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot
@@ -114,16 +111,14 @@ namespace TRKS.WF.QQBot
             try
             {
                 var alerts = await api.GetAlerts();
-                var newAlerts = new List<WarframeNET.Alert>();
                 foreach (var alert in alerts)
                 {
                     if (!SendedAlertsSet.Contains(alert.Id))
                     {
-                        newAlerts.Add(alert);
+                        SendWFAlert(alert);
                     }
                 }
 
-                SendWFAlert(newAlerts);
             }
             catch (WebException)
             {
@@ -158,23 +153,20 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格
         }
 
-        public void SendWFAlert(List<WarframeNET.Alert> alerts)
+        public void SendWFAlert(WarframeNET.Alert alert)
         {
-            foreach (var alert in alerts)
+            var reward = alert.Mission.Reward;
+            if (reward.Items.Count > 0 || reward.CountedItems.Count > 0)
             {
-                var reward = alert.Mission.Reward;
-                if (reward.Items.Count > 0 || reward.CountedItems.Count > 0)
+                var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
+                    WFFormatter.ToString(alert);
+
+                foreach (var group in Config.Instance.WFGroupList)
                 {
-                    var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
-                        WFFormatter.ToString(alert);
-                    
-                    foreach (var group in Config.Instance.WFGroupList)
-                    {
-                        Messenger.SendGroup(group, result);
-                    }
+                    Messenger.SendGroup(group, result);
                 }
-                SendedAlertsSet.Add(alert.Id);
             }
+            SendedAlertsSet.Add(alert.Id);
         }
 
         /* 以下是废弃的代码和注释
