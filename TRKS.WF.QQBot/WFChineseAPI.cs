@@ -97,11 +97,16 @@ namespace TRKS.WF.QQBot
             TranslateReward(invasion.DefenderReward);
             invasion.Node = TranslateNode(invasion.Node);
 
-            void TranslateReward(WarframeNET.Reward reward)
+            void TranslateReward(Reward reward)
             {
                 foreach (var item in reward.CountedItems)
                 {
                     item.Type = invasionTranslator.Translate(item.Type);
+                }
+
+                for (var i = 0; i < reward.Items.Count; i++)
+                {
+                    reward.Items[i] = alertTranslator.Translate(reward.Items[i]);
                 }
             }
         }
@@ -120,11 +125,16 @@ namespace TRKS.WF.QQBot
             mission.Type = dictTranslators["Mission"].Translate(mission.Type);
             TranslateReward(mission.Reward);
 
-            void TranslateReward(WarframeNET.Reward reward)
+            void TranslateReward(Reward reward)
             {
                 foreach (var item in reward.CountedItems)
                 {
                     item.Type = alertTranslator.Translate(item.Type);
+                }
+
+                for (var i = 0; i < reward.Items.Count; i++)
+                {
+                    reward.Items[i] = alertTranslator.Translate(reward.Items[i]);
                 }
             }
 
