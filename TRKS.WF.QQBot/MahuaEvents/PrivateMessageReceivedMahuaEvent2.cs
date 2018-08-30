@@ -10,11 +10,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IPrivateMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-
-        static PrivateMessageReceivedMahuaEvent2()
-        {
-            "".ToJsonString();
-        }
+        
         public PrivateMessageReceivedMahuaEvent2(
             IMahuaApi mahuaApi)
         {
