@@ -54,6 +54,7 @@ namespace TRKS.WF.QQBot
             foreach (var inv in invs)
             {
                 if (inv.IsCompleted) continue; // 不发已经完成的入侵
+                // 你学的好快啊
 
                 var list = GetAllInvasionsCountedItems(inv);
                 foreach (var item in list)
@@ -95,11 +96,14 @@ namespace TRKS.WF.QQBot
             // UpdateAlerts();
 
             var sb = new StringBuilder();
-            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务, 供您挑选."); //TODO 这里的语言你改一下
+            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务."); //TODO 这里的语言你改一下
             foreach (var invasion in invasions)
             {
-                sb.AppendLine(WFFormatter.ToString(invasion));
-                sb.AppendLine();
+                if (!invasion.IsCompleted)
+                {
+                    sb.AppendLine(WFFormatter.ToString(invasion));
+                    sb.AppendLine();
+                }
             }
 
             Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格

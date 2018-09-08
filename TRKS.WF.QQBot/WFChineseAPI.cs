@@ -166,7 +166,7 @@ namespace TRKS.WF.QQBot
 
         public string Translate(string source)
         {
-            return dic[source];
+            return dic.ContainsKey(source) ? dic[source] : source;
         }
 
         public void AddEntry(string source, string target)

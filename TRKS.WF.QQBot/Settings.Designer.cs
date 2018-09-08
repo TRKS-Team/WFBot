@@ -134,7 +134,7 @@
             this.checkBox4.Tag = resources.GetString("checkBox4.Tag");
             this.checkBox4.Text = "武器部件";
             this.checkBox4.UseVisualStyleBackColor = true;
-            this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
+            this.checkBox4.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
             // 
             // checkBox5
             // 

@@ -41,28 +41,6 @@ namespace Settings
 
         }
 
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            var types = new List<string> { "vandal", "wraith", "other" };
-            var rewardList = Config.Instance.InvationRewardList;
-            if (checkBox4.Checked)
-            {
-                foreach (var type in types)
-                {
-                    rewardList.Add(type);
-                }
-                Config.Save();
-            }
-            else
-            {
-                foreach (var type in types)
-                {
-                    rewardList.Remove(type);
-                }
-                Config.Save();
-            }
-        }
-
         private void label3_Click(object sender, EventArgs e)
         {
 
@@ -72,9 +50,9 @@ namespace Settings
         {
             var checkbox = (CheckBox) sender;
             var rewardList = Config.Instance.InvationRewardList;
-            if (checkbox.Tag is List<string>)
+            if (checkbox.Tag is List<string> list)
             {
-                foreach (var item in (List<string>)checkbox.Tag)
+                foreach (var item in list)
                 {
                     if (checkbox.Checked)
                     {
@@ -105,12 +83,11 @@ namespace Settings
         {
             foreach (var control in Controls)
             {
-                if (control is CheckBox)
+                if (control is CheckBox checkbox)
                 {
-                    var checkbox = (CheckBox) control;
-                    if (checkbox.Tag is List<string>)
+                    if (checkbox.Tag is List<string> list)
                     {
-                        foreach (var item in (List<string>)checkbox.Tag)
+                        foreach (var item in list)
                         {
                             checkbox.Checked = Config.Instance.InvationRewardList.Contains(item);
                             if (checkbox.Checked)

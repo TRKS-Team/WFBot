@@ -23,7 +23,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(WarframeNET.Invasion inv)
         {
             var sb = new StringBuilder();
-            var completion = Math.Ceiling(inv.Completion);
+            var completion = Math.Floor(inv.Completion);
 
             sb.AppendLine($"地点: {inv.Node}");
 
