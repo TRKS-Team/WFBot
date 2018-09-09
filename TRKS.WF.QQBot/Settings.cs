@@ -50,33 +50,19 @@ namespace Settings
         {
             var checkbox = (CheckBox) sender;
             var rewardList = Config.Instance.InvationRewardList;
-            if (checkbox.Tag is List<string> list)
-            {
-                foreach (var item in list)
-                {
-                    if (checkbox.Checked)
-                    {
-                        rewardList.Add(item);
-                    }
-                    else
-                    {
-                        rewardList.Remove(item);
-                    }
-                }
-                Config.Save();
-            }
-            else
+            var items = (string[]) checkbox.Tag;
+            foreach (var item in (string[]) checkbox.Tag)
             {
                 if (checkbox.Checked)
                 {
-                    rewardList.Add((string)checkbox.Tag);
+                    rewardList.Add(item);
                 }
                 else
                 {
-                    rewardList.Remove((string) checkbox.Tag);
+                    rewardList.Remove(item);
                 }
-                Config.Save();
             }
+            Config.Save();     
         }
 
         public void UpdateCheckBox()
@@ -85,20 +71,19 @@ namespace Settings
             {
                 if (control is CheckBox checkbox)
                 {
-                    if (checkbox.Tag is List<string> list)
+                    var items = (string[])checkbox.Tag;
+                    foreach (var item in items)
                     {
-                        foreach (var item in list)
+                        checkbox.Checked = Config.Instance.InvationRewardList.Contains(item);
+                        if (checkbox.Checked)
                         {
-                            checkbox.Checked = Config.Instance.InvationRewardList.Contains(item);
-                            if (checkbox.Checked)
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
-                    else
+
+                    foreach (var tag in items)
                     {
-                        checkbox.Checked = Config.Instance.InvationRewardList.Contains((string)checkbox.Tag);
+                        Config.Instance.InvationRewardList.Remove(tag);
                     }
                 }
             }

@@ -47,8 +47,8 @@ namespace TRKS.WF.QQBot
 
             var sb = new StringBuilder();
             sb.AppendLine($"现在平原的时间是: {status}");
-            sb.AppendLine($"距离 {nextTime} 还有 {time}");
-            sb.Append($"在 {cycle}");
+            sb.AppendLine($"将在 {time} 变为 {nextTime}");
+            sb.Append($"距离 {nextTime} 还有 {time}");
             return sb.ToString();
         }
 

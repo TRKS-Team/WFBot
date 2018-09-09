@@ -11,8 +11,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-        private readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
-        private readonly WFStatus _wFStatus = new WFStatus();
+        private static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
+        private static readonly WFStatus _wFStatus = new WFStatus();
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)

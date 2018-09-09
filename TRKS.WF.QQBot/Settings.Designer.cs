@@ -72,7 +72,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(382, 92);
             this.label1.TabIndex = 2;
-            this.label1.Text = "用于修改机器人的口令\r\n格式为私聊机器人：添加群 口令 群号\r\n删除群 口令 群号.";
+            this.label1.Text = "用于修改机器人的口令  私聊机器人：\r\n添加群 口令 群号\r\n删除群 口令 群号.";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
@@ -92,7 +92,7 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(99, 21);
             this.checkBox1.TabIndex = 4;
-            this.checkBox1.Tag = "Fieldron";
+            this.checkBox1.Tag = new string[]{ "Fieldron" };
             this.checkBox1.Text = "电磁力场装置";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -105,7 +105,7 @@
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(87, 21);
             this.checkBox2.TabIndex = 5;
-            this.checkBox2.Tag = "Detonite Injector";
+            this.checkBox2.Tag = new string[]{ "Detonite Injector" };
             this.checkBox2.Text = "爆燃喷射器";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -118,7 +118,7 @@
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(99, 21);
             this.checkBox3.TabIndex = 6;
-            this.checkBox3.Tag = "Mutagen Mass";
+            this.checkBox3.Tag = new string[]{ "Mutagen Mass" };
             this.checkBox3.Text = "突变原聚合物";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -131,7 +131,7 @@
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(75, 21);
             this.checkBox4.TabIndex = 7;
-            this.checkBox4.Tag = resources.GetString("checkBox4.Tag");
+            this.checkBox4.Tag = new string[] { "Dera Vandal Blueprint", "Dera Vandal Barrel", "Dera Vandal Receiver", "Dera Vandal Stock", "Snipetron Vandal Blueprint", "Snipetron Vandal Barrel", "Snipetron Vandal Receiver", "Snipetron Vandal Stock", "Karak Wraith Blueprint", "Karak Wraith Barrel", "Karak Wraith Receiver", "Karak Wraith Stock", "Latron Wraith Blueprint", "Latron Wraith Barrel", "Latron Wraith Barrel", "Latron Wraith Receiver", "Latron Wraith Stock", "Strun Wraith Blueprint", "Strun Wraith Barrel", "Strun Wraith Receiver", "Strun Wraith Stock", "Wraith Twin Vipers Blueprint", "Wraith Twin Vipers Barrel", "Wraith Twin Vipers Receiver", "Wraith Twin Vipers Link", "Sheev Blueprint", "Sheev Blade", "Sheev Hilt", "Sheev Heatsink" };
             this.checkBox4.Text = "武器部件";
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -144,7 +144,7 @@
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(176, 21);
             this.checkBox5.TabIndex = 8;
-            this.checkBox5.Tag = "{\"Orokin Catalyst Blueprint\", \"Orokin Reactor Blueprint\"}";
+            this.checkBox5.Tag = new string[] { "Orokin Catalyst Blueprint", "Orokin Reactor Blueprint" };
             this.checkBox5.Text = "Orokin 催化剂/反应堆 蓝图";
             this.checkBox5.UseVisualStyleBackColor = true;
             this.checkBox5.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -157,7 +157,7 @@
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(137, 21);
             this.checkBox6.TabIndex = 9;
-            this.checkBox6.Tag = "Mutalist Alad V Nav Coordinate";
+            this.checkBox6.Tag = new string[] {"Mutalist Alad V Nav Coordinate"};
             this.checkBox6.Text = "异融Alad V导航坐标";
             this.checkBox6.UseVisualStyleBackColor = true;
             this.checkBox6.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -170,7 +170,7 @@
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(92, 21);
             this.checkBox7.TabIndex = 10;
-            this.checkBox7.Tag = "Forma Blueprint";
+            this.checkBox7.Tag = new string[]{ "Forma Blueprint" };
             this.checkBox7.Text = "Forma 蓝图";
             this.checkBox7.UseVisualStyleBackColor = true;
             this.checkBox7.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -183,7 +183,7 @@
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(151, 21);
             this.checkBox8.TabIndex = 11;
-            this.checkBox8.Tag = "Exilus Adapter Blueprint";
+            this.checkBox8.Tag = new string[]{ "Exilus Adapter Blueprint" };
             this.checkBox8.Text = "特殊功能槽连接器 蓝图";
             this.checkBox8.UseVisualStyleBackColor = true;
             this.checkBox8.CheckedChanged += new System.EventHandler(this.InvasionsCheck);

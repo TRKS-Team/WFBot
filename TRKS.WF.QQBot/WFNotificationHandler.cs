@@ -23,9 +23,11 @@ namespace TRKS.WF.QQBot
         public WFNotificationHandler()
         {
             InitWFNotification();
+
         }
 
         public HashSet<string> SendedAlertsSet = new HashSet<string>();
+        public HashSet<string> SendedInvSet = new HashSet<string>();
         private readonly bool inited;
         public Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         private WFChineseAPI api = new WFChineseAPI();
@@ -34,10 +36,16 @@ namespace TRKS.WF.QQBot
         {
             if (inited) return;
             var alerts = await api.GetAlerts();
+            var invs = await api.GetInvasions();
 
             foreach (var alert in alerts)
             {
                 SendedAlertsSet.Add(alert.Id);
+            }
+
+            foreach (var inv in invs)
+            {
+                SendedInvSet.Add(inv.Id);
             }
 
             timer.Elapsed += (sender, eventArgs) =>
@@ -55,6 +63,7 @@ namespace TRKS.WF.QQBot
             {
                 if (inv.IsCompleted) continue; // 不发已经完成的入侵
                 // 你学的好快啊
+                if(SendedInvSet.Contains(inv.Id)) continue;// 不发已经发过的入侵
 
                 var list = GetAllInvasionsCountedItems(inv);
                 foreach (var item in list)
@@ -68,6 +77,8 @@ namespace TRKS.WF.QQBot
                         {
                             Messenger.SendGroup(group, notifyText);
                         }
+
+                        SendedInvSet.Add(inv.Id);
                         break;
                     }
                 }
@@ -124,10 +135,6 @@ namespace TRKS.WF.QQBot
                 }
 
             }
-            catch (WebException)
-            {
-                // 什么都不做
-            }
             catch (TaskCanceledException)
             {
                 // 什么都不做
@@ -137,6 +144,7 @@ namespace TRKS.WF.QQBot
                 const string qq = "1141946313"; // 这是我自己的qq号.
                 Messenger.SendPrivate(qq, e.ToString());
                 //TODO 写配置文件
+                //ez
             }
 
         }
@@ -219,3 +227,4 @@ namespace TRKS.WF.QQBot
         */
     }
 }
+
