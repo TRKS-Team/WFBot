@@ -139,6 +139,10 @@ namespace TRKS.WF.QQBot
             {
                 // 什么都不做
             }
+            catch (WebException)
+            {
+                // 什么也不做
+            }
             catch (Exception e)
             {
                 const string qq = "1141946313"; // 这是我自己的qq号.

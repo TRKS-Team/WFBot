@@ -12,7 +12,7 @@ namespace TRKS.WF.QQBot
                 new MahuaMenu
                 {
                     Id = "menu1",
-                    Text = "修改机器人访问口令(用于修改群)"
+                    Text = "机器人设置."
                 }
             };
         }
