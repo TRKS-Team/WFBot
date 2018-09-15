@@ -29,7 +29,7 @@ namespace TRKS.WF.QQBot
             var cycle = api.GetCetusCycle();
             var msg = WFFormatter.ToString(cycle);
             
-            Messenger.SendGroup(@"[QQ:pic=表情包\1551.jpg]" + msg, group);
+            Messenger.SendGroup(group, msg);
         }
         
     }

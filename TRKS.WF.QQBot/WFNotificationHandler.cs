@@ -18,7 +18,7 @@ namespace TRKS.WF.QQBot
     }
 
 
-    class WFNotificationHandler
+    public class WFNotificationHandler
     {
         public WFNotificationHandler()
         {
