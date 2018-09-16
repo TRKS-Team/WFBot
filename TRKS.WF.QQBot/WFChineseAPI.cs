@@ -33,7 +33,20 @@ namespace TRKS.WF.QQBot
 
         public async Task<List<WarframeNET.Alert>> GetAlerts()
         {
-            var alerts = await client.GetAlertsAsync(Platform.PC); // 这一行导致过一次报错. 第二次了
+            var alerts = new List<WarframeNET.Alert>();            
+            try
+            {
+                alerts = await client.GetAlertsAsync(Platform.PC); // 这一行导致过一次报错. 第二次了
+            }
+            catch (HttpRequestException)
+            {
+                // 啥也不做
+            }
+            catch (Exception e)
+            {
+                Messenger.SendPrivate("1141946313", $"警报获取报错:{Environment.NewLine}{e}");
+
+            }
             foreach (var alert in alerts)
             {
                 translator.TranslateAlert(alert);
