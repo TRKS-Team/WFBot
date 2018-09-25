@@ -10,17 +10,6 @@ using WarframeNET;
 namespace TRKS.WF.QQBot
 {
 
-    public class CetusCycle
-    {
-        public string ID { get; set; }
-        public DateTime Expiry { get; set; }
-        public bool IsDay { get; set; }
-        public string TimeLeft { get; set; }
-        public bool IsCetus { get; set; }
-        public string ShortString { get; set; }
-    }
-
-
     class WFStatus
     {
         private readonly WFChineseAPI api = new WFChineseAPI();
@@ -31,6 +20,13 @@ namespace TRKS.WF.QQBot
             
             Messenger.SendGroup(group, msg);
         }
-        
+
+        public void SendSortie(string group)
+        {
+            var sortie = api.GetSortie();
+            var msg = WFFormatter.ToString(sortie);
+            
+            Messenger.SendGroup(group, msg);
+        }
     }
 }

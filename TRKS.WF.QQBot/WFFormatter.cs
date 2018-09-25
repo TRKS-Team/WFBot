@@ -52,10 +52,23 @@ namespace TRKS.WF.QQBot
             return sb.ToString();
         }
 
+        public static string ToString(Sortie sortie)
+        {
+            var sb = new StringBuilder();
+            foreach (var variant in sortie.variants)
+            {
+                sb.AppendLine($"[{variant.node}]");
+                sb.AppendLine($"-类型:{variant.missionType}");
+                sb.AppendLine($"-状态:{variant.modifier}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
         public static string ToString(WarframeNET.Reward reward)
         {
             var rewards = new List<string>();
-            if (reward.Credits > 0)
+            if (reward.Credits > 0)// 其实吧 不存在没有现金的警报 真的不存在
             {
                 rewards.Add($"{reward.Credits} cr");
             }

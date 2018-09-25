@@ -33,7 +33,7 @@ namespace TRKS.WF.QQBot
 
         public async Task<List<WarframeNET.Alert>> GetAlerts()
         {
-            var alerts = new List<WarframeNET.Alert>();            
+            var alerts = new List<WarframeNET.Alert>();
             try
             {
                 alerts = await client.GetAlertsAsync(Platform.PC); // 这一行导致过一次报错. 第二次了
@@ -47,6 +47,7 @@ namespace TRKS.WF.QQBot
                 Messenger.SendPrivate("1141946313", $"警报获取报错:{Environment.NewLine}{e}");
 
             }
+
             foreach (var alert in alerts)
             {
                 translator.TranslateAlert(alert);
@@ -64,6 +65,12 @@ namespace TRKS.WF.QQBot
             return cycle;
         }
 
+        public Sortie GetSortie()
+        {
+            var sortie = WebHelper.DownloadJson<Sortie>("https://api.warframestat.us/pc/sortie");
+            return sortie;
+        }
+
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeSpan.FromHours(8); // TODO 这里需要改
@@ -78,6 +85,7 @@ namespace TRKS.WF.QQBot
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
+        private Translator sortieTranslator = new Translator();
 
         public WFTranslator()
         {
@@ -124,7 +132,7 @@ namespace TRKS.WF.QQBot
                 }
             }
         }
-        
+
         private string TranslateNode(string node)
         {
             var strings = node.Split('(');
@@ -153,7 +161,117 @@ namespace TRKS.WF.QQBot
             }
 
         }
+
+        public void TranslateSortie(Sortie sortie)
+        {
+            foreach (var variant in sortie.variants)
+            {
+                variant.node = TranslateNode(variant.node);
+                variant.missionType = dictTranslators["Mission"].Translate(variant.missionType);
+                variant.modifier = TranslateModifier(variant.modifier);
+            }
+        }
+        public string TranslateModifier(string modifier)
+        {
+            var result = "";
+            switch (modifier)
+            {
+                case "Weapon Restriction: Assault Rifle Only":
+                    result = "武器限定：突击步枪";
+                    break;
+                case "Weapon Restriction: Pistol Only":
+                    result = "武器限定：手枪";
+                    break;
+                case "Weapon Restriction: Melee Only":
+                    result = "武器限定：近战";
+                    break;
+                case "Weapon Restriction: Bow Only":
+                    result = "武器限定：弓箭";
+                    break;
+                case "Weapon Restriction: Shotgun Only":
+                    result = "武器限定：霰弹枪";
+                    break;
+                case "Weapon Restriction: Sniper Only":
+                    result = "武器限定：狙击枪";
+                    break;
+                case "Enemy Elemental Enhancement: Corrosive":
+                    result = "敌人元素强化：腐蚀";
+                    break;
+                case "Enemy Elemental Enhancement: Electricity":
+                    result = "敌人元素强化：电击";
+                    break;
+                case "Enemy Elemental Enhancement: Blast":
+                    result = "敌人元素强化：爆炸";
+                    break;
+                case "Enemy Elemental Enhancement: Heat":
+                    result = "敌人元素强化：火焰";
+                    break;
+                case "Enemy Elemental Enhancement: Cold":
+                    result = "敌人元素强化：冰冻";
+                    break;
+                case "Enemy Elemental Enhancement: Gas":
+                    result = "敌人元素强化：毒气";
+                    break;
+                case "Enemy Elemental Enhancement: Magnetic":
+                    result = "敌人元素强化：磁力";
+                    break;
+                case "Enemy Elemental Enhancement: Toxin":
+                    result = "敌人元素强化：毒素";
+                    break;
+                case "Enemy Elemental Enhancement: Radiation":
+                    result = "敌人元素强化：辐射";
+                    break;
+                case "Enemy Elemental Enhancement: Viral":
+                    result = "敌人元素强化：病毒";
+                    break;
+                case "Enemy Physical Enhancement: Impact":
+                    result = "敌人物理强化：冲击";
+                    break;
+                case "Enemy Physical Enhancement: Puncture":
+                    result = "敌人物理强化：穿刺";
+                    break;
+                case "Enemy Physical Enhancement: Slash":
+                    result = "敌人物理强化：切割";
+                    break;
+                case "Augmented Enemy Armor":
+                    result = "敌人护甲强化";
+                    break;
+                case "Eximus Stronghold":
+                    result = "卓越者大本营";
+                    break;
+                case "Energy Reduction":
+                    result = "能量上限减少";
+                    break;
+                case "Enhanced Enemy Shields":
+                    result = "敌人护盾强化";
+                    break;
+                case "Environmental Effect: Extreme Cold":
+                    result = "环境改变：极寒";
+                    break;
+                case "Environmental Hazard: Fire":
+                    result = "环境灾害：火灾";
+                    break;
+                case "Environmental Hazard: Dense Fog":
+                    result = "环境灾害：浓雾";
+                    break;
+                case "Environmental Effect: Cryogenic Leakage":
+                    result = "环境改变：冷却液泄露";
+                    break;
+                case "Environmental Hazard: Electromagnetic Anomalies":
+                    result = "环境灾害：电磁异常";
+                    break;
+                case "Environmental Hazard: Radiation Pockets":
+                    result = "环境灾害：辐射灾害";
+                    break;
+                default:
+                    result = modifier;
+                    break;
+            }
+
+            return result;
+        }
     }
+
     /*
     public class ObjectType
     {
@@ -173,6 +291,7 @@ namespace TRKS.WF.QQBot
         {
             dic = new Dictionary<string, string>();
         }
+
         public Translator(Dictionary<string, string> dictionary)
         {
             dic = dictionary;

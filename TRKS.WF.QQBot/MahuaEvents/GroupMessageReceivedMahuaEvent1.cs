@@ -39,6 +39,9 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "入侵":
                             _wFAlert.SendAllInvasions(context.FromGroup);
                             break;
+                        case "突击":
+                            _wFStatus.SendSortie(context.FromGroup);
+                            break;
                     }
                 }
             }

@@ -73,7 +73,41 @@ namespace TRKS.WF.QQBot
         public string Rewards { get; set; }
         public string Name { get; set; }
     }
-    
+
+    public class Sortie
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
+        public string rewardPool { get; set; }
+        public Variant[] variants { get; set; }
+        public string boss { get; set; }
+        public string faction { get; set; }
+        public bool expired { get; set; }
+        public string eta { get; set; }
+    }
+
+    public class Variant
+    {
+        public string boss { get; set; }
+        public string planet { get; set; }
+        public string missionType { get; set; }
+        public string modifier { get; set; }
+        public string modifierDescription { get; set; }
+        public string node { get; set; }
+    }
+    public class CetusCycle
+    {
+        public string ID { get; set; }
+        public DateTime Expiry { get; set; }
+        public bool IsDay { get; set; }
+        public string TimeLeft { get; set; }
+        public bool IsCetus { get; set; }
+        public string ShortString { get; set; }
+    }
+
+
+
     /*
     public class WFAlerts // 某个好朋友让我改成大写，好习惯
     {
