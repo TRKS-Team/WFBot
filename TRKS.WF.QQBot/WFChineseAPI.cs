@@ -33,14 +33,10 @@ namespace TRKS.WF.QQBot
 
         public async Task<List<WarframeNET.Alert>> GetAlerts()
         {
-<<<<<<< HEAD
             var alerts = new List<WarframeNET.Alert>();
-=======
-            var alerts = new List<WarframeNET.Alert>();            
->>>>>>> master
             try
             {
-                alerts = await client.GetAlertsAsync(Platform.PC); // 这一行导致过一次报错. 第二次了
+                alerts = await client.GetAlertsAsync(Platform.PC);// 已经踹掉了
             }
             catch (HttpRequestException)
             {
@@ -51,10 +47,6 @@ namespace TRKS.WF.QQBot
                 Messenger.SendPrivate("1141946313", $"警报获取报错:{Environment.NewLine}{e}");
 
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> master
             foreach (var alert in alerts)
             {
                 translator.TranslateAlert(alert);
@@ -75,6 +67,7 @@ namespace TRKS.WF.QQBot
         public Sortie GetSortie()
         {
             var sortie = WebHelper.DownloadJson<Sortie>("https://api.warframestat.us/pc/sortie");
+            translator.TranslateSortie(sortie);
             return sortie;
         }
 
@@ -92,7 +85,6 @@ namespace TRKS.WF.QQBot
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
-        private Translator sortieTranslator = new Translator();
 
         public WFTranslator()
         {
@@ -173,7 +165,7 @@ namespace TRKS.WF.QQBot
         {
             foreach (var variant in sortie.variants)
             {
-                variant.node = TranslateNode(variant.node);
+                variant.node = TranslateNode(variant.node).Replace("Plains of Eidolon", "夜灵平野"); // 这个不在翻译api里
                 variant.missionType = dictTranslators["Mission"].Translate(variant.missionType);
                 variant.modifier = TranslateModifier(variant.modifier);
             }

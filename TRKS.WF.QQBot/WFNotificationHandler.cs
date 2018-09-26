@@ -28,13 +28,13 @@ namespace TRKS.WF.QQBot
 
         public HashSet<string> SendedAlertsSet = new HashSet<string>();
         public HashSet<string> SendedInvSet = new HashSet<string>();
-        private readonly bool inited;
+        private bool _inited;// 谁加了个readonly????????
         public Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         private WFChineseAPI api = new WFChineseAPI();
 
         private async void InitWFNotification()
         {
-            if (inited) return;
+            if (_inited) return;
             var alerts = await api.GetAlerts();
             var invs = await api.GetInvasions();
 
@@ -54,6 +54,7 @@ namespace TRKS.WF.QQBot
                 UpdateInvasions();
             };
             timer.Start();
+            _inited = true;
         }
 
         public async void UpdateInvasions()
