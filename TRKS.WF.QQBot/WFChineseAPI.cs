@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using WarframeNET;
 
 namespace TRKS.WF.QQBot
@@ -33,10 +34,17 @@ namespace TRKS.WF.QQBot
 
         public async Task<List<WarframeNET.Alert>> GetAlerts()
         {
-            var alerts = new List<WarframeNET.Alert>();
             try
             {
-                alerts = await client.GetAlertsAsync(Platform.PC);// 已经踹掉了
+                var alerts = await client.GetAlertsAsync(Platform.PC);
+                foreach (var alert in alerts)
+                {
+                    translator.TranslateAlert(alert);
+                    alert.StartTime = GetRealTime(alert.StartTime);
+                    alert.EndTime = GetRealTime(alert.EndTime);
+                }
+
+                return alerts;
             }
             catch (HttpRequestException)
             {
@@ -47,14 +55,7 @@ namespace TRKS.WF.QQBot
                 Messenger.SendPrivate("1141946313", $"警报获取报错:{Environment.NewLine}{e}");
 
             }
-            foreach (var alert in alerts)
-            {
-                translator.TranslateAlert(alert);
-                alert.StartTime = GetRealTime(alert.StartTime);
-                alert.EndTime = GetRealTime(alert.EndTime);
-            }
-
-            return alerts;
+            return new List<WarframeNET.Alert>();
         }
 
         public CetusCycle GetCetusCycle()
@@ -71,10 +72,19 @@ namespace TRKS.WF.QQBot
             return sortie;
         }
 
+        public VoidTrader GetVoidTrader()
+        {
+            var trader = WebHelper.DownloadJson<VoidTrader>("https://api.warframestat.us/pc/voidTrader");
+            trader.activation = GetRealTime(trader.activation);
+            trader.expiry = GetRealTime(trader.expiry);
+            translator.TranslateVoidTrader(trader);
+            return trader;
+        }
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeSpan.FromHours(8); // TODO 这里需要改
+            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
+
     }
 
 
@@ -169,6 +179,12 @@ namespace TRKS.WF.QQBot
                 variant.missionType = dictTranslators["Mission"].Translate(variant.missionType);
                 variant.modifier = TranslateModifier(variant.modifier);
             }
+        }
+
+        public void TranslateVoidTrader(VoidTrader trader)
+        {
+            trader.location = TranslateNode(trader.location).Replace("Relay", "中继站");
+            // 下次奸商来了我再写翻译所带物品
         }
         public string TranslateModifier(string modifier)
         {

@@ -42,6 +42,10 @@
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -57,7 +61,7 @@
             // 
             this.button1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button1.Location = new System.Drawing.Point(302, 139);
+            this.button1.Location = new System.Drawing.Point(292, 141);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 33);
             this.button1.TabIndex = 1;
@@ -92,7 +96,8 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(99, 21);
             this.checkBox1.TabIndex = 4;
-            this.checkBox1.Tag = new string[]{ "电磁力场装置" };
+            this.checkBox1.Tag = new string[] {
+        "电磁力场装置"};
             this.checkBox1.Text = "电磁力场装置";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -105,7 +110,8 @@
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(87, 21);
             this.checkBox2.TabIndex = 5;
-            this.checkBox2.Tag = new string[]{ "爆燃喷射器" };
+            this.checkBox2.Tag = new string[] {
+        "爆燃喷射器"};
             this.checkBox2.Text = "爆燃喷射器";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -118,7 +124,8 @@
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(99, 21);
             this.checkBox3.TabIndex = 6;
-            this.checkBox3.Tag = new string[]{ "突变原聚合物" };
+            this.checkBox3.Tag = new string[] {
+        "突变原聚合物"};
             this.checkBox3.Text = "突变原聚合物";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -131,7 +138,35 @@
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(75, 21);
             this.checkBox4.TabIndex = 7;
-            this.checkBox4.Tag = new string[] { "德拉 破坏者 蓝图", "德拉 破坏者 枪管", "德拉 破坏者 枪机", "德拉 破坏者 枪托", "狙击特昂 破坏者 蓝图", "狙击特昂 破坏者 枪管", "狙击特昂 破坏者 枪机", "狙击特昂 破坏者 枪托", "卡拉克 亡魂 蓝图", "卡拉克 亡魂 枪管", "卡拉克 亡魂 枪机", "卡拉克 亡魂 枪托", "拉特昂 亡魂 蓝图", "拉特昂 亡魂 枪管", "拉特昂 亡魂 枪机", "拉特昂 亡魂 枪托", "斯特朗 亡魂 蓝图", "斯特朗 亡魂 枪机", "斯特朗 亡魂 枪托", "斯特朗 亡魂 枪管", "双子蝰蛇 亡魂 蓝图", "双子蝰蛇 亡魂 枪管", "双子蝰蛇 亡魂 枪机", "双子蝰蛇 亡魂 连接器", "希芙 蓝图", "希芙 刀刃", "希芙 握柄", "希芙 散热器" };
+            this.checkBox4.Tag = new string[] {
+        "德拉 破坏者 蓝图",
+        "德拉 破坏者 枪管",
+        "德拉 破坏者 枪机",
+        "德拉 破坏者 枪托",
+        "狙击特昂 破坏者 蓝图",
+        "狙击特昂 破坏者 枪管",
+        "狙击特昂 破坏者 枪机",
+        "狙击特昂 破坏者 枪托",
+        "卡拉克 亡魂 蓝图",
+        "卡拉克 亡魂 枪管",
+        "卡拉克 亡魂 枪机",
+        "卡拉克 亡魂 枪托",
+        "拉特昂 亡魂 蓝图",
+        "拉特昂 亡魂 枪管",
+        "拉特昂 亡魂 枪机",
+        "拉特昂 亡魂 枪托",
+        "斯特朗 亡魂 蓝图",
+        "斯特朗 亡魂 枪机",
+        "斯特朗 亡魂 枪托",
+        "斯特朗 亡魂 枪管",
+        "双子蝰蛇 亡魂 蓝图",
+        "双子蝰蛇 亡魂 枪管",
+        "双子蝰蛇 亡魂 枪机",
+        "双子蝰蛇 亡魂 连接器",
+        "希芙 蓝图",
+        "希芙 刀刃",
+        "希芙 握柄",
+        "希芙 散热器"};
             this.checkBox4.Text = "武器部件";
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -144,7 +179,9 @@
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(176, 21);
             this.checkBox5.TabIndex = 8;
-            this.checkBox5.Tag = new string[] { "OROKIN催化剂 蓝图", "OROKIN反应堆 蓝图" };
+            this.checkBox5.Tag = new string[] {
+        "OROKIN催化剂 蓝图",
+        "OROKIN反应堆 蓝图"};
             this.checkBox5.Text = "Orokin 催化剂/反应堆 蓝图";
             this.checkBox5.UseVisualStyleBackColor = true;
             this.checkBox5.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -157,7 +194,8 @@
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(137, 21);
             this.checkBox6.TabIndex = 9;
-            this.checkBox6.Tag = new string[] {"异融ALAD V导航座标"};
+            this.checkBox6.Tag = new string[] {
+        "异融ALAD V导航座标"};
             this.checkBox6.Text = "异融Alad V导航坐标";
             this.checkBox6.UseVisualStyleBackColor = true;
             this.checkBox6.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -170,7 +208,8 @@
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(92, 21);
             this.checkBox7.TabIndex = 10;
-            this.checkBox7.Tag = new string[]{ "FORMA 蓝图" };
+            this.checkBox7.Tag = new string[] {
+        "FORMA 蓝图"};
             this.checkBox7.Text = "Forma 蓝图";
             this.checkBox7.UseVisualStyleBackColor = true;
             this.checkBox7.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -183,7 +222,8 @@
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(151, 21);
             this.checkBox8.TabIndex = 11;
-            this.checkBox8.Tag = new string[]{ "特殊功能槽连接器 蓝图" };
+            this.checkBox8.Tag = new string[] {
+        "特殊功能槽连接器 蓝图"};
             this.checkBox8.Text = "特殊功能槽连接器 蓝图";
             this.checkBox8.UseVisualStyleBackColor = true;
             this.checkBox8.CheckedChanged += new System.EventHandler(this.InvasionsCheck);
@@ -199,11 +239,52 @@
             this.label3.Text = "提醒到群里的入侵任务所需含有的奖励";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(-5, 432);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(283, 21);
+            this.textBox2.TabIndex = 13;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.Location = new System.Drawing.Point(3, 323);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(275, 49);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "接收所有插件报错的QQ号\r\n(填入本人QQ号,留空为不接收报错)";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button2.Location = new System.Drawing.Point(292, 432);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 32);
+            this.button2.TabIndex = 15;
+            this.button2.Text = "确认";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // label5
+            // 
+            this.label5.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(10, 379);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(267, 42);
+            this.label5.TabIndex = 16;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 337);
+            this.ClientSize = new System.Drawing.Size(406, 512);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox8);
             this.Controls.Add(this.checkBox7);
@@ -241,6 +322,10 @@
         private System.Windows.Forms.CheckBox checkBox7;
         private System.Windows.Forms.CheckBox checkBox8;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label5;
     }
 }
 

@@ -33,6 +33,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "警报":
                             _wFAlert.SendAllAlerts(context.FromGroup);
                             break;
+                        case "平野":
+                        case "夜灵平野":
                         case "平原":
                             _wFStatus.SendCetusCycle(context.FromGroup);
                             break;
@@ -41,6 +43,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             break;
                         case "突击":
                             _wFStatus.SendSortie(context.FromGroup);
+                            break;
+                        case "奸商":
+                        case "虚空商人":
+                        case "商人":
+                            _wFStatus.SendVoidTrader(context.FromGroup);
                             break;
                     }
                 }

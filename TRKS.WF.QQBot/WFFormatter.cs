@@ -13,11 +13,12 @@ namespace TRKS.WF.QQBot
         {
             var mission = alert.Mission;
             var reward = mission.Reward;
+            var time = (alert.EndTime - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
 
             return $"[{mission.Node}] 等级 {mission.EnemyMinLevel}-{mission.EnemyMaxLevel}\r\n" +
                    $"-类型:     {mission.Type}-{mission.Faction}\r\n" +
                    $"-奖励:     {ToString(reward)}\r\n" +
-                   $"-过期时间: {alert.EndTime}";
+                   $"-过期时间: {alert.EndTime}({time} 后)";
         }
 
         public static string ToString(WarframeNET.Invasion inv)
@@ -55,6 +56,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(Sortie sortie)
         {
             var sb = new StringBuilder();
+            sb.AppendLine("指挥官,下面是今天的突击任务.");
             foreach (var variant in sortie.variants)
             {
                 sb.AppendLine($"[{variant.node}]");
@@ -65,10 +67,32 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
 
+        public static string ToString(VoidTrader trader)
+        {
+            var sb = new StringBuilder();
+            if (trader.active)
+            {
+                var time = (DateTime.Now - trader.expiry).Humanize(int.MaxValue,
+                    CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+                sb.AppendLine($"虚空商人已抵达:{trader.location}");
+                sb.AppendLine($"携带商品:");
+                sb.AppendLine($"     (这里还没写完...)");
+                sb.Append($"结束时间:{trader.expiry}({time} 后)");
+            }
+            else
+            {
+                var time = (DateTime.Now - trader.activation).Humanize(int.MaxValue,
+                    CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+                sb.Append($"虚空商人将在{trader.activation}({time} 后)抵达{trader.location}");
+            }
+
+            return sb.ToString().Trim();
+        }
+
         public static string ToString(WarframeNET.Reward reward)
         {
             var rewards = new List<string>();
-            if (reward.Credits > 0)// 其实吧 不存在没有现金的警报 真的不存在
+            if (reward.Credits > 0)
             {
                 rewards.Add($"{reward.Credits} cr");
             }

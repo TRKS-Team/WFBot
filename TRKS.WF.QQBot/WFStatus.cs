@@ -28,5 +28,13 @@ namespace TRKS.WF.QQBot
             
             Messenger.SendGroup(group, msg);
         }
+
+        public void SendVoidTrader(string group)
+        {
+            var trader = api.GetVoidTrader();
+            var msg = WFFormatter.ToString(trader);
+
+            Messenger.SendGroup(group, msg);
+        }
     }
 }
