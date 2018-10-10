@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Humanizer;
 using Humanizer.Localisation;
@@ -57,6 +58,9 @@ namespace TRKS.WF.QQBot
         {
             var sb = new StringBuilder();
             sb.AppendLine("指挥官,下面是今天的突击任务.");
+            sb.AppendLine($">阵营: {sortie.faction}");
+            sb.AppendLine($">首长: {sortie.boss}");
+            sb.AppendLine("");
             foreach (var variant in sortie.variants)
             {
                 sb.AppendLine($"[{variant.node}]");
@@ -76,7 +80,11 @@ namespace TRKS.WF.QQBot
                     CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
                 sb.AppendLine($"虚空商人已抵达:{trader.location}");
                 sb.AppendLine($"携带商品:");
-                sb.AppendLine($"     (这里还没写完...)");
+                foreach (var inventory in trader.inventory)
+                {
+                    sb.AppendLine($"         [{inventory.item}]");
+                    sb.AppendLine($"         {inventory.ducats}金币 + {inventory.credits}现金");
+                }
                 sb.Append($"结束时间:{trader.expiry}({time} 后)");
             }
             else
@@ -86,6 +94,21 @@ namespace TRKS.WF.QQBot
                 sb.Append($"虚空商人将在{trader.activation}({time} 后)抵达{trader.location}");
             }
 
+            return sb.ToString().Trim();
+        }
+
+        public static string ToString(WMInfo info)
+        {
+            var sb = new StringBuilder();
+            var itemItemsInSet = info.include.item.items_in_set;
+            sb.AppendLine($"下面是物品: {itemItemsInSet.Last().en.item_name} 按价格从小到大的{info.payload.orders.Length}条信息");
+            sb.AppendLine();
+            foreach (var order in info.payload.orders)
+            {
+                sb.AppendLine($"[{order.user.ingame_name}]   {order.user.status}");
+                sb.AppendLine($"{order.order_type}  {order.platinum}白鸡");
+            }
+            // 以后不好看了再说
             return sb.ToString().Trim();
         }
 
@@ -108,7 +131,6 @@ namespace TRKS.WF.QQBot
             }
 
             return string.Join(" + ", rewards);
-            // string.Join 就是把一堆字符串连接起来
         }
     }
 }

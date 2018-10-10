@@ -7,6 +7,133 @@ using System.Threading.Tasks;
 namespace TRKS.WF.QQBot
 {
 
+
+    public class WMInfo
+    {
+        public Payload payload { get; set; }
+        public Include include { get; set; }
+    }
+
+    public class Payload
+    {
+        public Order[] orders { get; set; }
+    }
+
+    public class Order
+    {
+        public bool visible { get; set; }
+        public int quantity { get; set; }
+        public User user { get; set; }
+        public int platinum { get; set; }
+        public DateTime creation_date { get; set; }
+        public string region { get; set; }
+        public DateTime last_update { get; set; }
+        public string order_type { get; set; }
+        public string platform { get; set; }
+        public string id { get; set; }
+    }
+
+    public class User
+    {
+        public string ingame_name { get; set; }
+        public DateTime? last_seen { get; set; }
+        public double reputation_bonus { get; set; }
+        public float reputation { get; set; }
+        public string region { get; set; }
+        public string status { get; set; }
+        public string id { get; set; }
+        public string avatar { get; set; }
+    }
+
+    public class Include
+    {
+        public Item item { get; set; }
+    }
+
+    public class Item
+    {
+        public string id { get; set; }
+        public Items_In_Set[] items_in_set { get; set; }
+    }
+
+    public class Items_In_Set
+    {
+        public int ducats { get; set; }
+        public string icon { get; set; }
+        public string[] tags { get; set; }
+        public string icon_format { get; set; }
+        public Ru ru { get; set; }
+        public string id { get; set; }
+        public bool set_root { get; set; }
+        public Fr fr { get; set; }
+        public string sub_icon { get; set; }
+        public string thumb { get; set; }
+        public string url_name { get; set; }
+        public Ko ko { get; set; }
+        public En en { get; set; }
+        public int trading_tax { get; set; }
+    }
+
+    public class Ru
+    {
+        public string description { get; set; }
+        public Drop[] drop { get; set; }
+        public string item_name { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Fr
+    {
+        public string description { get; set; }
+        public Drop1[] drop { get; set; }
+        public string item_name { get; set; }
+        public string codex { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop1
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Ko
+    {
+        public string description { get; set; }
+        public Drop2[] drop { get; set; }
+        public string item_name { get; set; }
+        public string codex { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop2
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
+    public class En
+    {
+        public string description { get; set; }
+        public Drop3[] drop { get; set; }
+        public string item_name { get; set; }
+        public string codex { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop3
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
+
     public class VoidTrader
     {
         public string id { get; set; }
@@ -14,12 +141,20 @@ namespace TRKS.WF.QQBot
         public DateTime expiry { get; set; }
         public string character { get; set; }
         public string location { get; set; }
-        public object[] inventory { get; set; }
+        public Inventory[] inventory { get; set; }
         public string psId { get; set; }
         public bool active { get; set; }
         public string startString { get; set; }
         public string endString { get; set; }
     }
+
+    public class Inventory
+    {
+        public string item { get; set; }
+        public int ducats { get; set; }
+        public int credits { get; set; }
+    }
+
 
     public class WFApi
     {

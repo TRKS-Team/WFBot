@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -52,7 +53,8 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                Messenger.SendPrivate("1141946313", $"警报获取报错:{Environment.NewLine}{e}");
+                var qq = Config.Instance.QQ;
+                Messenger.SendPrivate(qq, $"警报获取报错:{Environment.NewLine}{e}");
 
             }
             return new List<WarframeNET.Alert>();
@@ -93,6 +95,7 @@ namespace TRKS.WF.QQBot
         private WFApi translateApi = GetTranslateAPI();
 
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
+        private Translator searchwordTranslators = new Translator();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
 
@@ -102,8 +105,21 @@ namespace TRKS.WF.QQBot
             {
                 var type = dict.Type;
                 if (!dictTranslators.ContainsKey(type))
-                    dictTranslators.Add(type, new Translator());
+                {
+                    dictTranslators.Add(type, new Translator()); 
+                }
+
+                if (!dictTranslators.ContainsKey("All"))
+                {
+                    dictTranslators.Add("All", new Translator());
+                }
+                dictTranslators["All"].AddEntry(dict.En, dict.Zh);
                 dictTranslators[type].AddEntry(dict.En, dict.Zh);
+            }
+
+            foreach (var sale in translateApi.Sale)
+            {
+                 searchwordTranslators.AddEntry(sale.Zh.Replace(" ", "").ToLower(), sale.Search);
             }
 
             foreach (var invasion in translateApi.Invasion)
@@ -122,6 +138,10 @@ namespace TRKS.WF.QQBot
             return WebHelper.DownloadJson<WFApi>("https://api.richasy.cn/api/lib/localdb/tables");
         }
 
+        public string TranslateSearchWord(string source)
+        {
+            return searchwordTranslators.Translate(source);
+        }
         public void TranslateInvasion(WarframeNET.Invasion invasion)
         {
             TranslateReward(invasion.AttackerReward);
@@ -179,12 +199,48 @@ namespace TRKS.WF.QQBot
                 variant.missionType = dictTranslators["Mission"].Translate(variant.missionType);
                 variant.modifier = TranslateModifier(variant.modifier);
             }
+            sortie.boss = dictTranslators["Word"].Translate(sortie.boss);
         }
+
 
         public void TranslateVoidTrader(VoidTrader trader)
         {
             trader.location = TranslateNode(trader.location).Replace("Relay", "中继站");
-            // 下次奸商来了我再写翻译所带物品
+            foreach (var inventory in trader.inventory)
+            {
+                inventory.item = dictTranslators["All"].Translate(inventory.item);
+            }
+            // 下次奸商来了我再写翻译所带物品 ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊
+        }
+
+        public void TranslateWMOrder(WMInfo info)
+        {
+            foreach (var order in info.payload.orders)
+            {
+                switch (order.order_type)
+                {
+                    case "buy":
+                        order.order_type = "收购";
+                        break;
+                    case "sell":
+                        order.order_type = "出售";
+                        break;
+                }
+
+                switch (order.user.status)
+                {
+                    case "ingame":
+                        order.user.status = "游戏内在线";
+                        break;
+                    case "online":
+                        order.user.status = "WM在线";
+                        break;
+                    case "offline":
+                        order.user.status = "离线";
+                        break;
+                }
+            }
+
         }
         public string TranslateModifier(string modifier)
         {

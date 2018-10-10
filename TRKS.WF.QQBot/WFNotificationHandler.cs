@@ -15,6 +15,8 @@ namespace TRKS.WF.QQBot
         public List<string> InvationRewardList = new List<string>();
 
         public string Code;
+
+        public string QQ;
     }
 
 
@@ -59,7 +61,24 @@ namespace TRKS.WF.QQBot
 
         public async void UpdateInvasions()
         {
-            var invs = await api.GetInvasions();
+            var invs = new List<WarframeNET.Invasion>();
+            try
+            {
+                invs = await api.GetInvasions();
+            }
+            catch (TaskCanceledException)
+            {
+                // 正常情况 不慌
+            }
+            catch (WebException)
+            {
+                // 也挺正常 不慌不慌
+            }
+            catch (Exception e)
+            {
+                // 问题有点大 我慌一下
+                Messenger.SendPrivate(Config.Instance.QQ, e.ToString());
+            }
             foreach (var inv in invs)
             {
                 if (inv.IsCompleted) continue; // 不发已经完成的入侵
@@ -146,10 +165,8 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                const string qq = "1141946313"; // 这是我自己的qq号.
+                var qq = Config.Instance.QQ;
                 Messenger.SendPrivate(qq, e.ToString());
-                //TODO 写配置文件
-                //ez
             }
 
         }

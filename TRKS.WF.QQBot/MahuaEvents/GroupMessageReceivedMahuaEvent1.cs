@@ -13,6 +13,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private readonly IMahuaApi _mahuaApi;
         private static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
         private static readonly WFStatus _wFStatus = new WFStatus();
+        private static readonly WMSearcher _wmSearcher = new WMSearcher();
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
@@ -28,6 +29,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 if (message.StartsWith("/"))
                 {
                     var command = message.Substring(1);
+                    if (command.StartsWith("查询"))
+                    {
+                        var item = command.Substring(3).Replace(" ", "").ToLower();
+                        _wmSearcher.SendWMInfo(item, context.FromGroup);
+                    }
                     switch (command)
                     {
                         case "警报":
@@ -51,6 +57,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             break;
                     }
                 }
+
+
             }
             catch (Exception e)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newbe.Mahua;
+using Settings;
 
 namespace TRKS.WF.QQBot
 {
@@ -11,10 +12,13 @@ namespace TRKS.WF.QQBot
     {
         public static void SendPrivate(string qq, string content)
         {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            if (Config.Instance.QQ.IsNumber())
             {
-                var api = robotSession.MahuaApi;
-                api.SendPrivateMessage(qq, content);
+                using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+                {
+                    var api = robotSession.MahuaApi;
+                    api.SendPrivateMessage(qq, content);
+                }
             }
         }
 
