@@ -22,14 +22,14 @@ namespace Settings
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label2.Text = $"当前的口令为:{Config.Instance.Code}";
+            label5.Text = $"当前的口令为:{Config.Instance.Code}";
             if (string.IsNullOrEmpty(Config.Instance.QQ))
             {
-                label4.Text = $"当前不发送任何报错.";
+                label5.Text = $"当前不发送任何报错.";
             }
             else
             {
-                label4.Text = $"当前的QQ为:{Config.Instance.QQ}";
+                label5.Text = $"当前的QQ为:{Config.Instance.QQ}";
             }
             UpdateCheckBox();
         }
@@ -109,13 +109,13 @@ namespace Settings
             {
                 Config.Instance.QQ = qq;
                 Config.Save();
-                label4.Text = $"当前不发送任何报错.";                
+                label5.Text = $"当前不发送任何报错.";                
             }
             else if (qq.IsNumber())
             {
                 Config.Instance.QQ = qq;
                 Config.Save();
-                label4.Text = $"当前的QQ为: {qq}";
+                label5.Text = $"当前的QQ为: {qq}";
             }
             else
             {
@@ -125,6 +125,11 @@ namespace Settings
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
         {
 
         }
