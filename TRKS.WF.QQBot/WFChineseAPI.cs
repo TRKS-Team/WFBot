@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Runtime.Remoting.Channels;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +53,10 @@ namespace TRKS.WF.QQBot
             {
                 // 啥也不做
             }
+            catch (TaskCanceledException)
+            {
+                // nah
+            }
             catch (Exception e)
             {
                 var qq = Config.Instance.QQ;
@@ -66,6 +72,29 @@ namespace TRKS.WF.QQBot
             cycle.Expiry = GetRealTime(cycle.Expiry);
             return cycle;
         }
+        public async Task<List<SyndicateMission>> GetSyndicateMissions()
+        {
+            try
+            {
+                var mission = await client.GetSyndicateMissionsAsync(Platform.PC);
+            }
+            catch (TaskCanceledException)
+            {
+                // nah
+            }
+            catch (HttpRequestException)
+            {
+                // nah
+            }
+            catch (Exception e)
+            {
+                var qq = Config.Instance.QQ;
+                Messenger.SendPrivate(qq, $"赏金获取报错:{e}");
+            }
+
+            return null;
+        }
+        
 
         public Sortie GetSortie()
         {
@@ -95,7 +124,7 @@ namespace TRKS.WF.QQBot
         private WFApi translateApi = GetTranslateAPI();
 
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
-        private Translator searchwordTranslators = new Translator();
+        private Dictionary<string, Translator> searchwordTranslator = new Dictionary<string, Translator>();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
 
@@ -113,14 +142,32 @@ namespace TRKS.WF.QQBot
                 {
                     dictTranslators.Add("All", new Translator());
                 }
+
+                if (!dictTranslators.ContainsKey("WM"))
+                {
+                    dictTranslators.Add("WM", new Translator());
+                }
                 dictTranslators["All"].AddEntry(dict.En, dict.Zh);
                 dictTranslators[type].AddEntry(dict.En, dict.Zh);
             }
 
+
+            
             foreach (var sale in translateApi.Sale)
             {
-                 searchwordTranslators.AddEntry(sale.Zh.Replace(" ", "").ToLower(), sale.Search);
+                if (!searchwordTranslator.ContainsKey("Word"))
+                {
+                    searchwordTranslator.Add("Word", new Translator());
+                }
+
+                if (!searchwordTranslator.ContainsKey("Item"))
+                {
+                    searchwordTranslator.Add("Item", new Translator());
+                }
+                searchwordTranslator["Word"].AddEntry(sale.Zh.Replace(" ", "").ToLower(), sale.Search);
+                searchwordTranslator["Item"].AddEntry(sale.Search, sale.Zh);
             }
+            
 
             foreach (var invasion in translateApi.Invasion)
             {
@@ -140,7 +187,7 @@ namespace TRKS.WF.QQBot
 
         public string TranslateSearchWord(string source)
         {
-            return searchwordTranslators.Translate(source);
+            return searchwordTranslator["Word"].Translate(source);
         }
         public void TranslateInvasion(WarframeNET.Invasion invasion)
         {
@@ -190,7 +237,7 @@ namespace TRKS.WF.QQBot
             }
 
         }
-
+        
         public void TranslateSortie(Sortie sortie)
         {
             foreach (var variant in sortie.variants)
@@ -213,8 +260,13 @@ namespace TRKS.WF.QQBot
             // 下次奸商来了我再写翻译所带物品 ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊
         }
 
-        public void TranslateWMOrder(WMInfo info)
+        public void TranslateWMOrder(WMInfo info, string searchword)
         {
+            foreach (var iteminset in info.include.item.items_in_set.Where(word => word.url_name == searchword))
+            {
+                iteminset.zh.item_name = searchwordTranslator["Item"].Translate(searchword);
+            }
+            
             foreach (var order in info.payload.orders)
             {
                 switch (order.order_type)
@@ -242,6 +294,7 @@ namespace TRKS.WF.QQBot
             }
 
         }
+     
         public string TranslateModifier(string modifier)
         {
             var result = "";

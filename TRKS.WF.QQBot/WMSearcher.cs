@@ -35,7 +35,7 @@ namespace TRKS.WF.QQBot
             }
             var info = GetWMInfo(searchword);
             OrderWMInfo(info);
-            translator.TranslateWMOrder(info);
+            translator.TranslateWMOrder(info, searchword);
             var msg = WFFormatter.ToString(info);
             Messenger.SendGroup(group, msg);
         }

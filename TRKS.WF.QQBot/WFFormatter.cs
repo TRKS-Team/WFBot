@@ -101,7 +101,7 @@ namespace TRKS.WF.QQBot
         {
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
-            sb.AppendLine($"下面是物品: {itemItemsInSet.Last().en.item_name} 按价格从小到大的{info.payload.orders.Length}条信息");
+            sb.AppendLine($"下面是物品: {itemItemsInSet.Where(item => item.zh.item_name != item.en.item_name).ToList().Last().zh.item_name} 按价格从小到大的{info.payload.orders.Length}条信息");
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {

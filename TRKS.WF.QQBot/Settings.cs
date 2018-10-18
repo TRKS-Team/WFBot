@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Newbe.Mahua.MahuaEvents;
 using TRKS.WF.QQBot;
 
 namespace Settings
@@ -56,10 +57,10 @@ namespace Settings
 
         public void InvasionsCheck(object sender, EventArgs e)
         {
-            var checkbox = (CheckBox) sender;
+            var checkbox = (CheckBox)sender;
             var rewardList = Config.Instance.InvationRewardList;
-            var items = (string[]) checkbox.Tag;
-            foreach (var item in (string[]) checkbox.Tag)
+            var tags = (string[])checkbox.Tag;
+            foreach (var item in tags)
             {
                 if (checkbox.Checked)
                 {
@@ -70,56 +71,42 @@ namespace Settings
                     rewardList.Remove(item);
                 }
             }
-            Config.Save();     
+            Config.Save();
         }
-
+        // 关了么
+        // resharper激活?
         public void UpdateCheckBox()
         {
-            foreach (var control in Controls)
+            foreach (var checkbox in Controls.OfType<CheckBox>())
             {
-                if (control is CheckBox checkbox)
-                {
-                    var items = (string[])checkbox.Tag;
-                    foreach (var item in items)
-                    {
-                        checkbox.Checked = Config.Instance.InvationRewardList.Contains(item);
-                        if (checkbox.Checked)
-                        {
-                            break;
-                        }
-                    }
-
-                    foreach (var tag in items)
-                    {
-                        Config.Instance.InvationRewardList.Remove(tag);
-                    }
-                }
+                var items = new HashSet<string>(((string[])checkbox.Tag));
+                var invRewards = Config.Instance.InvationRewardList;
+                checkbox.Checked = items.Intersect(invRewards).Any();
+                Config.Instance.InvationRewardList.RemoveAll(item => items.Contains(item));
             }
         }
-
         private void label4_Click(object sender, EventArgs e)
         {
+
             
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             var qq = textBox2.Text;
-            if (string.IsNullOrEmpty(qq)) 
+            Config.Instance.QQ = qq;
+            Config.Save();
+            if (string.IsNullOrEmpty(qq))
             {
-                Config.Instance.QQ = qq;
-                Config.Save();
-                label5.Text = $"当前不发送任何报错.";                
+                label5.Text = $"当前不发送任何报错.";
             }
             else if (qq.IsNumber())
             {
-                Config.Instance.QQ = qq;
-                Config.Save();
                 label5.Text = $"当前的QQ为: {qq}";
             }
             else
             {
-                MessageBox.Show("您的QQ是真的牛逼."); 
+                MessageBox.Show("您的QQ是真的牛逼.");
             }
 
         }

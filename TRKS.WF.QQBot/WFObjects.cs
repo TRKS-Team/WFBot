@@ -8,6 +8,7 @@ namespace TRKS.WF.QQBot
 {
 
 
+
     public class WMInfo
     {
         public Payload payload { get; set; }
@@ -36,8 +37,8 @@ namespace TRKS.WF.QQBot
     public class User
     {
         public string ingame_name { get; set; }
-        public DateTime? last_seen { get; set; }
-        public double reputation_bonus { get; set; }
+        public DateTime last_seen { get; set; }
+        public int reputation_bonus { get; set; }
         public float reputation { get; set; }
         public string region { get; set; }
         public string status { get; set; }
@@ -59,26 +60,30 @@ namespace TRKS.WF.QQBot
     public class Items_In_Set
     {
         public int ducats { get; set; }
-        public string icon { get; set; }
-        public string[] tags { get; set; }
-        public string icon_format { get; set; }
-        public Ru ru { get; set; }
         public string id { get; set; }
-        public bool set_root { get; set; }
-        public Fr fr { get; set; }
         public string sub_icon { get; set; }
+        public string icon_format { get; set; }
+        public string[] tags { get; set; }
+        public Zh zh { get; set; }
         public string thumb { get; set; }
-        public string url_name { get; set; }
-        public Ko ko { get; set; }
         public En en { get; set; }
+        public Ko ko { get; set; }
+        public Fr fr { get; set; }
         public int trading_tax { get; set; }
+        public bool set_root { get; set; }
+        public De de { get; set; }
+        public Sv sv { get; set; }
+        public string icon { get; set; }
+        public Ru ru { get; set; }
+        public string url_name { get; set; }
     }
 
-    public class Ru
+    public class Zh
     {
         public string description { get; set; }
         public Drop[] drop { get; set; }
         public string item_name { get; set; }
+        public string codex { get; set; }
         public string wiki_link { get; set; }
     }
 
@@ -88,7 +93,7 @@ namespace TRKS.WF.QQBot
         public string name { get; set; }
     }
 
-    public class Fr
+    public class En
     {
         public string description { get; set; }
         public Drop1[] drop { get; set; }
@@ -118,7 +123,7 @@ namespace TRKS.WF.QQBot
         public string name { get; set; }
     }
 
-    public class En
+    public class Fr
     {
         public string description { get; set; }
         public Drop3[] drop { get; set; }
@@ -132,6 +137,51 @@ namespace TRKS.WF.QQBot
         public object link { get; set; }
         public string name { get; set; }
     }
+
+    public class De
+    {
+        public string description { get; set; }
+        public Drop4[] drop { get; set; }
+        public string item_name { get; set; }
+        public string codex { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop4
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Sv
+    {
+        public string description { get; set; }
+        public Drop5[] drop { get; set; }
+        public string item_name { get; set; }
+        public string codex { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop5
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Ru
+    {
+        public string description { get; set; }
+        public Drop6[] drop { get; set; }
+        public string item_name { get; set; }
+        public string wiki_link { get; set; }
+    }
+
+    public class Drop6
+    {
+        public object link { get; set; }
+        public string name { get; set; }
+    }
+
 
 
     public class VoidTrader
