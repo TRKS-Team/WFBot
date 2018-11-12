@@ -203,9 +203,6 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WarframeNET, Version=1.0.5.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Warframe.NET.1.1.5\lib\netstandard1.4\WarframeNET.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

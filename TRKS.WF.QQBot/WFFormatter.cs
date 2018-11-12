@@ -10,32 +10,32 @@ namespace TRKS.WF.QQBot
 {
     public static class WFFormatter
     {
-        public static string ToString(WarframeNET.Alert alert)
+        public static string ToString(WFAlert alert)
         {
             var mission = alert.Mission;
             var reward = mission.Reward;
-            var time = (alert.EndTime - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+            var time = (alert.Expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
 
-            return $"[{mission.Node}] 等级 {mission.EnemyMinLevel}-{mission.EnemyMaxLevel}\r\n" +
+            return $"[{mission.Node}] 等级 {mission.MinEnemyLevel}-{mission.MaxEnemyLevel}\r\n" +
                    $"-类型:     {mission.Type}-{mission.Faction}\r\n" +
                    $"-奖励:     {ToString(reward)}\r\n" +
-                   $"-过期时间: {alert.EndTime}({time} 后)";
+                   $"-过期时间: {alert.Expiry}({time} 后)";
         }
 
-        public static string ToString(WarframeNET.Invasion inv)
+        public static string ToString(WFInvasion inv)
         {
             var sb = new StringBuilder();
-            var completion = Math.Floor(inv.Completion);
+            var completion = Math.Floor(inv.completion);
 
-            sb.AppendLine($"地点: {inv.Node}");
+            sb.AppendLine($"地点: {inv.node}");
 
-            sb.AppendLine($">进攻方: {inv.AttackingFaction}");
-            if (!inv.IsVsInfestation)
-                sb.AppendLine($"奖励: {ToString(inv.AttackerReward)}");
+            sb.AppendLine($">进攻方: {inv.attackingFaction}");
+            if (!inv.vsInfestation)
+                sb.AppendLine($"奖励: {ToString(inv.attackerReward)}");
             sb.AppendLine($"进度: {completion}%");
 
-            sb.AppendLine($">防守方: {inv.DefendingFaction}");
-            sb.AppendLine($"奖励: {ToString(inv.DefenderReward)}");
+            sb.AppendLine($">防守方: {inv.defendingFaction}");
+            sb.AppendLine($"奖励: {ToString(inv.defenderReward)}");
             sb.Append($"进度 {100 - completion}%");
             return sb.ToString();
         }
@@ -112,7 +112,37 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
 
-        public static string ToString(WarframeNET.Reward reward)
+        public static string ToString(Defenderreward reward)
+        {
+            var rewards = new List<string>();
+            if (reward.credits > 0)
+            {
+                rewards.Add($"{reward.credits} cr");
+            }
+
+            foreach (var item in reward.countedItems)
+            {
+                rewards.Add($"{item.count}x{item.type}");
+            }
+
+            return string.Join(" + ", rewards);
+        }
+        public static string ToString(Attackerreward reward)
+        {
+            var rewards = new List<string>();
+            if (reward.credits > 0)
+            {
+                rewards.Add($"{reward.credits} cr");
+            }
+
+            foreach (var item in reward.countedItems)
+            {
+                rewards.Add($"{item.count}x{item.type}");
+            }
+
+            return string.Join(" + ", rewards);
+        }
+        public static string ToString(Reward reward)
         {
             var rewards = new List<string>();
             if (reward.Credits > 0)

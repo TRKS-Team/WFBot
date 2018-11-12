@@ -8,43 +8,40 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
-using WarframeNET;
 
 namespace TRKS.WF.QQBot
 {
     public class WFChineseAPI
     {
-        private WarframeClient client;
         private WFTranslator translator;
 
         public WFChineseAPI()
         {
-            client = new WarframeClient();
             translator = new WFTranslator();
         }
 
-        public async Task<List<WarframeNET.Invasion>> GetInvasions()
+        public List<WFInvasion> GetInvasions()
         {
-            var invasions = await client.GetInvasionsAsync(Platform.PC);
+            var invasions = WebHelper.DownloadJson<List<WFInvasion>>("https://api.warframestat.us/pc/invasions");
             foreach (var invasion in invasions)
             {
                 translator.TranslateInvasion(invasion);
-                invasion.StartTime = GetRealTime(invasion.StartTime);
+                invasion.activation= GetRealTime(invasion.activation);
             }
 
             return invasions;
         }
 
-        public async Task<List<WarframeNET.Alert>> GetAlerts()
+        public List<WFAlert> GetAlerts()
         {
             try
             {
-                var alerts = await client.GetAlertsAsync(Platform.PC);
+                var alerts = WebHelper.DownloadJson<List<WFAlert>>("https://api.warframestat.us/pc/alerts");
                 foreach (var alert in alerts)
                 {
                     translator.TranslateAlert(alert);
-                    alert.StartTime = GetRealTime(alert.StartTime);
-                    alert.EndTime = GetRealTime(alert.EndTime);
+                    alert.Activation = GetRealTime(alert.Activation);
+                    alert.Expiry = GetRealTime(alert.Expiry);
                 }
 
                 return alerts;
@@ -53,9 +50,9 @@ namespace TRKS.WF.QQBot
             {
                 // 啥也不做
             }
-            catch (TaskCanceledException)
+            catch (WebException)
             {
-                // nah
+                // 啥也不做
             }
             catch (Exception e)
             {
@@ -63,7 +60,7 @@ namespace TRKS.WF.QQBot
                 Messenger.SendPrivate(qq, $"警报获取报错:{Environment.NewLine}{e}");
 
             }
-            return new List<WarframeNET.Alert>();
+            return new List<WFAlert>();
         }
 
         public CetusCycle GetCetusCycle()
@@ -72,7 +69,8 @@ namespace TRKS.WF.QQBot
             cycle.Expiry = GetRealTime(cycle.Expiry);
             return cycle;
         }
-        public async Task<List<SyndicateMission>> GetSyndicateMissions()
+        /*
+        public async Task<List<SyndicateMission>> GetSyndicateMissions()// 这里暂时不着急改
         {
             try
             {
@@ -94,6 +92,7 @@ namespace TRKS.WF.QQBot
 
             return null;
         }
+        */
         
 
         public Sortie GetSortie()
@@ -189,23 +188,34 @@ namespace TRKS.WF.QQBot
         {
             return searchwordTranslator["Word"].Translate(source);
         }
-        public void TranslateInvasion(WarframeNET.Invasion invasion)
+        public void TranslateInvasion(WFInvasion invasion)
         {
-            TranslateReward(invasion.AttackerReward);
-            TranslateReward(invasion.DefenderReward);
-            invasion.Node = TranslateNode(invasion.Node);
-
-            void TranslateReward(Reward reward)
+            TranslateReward(invasion.attackerReward);
+            TranslateReward(invasion.defenderReward);
+            invasion.node = TranslateNode(invasion.node);
+        }
+        private void TranslateReward(Defenderreward reward)
+        {
+            foreach (var item in reward.countedItems)
             {
-                foreach (var item in reward.CountedItems)
-                {
-                    item.Type = invasionTranslator.Translate(item.Type);
-                }
+                item.type = invasionTranslator.Translate(item.type);
+            }
 
-                for (var i = 0; i < reward.Items.Count; i++)
-                {
-                    reward.Items[i] = alertTranslator.Translate(reward.Items[i]);
-                }
+            for (var i = 0; i < reward.countedItems.Length; i++)
+            {
+                reward.countedItems[i].type = alertTranslator.Translate(reward.countedItems[i].type);
+            }
+        }
+        private void TranslateReward(Attackerreward reward)
+        {
+            foreach (var item in reward.countedItems)
+            {
+                item.type = invasionTranslator.Translate(item.type);
+            }
+
+            for (var i = 0; i < reward.countedItems.Length; i++)
+            {
+                reward.countedItems[i].type = alertTranslator.Translate(reward.countedItems[i].type);
             }
         }
 
@@ -216,7 +226,7 @@ namespace TRKS.WF.QQBot
             return strings[0] + dictTranslators["Star"].Translate(nodeRegion);
         }
 
-        public void TranslateAlert(WarframeNET.Alert alert)
+        public void TranslateAlert(WFAlert alert)
         {
             var mission = alert.Mission;
             mission.Node = TranslateNode(mission.Node);
@@ -230,7 +240,7 @@ namespace TRKS.WF.QQBot
                     item.Type = alertTranslator.Translate(item.Type);
                 }
 
-                for (var i = 0; i < reward.Items.Count; i++)
+                for (var i = 0; i < reward.Items.Length; i++)
                 {
                     reward.Items[i] = alertTranslator.Translate(reward.Items[i]);
                 }

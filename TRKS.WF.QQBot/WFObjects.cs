@@ -37,8 +37,8 @@ namespace TRKS.WF.QQBot
     public class User
     {
         public string ingame_name { get; set; }
-        public DateTime last_seen { get; set; }
-        public int reputation_bonus { get; set; }
+        public DateTime? last_seen { get; set; }
+        public float reputation_bonus { get; set; }
         public float reputation { get; set; }
         public string region { get; set; }
         public string status { get; set; }
@@ -308,8 +308,66 @@ namespace TRKS.WF.QQBot
 
 
 
-    /*
-    public class WFAlerts // 某个好朋友让我改成大写，好习惯
+ /*   public class WFInvasions
+    {
+        public WFInvasion[] Property1 { get; set; }
+    }
+
+    public class WFInvasion
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public string node { get; set; }
+        public string desc { get; set; }
+        public Attackerreward attackerReward { get; set; }
+        public string attackingFaction { get; set; }
+        public Defenderreward defenderReward { get; set; }
+        public string defendingFaction { get; set; }
+        public bool vsInfestation { get; set; }
+        public int count { get; set; }
+        public int requiredRuns { get; set; }
+        public float completion { get; set; }
+        public bool completed { get; set; }
+        public string eta { get; set; }
+        public string[] rewardTypes { get; set; }
+    }
+
+    public class Attackerreward
+    {
+        public object[] items { get; set; }
+        public Counteditem[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
+    public class Counteditem
+    {
+        public int count { get; set; }
+        public string type { get; set; }
+    }
+
+    public class Defenderreward
+    {
+        public object[] items { get; set; }
+        public Counteditem1[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
+    public class Counteditem1
+    {
+        public int count { get; set; }
+        public string type { get; set; }
+    }*/
+
+    public class WFAlert
     {
         public string Id { get; set; }
         public DateTime Activation { get; set; }
@@ -318,10 +376,6 @@ namespace TRKS.WF.QQBot
         public bool Expired { get; set; }
         public string Eta { get; set; }
         public string[] RewardTypes { get; set; }
-        public DateTime GetRealTime()
-        {
-            return Expiry + TimeSpan.FromHours(8);
-        }
     }
 
     public class Mission
@@ -354,5 +408,60 @@ namespace TRKS.WF.QQBot
         public int Count { get; set; }
         public string Type { get; set; }
     }
-    */
+
+
+    public class WFInvasion
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public string node { get; set; }
+        public string desc { get; set; }
+        public Attackerreward attackerReward { get; set; }
+        public string attackingFaction { get; set; }
+        public Defenderreward defenderReward { get; set; }
+        public string defendingFaction { get; set; }
+        public bool vsInfestation { get; set; }
+        public int count { get; set; }
+        public int requiredRuns { get; set; }
+        public float completion { get; set; }
+        public bool completed { get; set; }
+        public string eta { get; set; }
+        public string[] rewardTypes { get; set; }
+    }
+
+    public class Attackerreward
+    {
+        public object[] items { get; set; }
+        public Counteditem[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
+    public class Counteditem
+    {
+        public int count { get; set; }
+        public string type { get; set; }
+    }
+
+    public class Defenderreward
+    {
+        public object[] items { get; set; }
+        public Counteditem1[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
+    public class Counteditem1
+    {
+        public int count { get; set; }
+        public string type { get; set; }
+    }
+
 }

@@ -5,7 +5,6 @@ using System.Text;
 using Humanizer;
 using Humanizer.Localisation;
 using Newbe.Mahua;
-using WarframeNET;
 
 namespace TRKS.WF.QQBot
 {

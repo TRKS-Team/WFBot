@@ -34,11 +34,11 @@ namespace TRKS.WF.QQBot
         public Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         private WFChineseAPI api = new WFChineseAPI();
 
-        private async void InitWFNotification()
+        private void InitWFNotification()
         {
             if (_inited) return;
-            var alerts = await api.GetAlerts();
-            var invs = await api.GetInvasions();
+            var alerts = api.GetAlerts();
+            var invs = api.GetInvasions();
 
             foreach (var alert in alerts)
             {
@@ -47,7 +47,7 @@ namespace TRKS.WF.QQBot
 
             foreach (var inv in invs)
             {
-                SendedInvSet.Add(inv.Id);
+                SendedInvSet.Add(inv.id);
             }
 
             timer.Elapsed += (sender, eventArgs) =>
@@ -59,16 +59,12 @@ namespace TRKS.WF.QQBot
             _inited = true;
         }
 
-        public async void UpdateInvasions()
+        public void UpdateInvasions()
         {
-            var invs = new List<WarframeNET.Invasion>();
+            var invs = new List<WFInvasion>();
             try
             {
-                invs = await api.GetInvasions();
-            }
-            catch (TaskCanceledException)
-            {
-                // 正常情况 不慌
+                invs = api.GetInvasions();
             }
             catch (WebException)
             {
@@ -81,9 +77,9 @@ namespace TRKS.WF.QQBot
             }
             foreach (var inv in invs)
             {
-                if (inv.IsCompleted) continue; // 不发已经完成的入侵
+                if (inv.completed) continue; // 不发已经完成的入侵
                 // 你学的好快啊
-                if(SendedInvSet.Contains(inv.Id)) continue;// 不发已经发过的入侵
+                if(SendedInvSet.Contains(inv.id)) continue;// 不发已经发过的入侵
 
                 var list = GetAllInvasionsCountedItems(inv);
                 foreach (var item in list)
@@ -98,39 +94,39 @@ namespace TRKS.WF.QQBot
                             Messenger.SendGroup(group, notifyText);
                         }
 
-                        SendedInvSet.Add(inv.Id);
+                        SendedInvSet.Add(inv.id);
                         break;
                     }
                 }
             }
         }
 
-        private static List<string> GetAllInvasionsCountedItems(WarframeNET.Invasion inv)
+        private static List<string> GetAllInvasionsCountedItems(WFInvasion inv)
         {
             var list = new List<string>();
-            foreach (var reward in inv.AttackerReward.CountedItems)
+            foreach (var reward in inv.attackerReward.countedItems)
             {
-                list.Add(reward.Type);
+                list.Add(reward.type);
             }
 
-            foreach (var reward in inv.DefenderReward.CountedItems)
+            foreach (var reward in inv.defenderReward.countedItems)
             {
-                list.Add(reward.Type);
+                list.Add(reward.type);
             }
 
             return list;
         }
 
-        public async void SendAllInvasions(string group)
+        public void SendAllInvasions(string group)
         {
-            var invasions = await api.GetInvasions();
+            var invasions = api.GetInvasions();
             // UpdateAlerts();
 
             var sb = new StringBuilder();
             sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务."); //TODO 这里的语言你改一下
             foreach (var invasion in invasions)
             {
-                if (!invasion.IsCompleted)
+                if (!invasion.completed)
                 {
                     sb.AppendLine(WFFormatter.ToString(invasion));
                     sb.AppendLine();
@@ -141,11 +137,11 @@ namespace TRKS.WF.QQBot
         }
 
 
-        public async void UpdateAlerts()
+        public void UpdateAlerts()
         {
             try
             {
-                var alerts = await api.GetAlerts();
+                var alerts = api.GetAlerts();
                 foreach (var alert in alerts)
                 {
                     if (!SendedAlertsSet.Contains(alert.Id))
@@ -155,13 +151,9 @@ namespace TRKS.WF.QQBot
                 }
 
             }
-            catch (TaskCanceledException)
-            {
-                // 什么都不做
-            }
             catch (WebException)
             {
-                // 什么也不做
+                // 问题不大 不用慌
             }
             catch (Exception e)
             {
@@ -171,9 +163,9 @@ namespace TRKS.WF.QQBot
 
         }
 
-        public async void SendAllAlerts(string group)
+        public void SendAllAlerts(string group)
         {
-            var alerts = await api.GetAlerts();
+            var alerts = api.GetAlerts();
             // UpdateAlerts();
 
             var sb = new StringBuilder();
@@ -187,10 +179,10 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格
         }
 
-        public void SendWFAlert(WarframeNET.Alert alert)
+        public void SendWFAlert(WFAlert alert)
         {
             var reward = alert.Mission.Reward;
-            if (reward.Items.Count > 0 || reward.CountedItems.Count > 0)
+            if (reward.Items.Length > 0 || reward.CountedItems.Length > 0)
             {
                 var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                     WFFormatter.ToString(alert);
