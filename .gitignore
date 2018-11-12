@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 *.json
+TRKS.WF.QQBot/build.ps1
