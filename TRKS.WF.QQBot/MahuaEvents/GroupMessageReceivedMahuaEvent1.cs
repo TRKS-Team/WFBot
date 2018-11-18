@@ -1,6 +1,9 @@
 ﻿using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Settings;
 
 namespace TRKS.WF.QQBot.MahuaEvents
 {
@@ -29,6 +32,27 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 if (message.StartsWith("/"))
                 {
                     var command = message.Substring(1);
+                    var ostrons = new List<string>() {"赏金", "平原赏金", "希图斯赏金", "希图斯", "地球赏金"};
+                    if (ostrons.Where(ostron => command.StartsWith(ostron)).Any())
+                    {
+                        var index = command.Substring(ostrons.Where(ostron => command.StartsWith(ostron)).First().Length);
+                        if (index.IsNumber())
+                        {
+                            if (Int32.Parse(index) <= 5 && 0 < Int32.Parse(index))
+                            {
+                                _wFStatus.SendOstronsMissions(context.FromGroup, Int32.Parse(index));
+                            }
+                            else
+                            {
+                                _wFStatus.SendOstronsMissions(context.FromGroup, 1);
+                            }
+
+                        }
+                        else
+                        {
+                            _wFStatus.SendOstronsMissions(context.FromGroup, 1);
+                        }
+                    }                   
                     if (command.StartsWith("查询"))
                     {
                         var item = command.Substring(3).Replace(" ", "").ToLower();
@@ -42,6 +66,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "平野":
                         case "夜灵平野":
                         case "平原":
+                        case "夜灵平原":
                             _wFStatus.SendCetusCycle(context.FromGroup);
                             break;
                         case "入侵":
@@ -54,6 +79,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "虚空商人":
                         case "商人":
                             _wFStatus.SendVoidTrader(context.FromGroup);
+                            break;
+                        case "help":
                             break;
                     }
                 }

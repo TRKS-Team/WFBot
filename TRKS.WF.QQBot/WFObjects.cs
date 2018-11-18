@@ -8,6 +8,27 @@ namespace TRKS.WF.QQBot
 {
 
 
+    public class SyndicateMission
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public string syndicate { get; set; }
+        public string[] nodes { get; set; }
+        public Job[] jobs { get; set; }
+        public string eta { get; set; }
+    }
+
+    public class Job
+    {
+        public string id { get; set; }
+        public string[] rewardPool { get; set; }
+        public string type { get; set; }
+        public int[] enemyLevels { get; set; }
+        public int[] standingStages { get; set; }
+    }
 
     public class WMInfo
     {
@@ -308,64 +329,64 @@ namespace TRKS.WF.QQBot
 
 
 
- /*   public class WFInvasions
-    {
-        public WFInvasion[] Property1 { get; set; }
-    }
+    /*   public class WFInvasions
+       {
+           public WFInvasion[] Property1 { get; set; }
+       }
 
-    public class WFInvasion
-    {
-        public string id { get; set; }
-        public DateTime activation { get; set; }
-        public string startString { get; set; }
-        public string node { get; set; }
-        public string desc { get; set; }
-        public Attackerreward attackerReward { get; set; }
-        public string attackingFaction { get; set; }
-        public Defenderreward defenderReward { get; set; }
-        public string defendingFaction { get; set; }
-        public bool vsInfestation { get; set; }
-        public int count { get; set; }
-        public int requiredRuns { get; set; }
-        public float completion { get; set; }
-        public bool completed { get; set; }
-        public string eta { get; set; }
-        public string[] rewardTypes { get; set; }
-    }
+       public class WFInvasion
+       {
+           public string id { get; set; }
+           public DateTime activation { get; set; }
+           public string startString { get; set; }
+           public string node { get; set; }
+           public string desc { get; set; }
+           public Attackerreward attackerReward { get; set; }
+           public string attackingFaction { get; set; }
+           public Defenderreward defenderReward { get; set; }
+           public string defendingFaction { get; set; }
+           public bool vsInfestation { get; set; }
+           public int count { get; set; }
+           public int requiredRuns { get; set; }
+           public float completion { get; set; }
+           public bool completed { get; set; }
+           public string eta { get; set; }
+           public string[] rewardTypes { get; set; }
+       }
 
-    public class Attackerreward
-    {
-        public object[] items { get; set; }
-        public Counteditem[] countedItems { get; set; }
-        public int credits { get; set; }
-        public string asString { get; set; }
-        public string itemString { get; set; }
-        public string thumbnail { get; set; }
-        public int color { get; set; }
-    }
+       public class Attackerreward
+       {
+           public object[] items { get; set; }
+           public Counteditem[] countedItems { get; set; }
+           public int credits { get; set; }
+           public string asString { get; set; }
+           public string itemString { get; set; }
+           public string thumbnail { get; set; }
+           public int color { get; set; }
+       }
 
-    public class Counteditem
-    {
-        public int count { get; set; }
-        public string type { get; set; }
-    }
+       public class Counteditem
+       {
+           public int count { get; set; }
+           public string type { get; set; }
+       }
 
-    public class Defenderreward
-    {
-        public object[] items { get; set; }
-        public Counteditem1[] countedItems { get; set; }
-        public int credits { get; set; }
-        public string asString { get; set; }
-        public string itemString { get; set; }
-        public string thumbnail { get; set; }
-        public int color { get; set; }
-    }
+       public class Defenderreward
+       {
+           public object[] items { get; set; }
+           public Counteditem1[] countedItems { get; set; }
+           public int credits { get; set; }
+           public string asString { get; set; }
+           public string itemString { get; set; }
+           public string thumbnail { get; set; }
+           public int color { get; set; }
+       }
 
-    public class Counteditem1
-    {
-        public int count { get; set; }
-        public string type { get; set; }
-    }*/
+       public class Counteditem1
+       {
+           public int count { get; set; }
+           public string type { get; set; }
+       }*/
 
     public class WFAlert
     {

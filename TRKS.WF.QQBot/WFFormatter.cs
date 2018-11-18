@@ -22,6 +22,19 @@ namespace TRKS.WF.QQBot
                    $"-过期时间: {alert.Expiry}({time} 后)";
         }
 
+        public static string ToString(SyndicateMission mission, int index)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"集团:{mission.syndicate} 赏金任务 {index + 1} ");
+            sb.AppendLine($"等级:{mission.jobs[index].enemyLevels[0]} - {mission.jobs[index].enemyLevels[1]}");
+            sb.AppendLine("奖励:");
+            foreach (var reward in mission.jobs[index].rewardPool)
+            {
+                sb.AppendLine($"    {reward}");
+            }
+
+            return sb.ToString().Trim();
+        }
         public static string ToString(WFInvasion inv)
         {
             var sb = new StringBuilder();

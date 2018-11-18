@@ -123,7 +123,7 @@ namespace TRKS.WF.QQBot
             // UpdateAlerts();
 
             var sb = new StringBuilder();
-            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务."); //TODO 这里的语言你改一下
+            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务."); //为什么要改???
             foreach (var invasion in invasions)
             {
                 if (!invasion.completed)

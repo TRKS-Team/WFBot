@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Remoting.Channels;
 using System.Security.Permissions;
 using System.Text;
@@ -102,6 +103,13 @@ namespace TRKS.WF.QQBot
             return sortie;
         }
 
+        public List<SyndicateMission> GetSyndicateMissions()
+        {
+            var missions = WebHelper.DownloadJson<List<SyndicateMission>>("https://api.warframestat.us/pc/syndicateMissions");
+            translator.TranslateSyndicateMission(missions);
+            return missions;
+
+        }
         public VoidTrader GetVoidTrader()
         {
             var trader = WebHelper.DownloadJson<VoidTrader>("https://api.warframestat.us/pc/voidTrader");
@@ -247,7 +255,36 @@ namespace TRKS.WF.QQBot
             }
 
         }
-        
+
+        public void TranslateSyndicateMission(List<SyndicateMission> missions)
+        {
+            foreach (var mission in missions)
+            {
+                if (mission.jobs.Length == 0)
+                {
+                    if (mission.nodes.Length != 0)
+                    {
+                        for (int i = 0; i < mission.nodes.Length; i++)
+                        {
+                            mission.nodes[i] = TranslateNode(mission.nodes[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    if (mission.syndicate == "Ostrons" || mission.syndicate == "Solaris United")
+                    {
+                        foreach (var job in mission.jobs)
+                        {
+                            for (int i = 0; i < job.rewardPool.Length; i++)
+                            {
+                                job.rewardPool[i] = dictTranslators["All"].Translate(job.rewardPool[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         public void TranslateSortie(Sortie sortie)
         {
             foreach (var variant in sortie.variants)
@@ -267,7 +304,7 @@ namespace TRKS.WF.QQBot
             {
                 inventory.item = dictTranslators["All"].Translate(inventory.item);
             }
-            // 下次奸商来了我再写翻译所带物品 ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊
+            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了
         }
 
         public void TranslateWMOrder(WMInfo info, string searchword)
