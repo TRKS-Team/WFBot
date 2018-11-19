@@ -135,7 +135,6 @@ namespace TRKS.WF.QQBot
 
     public class WFTranslator
     {
-        private WFApi translateApi = GetTranslateAPI();
 
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
         private Dictionary<string, Translator> searchwordTranslator = new Dictionary<string, Translator>();
@@ -144,23 +143,16 @@ namespace TRKS.WF.QQBot
 
         public WFTranslator()
         {
+            var translateApi = TranslateApi();
+            dictTranslators.Add("All", new Translator());
+            dictTranslators.Add("WM", new Translator());
             foreach (var dict in translateApi.Dict)
             {
                 var type = dict.Type;
                 if (!dictTranslators.ContainsKey(type))
                 {
                     dictTranslators.Add(type, new Translator()); 
-                }
-
-                if (!dictTranslators.ContainsKey("All"))
-                {
-                    dictTranslators.Add("All", new Translator());
-                }
-
-                if (!dictTranslators.ContainsKey("WM"))
-                {
-                    dictTranslators.Add("WM", new Translator());
-                }
+                }               
                 dictTranslators["All"].AddEntry(dict.En, dict.Zh);
                 dictTranslators[type].AddEntry(dict.En, dict.Zh);
             }
@@ -194,13 +186,23 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        private static WFApi GetTranslateAPI()
+        private static WFApi TranslateApi()
         {
-            var alerts = WebHelper.DownloadJson<Alert[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
-            var dicts = WebHelper.DownloadJson<Dict[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
-            var invasions = WebHelper.DownloadJson<Invasion[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
-            var sales = WebHelper.DownloadJson<Sale[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
-            return new WFApi{Alert = alerts,Dict = dicts, Invasion = invasions, Relic = new Relic[0], Riven = new Riven[0], Sale = sales, StatusCode = new Statuscode[0]};
+            var alerts =
+                WebHelper.DownloadJson<Alert[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
+            var dicts = WebHelper.DownloadJson<Dict[]>(
+                "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
+            var invasions =
+                WebHelper.DownloadJson<Invasion[]>(
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
+            var sales = WebHelper.DownloadJson<Sale[]>(
+                "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
+            var translateApi = new WFApi
+            {
+                Alert = alerts, Dict = dicts, Invasion = invasions, Relic = new Relic[0], Riven = new Riven[0], Sale = sales,
+                StatusCode = new Statuscode[0]
+            };
+            return translateApi;
         }
 
         public string TranslateSearchWord(string source)

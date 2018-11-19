@@ -75,7 +75,7 @@ namespace TRKS.WF.QQBot
                 }
             }
 
-            var msg = WFFormatter.ToString(result) + $"你正在查看与{string.Join(" ", words)}有关的所有裂隙.";
+            var msg = WFFormatter.ToString(result) + Environment.NewLine + $"你正在查看与{string.Join(" ", words)}有关的所有裂隙.";
             Messenger.SendGroup(group, msg);
         }
     }

@@ -26,8 +26,10 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             foreach (var fissure in fissures)
             {
-                sb.AppendLine($"{fissure.tier}({fissure.tierNum}) {fissure.missionType}");
-                sb.AppendLine($"{fissure.expiry}");
+                sb.AppendLine($"[{fissure.node}]");
+                sb.AppendLine($"类型:    {fissure.missionType}-{fissure.enemy}");
+                sb.AppendLine($"纪元:    {fissure.tier}(T{fissure.tierNum})");
+                sb.AppendLine($"{fissure.eta}后过期");
                 sb.AppendLine();
             }
 
@@ -83,7 +85,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             sb.AppendLine("指挥官,下面是今天的突击任务.");
             sb.AppendLine($">阵营: {sortie.faction}");
-            sb.AppendLine($">首长: {sortie.boss}");
+            sb.AppendLine($">头头: {sortie.boss}");
             sb.AppendLine("");
             foreach (var variant in sortie.variants)
             {
