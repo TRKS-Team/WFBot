@@ -3,6 +3,7 @@ using Newbe.Mahua.MahuaEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Humanizer;
 using Settings;
 
 namespace TRKS.WF.QQBot.MahuaEvents
@@ -33,6 +34,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     var command = message.Substring(1);
                     var ostrons = new List<string>() {"赏金", "平原赏金", "希图斯赏金", "希图斯", "地球赏金"};
+                    var fissures = new List<string>() {"裂隙", "裂缝", "查询裂缝", "查询裂隙"};
                     if (ostrons.Where(ostron => command.StartsWith(ostron)).Any())
                     {
                         var index = command.Substring(ostrons.Where(ostron => command.StartsWith(ostron)).First().Length);
@@ -52,7 +54,22 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         {
                             _wFStatus.SendOstronsMissions(context.FromGroup, 1);
                         }
-                    }                   
+                    }
+
+                    if (fissures.Where(fissure => command.StartsWith(fissure)).Any())
+                    {
+                        var words = command.Split(' ').ToList();
+                        if (words.Count >= 2)
+                        {
+                            words.RemoveAt(0);
+                            _wFStatus.SendFissures(context.FromGroup, words);
+                        }
+                        else
+                        {
+                            Messenger.SendGroup(context.FromGroup, $"需要参数,列如: /查询裂隙 古纪(第一个为主条件) 歼灭(之后可添加多个小条件).");
+                        }
+
+                    }
                     if (command.StartsWith("查询"))
                     {
                         var item = command.Substring(3).Replace(" ", "").ToLower();

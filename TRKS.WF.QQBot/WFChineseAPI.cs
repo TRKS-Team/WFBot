@@ -118,6 +118,13 @@ namespace TRKS.WF.QQBot
             translator.TranslateVoidTrader(trader);
             return trader;
         }
+
+        public List<Fissure> GetFissures()
+        {
+            var fissures = WebHelper.DownloadJson<List<Fissure>>("https://api.warframestat.us/pc/fissures");
+            translator.TranslateFissures(fissures);
+            return fissures;
+        }
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
@@ -296,6 +303,16 @@ namespace TRKS.WF.QQBot
             sortie.boss = dictTranslators["Word"].Translate(sortie.boss);
         }
 
+        public void TranslateFissures(List<Fissure> fissures)
+        {
+            foreach (var fissure in fissures)
+            {
+                fissure.node = TranslateNode(fissure.node);
+                fissure.tier = dictTranslators["Word"].Translate(fissure.tier);
+                fissure.missionType = dictTranslators["Mission"].Translate(fissure.missionType);
+
+            }
+        }
 
         public void TranslateVoidTrader(VoidTrader trader)
         {

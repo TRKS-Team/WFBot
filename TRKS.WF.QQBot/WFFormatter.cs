@@ -21,7 +21,18 @@ namespace TRKS.WF.QQBot
                    $"-奖励:     {ToString(reward)}\r\n" +
                    $"-过期时间: {alert.Expiry}({time} 后)";
         }
+        public static string ToString(List<Fissure> fissures)
+        {
+            var sb = new StringBuilder();
+            foreach (var fissure in fissures)
+            {
+                sb.AppendLine($"{fissure.tier}({fissure.tierNum}) {fissure.missionType}");
+                sb.AppendLine($"{fissure.expiry}");
+                sb.AppendLine();
+            }
 
+            return sb.ToString().Trim();
+        }
         public static string ToString(SyndicateMission mission, int index)
         {
             var sb = new StringBuilder();
