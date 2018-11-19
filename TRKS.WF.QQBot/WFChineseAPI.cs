@@ -196,7 +196,11 @@ namespace TRKS.WF.QQBot
 
         private static WFApi GetTranslateAPI()
         {
-            return WebHelper.DownloadJson<WFApi>("https://api.richasy.cn/api/lib/localdb/tables");
+            var alerts = WebHelper.DownloadJson<Alert[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
+            var dicts = WebHelper.DownloadJson<Dict[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
+            var invasions = WebHelper.DownloadJson<Invasion[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
+            var sales = WebHelper.DownloadJson<Sale[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
+            return new WFApi{Alert = alerts,Dict = dicts, Invasion = invasions, Relic = new Relic[0], Riven = new Riven[0], Sale = sales, StatusCode = new Statuscode[0]};
         }
 
         public string TranslateSearchWord(string source)
