@@ -114,7 +114,7 @@ Task Nuget -depends Init -Description "nuget restore" {
 
 Task Build -depends Nuget -Description "编译" {
     Exec {
-        & "K:\Visual Studio\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\amd64\msbuild.exe" "C:\Users\11419\source\repos\TRKS.WF.QQBot\TRKS.WF.QQBot.sln" /p:Configuration=$configuration
+        msbuild /p:Configuration=$configuration
     }
 }
 
