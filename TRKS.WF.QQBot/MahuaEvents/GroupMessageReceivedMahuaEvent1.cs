@@ -34,7 +34,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     var command = message.Substring(1);
                     var ostrons = new List<string>() {"赏金", "平原赏金", "希图斯赏金", "希图斯", "地球赏金"};
-                    var fissures = new List<string>() {"裂隙", "裂缝", "查询裂缝", "查询裂隙"};
+                    var fissures = new List<string>() {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
                     if (ostrons.Where(ostron => command.StartsWith(ostron)).Any())
                     {
                         var index = command.Substring(ostrons.Where(ostron => command.StartsWith(ostron)).First().Length);
@@ -98,6 +98,29 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             _wFStatus.SendVoidTrader(context.FromGroup);
                             break;
                         case "help":
+                        case "帮助":
+                        case "功能":
+                            Messenger.SendGroup(context.FromGroup, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
+作者:TheRealKamisama 开源地址:https://github.com/TheRealKamisama/WFBot
+!!!符号说明:[]符号内的所有字符为命令,{}符号内里的所有说明为按键,<>符号内的是命令所需参数的名称,()符号内的所有说明为功能或参数的注释.
+功能1:警报 可使用[/警报]来直接查询所有警报.
+      新警报也会自动发送到所有启用了通知功能的群.
+功能2:入侵 可使用[/入侵]来查询所有入侵.
+      新入侵也会自动发送到所有启用了通知功能的群.
+功能3:突击 可使用[/突击]来查询所有突击.
+     突击的奖励池为一般奖励池.
+功能4:平原时间 可使用[/平原(此处写了一个小词库,列如平野也可识别)]来查询平原目前的时间.
+功能5:虚空商人信息 可使用[/虚空商人(或者你输入奸商也可以)]来查询奸商的状态.
+     !注意:如果虚空商人已经抵达将会输出所有的商品和价格,长度较长.
+功能6:WarframeMarket 可使用[/查询{空格}<物品名称>(不区分大小写,无需空格.)]
+     !注意:物品名称必须标准,比如 总图 将无法识别 须输入 蓝图.
+功能7:赏金 可使用[/赏金(或平原赏金地球赏金之类的){空格}<赏金数>(比如赏金一就是1)]来查询单一赏金.
+     !注意:如果参数没有输入将会自动显示第一个赏金(待定).
+功能8:裂隙 可使用[/裂隙{空格}<关键词>(比如 前纪,歼灭)]来查询所有和关键词有关的裂隙.
+其他功能待定(查询遗物的功能因为字典更换被毙了.)
+用于管理的命令均为私聊机器人:
+用于启用群通知:[/添加群{空格}<口令>{空格}<群号>]
+用于禁用群通知:[/删除群{空格}<口令>{空格}<群号>]");
                             break;
                     }
                 }
