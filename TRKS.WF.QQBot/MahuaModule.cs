@@ -47,9 +47,16 @@ namespace TRKS.WF.QQBot
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
-                builder.RegisterType<GroupMessageReceivedMahuaEvent1>().As<IGroupMessageReceivedMahuaEvent>();
-                builder.RegisterType<MahuaMenuClickedMahuaEvent1>().As<IMahuaMenuClickedMahuaEvent>();
-                builder.RegisterType<PrivateMessageReceivedMahuaEvent2>().As<IPrivateMessageReceivedMahuaEvent>();
+                builder.RegisterType<GroupMessageReceivedMahuaEvent1>().
+                    As<IGroupMessageReceivedMahuaEvent>();
+                builder.RegisterType<MahuaMenuClickedMahuaEvent1>()
+                    .As<IMahuaMenuClickedMahuaEvent>();
+                builder.RegisterType<PrivateMessageReceivedMahuaEvent2>()
+                    .As<IPrivateMessageReceivedMahuaEvent>();
+                builder.RegisterType<GroupJoiningInvitationReceivedMahuaEvent1>()
+                    .As<IGroupJoiningInvitationReceivedMahuaEvent>();
+                builder.RegisterType<GroupJoiningRequestReceivedMahuaEvent1>()
+                    .As<IGroupJoiningRequestReceivedMahuaEvent>();
                 // 将需要监听的事件注册，若缺少此注册，则不会调用相关的实现类
             }
         }

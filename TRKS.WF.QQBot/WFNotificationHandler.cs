@@ -17,6 +17,10 @@ namespace TRKS.WF.QQBot
         public string Code;
 
         public string QQ;
+
+        public bool AcceptInvitation;
+
+        public bool AcceptJoiningRequest;
     }
 
 

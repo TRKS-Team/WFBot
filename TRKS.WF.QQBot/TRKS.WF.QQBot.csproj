@@ -207,6 +207,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cylib.cs" />
+    <Compile Include="MahuaEvents\GroupJoiningInvitationReceivedMahuaEvent1.cs" />
+    <Compile Include="MahuaEvents\GroupJoiningRequestReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\MahuaMenuClickedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\PrivateMessageReceivedMahuaEvent2.cs" />
     <Compile Include="Messenger.cs" />

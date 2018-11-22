@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newbe.Mahua.MahuaEvents;
 using TRKS.WF.QQBot;
@@ -33,6 +35,8 @@ namespace Settings
                 label5.Text = $"当前的QQ为:{Config.Instance.QQ}";
             }
             UpdateCheckBox();
+            checkBox9.Checked = Config.Instance.AcceptInvitation;
+            checkBox10.Checked = Config.Instance.AcceptJoiningRequest;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -73,16 +77,19 @@ namespace Settings
             }
             Config.Save();
         }
-        // 关了么
-        // resharper激活?
         public void UpdateCheckBox()
         {
-            foreach (var checkbox in Controls.OfType<CheckBox>())
+            var checkboxes = Controls.OfType<CheckBox>().Where(box => box.Tag is string[]);
+            foreach (var checkbox in checkboxes)
             {
                 var items = new HashSet<string>(((string[])checkbox.Tag));
                 var invRewards = Config.Instance.InvationRewardList;
                 checkbox.Checked = items.Intersect(invRewards).Any();
-                Config.Instance.InvationRewardList.RemoveAll(item => items.Contains(item));
+                foreach (var item in items)
+                {
+                    Config.Instance.InvationRewardList.Remove(item);
+                }
+ 
             }
         }
         private void label4_Click(object sender, EventArgs e)
@@ -119,6 +126,28 @@ namespace Settings
         private void label5_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox9_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.AcceptInvitation = checkBox9.Checked;
+            Config.Save();
+        }
+
+        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.AcceptJoiningRequest = checkBox10.Checked;
+            Config.Save();
         }
     }
 
