@@ -23,6 +23,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (Config.Instance.AcceptJoiningRequest)
             {
                 _mahuaApi.AcceptGroupJoiningRequest(context.GroupJoiningRequestId, context.ToGroup, context.FromQq);
+                Messenger.SendGroup(Config.Instance.QQ, $"{context.FromQq}加入了群{context.ToGroup}.");
             }
         }
     }

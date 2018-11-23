@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Remoting.Channels;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 
@@ -189,14 +190,15 @@ namespace TRKS.WF.QQBot
         private static WFApi TranslateApi()
         {
             var alerts =
-                WebHelper.DownloadJson<Alert[]>("https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
+                WebHelper.DownloadJson<Alert[]>(
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
             var dicts = WebHelper.DownloadJson<Dict[]>(
-                "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
             var invasions =
                 WebHelper.DownloadJson<Invasion[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
             var sales = WebHelper.DownloadJson<Sale[]>(
-                "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
             var translateApi = new WFApi
             {
                 Alert = alerts, Dict = dicts, Invasion = invasions, Relic = new Relic[0], Riven = new Riven[0], Sale = sales,
@@ -291,7 +293,23 @@ namespace TRKS.WF.QQBot
                         {
                             for (int i = 0; i < job.rewardPool.Length; i++)
                             {
-                                job.rewardPool[i] = dictTranslators["All"].Translate(job.rewardPool[i]);
+                                var reward = job.rewardPool[i];
+                                var item = reward;
+                                var count = "";
+                                if (!reward.Contains("Relic"))
+                                {
+                                    item = Regex.Replace(reward, @"\d", "").Replace("X", "").Replace(",", "").Replace("BP", "Blueprint").Replace("Relic", "").Trim();
+                                    count = Regex.Replace(reward, @"[^\d]*", "");
+                                }
+
+                                var sb = new StringBuilder();
+                                if (count.Length != 0)
+                                {
+                                    sb.Append($"{count}X");
+                                }
+
+                                sb.Append(dictTranslators["All"].Translate(item));
+                                job.rewardPool[i] = sb.ToString();
                             }
                         }
                     }
@@ -327,7 +345,7 @@ namespace TRKS.WF.QQBot
             {
                 inventory.item = dictTranslators["All"].Translate(inventory.item);
             }
-            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了
+            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了
         }
 
         public void TranslateWMOrder(WMInfo info, string searchword)

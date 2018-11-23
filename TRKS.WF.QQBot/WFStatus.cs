@@ -38,18 +38,16 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, msg);
         }
 
-        public void SendFortunaMissions(string group, int index)
-        {
-            var missions = api.GetSyndicateMissions();
-            var msg = WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Solaris United").ToList()[0], index - 1) + Environment.NewLine + $"您正在查看第 {index} 个赏金任务 可使用 /[关键词][空格][任务顺序] 来查询特定任务.";
-            Messenger.SendGroup(group, msg);
-        }
 
-        public void SendOstronsMissions(string group, int index)
+        public void SendSyndicateMissions(string group, int index)
         {
             var missions = api.GetSyndicateMissions();
-            var msg = WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Ostrons").ToList()[0], index - 1) +Environment.NewLine + $"您正在查看第 {index} 个赏金任务 可使用 /[关键词][空格][任务顺序] 来查询特定任务.";
-            Messenger.SendGroup(group, msg);
+            var sb = new StringBuilder();
+            sb.AppendLine(WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Ostrons").ToList().First(), index - 1));
+            sb.AppendLine(WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Solaris United").ToList()[0], index - 1));
+            sb.AppendLine();
+            sb.Append($"您正在查看第 {index} 个赏金任务 可使用 /[关键词][空格][任务顺序] 来查询特定任务.");
+            Messenger.SendGroup(group, sb.ToString());
         }
 
         public void SendFissures(string group, List<string> words)

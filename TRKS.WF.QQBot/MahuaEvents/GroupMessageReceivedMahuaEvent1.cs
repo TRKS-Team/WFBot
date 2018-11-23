@@ -33,26 +33,27 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 if (message.StartsWith("/"))
                 {
                     var command = message.Substring(1);
-                    var ostrons = new List<string>() {"赏金", "平原赏金", "希图斯赏金", "希图斯", "地球赏金"};
+                    var syndicates = new List<string>() {"赏金", "平原赏金", "地球赏金", "金星赏金", "金星平原赏金", "地球平原赏金"};
                     var fissures = new List<string>() {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
-                    if (ostrons.Where(ostron => command.StartsWith(ostron)).Any())
+                    if (syndicates.Where(ostron => command.StartsWith(ostron)).Any())
                     {
-                        var index = command.Substring(ostrons.Where(ostron => command.StartsWith(ostron)).First().Length);
-                        if (index.IsNumber())
+                        var indexString = command.Substring(syndicates.Where(ostron => command.StartsWith(ostron)).First().Length);
+                        if (indexString.IsNumber())
                         {
-                            if (Int32.Parse(index) <= 5 && 0 < Int32.Parse(index))
+                            var index = Int32.Parse(indexString);
+                            if (index <= 5 && 0 < index)
                             {
-                                _wFStatus.SendOstronsMissions(context.FromGroup, Int32.Parse(index));
+                                _wFStatus.SendSyndicateMissions(context.FromGroup, index);
                             }
                             else
                             {
-                                _wFStatus.SendOstronsMissions(context.FromGroup, 1);
+                                _wFStatus.SendSyndicateMissions(context.FromGroup, 1);
                             }
 
                         }
                         else
                         {
-                            _wFStatus.SendOstronsMissions(context.FromGroup, 1);
+                            Messenger.SendGroup(context.FromGroup, "需要参数,例子:/赏金 4 将会返回赏金四.");
                         }
                     }
 
