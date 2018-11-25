@@ -120,8 +120,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 功能8:裂隙 可使用[/裂隙{空格}<关键词>(比如 前纪,歼灭)]来查询所有和关键词有关的裂隙.
 其他功能待定(查询遗物的功能因为字典更换被毙了.)
 用于管理的命令均为私聊机器人:
-用于启用群通知:[/添加群{空格}<口令>{空格}<群号>]
-用于禁用群通知:[/删除群{空格}<口令>{空格}<群号>]");
+用于启用群通知:[添加群{空格}<口令>{空格}<群号>]
+用于禁用群通知:[删除群{空格}<口令>{空格}<群号>]");
                             break;
                     }
                 }
@@ -130,7 +130,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             }
             catch (Exception e)
             {
-                _mahuaApi.SendPrivateMessage("1141946313", e.ToString());
+                Messenger.SendPrivate("1141946313", e.ToString());
             }
 
         }

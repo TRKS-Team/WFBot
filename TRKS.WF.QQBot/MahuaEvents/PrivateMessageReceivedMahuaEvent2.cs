@@ -1,5 +1,6 @@
 ﻿using Newbe.Mahua.MahuaEvents;
 using Newbe.Mahua;
+using Settings;
 
 namespace TRKS.WF.QQBot.MahuaEvents
 {
@@ -26,18 +27,26 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     if (strs[1] == Config.Instance.Code)
                     {
-                        Config.Instance.WFGroupList.Add(strs[2]);
-                        Config.Save();
-                        _mahuaApi.SendPrivateMessage(context.FromQq, "Done.");
+                        if (strs[2].IsNumber())
+                        {
+                            Config.Instance.WFGroupList.Add(strs[2]);
+                            Config.Save();
+                            Messenger.SendPrivate(context.FromQq, "Done.");
+                        }
+                        else
+                        {
+                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼.");
+                        }
                     }
                     else
                     {
-                        _mahuaApi.SendPrivateMessage(context.FromQq, "口令错误.");
+                        Messenger.SendPrivate(context.FromQq, "口令错误.");
                     }
+                    
                 }
                 else
                 {
-                    _mahuaApi.SendPrivateMessage(context.FromQq, "参数不足.");
+                    Messenger.SendPrivate(context.FromQq, "参数不足.");
                 }
             }
             if (context.Message.Contains("删除群"))
@@ -47,18 +56,26 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     if (strs[1] == Config.Instance.Code)
                     {
-                        Config.Instance.WFGroupList.Remove(strs[2]);
-                        Config.Save();
-                        _mahuaApi.SendPrivateMessage(context.FromQq, "Done.");
+                        if (strs[2].IsNumber())
+                        {
+                            Config.Instance.WFGroupList.Remove(strs[2]);
+                            Config.Save();
+                            Messenger.SendPrivate(context.FromQq, "Done.");
+                        }
+                        else
+                        {
+                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼.");
+                        }
+
                     }
                     else
                     {
-                        _mahuaApi.SendPrivateMessage(context.FromQq, "口令错误.");
+                        Messenger.SendPrivate(context.FromQq, "口令错误.");
                     }
                 }
                 else
                 {
-                    _mahuaApi.SendPrivateMessage(context.FromQq, "参数不足.");
+                    Messenger.SendPrivate(context.FromQq, "参数不足.");
                 }
             }
         }
