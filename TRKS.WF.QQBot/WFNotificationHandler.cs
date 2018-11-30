@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,6 +63,7 @@ namespace TRKS.WF.QQBot
             timer.Start();
             _inited = true;
         }
+
 
         public void UpdateInvasions()
         {

@@ -149,6 +149,19 @@ namespace Settings
             Config.Instance.AcceptJoiningRequest = checkBox10.Checked;
             Config.Save();
         }
+
+        private void textBox3_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            foreach (var group in Config.Instance.WFGroupList)
+            {
+                Messenger.SendGroup(group, $"[来自管理者]通知:{textBox3.Text}");
+            }
+        }
     }
 
     public static class StringExtensions

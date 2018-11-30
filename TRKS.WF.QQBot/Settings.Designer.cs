@@ -49,6 +49,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.checkBox10 = new System.Windows.Forms.CheckBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -314,11 +317,43 @@
             this.checkBox10.UseVisualStyleBackColor = true;
             this.checkBox10.CheckedChanged += new System.EventHandler(this.checkBox10_CheckedChanged);
             // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(12, 597);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(262, 21);
+            this.textBox3.TabIndex = 20;
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged_1);
+            // 
+            // button3
+            // 
+            this.button3.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.Location = new System.Drawing.Point(292, 597);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 35);
+            this.button3.TabIndex = 21;
+            this.button3.Text = "发送";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Location = new System.Drawing.Point(8, 556);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(298, 21);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "向所有启用了通知功能的群发送一条消息";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 581);
+            this.ClientSize = new System.Drawing.Size(406, 644);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.checkBox10);
             this.Controls.Add(this.checkBox9);
             this.Controls.Add(this.label6);
@@ -370,6 +405,9 @@
         private System.Windows.Forms.Label label6;
         internal System.Windows.Forms.CheckBox checkBox9;
         private System.Windows.Forms.CheckBox checkBox10;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label label7;
     }
 }
 
