@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newbe.Mahua;
 using Settings;
+using Path = System.Windows.Shapes.Path;
 
 namespace TRKS.WF.QQBot
 {
@@ -37,7 +38,7 @@ namespace TRKS.WF.QQBot
 宣传贴地址:https://warframe.love/thread-230.htm
 开源地址:https://github.com/TheRealKamisama/WFBot
 本机器人毫无盈利意向,请不要使用本机器人进行任何商业行为(游戏内交易除外).");
-            if (Directory.Exists("帮助文档.png"))
+            if (File.Exists("data/image/帮助文档.png"))
             {
                 SendGroup(group, @"[CQ:image,file=\帮助文档.png]");
             }

@@ -32,7 +32,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 var message = context.Message;
                 if (message.StartsWith("/"))
                 {
-                    var command = message.Substring(1);
+                    var command = message.Substring(1).ToLower();
                     var syndicates = new List<string>() {"赏金", "平原赏金", "地球赏金", "金星赏金", "金星平原赏金", "地球平原赏金"};
                     var fissures = new List<string>() {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
                     if (syndicates.Where(ostron => command.StartsWith(ostron)).Any())
