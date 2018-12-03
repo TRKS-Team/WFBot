@@ -40,7 +40,7 @@ namespace TRKS.WF.QQBot
 本机器人毫无盈利意向,请不要使用本机器人进行任何商业行为(游戏内交易除外).");
             if (File.Exists("data/image/帮助文档.png"))
             {
-                SendGroup(group, @"[CQ:image,file=\帮助文档.png]");
+                SendGroup(group, @"[CQ:image,file=\帮助文档.png]*");
             }
             else
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 
@@ -22,6 +23,14 @@ namespace TRKS.WF.QQBot
         public bool AcceptInvitation;
 
         public bool AcceptJoiningRequest;
+
+        public string ClientId;
+
+        public string ClientSecret;
+
+        public string AcessToken;
+
+        public DateTime Last_update;
     }
 
 
@@ -98,6 +107,7 @@ namespace TRKS.WF.QQBot
                         foreach (var group in Config.Instance.WFGroupList)
                         {
                             Messenger.SendGroup(group, notifyText);
+                            Thread.Sleep(100);
                         }
 
                         SendedInvSet.Add(inv.id);
@@ -196,6 +206,7 @@ namespace TRKS.WF.QQBot
                 foreach (var group in Config.Instance.WFGroupList)
                 {
                     Messenger.SendGroup(group, result);
+                    Thread.Sleep(100);
                 }
             }
             SendedAlertsSet.Add(alert.Id);

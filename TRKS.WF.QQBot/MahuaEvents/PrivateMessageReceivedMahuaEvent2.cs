@@ -29,10 +29,19 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         if (strs[2].IsNumber())
                         {
-                            Config.Instance.WFGroupList.Add(strs[2]);
-                            Config.Save();
-                            Messenger.SendPrivate(context.FromQq, "Done.");
-                            Messenger.SendGroup(strs[2], $"{context.FromQq}已经在私聊启用了此群的新任务通知功能.");
+                            if (Config.Instance.WFGroupList.Contains(strs[2]))
+                            {
+                                Messenger.SendGroup(context.FromQq, "群号已经存在.");
+                            }
+                            else
+                            {
+                                Config.Instance.WFGroupList.Add(strs[2]);
+                                Config.Save();
+                                Messenger.SendPrivate(context.FromQq, "完事.");
+                                Messenger.SendGroup(strs[2], $"{context.FromQq}已经在私聊启用了此群的新任务通知功能.");
+                                Messenger.SendPrivate(Config.Instance.QQ, $"{strs[2]}启用了通知功能.");
+                            }
+
                         }
                         else
                         {
@@ -61,8 +70,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         {
                             Config.Instance.WFGroupList.Remove(strs[2]);
                             Config.Save();
-                            Messenger.SendPrivate(context.FromQq, "Done.");
+                            Messenger.SendPrivate(context.FromQq, "完事.");
                             Messenger.SendGroup(strs[2], $"{context.FromQq}已经在私聊禁用了此群的新任务通知功能.");
+                            Messenger.SendPrivate(Config.Instance.QQ, $"{strs[2]}禁用了通知功能.");
+
                         }
                         else
                         {

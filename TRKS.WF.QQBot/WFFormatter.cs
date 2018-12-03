@@ -74,9 +74,22 @@ namespace TRKS.WF.QQBot
             var nextTime = !cycle.IsDay ? "白天" : "夜晚";
 
             var sb = new StringBuilder();
-            sb.AppendLine($"现在平原的时间是: {status}");
+            sb.AppendLine($"现在地球平原的时间是: {status}");
             sb.AppendLine($"将在 {cycle.Expiry} 变为 {nextTime}");
             sb.Append($"距离 {nextTime} 还有 {time}");
+            return sb.ToString();
+        }
+
+        public static string ToString(VallisCycle cycle)
+        {
+            var time = (cycle.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
+                TimeUnit.Hour, TimeUnit.Millisecond, " ");
+            var temp = cycle.isWarm ? "温暖" : "寒冷";
+            var nextTemp = !cycle.isWarm ? "温暖" : "寒冷";
+            var sb = new StringBuilder();
+            sb.AppendLine($"现在金星平原的温度是: {temp}");
+            sb.AppendLine($"将在{cycle.expiry} 变为 {nextTemp}");
+            sb.Append($"距离{nextTemp} 还有 {time}");
             return sb.ToString();
         }
 

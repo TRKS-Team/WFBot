@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 namespace TRKS.WF.QQBot
 {
 
+
+    public class VallisCycle
+    {
+        public string id { get; set; }
+        public DateTime expiry { get; set; }
+        public bool isWarm { get; set; }
+        public string timeLeft { get; set; }
+        public string shortString { get; set; }
+    }
+
     public class Fissure
     {
         public string id { get; set; }

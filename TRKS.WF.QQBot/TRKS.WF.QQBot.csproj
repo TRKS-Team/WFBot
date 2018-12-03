@@ -39,8 +39,6 @@
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Awesomium.Core, Version=1.6.6.0, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214" />
-    <Reference Include="Awesomium.Windows.Forms, Version=1.6.6.0, Culture=neutral, PublicKeyToken=9bd24830fbe304a0, processorArchitecture=x86" />
     <Reference Include="Humanizer, Version=2.5.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\packages\Humanizer.Core.2.5.1\lib\netstandard2.0\Humanizer.dll</HintPath>
     </Reference>
@@ -214,6 +212,7 @@
     <Compile Include="MahuaEvents\MahuaMenuClickedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\PrivateMessageReceivedMahuaEvent2.cs" />
     <Compile Include="Messenger.cs" />
+    <Compile Include="RRSearcher.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -14,10 +14,11 @@ namespace TRKS.WF.QQBot
     public class WFStatus
     {
         private readonly WFChineseAPI api = new WFChineseAPI();
-        public void SendCetusCycle(string group)
+        public void SendCycles(string group)
         {
-            var cycle = api.GetCetusCycle();
-            var msg = WFFormatter.ToString(cycle);
+            var cetuscycle = api.GetCetusCycle();
+            var valliscycle = api.GetVallisCycle();
+            var msg = WFFormatter.ToString(cetuscycle) + Environment.NewLine + WFFormatter.ToString(valliscycle);
             
             Messenger.SendGroup(group, msg);
         }

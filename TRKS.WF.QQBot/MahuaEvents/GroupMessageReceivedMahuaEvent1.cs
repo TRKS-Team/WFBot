@@ -89,7 +89,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "夜灵平野":
                         case "平原":
                         case "夜灵平原":
-                            _wFStatus.SendCetusCycle(context.FromGroup);
+                        case "金星平原":
+                        case "奥布山谷":
+                        case "金星平原温度":
+                        case "平原温度":
+                            _wFStatus.SendCycles(context.FromGroup);
                             break;
                         case "入侵":
                             _wFAlert.SendAllInvasions(context.FromGroup);

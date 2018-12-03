@@ -71,6 +71,13 @@ namespace TRKS.WF.QQBot
             cycle.Expiry = GetRealTime(cycle.Expiry);
             return cycle;
         }
+
+        public VallisCycle GetVallisCycle()
+        {
+            var cycle = WebHelper.DownloadJson<VallisCycle>("https://api.warframestat.us/pc/vallisCycle");
+            cycle.expiry = GetRealTime(cycle.expiry);
+            return cycle;
+        }
         /*
         public async Task<List<SyndicateMission>> GetSyndicateMissions()// 这里暂时不着急改
         {
@@ -95,7 +102,7 @@ namespace TRKS.WF.QQBot
             return null;
         }
         */
-        
+
 
         public Sortie GetSortie()
         {
