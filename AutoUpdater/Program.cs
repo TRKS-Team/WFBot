@@ -40,7 +40,17 @@ namespace AutoUpdater
                         string n = art.fileName;
                         if (Path.GetFileNameWithoutExtension(n).Equals(name, StringComparison.OrdinalIgnoreCase))
                         {
-                            webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", name);
+                            a:
+                            try
+                            {
+                                webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", name);
+                                
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                goto a;
+                            }
                             //Directory.Delete("YUELUO", true);
                             Unzip(ZipFile.OpenRead(name));
                         }
