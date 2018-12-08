@@ -37,7 +37,8 @@ namespace AutoUpdater
                     dynamic jsonArt = new JArray(JsonConvert.DeserializeObject(value));
                     foreach (dynamic art in jsonArt[0])
                     {
-                        if (art.fileName == name)
+                        string n = art.fileName;
+                        if (Path.GetFileNameWithoutExtension(n).Equals(name, StringComparison.OrdinalIgnoreCase))
                         {
                             webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", name);
                             //Directory.Delete("YUELUO", true);
