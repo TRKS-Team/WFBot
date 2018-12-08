@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using Newbe.Mahua.Internals;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TRKS.WF.QQBot;
+using WTF;
+
 // ReSharper disable PossibleNullReferenceException
 
 namespace AutoUpdater
@@ -18,14 +19,14 @@ namespace AutoUpdater
     {
         static void Main(string[] args)
         {
-            var data = ReleaseGetter.Get();
-            foreach (var asset in data.assets)
+            var platformNames = new[] { "CleverQQ", "MPQ", "CQP", "QQLight" };
+            foreach (var name in platformNames)
             {
-                if (Path.GetFileNameWithoutExtension(asset.name)
+                if (Path.GetFileNameWithoutExtension(name)
                     .Equals(MahuaPlatformValueProvider.CurrentPlatform.Value.ToString(), StringComparison.OrdinalIgnoreCase))
                 {
                     var webClient = new WebClientEx(new CookieContainer());
-                    if (File.Exists(asset.name)) File.Delete(asset.name);
+                    if (File.Exists(name)) File.Delete(name);
                     webClient.Headers.Add("Authorization", "Bearer 6k1w2i924vgqpylm547l");
                     webClient.Headers.Add("Content-Type", "application/json");
                     var content = webClient.DownloadString("https://ci.appveyor.com/api/projects/TRKS-Team/WFBot");
@@ -36,11 +37,11 @@ namespace AutoUpdater
                     dynamic jsonArt = new JArray(JsonConvert.DeserializeObject(value));
                     foreach (dynamic art in jsonArt[0])
                     {
-                        if (art.fileName == asset.name)
+                        if (art.fileName == name)
                         {
-                            webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", asset.name);
+                            webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", name);
                             //Directory.Delete("YUELUO", true);
-                            Unzip(ZipFile.OpenRead(asset.name));
+                            Unzip(ZipFile.OpenRead(name));
                         }
                     }
                 }

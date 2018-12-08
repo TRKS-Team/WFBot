@@ -37,7 +37,7 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            Thread.Sleep(300);
+            Thread.Sleep(500);
         }
         public static void SendHelpdoc(string group)
         {

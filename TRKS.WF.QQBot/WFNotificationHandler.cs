@@ -31,6 +31,7 @@ namespace TRKS.WF.QQBot
         public string AcessToken;
 
         public DateTime Last_update;
+        public string GithubOAuthKey;
     }
 
 
