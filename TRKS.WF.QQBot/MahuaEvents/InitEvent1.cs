@@ -52,7 +52,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         Messenger.SendGroup(qq, $"机器人开始了自动更新, 大约在3分钟内机器人不会回答你的问题.");
                     }
-                    File.Copy("YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe", "AutoUpdater.exe", true);
+                    //File.Copy("YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe", "AutoUpdater.exe", true);
                     Thread.Sleep(1000);
                     Process.Start("AutoUpdater.exe");
                     timer1.Stop();
