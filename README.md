@@ -84,6 +84,8 @@
 - [Newbe.Mahua](http://www.newbe.pro/) (MIT)
 - [Newtonsoft.Json](https://www.newtonsoft.com/json) (MIT)
 - [Refit](https://github.com/reactiveui/refit) (MIT)
+- [Costura](https://github.com/Fody/Costura) (MIT)
+- [Fody](https://github.com/Fody/Fody) (MIT)
 ----------
 ## 代码部分
 代码注释极少... 并且大部分都是一些瞎记的.  

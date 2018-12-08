@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2043
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRKS.WF.QQBot", "TRKS.WF.QQBot\TRKS.WF.QQBot.csproj", "{795FA006-A765-48D7-A488-EFD37D7CA474}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoUpdater", "AutoUpdater\AutoUpdater.csproj", "{240C5BD5-9C1F-489A-BE75-94C5B6516167}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{795FA006-A765-48D7-A488-EFD37D7CA474}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795FA006-A765-48D7-A488-EFD37D7CA474}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795FA006-A765-48D7-A488-EFD37D7CA474}.Release|Any CPU.Build.0 = Release|Any CPU
+		{240C5BD5-9C1F-489A-BE75-94C5B6516167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{240C5BD5-9C1F-489A-BE75-94C5B6516167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{240C5BD5-9C1F-489A-BE75-94C5B6516167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{240C5BD5-9C1F-489A-BE75-94C5B6516167}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,7 +15,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-        private static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
+        internal static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
         private static readonly WFStatus _wFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
 
@@ -118,7 +118,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             }
             catch (Exception e)
             {
-                Messenger.SendPrivate("1141946313", e.ToString());
+                Messenger.SendDebugInfo(e.ToString());
             }
 
         }

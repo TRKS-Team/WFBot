@@ -39,7 +39,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                                 Config.Save();
                                 Messenger.SendPrivate(context.FromQq, "完事.");
                                 Messenger.SendGroup(strs[2], $"{context.FromQq}已经在私聊启用了此群的新任务通知功能.");
-                                Messenger.SendPrivate(Config.Instance.QQ, $"{strs[2]}启用了通知功能.");
+                                Messenger.SendDebugInfo($"{strs[2]}启用了通知功能.");
                             }
 
                         }
@@ -72,7 +72,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             Config.Save();
                             Messenger.SendPrivate(context.FromQq, "完事.");
                             Messenger.SendGroup(strs[2], $"{context.FromQq}已经在私聊禁用了此群的新任务通知功能.");
-                            Messenger.SendPrivate(Config.Instance.QQ, $"{strs[2]}禁用了通知功能.");
+                            Messenger.SendDebugInfo($"{strs[2]}禁用了通知功能.");
 
                         }
                         else

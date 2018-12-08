@@ -12,16 +12,22 @@ namespace TRKS.WF.QQBot
 {
     public static class Messenger
     {
-        public static void SendPrivate(string qq, string content)
+        public static void SendDebugInfo(string content)
         {
             if (Config.Instance.QQ.IsNumber())
+                SendPrivate(Config.Instance.QQ, content);
+        }
+
+        public static void SendPrivate(string qq, string content)
+        {
+            //if (Config.Instance.QQ.IsNumber())
+            //{
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
-                using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-                {
-                    var api = robotSession.MahuaApi;
-                    api.SendPrivateMessage(qq, content);
-                }
+                var api = robotSession.MahuaApi;
+                api.SendPrivateMessage(qq, content);
             }
+            //}
         }
 
         public static void SendGroup(string qq, string content)

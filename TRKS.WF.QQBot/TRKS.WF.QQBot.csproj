@@ -210,9 +210,13 @@
     <Compile Include="Cylib.cs" />
     <Compile Include="MahuaEvents\GroupJoiningInvitationReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\GroupJoiningRequestReceivedMahuaEvent1.cs" />
+    <Compile Include="MahuaEvents\InitEvent1.cs" />
     <Compile Include="MahuaEvents\MahuaMenuClickedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\PrivateMessageReceivedMahuaEvent2.cs" />
+    <Compile Include="MahuaEvents\UpdatedEvent1.cs" />
+    <Compile Include="MahuaEvents\UpdatingEvent1.cs" />
     <Compile Include="Messenger.cs" />
+    <Compile Include="ReleaseGetter.cs" />
     <Compile Include="RRSearcher.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
@@ -251,6 +255,12 @@
   <ItemGroup>
     <Content Include="buildTools\7z.exe" />
     <Content Include="buildTools\nuget.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj">
+      <Project>{240c5bd5-9c1f-489a-be75-94c5b6516167}</Project>
+      <Name>AutoUpdater</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />

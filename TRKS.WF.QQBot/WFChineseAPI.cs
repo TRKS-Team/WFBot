@@ -57,8 +57,7 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                var qq = Config.Instance.QQ;
-                Messenger.SendPrivate(qq, $"警报获取报错:{Environment.NewLine}{e}");
+                Messenger.SendDebugInfo($"警报获取报错:{Environment.NewLine}{e}");
 
             }
             return new List<WFAlert>();

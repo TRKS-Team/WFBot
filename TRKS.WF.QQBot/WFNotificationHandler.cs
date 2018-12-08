@@ -88,7 +88,7 @@ namespace TRKS.WF.QQBot
             catch (Exception e)
             {
                 // 问题有点大 我慌一下
-                Messenger.SendPrivate(Config.Instance.QQ, e.ToString());
+                Messenger.SendDebugInfo(e.ToString());
             }
             foreach (var inv in invs)
             {
@@ -172,8 +172,7 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                var qq = Config.Instance.QQ;
-                Messenger.SendPrivate(qq, e.ToString());
+                Messenger.SendDebugInfo(e.ToString());
             }
 
         }
