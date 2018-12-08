@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newbe.Mahua;
 using Settings;
@@ -31,6 +32,7 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
+            Thread.Sleep(300);
         }
         public static void SendHelpdoc(string group)
         {

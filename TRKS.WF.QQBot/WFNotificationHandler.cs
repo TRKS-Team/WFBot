@@ -107,7 +107,6 @@ namespace TRKS.WF.QQBot
                         foreach (var group in Config.Instance.WFGroupList)
                         {
                             Messenger.SendGroup(group, notifyText);
-                            Thread.Sleep(100);
                         }
 
                         SendedInvSet.Add(inv.id);
@@ -206,7 +205,6 @@ namespace TRKS.WF.QQBot
                 foreach (var group in Config.Instance.WFGroupList)
                 {
                     Messenger.SendGroup(group, result);
-                    Thread.Sleep(100);
                 }
             }
             SendedAlertsSet.Add(alert.Id);
