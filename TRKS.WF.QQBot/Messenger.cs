@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,8 +31,13 @@ namespace TRKS.WF.QQBot
             //}
         }
 
+        private static string previousMessage;
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(string qq, string content)
         {
+            if (content == previousMessage) return;
+            previousMessage = content;
+
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;

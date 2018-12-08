@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Newbe.Mahua.MahuaEvents;
 using WTF;
+using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot.MahuaEvents
 {
@@ -16,7 +18,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
     {
         private bool onlineBuild;
         private int localVersion;
-        private volatile bool updating;
+        private static volatile bool updating;
         internal static Timer timer1;
 
         public InitEvent1()
@@ -48,9 +50,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
                     foreach (var qq in Config.Instance.WFGroupList)
                     {
-                        Messenger.SendGroup(qq, $"机器人启动了自动更新, 更新内容为 '{releaseData.body}'. 大约在3分钟内机器人不会回答你的问题, 如有不爽顺着网线来打我呀.");
+                        Messenger.SendGroup(qq, $"机器人开始了自动更新, 大约在3分钟内机器人不会回答你的问题.");
                     }
                     File.Copy("YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe", "AutoUpdater.exe", true);
+                    Thread.Sleep(1000);
                     Process.Start("AutoUpdater.exe");
                     timer1.Stop();
                 }
