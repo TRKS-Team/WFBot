@@ -1,4 +1,5 @@
-﻿using Newbe.Mahua.MahuaEvents;
+﻿using System.Diagnostics;
+using Newbe.Mahua.MahuaEvents;
 using Newbe.Mahua;
 using Settings;
 
@@ -20,6 +21,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessPrivateMessage(PrivateMessageReceivedContext context)
         {
+            if (context.Message == $"执行自动更新 {Config.Instance.Code}")
+            {
+                InitEvent1.timer1.Stop();
+                Process.Start("AutoUpdater.exe");
+            }
             if (context.Message.Contains("添加群"))
             {
                 var strs = context.Message.Split(' ');
