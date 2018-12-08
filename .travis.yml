@@ -1,0 +1,8 @@
+language: csharp
+solution: TRKS.WF.QQBot.sln
+install:
+- sudo apt-get install -y gtk-sharp2
+- nuget restore TRKS.WF.QQBot.sln
+script:
+- msbuild /p:Configuration=Release TRKS.WF.QQBot.sln
+- ./pack.sh
