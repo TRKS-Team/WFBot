@@ -109,6 +109,7 @@ Task DonwloadPackages -depends Init -Description "下载 nuget 包到临时目�
 Task Nuget -depends Init -Description "nuget restore" {
     Exec {
         cmd /c """$nugetexe"" restore  -PackagesDirectory ""$rootNow\..\packages"""
+        cmd /c """$nugetexe"" restore ..\AutoUpdater\packages.config -PackagesDirectory ""$rootNow\..\packages"""
     }
 }
 
