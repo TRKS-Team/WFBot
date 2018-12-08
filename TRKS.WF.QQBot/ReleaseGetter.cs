@@ -11,6 +11,7 @@ namespace WTF
     {
         public static ReleaseData Get()
         {
+
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var wc = new WebClient { Encoding = Encoding.UTF8 };
