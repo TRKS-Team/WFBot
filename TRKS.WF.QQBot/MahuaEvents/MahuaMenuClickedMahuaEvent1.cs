@@ -21,6 +21,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessManhuaMenuClicked(MahuaMenuClickedContext context)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
+
             if (context.Menu.Id == "menu1")
             {
                 var thread = new Thread(() => new Settings.Settings().ShowDialog());

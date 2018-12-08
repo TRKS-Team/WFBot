@@ -208,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cylib.cs" />
+    <Compile Include="MahuaEvents\HotUpdateInfo.cs" />
     <Compile Include="MahuaEvents\GroupJoiningInvitationReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\GroupJoiningRequestReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\InitEvent1.cs" />

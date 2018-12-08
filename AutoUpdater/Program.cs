@@ -39,7 +39,7 @@ namespace AutoUpdater
                         if (art.fileName == asset.name)
                         {
                             webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", asset.name);
-                            Directory.Delete("YUELUO", true);
+                            //Directory.Delete("YUELUO", true);
                             Unzip(ZipFile.OpenRead(asset.name));
                         }
                     }

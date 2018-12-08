@@ -21,6 +21,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessPrivateMessage(PrivateMessageReceivedContext context)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
+            
             if (context.Message == $"执行自动更新 {Config.Instance.Code}")
             {
                 InitEvent1.timer1.Stop();

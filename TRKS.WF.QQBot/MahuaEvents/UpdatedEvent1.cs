@@ -11,6 +11,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
     {
         public void HotUpgraded(PluginHotUpgradedContext context)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
             Messenger.SendDebugInfo("插件热更新完成。");
         }
     }

@@ -27,6 +27,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
+
             try
             {
                 var message = context.Message;

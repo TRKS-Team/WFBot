@@ -20,6 +20,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessJoinGroupRequest(GroupJoiningRequestReceivedContext context)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
+
             if (Config.Instance.AcceptInvitation)
             {
                 _mahuaApi.AcceptGroupJoiningInvitation(context.GroupJoiningRequestId, context.ToGroup, context.FromQq);

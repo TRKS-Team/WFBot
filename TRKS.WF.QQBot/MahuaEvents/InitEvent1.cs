@@ -57,6 +57,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void Initialized(InitializedContext context)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
+
             Task.Delay(TimeSpan.FromSeconds(20)).ContinueWith(t =>
             {
                 if (!onlineBuild)
