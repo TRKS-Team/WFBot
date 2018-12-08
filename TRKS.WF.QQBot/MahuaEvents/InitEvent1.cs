@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (ver != localVersion)
             {
                 Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
+                File.Copy("YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe", "AutoUpdater.exe",true);
                 Process.Start("AutoUpdater.exe");
                 timer1.Stop();
             }
