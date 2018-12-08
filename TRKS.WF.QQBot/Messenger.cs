@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newbe.Mahua;
 using Settings;
-using Path = System.Windows.Shapes.Path;
 
 namespace TRKS.WF.QQBot
 {
