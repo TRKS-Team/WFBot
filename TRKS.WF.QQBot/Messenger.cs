@@ -35,7 +35,8 @@ namespace TRKS.WF.QQBot
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(string qq, string content)
         {
-            if (content == previousMessage) return;
+            // if (content == previousMessage) return;
+            // 你快气死我了 你这么搞 我怎么给多个群同时发????
             previousMessage = content;
 
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
