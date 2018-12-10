@@ -31,20 +31,26 @@ namespace TRKS.WF.QQBot
             //}
         }
 
-        private static string previousMessage;
+        private static Dictionary<string, string> previousMessageDic = new Dictionary<string, string>();
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(string qq, string content)
         {
-            // if (content == previousMessage) return;
-            // 你快气死我了 你这么搞 我怎么给多个群同时发????
-            previousMessage = content;
+            var previousMessage = "";
+            if (previousMessageDic.ContainsKey(qq))
+            {
+                previousMessage = previousMessageDic[qq];
+            }
+
+
+            if (content == previousMessage) return;
+            previousMessageDic[qq] = content;
 
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
         public static void SendHelpdoc(string group)
         {
