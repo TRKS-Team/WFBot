@@ -31,6 +31,7 @@ namespace TRKS.WF.QQBot
         public string AcessToken;
 
         public DateTime Last_update;
+
         public string GithubOAuthKey;
     }
 
@@ -105,10 +106,7 @@ namespace TRKS.WF.QQBot
                         var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                          $"{WFFormatter.ToString(inv)}";
 
-                        foreach (var group in Config.Instance.WFGroupList)
-                        {
-                            Messenger.SendGroup(group, notifyText);
-                        }
+                        Messenger.BoardCast(notifyText);
 
                         SendedInvSet.Add(inv.id);
                         break;
@@ -201,11 +199,7 @@ namespace TRKS.WF.QQBot
             {
                 var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                     WFFormatter.ToString(alert);
-
-                foreach (var group in Config.Instance.WFGroupList)
-                {
-                    Messenger.SendGroup(group, result);
-                }
+                Messenger.BoardCast(result);
             }
             SendedAlertsSet.Add(alert.Id);
         }

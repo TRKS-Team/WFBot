@@ -48,10 +48,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     updating = true;
                     
                     Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
-                    foreach (var qq in Config.Instance.WFGroupList)
-                    {
-                        Messenger.SendGroup(qq, $"机器人开始了自动更新, 大约在3分钟内机器人不会回答你的问题.");
-                    }
+                    Messenger.BoardCast($"机器人开始了自动更新, 大约在3分钟内机器人不会回答你的问题.");
                     //File.Copy("YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe", "AutoUpdater.exe", true);
                     Thread.Sleep(1000);
                     Process.Start("AutoUpdater.exe");
