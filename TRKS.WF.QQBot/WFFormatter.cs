@@ -19,7 +19,8 @@ namespace TRKS.WF.QQBot
             return $"[{mission.Node}] 等级 {mission.MinEnemyLevel}-{mission.MaxEnemyLevel}\r\n" +
                    $"-类型:     {mission.Type}-{mission.Faction}\r\n" +
                    $"-奖励:     {ToString(reward)}\r\n" +
-                   $"-过期时间: {alert.Expiry}({time} 后)";
+                   //$"-过期时间: {alert.Expiry}({time} 后)" +
+                   $"-过期时间: ({time} 后)";
         }
         public static string ToString(List<Fissure> fissures)
         {
@@ -75,7 +76,7 @@ namespace TRKS.WF.QQBot
 
             var sb = new StringBuilder();
             sb.AppendLine($"现在地球平原的时间是: {status}");
-            sb.AppendLine($"将在 {cycle.Expiry} 变为 {nextTime}");
+            //sb.AppendLine($"将在 {cycle.Expiry} 变为 {nextTime}");
             sb.Append($"距离 {nextTime} 还有 {time}");
             return sb.ToString();
         }
@@ -88,7 +89,7 @@ namespace TRKS.WF.QQBot
             var nextTemp = !cycle.isWarm ? "温暖" : "寒冷";
             var sb = new StringBuilder();
             sb.AppendLine($"现在金星平原的温度是: {temp}");
-            sb.AppendLine($"将在{cycle.expiry} 变为 {nextTemp}");
+            //sb.AppendLine($"将在{cycle.expiry} 变为 {nextTemp}");
             sb.Append($"距离{nextTemp} 还有 {time}");
             return sb.ToString();
         }
@@ -124,13 +125,15 @@ namespace TRKS.WF.QQBot
                     sb.AppendLine($"         [{inventory.item}]");
                     sb.AppendLine($"         {inventory.ducats}金币 + {inventory.credits}现金");
                 }
-                sb.Append($"结束时间:{trader.expiry}({time} 后)");
+                //sb.Append($"结束时间:{trader.expiry}({time} 后)");
+                sb.Append($"结束时间:({time} 后)");
             }
             else
             {
                 var time = (DateTime.Now - trader.activation).Humanize(int.MaxValue,
                     CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
-                sb.Append($"虚空商人将在{trader.activation}({time} 后)抵达{trader.location}");
+                //sb.Append($"虚空商人将在{trader.activation}({time} 后)抵达{trader.location}");
+                sb.Append($"虚空商人将在({time} 后)抵达{trader.location}");
             }
 
             return sb.ToString().Trim();
