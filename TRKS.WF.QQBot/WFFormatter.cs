@@ -70,7 +70,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(CetusCycle cycle)
         {
             var time = (cycle.Expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
-                TimeUnit.Hour, TimeUnit.Millisecond, " ");
+                TimeUnit.Hour, TimeUnit.Second, " ");
             var status = cycle.IsDay ? "白天" : "夜晚";
             var nextTime = !cycle.IsDay ? "白天" : "夜晚";
 
@@ -84,7 +84,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(VallisCycle cycle)
         {
             var time = (cycle.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
-                TimeUnit.Hour, TimeUnit.Millisecond, " ");
+                TimeUnit.Hour, TimeUnit.Second, " ");
             var temp = cycle.isWarm ? "温暖" : "寒冷";
             var nextTemp = !cycle.isWarm ? "温暖" : "寒冷";
             var sb = new StringBuilder();
