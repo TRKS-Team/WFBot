@@ -143,12 +143,13 @@ namespace TRKS.WF.QQBot
         {
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
-            sb.AppendLine($"下面是物品: {itemItemsInSet.Where(item => item.zh.item_name != item.en.item_name).ToList().Last().zh.item_name} 按价格从小到大的{info.payload.orders.Length}条信息");
+            var item = itemItemsInSet.Where(i => i.zh.item_name != i.en.item_name).ToList().Last();
+            sb.AppendLine($"下面是物品: {item.zh.item_name} 按价格从小到大的{info.payload.orders.Length}条信息");
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {
                 sb.AppendLine($"[{order.user.ingame_name}]   {order.user.status}");
-                sb.AppendLine($"{order.order_type}  {order.platinum}白鸡");
+                sb.AppendLine($"{order.order_type}  {order.platinum}白鸡 快捷回复:/w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
