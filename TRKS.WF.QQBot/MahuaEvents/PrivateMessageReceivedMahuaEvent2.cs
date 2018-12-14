@@ -25,8 +25,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             
             if (context.Message == $"执行自动更新 {Config.Instance.Code}")
             {
-                InitEvent1.timer1.Stop();
-                Process.Start("AutoUpdater.exe");
+                AutoUpdateRR.Execute();
             }
             if (context.Message.Contains("添加群"))
             {

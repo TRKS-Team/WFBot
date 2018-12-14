@@ -16,6 +16,8 @@ namespace TRKS.WF.QQBot
     {
         public static void SendDebugInfo(string content)
         {
+            if (content.StartsWith("System.Threading.ThreadAbortException")) return;
+            
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ, content);
         }

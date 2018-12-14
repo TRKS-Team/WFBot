@@ -29,6 +29,7 @@ namespace AutoUpdater
                     if (File.Exists(name)) File.Delete(name);
                     webClient.Headers.Add("Authorization", "Bearer 6k1w2i924vgqpylm547l");
                     webClient.Headers.Add("Content-Type", "application/json");
+                    webClient.Encoding = Encoding.UTF8;
                     var content = webClient.DownloadString("https://ci.appveyor.com/api/projects/TRKS-Team/WFBot");
                     dynamic jsonInfo =
                         (JObject)JsonConvert.DeserializeObject(content);
