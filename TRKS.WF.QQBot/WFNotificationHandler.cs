@@ -106,7 +106,7 @@ namespace TRKS.WF.QQBot
                         var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                          $"{WFFormatter.ToString(inv)}";
 
-                        Messenger.BoardCast(notifyText);
+                        Messenger.Broadcast(notifyText);
 
                         SendedInvSet.Add(inv.id);
                         break;
@@ -198,8 +198,9 @@ namespace TRKS.WF.QQBot
             if (reward.Items.Length > 0 || reward.CountedItems.Length > 0)
             {
                 var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
-                    WFFormatter.ToString(alert);
-                Messenger.BoardCast(result);
+                    WFFormatter.ToString(alert) +
+                    "\r\n可使用:/help来查看机器人的更多说明.";
+                Messenger.Broadcast(result);
             }
             SendedAlertsSet.Add(alert.Id);
         }

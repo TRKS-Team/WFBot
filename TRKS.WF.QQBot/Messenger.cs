@@ -47,10 +47,10 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(5000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
-        public static void BoardCast(string content)
+        public static void Broadcast(string content)
         {
             foreach (var group in Config.Instance.WFGroupList)
             {
@@ -61,7 +61,7 @@ namespace TRKS.WF.QQBot
         }
         public static void SendHelpdoc(string group)
         {
-            SendGroup(group, @"机器人欢迎唯一指定帮助文档
+            SendGroup(group, @"欢迎查看机器人唯一指定帮助文档
 宣传贴地址:https://warframe.love/thread-230.htm
 开源地址:https://github.com/TheRealKamisama/WFBot
 本机器人为公益项目,持续维护中.");
@@ -91,7 +91,6 @@ namespace TRKS.WF.QQBot
 功能7:赏金 可使用[/赏金(同义词也可){空格}<赏金数>(赏金一是1)]来查询地球和金星的单一赏金任务.
      注意:必须需要参数.
 功能8:裂隙 可使用[/裂隙{空格}<关键词>(比如 前纪,歼灭)]来查询所有和关键词有关的裂隙.
-其他功能待定
 用于管理的命令均为私聊机器人:
     启用群通知:[添加群{空格}<口令>{空格}<群号>]
     禁用群通知:[删除群{空格}<口令>{空格}<群号>]");

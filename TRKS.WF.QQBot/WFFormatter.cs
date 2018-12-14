@@ -90,7 +90,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             sb.AppendLine($"现在金星平原的温度是: {temp}");
             //sb.AppendLine($"将在{cycle.expiry} 变为 {nextTemp}");
-            sb.Append($"距离{nextTemp} 还有 {time}");
+            sb.Append($"距离 {nextTemp} 还有 {time}");
             return sb.ToString();
         }
 
@@ -149,7 +149,8 @@ namespace TRKS.WF.QQBot
             foreach (var order in info.payload.orders)
             {
                 sb.AppendLine($"[{order.user.ingame_name}]   {order.user.status}");
-                sb.AppendLine($"{order.order_type}  {order.platinum}白鸡 快捷回复:/w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+                sb.AppendLine($"{order.order_type}  {order.platinum}白鸡");
+                sb.AppendLine($"-快捷回复:/w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)")
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
