@@ -103,12 +103,13 @@ namespace TRKS.WF.QQBot
                 {
                     if (Config.Instance.InvationRewardList.Contains(item))
                     {
+                        SendedInvSet.Add(inv.id);
                         var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                          $"{WFFormatter.ToString(inv)}";
 
                         Messenger.Broadcast(notifyText);
 
-                        SendedInvSet.Add(inv.id);
+
                         break;
                     }
                 }
@@ -197,12 +198,13 @@ namespace TRKS.WF.QQBot
             var reward = alert.Mission.Reward;
             if (reward.Items.Length > 0 || reward.CountedItems.Length > 0)
             {
+                SendedAlertsSet.Add(alert.Id);
                 var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                     WFFormatter.ToString(alert) +
                     "\r\n可使用:/help来查看机器人的更多说明.";
                 Messenger.Broadcast(result);
             }
-            SendedAlertsSet.Add(alert.Id);
+
         }
 
         /* 以下是废弃的代码和注释
