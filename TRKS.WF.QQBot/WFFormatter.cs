@@ -150,7 +150,8 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine($"[{order.user.ingame_name}]   {order.user.status}");
                 sb.AppendLine($"{order.order_type}  {order.platinum}白鸡");
-                sb.AppendLine($"-快捷回复:/w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)")
+                sb.AppendLine(
+                    $"-快捷回复:/w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
