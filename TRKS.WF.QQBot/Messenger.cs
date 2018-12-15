@@ -57,7 +57,7 @@ namespace TRKS.WF.QQBot
                 foreach (var group in Config.Instance.WFGroupList)
                 {
                     SendGroup(group, content + Environment.NewLine + group);
-                    Thread.Sleep(4000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                    Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
         }
