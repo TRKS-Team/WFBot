@@ -13,7 +13,10 @@ namespace TRKS.WF.QQBot
     {
         public static void Execute()
         {
-            Process.Start(new ProcessStartInfo("YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe")
+            var basePath = "YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe";
+            var path = Path.Combine(Path.GetTempPath(), Path.GetFileName(basePath));
+            File.Copy(basePath, path, true);
+            Process.Start(new ProcessStartInfo(path)
             {
                 WorkingDirectory = Directory.GetCurrentDirectory()
             });
