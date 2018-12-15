@@ -35,14 +35,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 if (message.StartsWith("/"))
                 {
                     var command = message.Substring(1).ToLower();
-                    var syndicates = new List<string>() {"赏金", "平原赏金", "地球赏金", "金星赏金", "金星平原赏金", "地球平原赏金"};
-                    var fissures = new List<string>() {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
-                    if (syndicates.Where(ostron => command.StartsWith(ostron)).Any())
+                    var syndicates = new [] {"赏金", "平原赏金", "地球赏金", "金星赏金", "金星平原赏金", "地球平原赏金"};
+                    var fissures = new [] {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
+                    if (syndicates.Any(ostron => command.StartsWith(ostron)))
                     {
-                        var indexString = command.Substring(syndicates.Where(ostron => command.StartsWith(ostron)).First().Length);
+                        var indexString = command.Substring(syndicates.First(ostron => command.StartsWith(ostron)).Length);
                         if (indexString.IsNumber())
                         {
-                            var index = Int32.Parse(indexString);
+                            var index = int.Parse(indexString);
                             if (index <= 5 && 0 < index)
                             {
                                 _wFStatus.SendSyndicateMissions(context.FromGroup, index);
@@ -55,11 +55,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendGroup(context.FromGroup, "需要参数,例子:/赏金 4 将会返回赏金四.");
+                            Messenger.SendGroup(context.FromGroup, "需要参数, 例子:/赏金 4 将会返回赏金四.");
                         }
                     }
 
-                    if (fissures.Where(fissure => command.StartsWith(fissure)).Any())
+                    if (fissures.Any(fissure => command.StartsWith(fissure)))
                     {
                         var words = command.Split(' ').ToList();
                         if (words.Count >= 2)
@@ -69,7 +69,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendGroup(context.FromGroup, $"需要参数,列如: /查询裂隙 古纪(第一个为主条件) 歼灭(之后可添加多个小条件).");
+                            Messenger.SendGroup(context.FromGroup, $"需要参数, 列如: /查询裂隙 古纪(第一个为主条件) 歼灭(之后可添加多个小条件).");
                         }
 
                     }

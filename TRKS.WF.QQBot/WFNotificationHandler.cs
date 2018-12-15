@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
+// ReSharper disable FieldCanBeMadeReadOnly.Global
 
 namespace TRKS.WF.QQBot
 {
@@ -44,11 +45,11 @@ namespace TRKS.WF.QQBot
 
         }
 
-        public HashSet<string> SendedAlertsSet = new HashSet<string>();
-        public HashSet<string> SendedInvSet = new HashSet<string>();
+        private readonly HashSet<string> SendedAlertsSet = new HashSet<string>();
+        private readonly HashSet<string> SendedInvSet = new HashSet<string>();
         private bool _inited;// 谁加了个readonly????????
-        public Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
-        private WFChineseAPI api = new WFChineseAPI();
+        public readonly Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+        private readonly WFChineseAPI api = new WFChineseAPI();
 
         private void InitWFNotification()
         {
@@ -75,42 +76,46 @@ namespace TRKS.WF.QQBot
             _inited = true;
         }
 
-
-        public void UpdateInvasions()
+        private static readonly object _invasionLocker = new object();
+        private void UpdateInvasions()
         {
-            var invs = new List<WFInvasion>();
-            try
+            lock (_invasionLocker)
             {
-                invs = api.GetInvasions();
-            }
-            catch (WebException)
-            {
-                // 也挺正常 不慌不慌
-            }
-            catch (Exception e)
-            {
-                // 问题有点大 我慌一下
-                Messenger.SendDebugInfo(e.ToString());
-            }
-            foreach (var inv in invs)
-            {
-                if (inv.completed) continue; // 不发已经完成的入侵
-                // 你学的好快啊
-                if(SendedInvSet.Contains(inv.id)) continue;// 不发已经发过的入侵
-
-                var list = GetAllInvasionsCountedItems(inv);
-                foreach (var item in list)
+                var invs = new List<WFInvasion>();
+                try
                 {
-                    if (Config.Instance.InvationRewardList.Contains(item))
+                    invs = api.GetInvasions();
+                }
+                catch (WebException)
+                {
+                    // 也挺正常 不慌不慌
+                }
+                catch (Exception e)
+                {
+                    // 问题有点大 我慌一下
+                    Messenger.SendDebugInfo(e.ToString());
+                }
+
+                foreach (var inv in invs)
+                {
+                    if (inv.completed) continue; // 不发已经完成的入侵
+                    // 你学的好快啊
+                    if (SendedInvSet.Contains(inv.id)) continue; // 不发已经发过的入侵
+
+                    var list = GetAllInvasionsCountedItems(inv);
+                    foreach (var item in list)
                     {
-                        SendedInvSet.Add(inv.id);
-                        var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
-                                         $"{WFFormatter.ToString(inv)}";
+                        if (Config.Instance.InvationRewardList.Contains(item))
+                        {
+                            var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
+                                             $"{WFFormatter.ToString(inv)}";
 
-                        Messenger.Broadcast(notifyText);
+                            Messenger.Broadcast(notifyText);
+                            SendedInvSet.Add(inv.id);
 
 
-                        break;
+                            break;
+                        }
                     }
                 }
             }
@@ -151,30 +156,32 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格
         }
 
-
-        public void UpdateAlerts()
+        private static readonly object _alertLocker = new object();
+        private void UpdateAlerts()
         {
-            try
+            lock (_alertLocker)
             {
-                var alerts = api.GetAlerts();
-                foreach (var alert in alerts)
+                try
                 {
-                    if (!SendedAlertsSet.Contains(alert.Id))
+                    var alerts = api.GetAlerts();
+                    foreach (var alert in alerts)
                     {
-                        SendWFAlert(alert);
+                        if (!SendedAlertsSet.Contains(alert.Id))
+                        {
+                            SendWFAlert(alert);
+                        }
                     }
+
                 }
-
+                catch (WebException)
+                {
+                    // 问题不大 不用慌
+                }
+                catch (Exception e)
+                {
+                    Messenger.SendDebugInfo(e.ToString());
+                }
             }
-            catch (WebException)
-            {
-                // 问题不大 不用慌
-            }
-            catch (Exception e)
-            {
-                Messenger.SendDebugInfo(e.ToString());
-            }
-
         }
 
         public void SendAllAlerts(string group)
@@ -193,18 +200,21 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格
         }
 
-        public void SendWFAlert(WFAlert alert)
+        private static object _wfalertLock = new object();
+        private void SendWFAlert(WFAlert alert)
         {
-            var reward = alert.Mission.Reward;
-            if (reward.Items.Length > 0 || reward.CountedItems.Length > 0)
+            lock (_wfalertLock)
             {
-                SendedAlertsSet.Add(alert.Id);
-                var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
-                    WFFormatter.ToString(alert) +
-                    "\r\n可使用:/help来查看机器人的更多说明.";
-                Messenger.Broadcast(result);
+                var reward = alert.Mission.Reward;
+                if (reward.Items.Length > 0 || reward.CountedItems.Length > 0)
+                {
+                    var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
+                                 WFFormatter.ToString(alert) +
+                                 "\r\n可使用:/help来查看机器人的更多说明.";
+                    Messenger.Broadcast(result);
+                    SendedAlertsSet.Add(alert.Id);
+                }
             }
-
         }
 
         /* 以下是废弃的代码和注释

@@ -47,17 +47,19 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            Thread.Sleep(5000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+            Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
         public static void Broadcast(string content)
         {
-            foreach (var group in Config.Instance.WFGroupList)
+            Task.Factory.StartNew(() =>
             {
-                SendGroup(group, content + Environment.NewLine + group);
-            }
-            
-
+                foreach (var group in Config.Instance.WFGroupList)
+                {
+                    SendGroup(group, content + Environment.NewLine + group);
+                    Thread.Sleep(4000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                }
+            }, TaskCreationOptions.LongRunning);
         }
         public static void SendHelpdoc(string group)
         {
@@ -90,7 +92,7 @@ namespace TRKS.WF.QQBot
      *查询未开紫卡请输入:手枪未开紫卡*
 功能7:赏金 可使用[/赏金(同义词也可){空格}<赏金数>(赏金一是1)]来查询地球和金星的单一赏金任务.
      注意:必须需要参数.
-功能8:裂隙 可使用[/裂隙{空格}<关键词>(比如 前纪,歼灭)]来查询所有和关键词有关的裂隙.
+功能8:裂隙 可使用[/裂隙{空格}<关键词>(比如 前纪, 歼灭)]来查询所有和关键词有关的裂隙.
 用于管理的命令均为私聊机器人:
     启用群通知:[添加群{空格}<口令>{空格}<群号>]
     禁用群通知:[删除群{空格}<口令>{空格}<群号>]");
