@@ -181,6 +181,7 @@ namespace Settings
             Config.Instance.ClientId = textBox4.Text;
             Config.Instance.ClientSecret = textBox5.Text;
             Config.Save();
+            RRSearcher.UpdateAccessToken();
         }
     }
 
