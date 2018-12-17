@@ -30,11 +30,12 @@ namespace TRKS.WF.QQBot
             Config.Instance.Last_update = DateTime.Now;
             Config.Save();
             return accesstoken;
+            
         }
 
         public void UpdateAccessToken()
         {
-            if (Config.Instance.ClientId.Length != 0 && Config.Instance.ClientSecret.Length != 0)
+            if (!string.IsNullOrEmpty(Config.Instance.ClientId) && !string.IsNullOrEmpty(Config.Instance.ClientSecret))
             {
                 if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7))
                 {
