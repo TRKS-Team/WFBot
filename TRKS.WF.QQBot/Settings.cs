@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -170,5 +171,11 @@ namespace Settings
         {
             return int.TryParse(source, out _);
         }
+
+        public static string ToBase64(this string source)
+        {
+            var bytes = Encoding.ASCII.GetBytes(source);
+            return Convert.ToBase64String(bytes);
+        }   
     }
 }

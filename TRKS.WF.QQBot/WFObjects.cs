@@ -7,6 +7,42 @@ using System.Threading.Tasks;
 namespace TRKS.WF.QQBot
 {
 
+    public class RivenInfo
+    {
+        public string item_Name { get; set; }
+        public string item_Cate { get; set; }
+        public string item_Class { get; set; }
+        public string item_Property { get; set; }
+        public int item_Price { get; set; }
+        public string user_Name { get; set; }
+        public string item_Id { get; set; }
+        public int user_Status { get; set; }
+        public int item_Status { get; set; }
+        public int item_Level { get; set; }
+        public int isSell { get; set; }
+        public int item_ResetNum { get; set; }
+        public int last_In { get; set; }
+        public int lockingNum { get; set; }
+        public string lockingUser { get; set; }
+        public int business_Process { get; set; }
+        public int customer_Process { get; set; }
+        public string success_UserId { get; set; }
+        public int item_Dan { get; set; }
+        public string item_Polarity { get; set; }
+        public object item_Platform { get; set; }
+        public int isVeiled { get; set; }
+        public int user_Level { get; set; }
+        public int last_Update { get; set; }
+        public object user_Mail { get; set; }
+    }
+
+
+    public class AccessToken
+    {
+        public string access_token { get; set; }
+        public int expires_in { get; set; }
+        public string token_type { get; set; }
+    }
 
     public class VallisCycle
     {
@@ -260,7 +296,6 @@ namespace TRKS.WF.QQBot
         public Alert[] Alert { get; set; }
         public Invasion[] Invasion { get; set; }
         public Riven[] Riven { get; set; }
-        public Statuscode[] StatusCode { get; set; }
         public Relic[] Relic { get; set; }
     }
 

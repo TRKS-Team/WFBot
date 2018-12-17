@@ -31,8 +31,15 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        public static T DownloadJson<T>(string url, WebHeaderCollection header)
+        {
+            var wc = webClient;
+            wc.Value.Headers = header;
+            return wc.Value.DownloadString(url).JsonDeserialize<T>();
+        }
 
-        public static T DownloadJson<T>(string url, string body)
+
+        public static T UploadJson<T>(string url, string body)
         {
             return webClient.Value.UploadString(url, body).JsonDeserialize<T>();
         }

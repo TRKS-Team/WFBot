@@ -18,6 +18,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         internal static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
         private static readonly WFStatus _wFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
+        private static readonly RRSearcher _rrSearcher = new RRSearcher();
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
@@ -81,6 +82,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             _wmSearcher.SendWMInfo(item, context.FromGroup);
                         }
 
+                    }
+
+                    if (command.StartsWith("紫卡"))
+                    {
+                        var strs = command.Split(' ');
+                        var weapon = strs.Last();
+                        _rrSearcher.SendRiveninfos(context.FromGroup, weapon);
+                        
                     }
                     switch (command)
                     {

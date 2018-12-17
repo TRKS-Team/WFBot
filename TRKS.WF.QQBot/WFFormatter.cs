@@ -22,6 +22,37 @@ namespace TRKS.WF.QQBot
                    //$"-过期时间: {alert.Expiry}({time} 后)" +
                    $"-过期时间: ({time} 后)";
         }
+
+        public static string ToString(List<RivenInfo> infos)
+        {
+            var weapon = infos.First().item_Class;
+            var sb = new StringBuilder();
+            sb.AppendLine($"下面是{weapon}紫卡的{infos.Count}条卖家信息.");
+            foreach (var info in infos)
+            {
+                sb.AppendLine($"[{info.item_Name}]  ");
+                switch (info.user_Status)
+                {
+                    case 0:
+                        sb.Append("离线");
+                        break;
+                    case 1:
+                        sb.Append("在线");
+                        break;
+                    case 2:
+                        sb.Append("游戏中");
+                        break;
+                }
+
+                sb.AppendLine($"-价格:{info.item_Price}白鸡");
+                sb.AppendLine($"-属性:{info.item_Property}");
+                sb.AppendLine();
+            }
+
+            return sb.ToString().Trim();
+
+
+        }
         public static string ToString(List<Fissure> fissures)
         {
             var sb = new StringBuilder();

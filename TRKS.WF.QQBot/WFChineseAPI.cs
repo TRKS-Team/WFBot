@@ -146,6 +146,7 @@ namespace TRKS.WF.QQBot
         private Dictionary<string, Translator> searchwordTranslator = new Dictionary<string, Translator>();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
+        private List<string> weapons = new List<string>();
 
         public WFTranslator()
         {
@@ -190,24 +191,30 @@ namespace TRKS.WF.QQBot
             {
                 alertTranslator.AddEntry(alert.En, alert.Zh);
             }
+
+            foreach (var riven in translateApi.Riven)
+            {
+                weapons.Add(riven.Name.ToLower().Trim());
+            }
         }
 
         private static WFApi TranslateApi()
         {
-            var alerts =
-                WebHelper.DownloadJson<Alert[]>(
+            var alerts = WebHelper.DownloadJson<Alert[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
             var dicts = WebHelper.DownloadJson<Dict[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
-            var invasions =
-                WebHelper.DownloadJson<Invasion[]>(
+            var invasions = WebHelper.DownloadJson<Invasion[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
             var sales = WebHelper.DownloadJson<Sale[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
+            var relic = WebHelper.DownloadJson<Relic[]>(
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Riven.json");
+            var riven = WebHelper.DownloadJson<Riven[]>(
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Relic.json");
             var translateApi = new WFApi
             {
-                Alert = alerts, Dict = dicts, Invasion = invasions, Relic = new Relic[0], Riven = new Riven[0], Sale = sales,
-                StatusCode = new Statuscode[0]
+                Alert = alerts, Dict = dicts, Invasion = invasions, Relic = relic, Riven = riven, Sale = sales
             };
             return translateApi;
         }
@@ -254,6 +261,10 @@ namespace TRKS.WF.QQBot
             return strings[0] + dictTranslators["Star"].Translate(nodeRegion);
         }
 
+        public bool ContainsWeapon(string weapon)
+        {
+            return weapons.Contains(weapon);
+        }
         public void TranslateAlert(WFAlert alert)
         {
             var mission = alert.Mission;
