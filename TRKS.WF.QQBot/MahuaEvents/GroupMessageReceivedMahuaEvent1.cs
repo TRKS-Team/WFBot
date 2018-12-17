@@ -88,7 +88,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         var strs = command.Split(' ');
                         var weapon = strs.Last();
-                        _rrSearcher.SendRiveninfos(context.FromGroup, weapon);
+                        // _rrSearcher.SendRiveninfos(context.FromGroup, weapon);
                         
                     }
                     switch (command)
