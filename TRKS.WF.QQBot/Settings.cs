@@ -38,6 +38,8 @@ namespace Settings
             UpdateCheckBox();
             checkBox9.Checked = Config.Instance.AcceptInvitation;
             checkBox10.Checked = Config.Instance.AcceptJoiningRequest;
+            textBox4.Text = Config.Instance.ClientId;
+            textBox5.Text = Config.Instance.ClientSecret;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -162,6 +164,23 @@ namespace Settings
             {
                 Messenger.SendGroup(group, $"[来自管理者]通知:{textBox3.Text}");
             }
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Config.Instance.ClientId = textBox4.Text;
+            Config.Instance.ClientSecret = textBox5.Text;
+            Config.Save();
         }
     }
 
