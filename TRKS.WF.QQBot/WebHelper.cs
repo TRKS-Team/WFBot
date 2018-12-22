@@ -43,6 +43,12 @@ namespace TRKS.WF.QQBot
         {
             return webClient.Value.UploadString(url, body).JsonDeserialize<T>();
         }
+        public static T UploadJson<T>(string url, string body, WebHeaderCollection header)
+        {
+            var wc = webClient;
+            wc.Value.Headers = header;
+            return wc.Value.UploadString(url, body).JsonDeserialize<T>();
+        }
     }
 
     public class WebClientEx2 : WebClient

@@ -10,11 +10,11 @@ using Settings;
 
 namespace TRKS.WF.QQBot
 {
-    public class RRSearcher
+    public class RMSearcher
     {
         public Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
         public WFTranslator translator = new WFTranslator();
-        public RRSearcher()
+        public RMSearcher()
         {
             UpdateAccessToken();
             timer.Elapsed += (sender, eventArgs) =>
@@ -26,7 +26,9 @@ namespace TRKS.WF.QQBot
         public string GetAccessToken()
         {
             var body = $"client_id={Config.Instance.ClientId}&client_secret={Config.Instance.ClientSecret}&grant_type=client_credentials";
-            var accesstoken = WebHelper.UploadJson<AccessToken>("https://api.richasy.cn/connect/token", body).access_token;
+            var header = new WebHeaderCollection();
+            header.Add("Content-Type", "application/x-www-form-urlencoded");
+            var accesstoken = WebHelper.UploadJson<AccessToken>("https://api.richasy.cn/connect/token", body, header).access_token;
             Config.Instance.Last_update = DateTime.Now;
             Config.Save();
             return accesstoken;

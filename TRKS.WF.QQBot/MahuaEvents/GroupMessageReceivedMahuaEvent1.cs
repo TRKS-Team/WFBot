@@ -18,7 +18,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         internal static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
         private static readonly WFStatus _wFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
-        //private static readonly RRSearcher _rrSearcher = new RRSearcher(); 去死吧 老子不写了
+        private static readonly RMSearcher _rmSearcher = new RMSearcher();
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
@@ -88,7 +88,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         var strs = command.Split(' ');
                         var weapon = strs.Last();
-                        // _rrSearcher.SendRiveninfos(context.FromGroup, weapon);
+                         _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
                         
                     }
                     switch (command)

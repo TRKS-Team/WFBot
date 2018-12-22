@@ -193,7 +193,7 @@ namespace Settings
 
         public static string ToBase64(this string source)
         {
-            var bytes = Encoding.ASCII.GetBytes(source);
+            var bytes = Encoding.UTF8.GetBytes(source);
             return Convert.ToBase64String(bytes);
         }   
     }

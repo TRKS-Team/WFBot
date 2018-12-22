@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newbe.Mahua;
 using Timer = System.Timers.Timer;
 // ReSharper disable FieldCanBeMadeReadOnly.Global
 
@@ -47,7 +49,7 @@ namespace TRKS.WF.QQBot
 
         private readonly HashSet<string> SendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> SendedInvSet = new HashSet<string>();
-        private bool _inited;// 谁加了个readonly????????
+        private bool _inited;
         public readonly Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         private readonly WFChineseAPI api = new WFChineseAPI();
 
@@ -71,11 +73,34 @@ namespace TRKS.WF.QQBot
             {
                 UpdateAlerts();
                 UpdateInvasions();
+                UpdateWFGroups();
             };
             timer.Start();
             _inited = true;
         }
 
+        private List<GroupInfo> GetGroups()
+        {
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            {
+                var api = robotSession.MahuaApi;
+                var groups = api.GetGroupsWithModel().Model.ToList();
+                return groups;
+            }
+        }
+
+        private void UpdateWFGroups()
+        {
+            var groups = GetGroups().Select(group => group.Group);
+            foreach (var group in Config.Instance.WFGroupList)
+            {
+                if (!groups.Contains(group))
+                {
+                    Config.Instance.WFGroupList.Remove(group);
+                }
+            }
+            Config.Save();
+        }
         private static readonly object _invasionLocker = new object();
         private void UpdateInvasions()
         {

@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -219,7 +219,7 @@
     <Compile Include="MahuaEvents\UpdatingEvent1.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="ReleaseGetter.cs" />
-    <Compile Include="RRSearcher.cs" />
+    <Compile Include="RMSearcher.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
