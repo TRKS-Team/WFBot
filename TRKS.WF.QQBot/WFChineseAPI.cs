@@ -208,9 +208,9 @@ namespace TRKS.WF.QQBot
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
             var sales = WebHelper.DownloadJson<Sale[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
-            var relic = WebHelper.DownloadJson<Relic[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Riven.json");
             var riven = WebHelper.DownloadJson<Riven[]>(
+                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Riven.json");
+            var relic = WebHelper.DownloadJson<Relic[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Relic.json");
             var translateApi = new WFApi
             {

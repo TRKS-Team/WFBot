@@ -26,8 +26,10 @@ namespace TRKS.WF.QQBot
         public string GetAccessToken()
         {
             var body = $"client_id={Config.Instance.ClientId}&client_secret={Config.Instance.ClientSecret}&grant_type=client_credentials";
-            var header = new WebHeaderCollection();
-            header.Add("Content-Type", "application/x-www-form-urlencoded");
+            var header = new WebHeaderCollection
+            {
+                { "Content-Type", "application/x-www-form-urlencoded" }
+            };
             var accesstoken = WebHelper.UploadJson<AccessToken>("https://api.richasy.cn/connect/token", body, header).access_token;
             Config.Instance.Last_update = DateTime.Now;
             Config.Save();
