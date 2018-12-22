@@ -30,7 +30,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"下面是{weapon}紫卡的{infos.Count}条卖家信息.");
             foreach (var info in infos)
             {
-                sb.AppendLine($"[{info.item_Name}]  ");
+                sb.AppendLine($"[{info.user_Name}]  ");
                 switch (info.user_Status)
                 {
                     case 0:
