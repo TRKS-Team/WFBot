@@ -21,6 +21,7 @@
 - [Cleverqq(原IRQQ)](https://www.cleverqq.cn/)(拥有免费阉割版)  
 - [MyPCQQ](https://mypcqq.cc/)(付费)  
 
+**请将你选择的机器人放在一台24小时运行的电脑上.**    
 ### 安装插件文件
 #### 从 GitHub Release
 1. 从[这里](https://github.com/TRKS-Team/WFBot/releases/latest)选择对应的平台并下载, 解压到机器人根目录.
@@ -29,10 +30,12 @@
 1. 安装 `Visual Studio 2017`, 以及 `.NET Framework 4.6.2 SDK.`  
 2. Clone 这个仓库, 并使用`TRKS.WF.QQBot\build.bat`来生成一份插件.  
 3. 将生成的所有`TRKS.WF.QQBot\bin\{对应QQ平台}`文件夹内的所有文件拖入机器人根目录.  
----
-> 提示: 如果机器人启动就报错 可尝试删除`YUELUO\TRKS.WF.QQBot\TRKS.WF.QQBot.dll.config`   
-  
 
+*代码变动后的五分钟内将会把最新的插件部署到所有机器人上,如果我手滑引爆了所有机器人,请不要慌张.*
+
+---
+> 提示: 如果机器人启动就报错 可尝试删除`YUELUO\TRKS.WF.QQBot\TRKS.WF.QQBot.dll.config`  
+  
 之后可以在插件设置内修改入侵提醒物品以及授权口令.
 可修改的内容如下: 
 - 修改群通知功能所用的口令
@@ -60,7 +63,7 @@
     > - *查询 `prime` 版物品必须加 `prime` 后缀*  
     > - *`prime` 不可以缩写成 `p`*  
     > - *查询未开紫卡请输入: 手枪未开紫卡*  
-- **紫卡市场(未完成)** 可使用 **/紫卡  \[武器名称]**
+- **紫卡市场** 可使用 **/紫卡  \[武器名称]**
   > *数据来自[**WFA紫卡市场**](https://riven.richasy.cn/#/)*
 - **赏金**: 可使用 **/赏金(或同义词) \[赏金数] (eg. 赏金一就是 1)** 来查询**地球**和**平原**的单一赏金任务.  
     > *必须输入需要第几个赏金.*  
