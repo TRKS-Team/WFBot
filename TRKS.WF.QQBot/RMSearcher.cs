@@ -69,7 +69,7 @@ namespace TRKS.WF.QQBot
             }
             else
             {
-                Messenger.SendGroup(group, $"武器{weapon}不存在,请检查格式(悦音prime)");
+                Messenger.SendGroup(group, $"武器{weapon}不存在,请检查格式(请注意:悦音prime)");
             }
         }
     } 

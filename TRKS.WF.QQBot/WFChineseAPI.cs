@@ -194,7 +194,7 @@ namespace TRKS.WF.QQBot
 
             foreach (var riven in translateApi.Riven)
             {
-                weapons.Add(riven.Name.ToLower().Trim());
+                weapons.Add(riven.Name.ToLower().Trim().Replace(" ", ""));
             }
         }
 

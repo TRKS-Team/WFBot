@@ -65,7 +65,7 @@ namespace TRKS.WF.QQBot
         {
             SendGroup(group, @"欢迎查看机器人唯一指定帮助文档
 宣传贴地址:https://warframe.love/thread-230.htm
-开源地址:https://github.com/TheRealKamisama/WFBot
+开源地址:https://github.com/TheRealKamisama/WFBot (具体的使用方法请见此链接.)
 本机器人为公益项目,持续维护中.");
             if (File.Exists("data/image/帮助文档.png"))
             {

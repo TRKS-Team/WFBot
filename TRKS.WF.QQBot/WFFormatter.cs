@@ -30,17 +30,17 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"下面是{weapon}紫卡的{infos.Count}条卖家信息.");
             foreach (var info in infos)
             {
-                sb.AppendLine($"[{info.user_Name}]  ");
+                sb.Append($"[{info.user_Name}]  ");
                 switch (info.user_Status)
                 {
                     case 0:
-                        sb.Append("离线");
+                        sb.AppendLine("离线");
                         break;
                     case 1:
-                        sb.Append("在线");
+                        sb.AppendLine("在线");
                         break;
                     case 2:
-                        sb.Append("游戏中");
+                        sb.AppendLine("游戏中");
                         break;
                 }
 

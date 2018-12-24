@@ -56,7 +56,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendGroup(context.FromGroup, "需要参数, 例子:/赏金 4 将会返回赏金四.");
+                            Messenger.SendGroup(context.FromGroup, "需要参数, e.g. /赏金 4");
                         }
                     }
 
@@ -70,7 +70,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendGroup(context.FromGroup, $"需要参数, 列如: /查询裂隙 古纪(第一个为主条件) 歼灭(之后可添加多个小条件).");
+                            Messenger.SendGroup(context.FromGroup, $"需要参数, e.g. /裂隙 古纪");
                         }
 
                     }
@@ -78,17 +78,32 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         if (!command.Contains("裂隙") || !command.Contains("裂缝"))
                         {
-                            var item = command.Substring(3).Replace(" ", "").ToLower();
-                            _wmSearcher.SendWMInfo(item, context.FromGroup);
+                            if (command.Length > 3)
+                            {
+                                var item = command.Substring(3).Replace(" ", "").ToLower();
+                                _wmSearcher.SendWMInfo(item, context.FromGroup);
+                            }
+                            else
+                            {
+                                Messenger.SendGroup(context.FromGroup, "你没输入要查询的物品.");
+                            }
+
                         }
 
                     }
 
                     if (command.StartsWith("紫卡"))
                     {
-                        var strs = command.Split(' ');
-                        var weapon = strs.Last();
-                         _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
+                        if (command.Length > 3)
+                        {
+                            var weapon = command.Substring(3).Replace(" ", "").ToLower();
+                            _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
+                        }
+                        else
+                        {
+                            Messenger.SendGroup(context.FromGroup, "你没输入要查询的武器.");
+                        }
+
                         
                     }
                     switch (command)
@@ -104,6 +119,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "奥布山谷":
                         case "金星平原温度":
                         case "平原温度":
+                        case "平原时间":
                             _wFStatus.SendCycles(context.FromGroup);
                             break;
                         case "入侵":
