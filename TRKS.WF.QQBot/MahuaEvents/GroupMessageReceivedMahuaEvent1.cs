@@ -116,7 +116,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendGroup(context.FromGroup, "请在后面输入查找关键词.");
+                            Messenger.SendGroup(context.FromGroup, "请在后面输入关键词.");
                         }
                     }
                     switch (command)

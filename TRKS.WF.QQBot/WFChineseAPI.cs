@@ -222,7 +222,7 @@ namespace TRKS.WF.QQBot
 
         public List<Relic> GetRelicInfo(string word)
         {
-            return translateApi.Relic.Where(relic => relic.Name.Contains(word)).ToList();
+            return translateApi.Relic.Where(relic => relic.Name.ToLower().Replace(" ","").Contains(word)).ToList();
         }
         public string TranslateSearchWord(string source)
         {
@@ -315,10 +315,15 @@ namespace TRKS.WF.QQBot
                             for (int i = 0; i < job.rewardPool.Length; i++)
                             {
                                 var reward = job.rewardPool[i];
-                                var item = reward.Replace("Relic", "");
+                                var item = reward;
                                 var count = "";
-                                item = Regex.Replace(reward, @"\d", "").Replace("X", "").Replace(",", "").Replace("BP", "Blueprint").Trim();
-                                count = Regex.Replace(reward, @"[^\d]*", "");                             
+                                if (!reward.Contains("Relic"))
+                                {
+                                    item = Regex.Replace(reward, @"\d", "").Replace("X", "").Replace(",", "").Replace("BP", "Blueprint").Trim();
+                                    count = Regex.Replace(reward, @"[^\d]*", "");
+                                }
+
+                                item = item.Replace("Relic", "");
                                 var sb = new StringBuilder();
                                 if (count.Length != 0)
                                 {
