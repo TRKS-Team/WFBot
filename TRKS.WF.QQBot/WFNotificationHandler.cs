@@ -51,7 +51,7 @@ namespace TRKS.WF.QQBot
         private readonly HashSet<string> SendedInvSet = new HashSet<string>();
         private bool _inited;
         public readonly Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
-        private readonly WFChineseAPI api = new WFChineseAPI();
+        private readonly WFChineseAPI api = WFResource.WFChineseApi;
 
         private void InitWFNotification()
         {

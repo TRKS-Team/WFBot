@@ -22,7 +22,20 @@ namespace TRKS.WF.QQBot
                    //$"-过期时间: {alert.Expiry}({time} 后)" +
                    $"-过期时间: ({time} 后)";
         }
+        public static string ToString(List<Relic> relics)
+        {
+            var sb = new StringBuilder();
+            foreach (var relic in relics)
+            {
+                var rewards = relic.Rewards.Split(' ').Select(reward => $"[{reward.Replace("_", " ")}]");
+                var rewardstring = string.Join("", rewards);
+                sb.AppendLine($"-{relic.Name}");
+                sb.AppendLine($">{rewardstring}");
+                sb.AppendLine();
+            }
 
+            return sb.ToString().Trim();
+        }
         public static string ToString(List<RivenInfo> infos)
         {
             var weapon = infos.First().item_Class;

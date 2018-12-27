@@ -8,7 +8,7 @@ namespace TRKS.WF.QQBot
 {
     public class WMSearcher
     {
-        private readonly WFTranslator translator = new WFTranslator();
+        private readonly WFTranslator translator = WFResource.WFTranslator;
         public WMInfo GetWMInfo(string searchword)
         {
             var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item");

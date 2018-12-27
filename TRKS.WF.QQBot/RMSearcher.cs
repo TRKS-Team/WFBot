@@ -12,8 +12,8 @@ namespace TRKS.WF.QQBot
 {
     public class RMSearcher
     {
-        public Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
-        public WFTranslator translator = new WFTranslator();
+        private Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
+        private WFTranslator translator = WFResource.WFTranslator;
         public RMSearcher()
         {
             UpdateAccessToken();
@@ -61,10 +61,18 @@ namespace TRKS.WF.QQBot
 
         public void SendRiveninfos(string group, string weapon)
         {
-            if (translator.ContainsWeapon(weapon))
+            if (translator.ContainsWeapon(weapon.ToLower().Replace(" ", "")))
             {
                 var info = GetRiveninfos(weapon);
-                var msg = WFFormatter.ToString(info);
+                var msg = "";
+                if (info.Count > 0)
+                {
+                    msg = WFFormatter.ToString(info);
+                }
+                else
+                {
+                    msg = $"抱歉,目前紫卡市场没有任何出售:{weapon}紫卡的用户.";
+                }
                 Messenger.SendGroup(group, msg);
             }
             else

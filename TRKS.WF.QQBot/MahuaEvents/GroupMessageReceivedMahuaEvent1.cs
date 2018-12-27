@@ -106,6 +106,19 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                         
                     }
+
+                    if (command.StartsWith("遗物"))
+                    {
+                        if (command.Length > 3)
+                        {
+                            var word = command.Substring(3).ToLower().Replace(" ", "");
+                            _wFStatus.SendRelicInfo(context.FromGroup, word);
+                        }
+                        else
+                        {
+                            Messenger.SendGroup(context.FromGroup, "请在后面输入查找关键词.");
+                        }
+                    }
                     switch (command)
                     {
                         case "警报":

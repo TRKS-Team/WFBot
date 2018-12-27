@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace TRKS.WF.QQBot
 {
+    public static class WFResource
+    {
+        public static WFTranslator WFTranslator = new WFTranslator();
+        public static WFChineseAPI WFChineseApi = new WFChineseAPI();
+    }
     public class WFChineseAPI
     {
-        private WFTranslator translator;
-
-        public WFChineseAPI()
-        {
-            translator = new WFTranslator();
-        }
+        private WFTranslator translator = WFResource.WFTranslator;
 
         public List<WFInvasion> GetInvasions()
         {
@@ -147,10 +147,11 @@ namespace TRKS.WF.QQBot
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
+        private WFApi translateApi = TranslateApi();
 
         public WFTranslator()
         {
-            var translateApi = TranslateApi();
+
             dictTranslators.Add("All", new Translator());
             dictTranslators.Add("WM", new Translator());
             foreach (var dict in translateApi.Dict)
@@ -219,6 +220,10 @@ namespace TRKS.WF.QQBot
             return translateApi;
         }
 
+        public List<Relic> GetRelicInfo(string word)
+        {
+            return translateApi.Relic.Where(relic => relic.Name.Contains(word)).ToList();
+        }
         public string TranslateSearchWord(string source)
         {
             return searchwordTranslator["Word"].Translate(source);
@@ -310,14 +315,10 @@ namespace TRKS.WF.QQBot
                             for (int i = 0; i < job.rewardPool.Length; i++)
                             {
                                 var reward = job.rewardPool[i];
-                                var item = reward;
+                                var item = reward.Replace("Relic", "");
                                 var count = "";
-                                if (!reward.Contains("Relic"))
-                                {
-                                    item = Regex.Replace(reward, @"\d", "").Replace("X", "").Replace(",", "").Replace("BP", "Blueprint").Replace("Relic", "").Trim();
-                                    count = Regex.Replace(reward, @"[^\d]*", "");
-                                }
-
+                                item = Regex.Replace(reward, @"\d", "").Replace("X", "").Replace(",", "").Replace("BP", "Blueprint").Trim();
+                                count = Regex.Replace(reward, @"[^\d]*", "");                             
                                 var sb = new StringBuilder();
                                 if (count.Length != 0)
                                 {
