@@ -83,7 +83,7 @@ namespace TRKS.WF.QQBot
         public void SendRelicInfo(string group, string word)
         {
             var relics = translator.GetRelicInfo(word);
-            var msg = WFFormatter.ToString(relics) + $"你正在查看与 {word} 有关的所有遗物.";
+            var msg = WFFormatter.ToString(relics) + Environment.NewLine + $"你正在查看与 {word} 有关的所有遗物.";
             Messenger.SendGroup(group, msg);
         }
     }

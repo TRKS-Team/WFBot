@@ -322,8 +322,10 @@ namespace TRKS.WF.QQBot
                                     item = Regex.Replace(reward, @"\d", "").Replace("X", "").Replace(",", "").Replace("BP", "Blueprint").Trim();
                                     count = Regex.Replace(reward, @"[^\d]*", "");
                                 }
-
-                                item = item.Replace("Relic", "");
+                                else
+                                {
+                                    item = item.Replace("Relic", "").Replace("Lith", "古纪").Replace("Meso", "前纪").Replace("Neo", "中纪").Replace("Axi", "后纪");// 这是暴力写法 我懒了 真的
+                                }
                                 var sb = new StringBuilder();
                                 if (count.Length != 0)
                                 {
