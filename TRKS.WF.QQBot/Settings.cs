@@ -182,6 +182,11 @@ namespace Settings
             Config.Instance.ClientSecret = textBox5.Text;
             Config.Save();
         }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public static class StringExtensions
@@ -195,6 +200,11 @@ namespace Settings
         {
             var bytes = Encoding.UTF8.GetBytes(source);
             return Convert.ToBase64String(bytes);
-        }   
+        }
+
+        public static string Format(this string source)
+        {
+            return source.Replace(" ", "").ToLower().Trim();
+        }
     }
 }

@@ -7,6 +7,37 @@ using System.Threading.Tasks;
 namespace TRKS.WF.QQBot
 {
 
+    public class Event
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public int maximumScore { get; set; }
+        public string faction { get; set; }
+        public string description { get; set; }
+        public string node { get; set; }
+        public object[] concurrentNodes { get; set; }
+        public string victimNode { get; set; }
+        public string scoreLocTag { get; set; }
+        public EventReward[] rewards { get; set; }
+        public bool expired { get; set; }
+        public string health { get; set; }
+        public string asString { get; set; }
+    }
+
+    public class EventReward
+    {
+        public string[] items { get; set; }
+        public object[] countedItems { get; set; }
+        public int credits { get; set; }
+        public string asString { get; set; }
+        public string itemString { get; set; }
+        public string thumbnail { get; set; }
+        public int color { get; set; }
+    }
+
     public class RivenInfo
     {
         public string item_Name { get; set; }

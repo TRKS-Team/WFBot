@@ -61,7 +61,7 @@ namespace TRKS.WF.QQBot
 
         public void SendRiveninfos(string group, string weapon)
         {
-            if (translator.ContainsWeapon(weapon.ToLower().Replace(" ", "")))
+            if (translator.ContainsWeapon(weapon.Format()))
             {
                 var info = GetRiveninfos(weapon);
                 var msg = "";

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,9 +10,49 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Settings;
 
 namespace TRKS.WF.QQBot
 {
+    class StringInfo : IComparable<StringInfo>, IComparable
+    {
+        public string Name { get; set; }
+        public int LevDistance { get; set; }
+
+        public int CompareTo(StringInfo other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            return LevDistance.CompareTo(other.LevDistance);
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return 1;
+            if (ReferenceEquals(this, obj)) return 0;
+            return obj is StringInfo other ? CompareTo(other) : throw new ArgumentException($"Object must be of type {nameof(StringInfo)}");
+        }
+
+        public static bool operator <(StringInfo left, StringInfo right)
+        {
+            return Comparer<StringInfo>.Default.Compare(left, right) < 0;
+        }
+
+        public static bool operator >(StringInfo left, StringInfo right)
+        {
+            return Comparer<StringInfo>.Default.Compare(left, right) > 0;
+        }
+
+        public static bool operator <=(StringInfo left, StringInfo right)
+        {
+            return Comparer<StringInfo>.Default.Compare(left, right) <= 0;
+        }
+
+        public static bool operator >=(StringInfo left, StringInfo right)
+        {
+            return Comparer<StringInfo>.Default.Compare(left, right) >= 0;
+        }
+    }
     public static class WFResource
     {
         public static WFTranslator WFTranslator = new WFTranslator();
@@ -131,6 +172,18 @@ namespace TRKS.WF.QQBot
             translator.TranslateFissures(fissures);
             return fissures;
         }
+
+        public List<Event> GetEvents()
+        {
+            var events = WebHelper.DownloadJson<List<Event>>("https://api.warframestat.us/pc/events");
+            translator.TranslateEvents(events);
+            foreach (var @event in events)
+            {
+                @event.expiry = GetRealTime(@event.expiry);
+            }
+
+            return events;
+        }
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
@@ -178,7 +231,7 @@ namespace TRKS.WF.QQBot
                 {
                     searchwordTranslator.Add("Item", new Translator());
                 }
-                searchwordTranslator["Word"].AddEntry(sale.Zh.Replace(" ", "").ToLower(), sale.Search);
+                searchwordTranslator["Word"].AddEntry(sale.Zh.Format(), sale.Search);
                 searchwordTranslator["Item"].AddEntry(sale.Search, sale.Zh);
             }
             
@@ -195,7 +248,7 @@ namespace TRKS.WF.QQBot
 
             foreach (var riven in translateApi.Riven)
             {
-                weapons.Add(riven.Name.ToLower().Trim().Replace(" ", ""));
+                weapons.Add(riven.Name.Format());
             }
         }
 
@@ -220,9 +273,29 @@ namespace TRKS.WF.QQBot
             return translateApi;
         }
 
+        public List<string> GetSimilarItem(string word)
+        {
+            Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(word);
+            var distancelist = new SortedSet<StringInfo>();
+            foreach (var sale in translateApi.Sale)
+            {
+                var distance = lev.DistanceFrom(sale.Zh.Format());
+                distancelist.Add(new StringInfo {LevDistance = distance, Name = sale.Zh});
+            }
+
+            return distancelist.Take(5).Select(info => info.Name).ToList();
+        }
         public List<Relic> GetRelicInfo(string word)
         {
-            return translateApi.Relic.Where(relic => relic.Name.ToLower().Replace(" ","").Contains(word)).ToList();
+            return translateApi.Relic.Where(relic => relic.Name.Format().Contains(word)).ToList();
+        }
+
+        public void TranslateEvents(List<Event> events)
+        {
+            foreach (var @event in events)
+            {
+                @event.description = dictTranslators["All"].Translate(@event.description);
+            }
         }
         public string TranslateSearchWord(string source)
         {

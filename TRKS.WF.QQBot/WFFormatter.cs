@@ -10,6 +10,24 @@ namespace TRKS.WF.QQBot
 {
     public static class WFFormatter
     {
+        public static string ToString(List<Event> events)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("以下是游戏内所有的活动:");
+
+            foreach (var @event in events)
+            {
+                var time = (@event.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+                sb.AppendLine($"[{@event.description}]");
+                sb.AppendLine($"-剩余点数:{@event.health}");
+                sb.AppendLine($"-结束时间:{time} 后");
+                sb.AppendLine();
+
+            }
+
+            return sb.ToString().Trim();
+
+        }
         public static string ToString(WFAlert alert)
         {
             var mission = alert.Mission;

@@ -86,5 +86,12 @@ namespace TRKS.WF.QQBot
             var msg = WFFormatter.ToString(relics) + Environment.NewLine + $"你正在查看与 {word} 有关的所有遗物.";
             Messenger.SendGroup(group, msg);
         }
+
+        public void SendEvent(string group)
+        {
+            var events = api.GetEvents();
+            var msg = WFFormatter.ToString(events);
+            Messenger.SendGroup(group, msg);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Settings;
 
 namespace TRKS.WF.QQBot
 {
@@ -30,7 +31,15 @@ namespace TRKS.WF.QQBot
             var searchword = translator.TranslateSearchWord(item);
             if (item == searchword)
             {
-                Messenger.SendGroup(group, $"物品{item}不存在或格式错误,请尝试重新搜索");
+                var sb = new StringBuilder();
+                var similarlist = translator.GetSimilarItem(item.Format());
+                sb.AppendLine($"物品{item}不存在或格式错误.");
+                sb.AppendLine($"请问这下面有没有你要找的物品呢?:");
+                foreach (var similarresult in similarlist)
+                {
+                    sb.AppendLine($"    {similarresult}");
+                }
+                Messenger.SendGroup(group, sb.ToString().Trim());
                 return;
             }
             var info = GetWMInfo(searchword);

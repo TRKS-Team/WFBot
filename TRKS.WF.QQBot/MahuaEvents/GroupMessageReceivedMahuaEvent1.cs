@@ -3,6 +3,7 @@ using Newbe.Mahua.MahuaEvents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Humanizer;
 using Settings;
 
@@ -80,7 +81,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         {
                             if (command.Length > 3)
                             {
-                                var item = command.Substring(3).Replace(" ", "").ToLower();
+                                var item = command.Substring(3).Format();
                                 _wmSearcher.SendWMInfo(item, context.FromGroup);
                             }
                             else
@@ -96,7 +97,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         if (command.Length > 3)
                         {
-                            var weapon = command.Substring(3).Replace(" ", "").ToLower();
+                            var weapon = command.Substring(3).Format();
                             _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
                         }
                         else
@@ -111,7 +112,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         if (command.Length > 3)
                         {
-                            var word = command.Substring(3).ToLower().Replace(" ", "");
+                            var word = command.Substring(3).Format();
                             _wFStatus.SendRelicInfo(context.FromGroup, word);
                         }
                         else
@@ -145,6 +146,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "虚空商人":
                         case "商人":
                             _wFStatus.SendVoidTrader(context.FromGroup);
+                            break;
+                        case "活动":
+                        case "事件":
+                            _wFStatus.SendEvent(context.FromGroup);
                             break;
                         case "help":
                         case "帮助":
