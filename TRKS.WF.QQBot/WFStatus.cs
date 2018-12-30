@@ -20,7 +20,8 @@ namespace TRKS.WF.QQBot
         {
             var cetuscycle = api.GetCetusCycle();
             var valliscycle = api.GetVallisCycle();
-            var msg = WFFormatter.ToString(cetuscycle) + Environment.NewLine + WFFormatter.ToString(valliscycle);
+            var msg = $"{WFFormatter.ToString(cetuscycle)}\r\n" +
+                      $"{WFFormatter.ToString(valliscycle)}";
             
             Messenger.SendGroup(group, msg);
         }
@@ -40,7 +41,6 @@ namespace TRKS.WF.QQBot
 
             Messenger.SendGroup(group, msg);
         }
-
 
         public void SendSyndicateMissions(string group, int index)
         {
@@ -76,14 +76,17 @@ namespace TRKS.WF.QQBot
                 }
             }
 
-            var msg = WFFormatter.ToString(result) + Environment.NewLine + $"你正在查看与{string.Join(" ", words)}有关的所有裂隙.";
+            var msg = $"{WFFormatter.ToString(result)}\r\n" +
+                      $"你正在查看与{string.Join(" ", words)}有关的所有裂隙.";
             Messenger.SendGroup(group, msg);
         }
 
         public void SendRelicInfo(string group, string word)
         {
             var relics = translator.GetRelicInfo(word);
-            var msg = WFFormatter.ToString(relics) + Environment.NewLine + $"你正在查看与 {word} 有关的所有遗物.";
+            var msg = $"{WFFormatter.ToString(relics)}\r\n" +
+                      $"你正在查看与 {word} 有关的所有遗物.";
+
             Messenger.SendGroup(group, msg);
         }
 
@@ -91,6 +94,7 @@ namespace TRKS.WF.QQBot
         {
             var events = api.GetEvents();
             var msg = WFFormatter.ToString(events);
+
             Messenger.SendGroup(group, msg);
         }
     }

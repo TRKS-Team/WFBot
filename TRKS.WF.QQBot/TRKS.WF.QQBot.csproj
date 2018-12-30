@@ -210,6 +210,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="MahuaEvents\AutoUpdateRR.cs" />
     <Compile Include="Cylib.cs" />
     <Compile Include="MahuaEvents\HotUpdateInfo.cs" />

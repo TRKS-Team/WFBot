@@ -71,13 +71,13 @@ namespace TRKS.WF.QQBot
                 }
                 else
                 {
-                    msg = $"抱歉,目前紫卡市场没有任何出售:{weapon}紫卡的用户.";
+                    msg = $"抱歉, 目前紫卡市场没有任何出售: {weapon}紫卡的用户.";
                 }
                 Messenger.SendGroup(group, msg);
             }
             else
             {
-                Messenger.SendGroup(group, $"武器{weapon}不存在,请检查格式(请注意:悦音prime)");
+                Messenger.SendGroup(group, $"武器{weapon}不存在, 请检查格式(请注意: 悦音prime)");
             }
         }
     } 

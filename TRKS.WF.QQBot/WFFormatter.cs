@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using Humanizer;
 using Humanizer.Localisation;
@@ -19,15 +20,15 @@ namespace TRKS.WF.QQBot
             {
                 var time = (@event.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
                 sb.AppendLine($"[{@event.description}]");
-                sb.AppendLine($"-剩余点数:{@event.health}");
-                sb.AppendLine($"-结束时间:{time} 后");
+                sb.AppendLine($"- 剩余点数: {@event.health}");
+                sb.AppendLine($"- 结束时间: {time} 后");
                 sb.AppendLine();
 
             }
 
             return sb.ToString().Trim();
-
         }
+
         public static string ToString(WFAlert alert)
         {
             var mission = alert.Mission;
@@ -38,8 +39,9 @@ namespace TRKS.WF.QQBot
                    $"-类型:     {mission.Type}-{mission.Faction}\r\n" +
                    $"-奖励:     {ToString(reward)}\r\n" +
                    //$"-过期时间: {alert.Expiry}({time} 后)" +
-                   $"-过期时间: ({time} 后)";
+                   $"-过期时间: {time} 后";
         }
+
         public static string ToString(List<Relic> relics)
         {
             var sb = new StringBuilder();
@@ -58,7 +60,7 @@ namespace TRKS.WF.QQBot
         {
             var weapon = infos.First().item_Class;
             var sb = new StringBuilder();
-            sb.AppendLine($"下面是{weapon}紫卡的{infos.Count}条卖家信息.");
+            sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息.");
             foreach (var info in infos)
             {
                 sb.Append($"[{info.user_Name}]  ");
@@ -75,14 +77,12 @@ namespace TRKS.WF.QQBot
                         break;
                 }
 
-                sb.AppendLine($"-价格:{info.item_Price}白鸡");
-                sb.AppendLine($"-属性:{info.item_Property}");
+                sb.AppendLine($"- 价格:{info.item_Price}白鸡");
+                sb.AppendLine($"- 属性:{info.item_Property}");
                 sb.AppendLine();
             }
 
             return sb.ToString().Trim();
-
-
         }
         public static string ToString(List<Fissure> fissures)
         {
@@ -92,7 +92,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine($"[{fissure.node}]");
                 sb.AppendLine($"类型:    {fissure.missionType}-{fissure.enemy}");
                 sb.AppendLine($"纪元:    {fissure.tier}(T{fissure.tierNum})");
-                sb.AppendLine($"{fissure.eta}后过期");
+                sb.AppendLine($"{fissure.eta} 后过期");
                 sb.AppendLine();
             }
 
@@ -101,8 +101,8 @@ namespace TRKS.WF.QQBot
         public static string ToString(SyndicateMission mission, int index)
         {
             var sb = new StringBuilder();
-            sb.Append($"集团:{mission.syndicate} 赏金任务 {index + 1} ");
-            sb.AppendLine($"等级:{mission.jobs[index].enemyLevels[0]} - {mission.jobs[index].enemyLevels[1]}");
+            sb.Append($"集团: {mission.syndicate} 赏金任务 {index + 1} ");
+            sb.AppendLine($"等级: {mission.jobs[index].enemyLevels[0]} - {mission.jobs[index].enemyLevels[1]}");
             sb.AppendLine("奖励:");
             foreach (var reward in mission.jobs[index].rewardPool)
             {
@@ -118,12 +118,13 @@ namespace TRKS.WF.QQBot
 
             sb.AppendLine($"地点: {inv.node}");
 
-            sb.AppendLine($">进攻方: {inv.attackingFaction}");
+            sb.AppendLine($"> 进攻方: {inv.attackingFaction}");
             if (!inv.vsInfestation)
                 sb.AppendLine($"奖励: {ToString(inv.attackerReward)}");
             sb.AppendLine($"进度: {completion}%");
+            sb.AppendLine();
 
-            sb.AppendLine($">防守方: {inv.defendingFaction}");
+            sb.AppendLine($"> 防守方: {inv.defendingFaction}");
             sb.AppendLine($"奖励: {ToString(inv.defenderReward)}");
             sb.Append($"进度 {100 - completion}%");
             return sb.ToString();
@@ -140,6 +141,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"现在地球平原的时间是: {status}");
             //sb.AppendLine($"将在 {cycle.Expiry} 变为 {nextTime}");
             sb.Append($"距离 {nextTime} 还有 {time}");
+
             return sb.ToString();
         }
 
@@ -153,21 +155,22 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"现在金星平原的温度是: {temp}");
             //sb.AppendLine($"将在{cycle.expiry} 变为 {nextTemp}");
             sb.Append($"距离 {nextTemp} 还有 {time}");
+
             return sb.ToString();
         }
 
         public static string ToString(Sortie sortie)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("指挥官,下面是今天的突击任务.");
-            sb.AppendLine($">阵营: {sortie.faction}");
-            sb.AppendLine($">头头: {sortie.boss}");
-            sb.AppendLine("");
+            sb.AppendLine("指挥官, 下面是今天的突击任务.");
+            sb.AppendLine($"> 阵营: {sortie.faction}");
+            sb.AppendLine($"> 头头: {sortie.boss}");
+            sb.AppendLine();
             foreach (var variant in sortie.variants)
             {
                 sb.AppendLine($"[{variant.node}]");
-                sb.AppendLine($"-类型:{variant.missionType}");
-                sb.AppendLine($"-状态:{variant.modifier}");
+                sb.AppendLine($"- 类型:{variant.missionType}");
+                sb.AppendLine($"- 状态:{variant.modifier}");
             }
 
             return sb.ToString().Trim();
@@ -180,7 +183,7 @@ namespace TRKS.WF.QQBot
             {
                 var time = (DateTime.Now - trader.expiry).Humanize(int.MaxValue,
                     CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
-                sb.AppendLine($"虚空商人已抵达:{trader.location}");
+                sb.AppendLine($"虚空商人已抵达: {trader.location}");
                 sb.AppendLine($"携带商品:");
                 foreach (var inventory in trader.inventory)
                 {
@@ -188,14 +191,14 @@ namespace TRKS.WF.QQBot
                     sb.AppendLine($"         {inventory.ducats}金币 + {inventory.credits}现金");
                 }
                 //sb.Append($"结束时间:{trader.expiry}({time} 后)");
-                sb.Append($"结束时间:({time} 后)");
+                sb.Append($"结束时间: {time} 后");
             }
             else
             {
                 var time = (DateTime.Now - trader.activation).Humanize(int.MaxValue,
                     CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
                 //sb.Append($"虚空商人将在{trader.activation}({time} 后)抵达{trader.location}");
-                sb.Append($"虚空商人将在({time} 后)抵达{trader.location}");
+                sb.Append($"虚空商人将在 {time} 后 抵达{trader.location}");
             }
 
             return sb.ToString().Trim();
@@ -211,9 +214,10 @@ namespace TRKS.WF.QQBot
             foreach (var order in info.payload.orders)
             {
                 sb.AppendLine($"[{order.user.ingame_name}]   {order.user.status}");
-                sb.AppendLine($"{order.order_type}  {order.platinum}白鸡");
+                sb.AppendLine($"{order.order_type}  {order.platinum} 白鸡");
                 sb.AppendLine(
-                    $"-快捷回复:/w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+                    $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+                sb.AppendLine();
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
@@ -234,6 +238,7 @@ namespace TRKS.WF.QQBot
 
             return string.Join(" + ", rewards);
         }
+
         public static string ToString(Attackerreward reward)
         {
             var rewards = new List<string>();

@@ -24,14 +24,11 @@ namespace TRKS.WF.QQBot
 
         public static void SendPrivate(string qq, string content)
         {
-            //if (Config.Instance.QQ.IsNumber())
-            //{
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
                 api.SendPrivateMessage(qq, content);
             }
-            //}
         }
 
         private static Dictionary<string, string> previousMessageDic = new Dictionary<string, string>();
@@ -39,7 +36,7 @@ namespace TRKS.WF.QQBot
         public static void SendGroup(string qq, string content)
         {
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
-            
+
             previousMessageDic[qq] = content;
 
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
@@ -54,9 +51,10 @@ namespace TRKS.WF.QQBot
         {
             Task.Factory.StartNew(() =>
             {
+                var count = 1;
                 foreach (var group in Config.Instance.WFGroupList)
                 {
-                    SendGroup(group, content + Environment.NewLine + group);
+                    SendGroup(group, content + Environment.NewLine + ($"发送次序: {count++}"));
                     Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);

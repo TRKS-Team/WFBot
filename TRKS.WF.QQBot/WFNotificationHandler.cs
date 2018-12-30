@@ -12,136 +12,92 @@ using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot
 {
-    [Configuration("WFConfig")]
-    class Config : Configuration<Config>
-    {
-        public List<string> WFGroupList = new List<string>();
-
-        public List<string> InvationRewardList = new List<string>();
-
-        public string Code;
-
-        public string QQ;
-
-        public bool AcceptInvitation;
-
-        public bool AcceptJoiningRequest;
-
-        public string ClientId;
-
-        public string ClientSecret;
-
-        public string AcessToken;
-
-        public DateTime Last_update;
-
-        public string GithubOAuthKey;
-    }
-
-
     public class WFNotificationHandler
     {
+        private static readonly object InvasionLocker = new object();
+        private static readonly object AlertLocker = new object();
+        private static readonly object WFAlertLocker = new object();
+
+        private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
+        private readonly HashSet<string> sendedInvSet = new HashSet<string>();
+        private bool _inited;
+        public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+        private readonly WFChineseAPI api = WFResource.WFChineseApi;
+
         public WFNotificationHandler()
         {
             InitWFNotification();
-
         }
-
-        private readonly HashSet<string> SendedAlertsSet = new HashSet<string>();
-        private readonly HashSet<string> SendedInvSet = new HashSet<string>();
-        private bool _inited;
-        public readonly Timer timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
-        private readonly WFChineseAPI api = WFResource.WFChineseApi;
 
         private void InitWFNotification()
         {
             if (_inited) return;
+            _inited = true;
+
             var alerts = api.GetAlerts();
             var invs = api.GetInvasions();
 
             foreach (var alert in alerts)
-            {
-                SendedAlertsSet.Add(alert.Id);
-            }
+                sendedAlertsSet.Add(alert.Id);
 
             foreach (var inv in invs)
-            {
-                SendedInvSet.Add(inv.id);
-            }
+                sendedInvSet.Add(inv.id);
 
-            timer.Elapsed += (sender, eventArgs) =>
+            Timer.Elapsed += (sender, eventArgs) =>
             {
                 UpdateAlerts();
                 UpdateInvasions();
                 UpdateWFGroups();
             };
-            timer.Start();
-            _inited = true;
+            Timer.Start();
         }
 
         private List<GroupInfo> GetGroups()
         {
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
-                var api = robotSession.MahuaApi;
-                var groups = api.GetGroupsWithModel().Model.ToList();
+                var mahuaApi = robotSession.MahuaApi;
+                var groups = mahuaApi.GetGroupsWithModel().Model.ToList();
                 return groups;
             }
         }
 
         private void UpdateWFGroups()
         {
-            var groups = GetGroups().Select(group => group.Group);
-            foreach (var group in Config.Instance.WFGroupList)
+            var groups = GetGroups().Select(group => group.Group).ToList();
+            foreach (var group in Config.Instance.WFGroupList.Where(group => !groups.Contains(group)))
             {
-                if (!groups.Contains(group))
-                {
-                    Config.Instance.WFGroupList.Remove(group);
-                }
+                Config.Instance.WFGroupList.Remove(group);
             }
             Config.Save();
         }
-        private static readonly object _invasionLocker = new object();
+
         private void UpdateInvasions()
         {
-            lock (_invasionLocker)
+            lock (InvasionLocker)
             {
-                var invs = new List<WFInvasion>();
                 try
                 {
-                    invs = api.GetInvasions();
-                }
-                catch (WebException)
-                {
-                    // 也挺正常 不慌不慌
-                }
-                catch (Exception e)
-                {
-                    // 问题有点大 我慌一下
-                    Messenger.SendDebugInfo(e.ToString());
-                }
+                    foreach (var inv in api.GetInvasions().Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                    {   
+                        // 不发已经完成的入侵 你学的好快啊
+                        // 不发已经发过的入侵
+                        var list = GetAllInvasionsCountedItems(inv);
 
-                foreach (var inv in invs)
-                {
-                    if (inv.completed) continue; // 不发已经完成的入侵
-                    // 你学的好快啊
-                    if (SendedInvSet.Contains(inv.id)) continue; // 不发已经发过的入侵
-
-                    var list = GetAllInvasionsCountedItems(inv);
-                    foreach (var item in list)
-                    {
-                        if (Config.Instance.InvationRewardList.Contains(item))
+                        if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
                         {
                             var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                              $"{WFFormatter.ToString(inv)}";
 
                             Messenger.Broadcast(notifyText);
-                            SendedInvSet.Add(inv.id);
-
-
-                            break;
+                            sendedInvSet.Add(inv.id);
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    // 问题有点大 我慌一下
+                    Messenger.SendDebugInfo(e.ToString());
                 }
             }
         }
@@ -165,42 +121,29 @@ namespace TRKS.WF.QQBot
         public void SendAllInvasions(string group)
         {
             var invasions = api.GetInvasions();
-            // UpdateAlerts();
-
             var sb = new StringBuilder();
-            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务."); //为什么要改???
-            foreach (var invasion in invasions)
+            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
+
+            foreach (var invasion in invasions.Where(invasion => !invasion.completed))
             {
-                if (!invasion.completed)
-                {
-                    sb.AppendLine(WFFormatter.ToString(invasion));
-                    sb.AppendLine();
-                }
+                sb.AppendLine(WFFormatter.ToString(invasion));
+                sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格
+            Messenger.SendGroup(group, sb.ToString().Trim());
         }
 
-        private static readonly object _alertLocker = new object();
         private void UpdateAlerts()
         {
-            lock (_alertLocker)
+            lock (AlertLocker)
             {
                 try
                 {
                     var alerts = api.GetAlerts();
-                    foreach (var alert in alerts)
+                    foreach (var alert in alerts.Where(alert => !sendedAlertsSet.Contains(alert.Id)))
                     {
-                        if (!SendedAlertsSet.Contains(alert.Id))
-                        {
-                            SendWFAlert(alert);
-                        }
+                        SendWFAlert(alert);
                     }
-
-                }
-                catch (WebException)
-                {
-                    // 问题不大 不用慌
                 }
                 catch (Exception e)
                 {
@@ -212,9 +155,8 @@ namespace TRKS.WF.QQBot
         public void SendAllAlerts(string group)
         {
             var alerts = api.GetAlerts();
-            // UpdateAlerts();
-
             var sb = new StringBuilder();
+
             sb.AppendLine("指挥官, 下面是太阳系内所有的警报任务, 供您挑选.");
             foreach (var alert in alerts)
             {
@@ -222,22 +164,21 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim()); // trim 去掉最后的空格
+            Messenger.SendGroup(group, sb.ToString().Trim());
         }
 
-        private static object _wfalertLock = new object();
         private void SendWFAlert(WFAlert alert)
         {
-            lock (_wfalertLock)
+            lock (WFAlertLocker)
             {
                 var reward = alert.Mission.Reward;
-                if (reward.Items.Length > 0 || reward.CountedItems.Length > 0)
+                if (reward.Items.Any() || reward.CountedItems.Any())
                 {
                     var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                                  WFFormatter.ToString(alert) +
-                                 "\r\n可使用:/help来查看机器人的更多说明.";
+                                 "\r\n可使用: /help来查看机器人的更多说明.";
                     Messenger.Broadcast(result);
-                    SendedAlertsSet.Add(alert.Id);
+                    sendedAlertsSet.Add(alert.Id);
                 }
             }
         }

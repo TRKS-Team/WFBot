@@ -21,19 +21,19 @@ namespace Settings
         {
             Config.Instance.Code = textBox1.Text;
             Config.Save();
-            label2.Text = $"当前的口令为:{Config.Instance.Code}";
+            label2.Text = $"当前的口令为: {Config.Instance.Code}";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label5.Text = $"当前的口令为:{Config.Instance.Code}";
+            label5.Text = $"当前的口令为: {Config.Instance.Code}";
             if (string.IsNullOrEmpty(Config.Instance.QQ))
             {
                 label5.Text = $"当前不发送任何报错.";
             }
             else
             {
-                label5.Text = $"当前的QQ为:{Config.Instance.QQ}";
+                label5.Text = $"当前的QQ为: {Config.Instance.QQ}";
             }
             UpdateCheckBox();
             checkBox9.Checked = Config.Instance.AcceptInvitation;
@@ -162,7 +162,7 @@ namespace Settings
         {
             foreach (var group in Config.Instance.WFGroupList)
             {
-                Messenger.SendGroup(group, $"[来自管理者]通知:{textBox3.Text}");
+                Messenger.SendGroup(group, $"[来自管理者]通知: {textBox3.Text}");
             }
         }
 

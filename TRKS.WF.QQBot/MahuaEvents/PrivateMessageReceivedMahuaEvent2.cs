@@ -52,7 +52,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼.");
+                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 1
                         }
                     }
                     else

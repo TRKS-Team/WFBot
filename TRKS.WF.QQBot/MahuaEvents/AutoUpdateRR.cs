@@ -20,8 +20,8 @@ namespace TRKS.WF.QQBot
             {
                 WorkingDirectory = Directory.GetCurrentDirectory()
             });
-            
-            GroupMessageReceivedMahuaEvent1._wFAlert?.timer?.Stop();
+
+            GroupMessageReceivedMahuaEvent1._wFAlert?.Timer?.Stop();
             InitEvent1.timer1?.Stop();
         }
     }

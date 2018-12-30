@@ -14,7 +14,7 @@ using Settings;
 
 namespace TRKS.WF.QQBot
 {
-    class StringInfo : IComparable<StringInfo>, IComparable
+    internal class StringInfo : IComparable<StringInfo>, IComparable
     {
         public string Name { get; set; }
         public int LevDistance { get; set; }
@@ -98,7 +98,8 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                Messenger.SendDebugInfo($"警报获取报错:{Environment.NewLine}{e}");
+                Messenger.SendDebugInfo($"警报获取报错: \r\n" +
+                                        $"{e}");
 
             }
             return new List<WFAlert>();
@@ -155,7 +156,6 @@ namespace TRKS.WF.QQBot
             var missions = WebHelper.DownloadJson<List<SyndicateMission>>("https://api.warframestat.us/pc/syndicateMissions");
             translator.TranslateSyndicateMission(missions);
             return missions;
-
         }
         public VoidTrader GetVoidTrader()
         {
@@ -184,29 +184,27 @@ namespace TRKS.WF.QQBot
 
             return events;
         }
+
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
-
     }
-
 
     public class WFTranslator
     {
-
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
         private Dictionary<string, Translator> searchwordTranslator = new Dictionary<string, Translator>();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
-        private WFApi translateApi = TranslateApi();
+        private WFApi translateApi = GetTranslateApi();
 
         public WFTranslator()
         {
-
             dictTranslators.Add("All", new Translator());
             dictTranslators.Add("WM", new Translator());
+
             foreach (var dict in translateApi.Dict)
             {
                 var type = dict.Type;
@@ -217,8 +215,6 @@ namespace TRKS.WF.QQBot
                 dictTranslators["All"].AddEntry(dict.En, dict.Zh);
                 dictTranslators[type].AddEntry(dict.En, dict.Zh);
             }
-
-
             
             foreach (var sale in translateApi.Sale)
             {
@@ -234,7 +230,6 @@ namespace TRKS.WF.QQBot
                 searchwordTranslator["Word"].AddEntry(sale.Zh.Format(), sale.Search);
                 searchwordTranslator["Item"].AddEntry(sale.Search, sale.Zh);
             }
-            
 
             foreach (var invasion in translateApi.Invasion)
             {
@@ -252,7 +247,7 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        private static WFApi TranslateApi()
+        private static WFApi GetTranslateApi()
         {
             var alerts = WebHelper.DownloadJson<Alert[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
@@ -285,6 +280,7 @@ namespace TRKS.WF.QQBot
 
             return distancelist.Take(5).Select(info => info.Name).ToList();
         }
+
         public List<Relic> GetRelicInfo(string word)
         {
             return translateApi.Relic.Where(relic => relic.Name.Format().Contains(word)).ToList();
@@ -297,16 +293,19 @@ namespace TRKS.WF.QQBot
                 @event.description = dictTranslators["All"].Translate(@event.description);
             }
         }
+
         public string TranslateSearchWord(string source)
         {
             return searchwordTranslator["Word"].Translate(source);
         }
+
         public void TranslateInvasion(WFInvasion invasion)
         {
             TranslateReward(invasion.attackerReward);
             TranslateReward(invasion.defenderReward);
             invasion.node = TranslateNode(invasion.node);
         }
+
         private void TranslateReward(Defenderreward reward)
         {
             foreach (var item in reward.countedItems)
@@ -314,11 +313,12 @@ namespace TRKS.WF.QQBot
                 item.type = invasionTranslator.Translate(item.type);
             }
 
-            for (var i = 0; i < reward.countedItems.Length; i++)
+            foreach (var t in reward.countedItems)
             {
-                reward.countedItems[i].type = alertTranslator.Translate(reward.countedItems[i].type);
+                t.type = alertTranslator.Translate(t.type);
             }
         }
+
         private void TranslateReward(Attackerreward reward)
         {
             foreach (var item in reward.countedItems)
@@ -326,9 +326,9 @@ namespace TRKS.WF.QQBot
                 item.type = invasionTranslator.Translate(item.type);
             }
 
-            for (var i = 0; i < reward.countedItems.Length; i++)
+            foreach (var t in reward.countedItems)
             {
-                reward.countedItems[i].type = alertTranslator.Translate(reward.countedItems[i].type);
+                t.type = alertTranslator.Translate(t.type);
             }
         }
 
@@ -343,6 +343,7 @@ namespace TRKS.WF.QQBot
         {
             return weapons.Contains(weapon);
         }
+
         public void TranslateAlert(WFAlert alert)
         {
             var mission = alert.Mission;
@@ -373,7 +374,7 @@ namespace TRKS.WF.QQBot
                 {
                     if (mission.nodes.Length != 0)
                     {
-                        for (int i = 0; i < mission.nodes.Length; i++)
+                        for (var i = 0; i < mission.nodes.Length; i++)
                         {
                             mission.nodes[i] = TranslateNode(mission.nodes[i]);
                         }
@@ -399,6 +400,7 @@ namespace TRKS.WF.QQBot
                                 {
                                     item = item.Replace("Relic", "").Replace("Lith", "古纪").Replace("Meso", "前纪").Replace("Neo", "中纪").Replace("Axi", "后纪");// 这是暴力写法 我懒了 真的
                                 }
+
                                 var sb = new StringBuilder();
                                 if (count.Length != 0)
                                 {
@@ -413,6 +415,7 @@ namespace TRKS.WF.QQBot
                 }
             }
         }
+
         public void TranslateSortie(Sortie sortie)
         {
             foreach (var variant in sortie.variants)
@@ -431,7 +434,6 @@ namespace TRKS.WF.QQBot
                 fissure.node = TranslateNode(fissure.node);
                 fissure.tier = dictTranslators["Word"].Translate(fissure.tier);
                 fissure.missionType = dictTranslators["Mission"].Translate(fissure.missionType);
-
             }
         }
 
@@ -482,7 +484,7 @@ namespace TRKS.WF.QQBot
      
         public string TranslateModifier(string modifier)
         {
-            var result = "";
+            string result;
             switch (modifier)
             {
                 case "Weapon Restriction: Assault Rifle Only":
@@ -594,7 +596,7 @@ namespace TRKS.WF.QQBot
     */
     public class Translator
     {
-        private Dictionary<string, string> dic;
+        private readonly Dictionary<string, string> dic;
 
         public Translator()
         {
