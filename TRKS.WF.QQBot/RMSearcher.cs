@@ -52,7 +52,7 @@ namespace TRKS.WF.QQBot
         public List<RivenInfo> GetRiveninfos(string weapon)
         {
             var header = new WebHeaderCollection();
-            var count = 5;
+            var count = 3;
             header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
             header.Add("Platform", "pc");
             header.Add("Weapon", weapon.ToBase64());
