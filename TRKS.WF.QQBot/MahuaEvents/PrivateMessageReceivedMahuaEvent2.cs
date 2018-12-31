@@ -24,16 +24,20 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (HotUpdateInfo.PreviousVersion) return;
 
-            if (context.Message == $"没有开启通知的群 {Config.Instance.Code}")
+            if (context.FromQq == Config.Instance.QQ)
             {
-                var groups = _mahuaApi.GetGroupsWithModel().Model.Select(info => info.Group).ToList();
-                var gs = groups.Except(Config.Instance.WFGroupList.Intersect(groups)).ToList();
-                Messenger.SendPrivate(context.FromQq, string.Join("\r\n", gs));
+                if (context.Message == $"没有开启通知的群 {Config.Instance.Code}")
+                {
+                    var groups = _mahuaApi.GetGroupsWithModel().Model.Select(info => info.Group).ToList();
+                    var gs = groups.Except(Config.Instance.WFGroupList.Intersect(groups)).ToList();
+                    Messenger.SendPrivate(context.FromQq, string.Join("\r\n", gs));
+                }
+                if (context.Message == $"执行自动更新 {Config.Instance.Code}")
+                {
+                    AutoUpdateRR.Execute();
+                }
             }
-            if (context.Message == $"执行自动更新 {Config.Instance.Code}")
-            {
-                AutoUpdateRR.Execute();
-            }
+
             if (context.Message.Contains("添加群"))
             {
                 var strs = context.Message.Split(' ');
