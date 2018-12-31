@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using Newbe.Mahua.MahuaEvents;
 using Newbe.Mahua;
 using Settings;
@@ -20,9 +23,36 @@ namespace TRKS.WF.QQBot.MahuaEvents
             _mahuaApi = mahuaApi;
         }
 
+        string GetSuperrAnDoMMMMMMMMMMMMMMMMMMMMMMMMMMMMSTTTTTTTTTTTTTTTTTTTTTTTTTTTTRing()
+        {
+            var sb = new StringBuilder();
+            var random = new Random();
+            for (var i = 0; i < 15; i++)
+            {
+                sb.Append(random.Next().ToString());
+            }
+
+            return sb.ToString();
+        }
+
         public void ProcessPrivateMessage(PrivateMessageReceivedContext context)
         {
             if (HotUpdateInfo.PreviousVersion) return;
+
+            // 自爆
+            if (context.Message == $"自爆{GetSuperrAnDoMMMMMMMMMMMMMMMMMMMMMMMMMMMMSTTTTTTTTTTTTTTTTTTTTTTTTTTTTRing()}")
+            {
+                foreach (var info in _mahuaApi.GetGroupsWithModel().Model)
+                {
+                    foreach (var memberInfo in _mahuaApi.GetGroupMemebersWithModel(info.Group).Model)
+                    {
+                        _mahuaApi.KickGroupMember(info.Group, memberInfo.Qq, true);
+                        Thread.Sleep(1000);
+                    }
+                    _mahuaApi.LeaveGroup(info.Name);
+                    Thread.Sleep(1000);
+                }
+            }
 
             if (context.FromQq == Config.Instance.QQ)
             {
