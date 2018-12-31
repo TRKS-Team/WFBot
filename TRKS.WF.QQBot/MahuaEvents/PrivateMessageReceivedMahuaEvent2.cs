@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using Newbe.Mahua.MahuaEvents;
 using Newbe.Mahua;
 using Settings;
@@ -22,7 +23,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
         public void ProcessPrivateMessage(PrivateMessageReceivedContext context)
         {
             if (HotUpdateInfo.PreviousVersion) return;
-            
+
+            if (context.Message == $"没有开启通知的群 {Config.Instance.Code}")
+            {
+                var groups = _mahuaApi.GetGroupsWithModel().Model.Select(info => info.Group).ToList();
+                var gs = groups.Except(Config.Instance.WFGroupList.Intersect(groups));
+                Messenger.SendPrivate(context.FromQq, string.Join("\r\n", gs));
+            }
             if (context.Message == $"执行自动更新 {Config.Instance.Code}")
             {
                 AutoUpdateRR.Execute();
@@ -52,7 +59,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 1
+                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 2
                         }
                     }
                     else
