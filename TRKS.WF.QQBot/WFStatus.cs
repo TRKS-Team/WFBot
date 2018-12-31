@@ -65,7 +65,7 @@ namespace TRKS.WF.QQBot
                 words.RemoveAt(0);
                 foreach (var word in words)
                 {
-                    result.Concat(fissures.Where(fissure => fissure.missionType == word || fissure.tier == word));
+                    result = result.Concat(fissures.Where(fissure => fissure.missionType == word || fissure.tier == word)).ToList();
                 }
             }
             else
