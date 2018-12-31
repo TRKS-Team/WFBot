@@ -22,7 +22,7 @@ namespace TRKS.WF.QQBot
                 .Where(type => type.order_type == "sell")
                 .Where(status => status.user.status == "online" || status.user.status == "ingame")
                 .OrderBy(plat => plat.platinum)
-                .Take(5)
+                .Take(3)
                 .ToArray();
         }
 

@@ -28,8 +28,9 @@ namespace TRKS.WF.QQBot.MahuaEvents
             {
                 if (context.Message == $"没有开启通知的群 {Config.Instance.Code}")
                 {
-                    var groups = _mahuaApi.GetGroupsWithModel().Model.Select(info => info.Group).ToList();
-                    var gs = groups.Except(Config.Instance.WFGroupList.Intersect(groups)).ToList();
+                    var groups = _mahuaApi.GetGroupsWithModel().Model.ToList();
+                    var gs = groups.Where(g => !groups.Contains(g)).Select(g => $"{g.Group}-{g.Name}");
+
                     Messenger.SendPrivate(context.FromQq, string.Join("\r\n", gs));
                 }
                 if (context.Message == $"执行自动更新 {Config.Instance.Code}")
