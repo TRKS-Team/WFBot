@@ -166,6 +166,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "裂隙":
                         case "裂缝":
                             _wFStatus.SendFissures(context.FromGroup);
+                            break;
                         case "help":
                         case "帮助":
                         case "功能":
