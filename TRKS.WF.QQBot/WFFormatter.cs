@@ -98,16 +98,21 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-        public static string ToString(SyndicateMission mission, int index)
+        public static string ToString(SyndicateMission mission)
         {
             var sb = new StringBuilder();
-            sb.Append($"集团: {mission.syndicate} 赏金任务 {index + 1} ");
-            sb.AppendLine($"等级: {mission.jobs[index].enemyLevels[0]} - {mission.jobs[index].enemyLevels[1]}");
-            sb.AppendLine("奖励:");
-            foreach (var reward in mission.jobs[index].rewardPool)
+            sb.Append($"集团: {mission.syndicate}");
+
+            foreach (var job in mission.jobs)
             {
-                sb.AppendLine($"    {reward}");
+                sb.AppendLine($"等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
+                sb.AppendLine("奖励:");
+                foreach (var reward in job.rewardPool)
+                {
+                    sb.Append($"[{reward}]");
+                }
             }
+
 
             return sb.ToString().Trim();
         }

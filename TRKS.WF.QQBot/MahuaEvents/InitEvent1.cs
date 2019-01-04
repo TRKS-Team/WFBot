@@ -28,7 +28,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (onlineBuild)
             {
                 localVersion = int.Parse(nameof(InitEvent1).Split(new[] { "_" }, StringSplitOptions.None)[1]);
-                var timer = new Timer(TimeSpan.FromSeconds(70).TotalMilliseconds);
+                var delay = string.IsNullOrWhiteSpace(Config.Instance.GithubOAuthKey) ? 60 : 600;
+                var timer = new Timer(TimeSpan.FromSeconds(delay).TotalMilliseconds);
                 timer1 = timer;
                 timer.Elapsed += Timer_Elapsed;
                 timer.Start();

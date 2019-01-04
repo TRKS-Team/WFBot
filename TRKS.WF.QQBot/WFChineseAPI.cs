@@ -278,7 +278,7 @@ namespace TRKS.WF.QQBot
                 distancelist.Add(new StringInfo {LevDistance = distance, Name = sale.Zh});
             }
 
-            return distancelist.Take(5).Select(info => info.Name).ToList();
+            return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
         }
 
         public List<Relic> GetRelicInfo(string word)

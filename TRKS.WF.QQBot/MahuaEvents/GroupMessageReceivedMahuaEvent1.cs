@@ -41,7 +41,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     var fissures = new [] {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
                     if (syndicates.Any(ostron => command.StartsWith(ostron)))
                     {
-                        var indexString = command.Substring(syndicates.First(ostron => command.StartsWith(ostron)).Length);
+                        Messenger.SendGroup(context.FromGroup, "赏金查询已改版，请使用 /金星赏金 或者 /地球赏金.");
+                        /*var indexString = command.Substring(syndicates.First(ostron => command.StartsWith(ostron)).Length);
                         if (indexString.IsNumber())
                         {
                             var index = int.Parse(indexString);
@@ -58,12 +59,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         else
                         {
                             Messenger.SendGroup(context.FromGroup, "需要参数, e.g. /赏金 4");
-                        }
+                        }*/
                     }
 
                     if (fissures.Any(fissure => command.StartsWith(fissure)))
                     {
-                        var words = command.Split(' ').ToList();
+                        Messenger.SendGroup(context.FromGroup, "裂隙查询已经改版，请直接使用 /裂隙.");
+                        /*var words = command.Split(' ').ToList();
                         if (words.Count >= 2)
                         {
                             words.RemoveAt(0);
@@ -72,7 +74,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         else
                         {
                             Messenger.SendGroup(context.FromGroup, $"需要参数, e.g. /裂隙 古纪");
-                        }
+                        }*/
 
                     }
                     if (command.StartsWith("查询"))
@@ -151,6 +153,19 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "事件":
                             _wFStatus.SendEvent(context.FromGroup);
                             break;
+                        case "金星赏金":
+                        case "福尔图娜赏金":
+                        case "金星平原赏金":
+                            _wFStatus.SendFortunaMissions(context.FromGroup);
+                            break;
+                        case "地球赏金":
+                        case "希图斯赏金":
+                        case "地球平原赏金":
+                            _wFStatus.SendCetusMissions(context.FromGroup);
+                            break;
+                        case "裂隙":
+                        case "裂缝":
+                            _wFStatus.SendFissures(context.FromGroup);
                         case "help":
                         case "帮助":
                         case "功能":
