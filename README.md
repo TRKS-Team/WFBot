@@ -19,7 +19,7 @@
 
 > **_[部署 FAQ (常见问题)](docs/faq.md)_**
 
-> 如果你在部署过程中遇到了, 请先查看上面的 FAQ. 如果还是无法解决, 可以添加上面的个人 QQ 群或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
+> 如果你在部署过程中遇到了问题, 请先查看上面的 FAQ. 如果还是无法解决, 可以添加上面的个人 QQ 群或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
 
 ### 第一步: 选择以下几种 QQ 机器人平台
 
@@ -27,7 +27,8 @@
 - [QQLight](https://www.52chat.cc/download.php) - 付费
 - [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) - 拥有免费阉割版
 - [MyPCQQ](https://mypcqq.cc/) - 付费
-  > **部分机器人平台 (如酷 Q) 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法请自行查找.**
+
+> **部分机器人平台 (如酷 Q) 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法请自行查找.**
 
 > **请将你选择的机器人放在一台 24 小时运行的电脑上.**
 
