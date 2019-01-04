@@ -19,16 +19,18 @@ namespace TRKS.WF.QQBot
         private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() => new WebClientEx2() { Encoding = Encoding.UTF8 });
         public static T DownloadJson<T>(string url)
         {
-            a:
-            try
+            while (true)
             {
-                return webClient.Value.DownloadString(url).JsonDeserialize<T>();
+                try
+                {
+                    return webClient.Value.DownloadString(url).JsonDeserialize<T>();
+                }
+                catch (Exception)
+                {
+                                 
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                goto a;
-            }
+
         }
 
         public static T DownloadJson<T>(string url, WebHeaderCollection header)

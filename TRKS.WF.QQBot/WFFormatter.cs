@@ -101,7 +101,8 @@ namespace TRKS.WF.QQBot
         public static string ToString(SyndicateMission mission)
         {
             var sb = new StringBuilder();
-            sb.Append($"集团: {mission.syndicate}");
+            sb.AppendLine($"集团: {mission.syndicate}");
+            sb.AppendLine();
 
             foreach (var job in mission.jobs)
             {
@@ -109,7 +110,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine("奖励:");
                 foreach (var reward in job.rewardPool)
                 {
-                    sb.Append($"[{reward}]");
+                    sb.Append($"[{reward}]");                   
                 }
             }
 
