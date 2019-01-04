@@ -2,45 +2,47 @@
 
 ![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人  
-基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发  
-可部署于多种 QQ 机器人框架上
+基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发
 
 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
 任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
 
-## 部署方法
+> _代码变动后的五分钟内自动更新将会把最新的插件部署到所有机器人上, 如果我手滑引爆了所有机器人, 请不要慌张._
 
-目前有一个由我维护, ~~稳定运行~~ 现在已经不稳定的机器人, 可直接邀请入群 QQ: 2504645673  
-个人用户可添加 QQ 群: 938873897  
-目前**不建议**使用我部署的机器人!!!负荷过大导致**经常失效**!!!  
-**自己按照下面的说明部署可以享受完全体**
+> 目前有一个由我维护, ~~稳定运行~~ 现在已经不稳定的机器人, 可直接邀请入群 QQ: `2504645673`  
+> 个人用户可添加 QQ 群: `938873897`  
+> 目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**!  
+> **自己按照下面的说明部署可以享受完全体**
 
----
+## 如何部署
 
-自己部署: 请选择以下几种 QQ 机器人平台:  
-**部分机器人平台 (如酷 Q) 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法请自行查找.**
+> **_[部署 FAQ (常见问题)](docs/faq.md)_**
+
+> 如果你在部署过程中遇到了, 请先查看上面的 FAQ. 如果还是无法解决, 可以添加上面的个人 QQ 群或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
+
+### 第一步: 选择以下几种 QQ 机器人平台
 
 - [酷 Q Pro / Air](https://cqp.cc/) - 拥有免费阉割版 推荐
 - [QQLight](https://www.52chat.cc/download.php) - 付费
 - [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) - 拥有免费阉割版
 - [MyPCQQ](https://mypcqq.cc/) - 付费
+  > **部分机器人平台 (如酷 Q) 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法请自行查找.**
 
-**请将你选择的机器人放在一台 24 小时运行的电脑上.**
+> **请将你选择的机器人放在一台 24 小时运行的电脑上.**
 
-### 安装插件文件
+### 第二步: 安装插件文件
 
 #### 从 GitHub Release / AppVeyor (推荐)
 
-1. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
+1. 下载 [.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462) 并安装.
+2. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 
 #### 自己编译
 
-1. 安装 `Visual Studio 2017`, 以及 `.NET Framework 4.6.2 SDK.`
+1. 安装 `Visual Studio 2017/2019`, 以及 `.NET Framework 4.6.2 SDK.`
 2. Clone 这个仓库, 并使用`TRKS.WF.QQBot\build.bat`来生成一份插件.
 3. 将生成的所有`TRKS.WF.QQBot\bin\[对应 QQ 平台]`文件夹内的所有文件拖入机器人根目录.
-
-_代码变动后的五分钟内将会把最新的插件部署到所有机器人上, 如果我手滑引爆了所有机器人, 请不要慌张._
 
 ---
 
@@ -94,16 +96,16 @@ _代码变动后的五分钟内将会把最新的插件部署到所有机器人�
 - **用于禁用群通知:** `删除群 [口令] [群号]`  
   默认为: `删除群 ******* 群号`
 
-### 其他内容
+### 其他东西
 
 直接邀请机器人机器人就会同意. (可修改配置)  
 默认口令: `*******` (对没错就是七个星号, 有人猜得出我玩了什么梗吗)
 
 ---
 
-## 使用的开源库
+## 用到的开源库
 
-|                             名称                             |  开源协议  |           用途           |
+|                             名字                             |  开源协议  |         用来干嘛         |
 | :----------------------------------------------------------: | :--------: | :----------------------: |
 |        [Autofac](https://github.com/autofac/Autofac)         |    MIT     |        Mahua 依赖        |
 |        [MediatR](https://github.com/jbogard/MediatR)         | Apache-2.0 |        Mahua 依赖        |
