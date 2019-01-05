@@ -10,7 +10,7 @@ namespace TRKS.WF.QQBot
 
         public List<string> InvationRewardList = new List<string>();
 
-        public string Code;
+        public string Code = "*******";
 
         public string QQ;
 
@@ -27,5 +27,26 @@ namespace TRKS.WF.QQBot
         public DateTime Last_update;
 
         public string GithubOAuthKey;
+
+        public bool IsSlashRequired = true;
     }
+
+    [Configuration("CoquettishConfig")]
+    internal class CoquettishConfig : Configuration<CoquettishConfig>
+    {
+        public List<CoquettishWord> CoquettishWords = new List<CoquettishWord>();
+    }
+
+    public class CoquettishWord
+    {
+        public CoquettishWord(string word, string result)
+        {
+            this.word = word;
+            this.result = result;
+        }
+
+        public string word { get;}
+        public string result { get;}
+    }
+
 }

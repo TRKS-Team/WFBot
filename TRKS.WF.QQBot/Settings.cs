@@ -40,6 +40,7 @@ namespace Settings
             checkBox10.Checked = Config.Instance.AcceptJoiningRequest;
             textBox4.Text = Config.Instance.ClientId;
             textBox5.Text = Config.Instance.ClientSecret;
+            checkBox11.Checked = Config.Instance.IsSlashRequired;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -186,6 +187,16 @@ namespace Settings
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.IsSlashRequired = checkBox11.Checked;
         }
     }
 

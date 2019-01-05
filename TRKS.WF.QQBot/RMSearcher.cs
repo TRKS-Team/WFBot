@@ -61,24 +61,33 @@ namespace TRKS.WF.QQBot
 
         public void SendRiveninfos(string group, string weapon)
         {
-            if (translator.ContainsWeapon(weapon.Format()))
+            if (string.IsNullOrEmpty(Config.Instance.ClientId) && string.IsNullOrEmpty(Config.Instance.ClientSecret))
             {
-                var info = GetRiveninfos(weapon);
-                var msg = "";
-                if (info.Count > 0)
+                if (translator.ContainsWeapon(weapon.Format()))
                 {
-                    msg = WFFormatter.ToString(info);
+                    var info = GetRiveninfos(weapon);
+                    var msg = "";
+                    if (info.Count > 0)
+                    {
+                        msg = WFFormatter.ToString(info);
+                    }
+                    else
+                    {
+                        msg = $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.";
+                    }
+                    Messenger.SendGroup(group, msg);
                 }
                 else
                 {
-                    msg = $"抱歉, 目前紫卡市场没有任何出售: {weapon}紫卡的用户.";
+                    Messenger.SendGroup(group, $"武器{weapon}不存在, 请检查格式(请注意: 悦音prime)");
                 }
-                Messenger.SendGroup(group, msg);
             }
             else
             {
-                Messenger.SendGroup(group, $"武器{weapon}不存在, 请检查格式(请注意: 悦音prime)");
+                Messenger.SendGroup(group, "本机器人没有API授权,请联系机器人管理员.");
             }
+
+            
         }
     } 
 }

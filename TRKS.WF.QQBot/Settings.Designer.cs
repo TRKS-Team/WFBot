@@ -59,6 +59,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.checkBox11 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -294,7 +296,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(3, 479);
+            this.label6.Location = new System.Drawing.Point(8, 474);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 19);
             this.label6.TabIndex = 17;
@@ -346,15 +348,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label7.Location = new System.Drawing.Point(8, 556);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(298, 21);
+            this.label7.Size = new System.Drawing.Size(261, 20);
             this.label7.TabIndex = 22;
             this.label7.Text = "向所有启用了通知功能的群发送一条消息";
             // 
             // textBox4
             // 
+            this.textBox4.AcceptsReturn = true;
             this.textBox4.Location = new System.Drawing.Point(12, 692);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(262, 21);
@@ -362,6 +365,7 @@
             // 
             // textBox5
             // 
+            this.textBox5.AllowDrop = true;
             this.textBox5.Location = new System.Drawing.Point(12, 744);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(262, 21);
@@ -411,11 +415,36 @@
             this.label10.TabIndex = 28;
             this.label10.Text = "特殊API授权(申请方式请见存储库的API文档)";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.Location = new System.Drawing.Point(7, 777);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(122, 21);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "机器人格式设置";
+            this.label11.Click += new System.EventHandler(this.label11_Click);
+            // 
+            // checkBox11
+            // 
+            this.checkBox11.AutoSize = true;
+            this.checkBox11.Location = new System.Drawing.Point(17, 811);
+            this.checkBox11.Name = "checkBox11";
+            this.checkBox11.Size = new System.Drawing.Size(102, 16);
+            this.checkBox11.TabIndex = 30;
+            this.checkBox11.Text = "命令前需要加/";
+            this.checkBox11.UseVisualStyleBackColor = true;
+            this.checkBox11.CheckedChanged += new System.EventHandler(this.checkBox11_CheckedChanged);
+            // 
             // Settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 818);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScroll = true;
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(420, 385);
+            this.Controls.Add(this.checkBox11);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label9);
@@ -486,6 +515,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox checkBox11;
     }
 }
 

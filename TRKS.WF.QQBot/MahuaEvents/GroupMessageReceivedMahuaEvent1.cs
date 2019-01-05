@@ -34,9 +34,17 @@ namespace TRKS.WF.QQBot.MahuaEvents
             try
             {
                 var message = context.Message;
-                if (message.StartsWith("/"))
+                if (message.StartsWith("/") || !Config.Instance.IsSlashRequired)
                 {
-                    var command = message.Substring(1).ToLower();
+                    var command = "";
+                    if (message.Contains("/"))
+                    {
+                        command = message.Substring(1).ToLower();
+                    }
+                    else
+                    {
+                        command = message;
+                    }
                     var syndicates = new [] {"赏金", "平原赏金", "地球赏金", "金星赏金", "金星平原赏金", "地球平原赏金"};
                     var fissures = new [] {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
                     if (syndicates.Any(ostron => command.StartsWith(ostron)))
