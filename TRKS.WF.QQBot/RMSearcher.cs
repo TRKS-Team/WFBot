@@ -61,7 +61,7 @@ namespace TRKS.WF.QQBot
 
         public void SendRiveninfos(string group, string weapon)
         {
-            if (string.IsNullOrEmpty(Config.Instance.ClientId) && string.IsNullOrEmpty(Config.Instance.ClientSecret))
+            if (!string.IsNullOrEmpty(Config.Instance.ClientId) && !string.IsNullOrEmpty(Config.Instance.ClientSecret))
             {
                 if (translator.ContainsWeapon(weapon.Format()))
                 {
