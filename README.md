@@ -133,6 +133,6 @@
 如果有 bug 或者你有好的想法可以作为 feature 可以在 Issue 里直接提出, 我会尽量去修改和实现.  
 特别鸣谢 [@Cyl18](https://github.com/Cyl18)  
 > Cyl18 是我雇佣的一个劳工  
-> 他每天坐在电脑前 看到我 Commit 的时候 他就点下build.bat  
-> 然后将插件文件打包 上传到 Github 上  
+> 他每天坐在电脑前 看到我 Commit 的时候 他就戳一下 build.bat  
+> 然后将插件文件打包 上传到 GitHub 上  
 > 可怜的 Cyl18 每天要做这些工作维持生活  
