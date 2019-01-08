@@ -105,10 +105,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                     if (command.StartsWith("紫卡"))
                     {
-                        if (command.Length > 3 && command.Substring(2).StartsWith(" "))
+                        if (command.Length > 3)
                         {
-                            var weapon = command.Substring(3).Format();
-                             _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
+                            if (command.Substring(2).StartsWith(" "))
+                            {
+                                var weapon = command.Substring(3).Format();
+                                _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
+                            }
+
                         }
                         else
                         {
@@ -120,10 +124,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                     if (command.StartsWith("遗物"))
                     {
-                        if (command.Length > 3 && command.Substring(2).StartsWith(" "))
+                        if (command.Length > 3 )
                         {
-                            var word = command.Substring(3).Format();
-                            _wFStatus.SendRelicInfo(context.FromGroup, word);
+                            if (command.Substring(2).StartsWith(" "))
+                            {
+                                var word = command.Substring(3).Format();
+                                _wFStatus.SendRelicInfo(context.FromGroup, word);
+                            }
                         }
                         else
                         {

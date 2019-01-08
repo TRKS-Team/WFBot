@@ -107,8 +107,8 @@ namespace TRKS.WF.QQBot
             foreach (var job in mission.jobs)
             {
                 count++;
-                sb.AppendLine($"[赏金{count}]等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
-                sb.AppendLine("奖励:");
+                sb.AppendLine($"> 赏金{count}等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
+                sb.AppendLine("- 奖励:");
                 foreach (var reward in job.rewardPool)
                 {
                     sb.Append($"[{reward}]");                   
