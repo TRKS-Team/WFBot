@@ -44,9 +44,9 @@ namespace Newbe.Mahua.Internals
     /// <summary>
     /// 当前插件平台信息读取
     /// </summary>
-    internal static class MahuaPlatformValueProvider
+    public static class MahuaPlatformValueProvider
     {
-        internal static readonly Lazy<MahuaPlatform> CurrentPlatform =
+        public static readonly Lazy<MahuaPlatform> CurrentPlatform =
             new Lazy<MahuaPlatform>(() =>
             {
                 var mahuaPlatform = new IPlatformResolver[]

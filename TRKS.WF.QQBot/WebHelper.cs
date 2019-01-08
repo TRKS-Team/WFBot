@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -50,6 +52,29 @@ namespace TRKS.WF.QQBot
             var wc = webClient;
             wc.Value.Headers = header;
             return wc.Value.UploadString(url, body).JsonDeserialize<T>();
+        }
+        public static void DowloadFile(string url, string path, string name)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            webClient.Value.DownloadFile(url, Path.Combine(path, name));
+            /*var img = Image.FromFile(Path.Combine(path, name));
+            var fullname = name;
+            if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Gif))
+            {
+                fullname = name + ".gif";
+            }
+            if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Jpeg))
+            {
+                fullname = name + ".jpg";
+            }
+            if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Png))
+            {
+                fullname = name + ".png";
+            }
+            webClient.Value.DownloadFile(url, Path.Combine(path, fullname));*/
         }
     }
 

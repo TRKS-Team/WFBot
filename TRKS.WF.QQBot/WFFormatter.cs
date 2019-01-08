@@ -112,6 +112,8 @@ namespace TRKS.WF.QQBot
                 {
                     sb.Append($"[{reward}]");                   
                 }
+
+                sb.AppendLine();
             }
 
 
