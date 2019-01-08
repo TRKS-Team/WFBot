@@ -47,7 +47,7 @@ namespace TRKS.WF.QQBot
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Solaris United").ToList().First()));
-            sb.AppendLine($"您正在查看 福尔图娜 的全部赏金任务,使用: 地球赏金 来查询希图斯的赏金任务.");
+            sb.AppendLine($"您正在查看 福尔图娜 的全部赏金任务,使用: /地球赏金 来查询希图斯的赏金任务.");
             Messenger.SendGroup(group, sb.ToString());
         }
 
@@ -56,7 +56,7 @@ namespace TRKS.WF.QQBot
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Ostrons").ToList().First()));
-            sb.AppendLine("您正在查看 希图斯 的全部赏金任务,使用: 金星赏金 来查询 福尔图娜 的赏金任务.");
+            sb.AppendLine("您正在查看 希图斯 的全部赏金任务,使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
             Messenger.SendGroup(group, sb.ToString());
         }
 
@@ -84,7 +84,7 @@ namespace TRKS.WF.QQBot
                 }
             }*/
             result.AddRange(fissures);
-            var msg = $"{WFFormatter.ToString(result)}\r\n" + "目前机器人正在调查一次发送全部裂隙的玩家反响,麻烦各大群的管理员来和我说一下你的看法.";
+            var msg = $"{WFFormatter.ToString(result)}";
                 //$你正在查看与{string.Join(" ", words)}有关的所有裂隙.";
             Messenger.SendGroup(group, msg);
         }

@@ -103,10 +103,11 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             sb.AppendLine($"集团: {mission.syndicate}");
             sb.AppendLine();
-
+            var count = 0;
             foreach (var job in mission.jobs)
             {
-                sb.AppendLine($"等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
+                count++;
+                sb.AppendLine($"[赏金{count}]等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
                 sb.AppendLine("奖励:");
                 foreach (var reward in job.rewardPool)
                 {
