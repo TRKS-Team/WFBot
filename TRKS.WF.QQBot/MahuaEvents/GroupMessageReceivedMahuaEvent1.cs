@@ -105,7 +105,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                     if (command.StartsWith("紫卡"))
                     {
-                        if (command.Length > 3)
+                        if (command.Length >= 3)
                         {
                             if (command.Substring(2).StartsWith(" "))
                             {
@@ -124,7 +124,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                     if (command.StartsWith("遗物"))
                     {
-                        if (command.Length > 3 )
+                        if (command.Length >= 3 )
                         {
                             if (command.Substring(2).StartsWith(" "))
                             {
