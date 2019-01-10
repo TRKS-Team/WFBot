@@ -248,6 +248,10 @@ namespace TRKS.WF.QQBot
 
             foreach (var modifier in translateApi.Modifier)
             {
+                if (!dictTranslators.ContainsKey("Modifier"))
+                {
+                    dictTranslators.Add("Modifier", new Translator());
+                }
                 dictTranslators["Modifier"].AddEntry(modifier.en, modifier.zh);
             }
         }
