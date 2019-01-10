@@ -328,6 +328,14 @@ namespace TRKS.WF.QQBot
         public Invasion[] Invasion { get; set; }
         public Riven[] Riven { get; set; }
         public Relic[] Relic { get; set; }
+        public Modifier[] Modifier { get; set; }
+    }
+
+    public class Modifier
+    {
+        public int id { get; set; }
+        public string zh { get; set; }
+        public string en { get; set; }
     }
 
     public class Dict

@@ -125,13 +125,13 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             var completion = Math.Floor(inv.completion);
 
-            sb.AppendLine($"地点: {inv.node}");
+            sb.AppendLine($"地点: [{inv.node}]");
 
             sb.AppendLine($"> 进攻方: {inv.attackingFaction}");
             if (!inv.vsInfestation)
                 sb.AppendLine($"奖励: {ToString(inv.attackerReward)}");
             sb.AppendLine($"进度: {completion}%");
-            sb.AppendLine();
+            // sb.AppendLine();
 
             sb.AppendLine($"> 防守方: {inv.defendingFaction}");
             sb.AppendLine($"奖励: {ToString(inv.defenderReward)}");
@@ -196,8 +196,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine($"携带商品:");
                 foreach (var inventory in trader.inventory)
                 {
-                    sb.AppendLine($"         [{inventory.item}]");
-                    sb.AppendLine($"         {inventory.ducats}金币 + {inventory.credits}现金");
+                    sb.AppendLine($"         [{inventory.item}] {inventory.ducats}金币 + {inventory.credits}现金");
                 }
                 //sb.Append($"结束时间:{trader.expiry}({time} 后)");
                 sb.Append($"结束时间: {time} 后");

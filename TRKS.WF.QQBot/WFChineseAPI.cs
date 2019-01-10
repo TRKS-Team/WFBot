@@ -245,6 +245,11 @@ namespace TRKS.WF.QQBot
             {
                 weapons.Add(riven.Name.Format());
             }
+
+            foreach (var modifier in translateApi.Modifier)
+            {
+                dictTranslators["Modifier"].AddEntry(modifier.en, modifier.zh);
+            }
         }
 
         private static WFApi GetTranslateApi()
@@ -261,9 +266,11 @@ namespace TRKS.WF.QQBot
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Riven.json");
             var relic = WebHelper.DownloadJson<Relic[]>(
                     "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Relic.json");
+            var modifier = WebHelper.DownloadJson<Modifier[]>(
+                "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Modifier.json");
             var translateApi = new WFApi
             {
-                Alert = alerts, Dict = dicts, Invasion = invasions, Relic = relic, Riven = riven, Sale = sales
+                Alert = alerts, Dict = dicts, Invasion = invasions, Relic = relic, Riven = riven, Sale = sales, Modifier = modifier
             };
             return translateApi;
         }
@@ -422,7 +429,7 @@ namespace TRKS.WF.QQBot
             {
                 variant.node = TranslateNode(variant.node).Replace("Plains of Eidolon", "夜灵平野"); // 这个不在翻译api里
                 variant.missionType = dictTranslators["Mission"].Translate(variant.missionType);
-                variant.modifier = TranslateModifier(variant.modifier);
+                variant.modifier = dictTranslators["Modifier"].Translate(variant.modifier);
             }
             sortie.boss = dictTranslators["Word"].Translate(sortie.boss);
         }
@@ -481,106 +488,7 @@ namespace TRKS.WF.QQBot
             }
 
         }
-     
-        public string TranslateModifier(string modifier)
-        {
-            string result;
-            switch (modifier)
-            {
-                case "Weapon Restriction: Assault Rifle Only":
-                    result = "武器限定：突击步枪";
-                    break;
-                case "Weapon Restriction: Pistol Only":
-                    result = "武器限定：手枪";
-                    break;
-                case "Weapon Restriction: Melee Only":
-                    result = "武器限定：近战";
-                    break;
-                case "Weapon Restriction: Bow Only":
-                    result = "武器限定：弓箭";
-                    break;
-                case "Weapon Restriction: Shotgun Only":
-                    result = "武器限定：霰弹枪";
-                    break;
-                case "Weapon Restriction: Sniper Only":
-                    result = "武器限定：狙击枪";
-                    break;
-                case "Enemy Elemental Enhancement: Corrosive":
-                    result = "敌人元素强化：腐蚀";
-                    break;
-                case "Enemy Elemental Enhancement: Electricity":
-                    result = "敌人元素强化：电击";
-                    break;
-                case "Enemy Elemental Enhancement: Blast":
-                    result = "敌人元素强化：爆炸";
-                    break;
-                case "Enemy Elemental Enhancement: Heat":
-                    result = "敌人元素强化：火焰";
-                    break;
-                case "Enemy Elemental Enhancement: Cold":
-                    result = "敌人元素强化：冰冻";
-                    break;
-                case "Enemy Elemental Enhancement: Gas":
-                    result = "敌人元素强化：毒气";
-                    break;
-                case "Enemy Elemental Enhancement: Magnetic":
-                    result = "敌人元素强化：磁力";
-                    break;
-                case "Enemy Elemental Enhancement: Toxin":
-                    result = "敌人元素强化：毒素";
-                    break;
-                case "Enemy Elemental Enhancement: Radiation":
-                    result = "敌人元素强化：辐射";
-                    break;
-                case "Enemy Elemental Enhancement: Viral":
-                    result = "敌人元素强化：病毒";
-                    break;
-                case "Enemy Physical Enhancement: Impact":
-                    result = "敌人物理强化：冲击";
-                    break;
-                case "Enemy Physical Enhancement: Puncture":
-                    result = "敌人物理强化：穿刺";
-                    break;
-                case "Enemy Physical Enhancement: Slash":
-                    result = "敌人物理强化：切割";
-                    break;
-                case "Augmented Enemy Armor":
-                    result = "敌人护甲强化";
-                    break;
-                case "Eximus Stronghold":
-                    result = "卓越者大本营";
-                    break;
-                case "Energy Reduction":
-                    result = "能量上限减少";
-                    break;
-                case "Enhanced Enemy Shields":
-                    result = "敌人护盾强化";
-                    break;
-                case "Environmental Effect: Extreme Cold":
-                    result = "环境改变：极寒";
-                    break;
-                case "Environmental Hazard: Fire":
-                    result = "环境灾害：火灾";
-                    break;
-                case "Environmental Hazard: Dense Fog":
-                    result = "环境灾害：浓雾";
-                    break;
-                case "Environmental Effect: Cryogenic Leakage":
-                    result = "环境改变：冷却液泄露";
-                    break;
-                case "Environmental Hazard: Electromagnetic Anomalies":
-                    result = "环境灾害：电磁异常";
-                    break;
-                case "Environmental Hazard: Radiation Pockets":
-                    result = "环境灾害：辐射灾害";
-                    break;
-                default:
-                    result = modifier;
-                    break;
-            }
 
-            return result;
-        }
     }
 
     /*

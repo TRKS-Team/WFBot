@@ -101,9 +101,15 @@ namespace TRKS.WF.QQBot
         public void SendEvent(string group)
         {
             var events = api.GetEvents();
-            var msg = WFFormatter.ToString(events);
-
-            Messenger.SendGroup(group, msg);
+            if (events.Count > 0)
+            {
+                var msg = WFFormatter.ToString(events);
+                Messenger.SendGroup(group, msg);
+            }
+            else
+            {
+                Messenger.SendGroup(group, "目前游戏内没有任何活动(尸鬼,豺狼,舰队).");
+            }
         }
     }
 }
