@@ -492,6 +492,39 @@ namespace TRKS.WF.QQBot
             }
 
         }
+        public void TranslateWMOrderEx(WMInfoEx info)
+        {
+            info.info.enName = info.orders.First().itemName;
+            info.info.zhName = searchwordTranslator["Item"].Translate(info.info.enName);
+
+            foreach (var order in info.orders)
+            {
+                switch (order.order_Type)
+                {
+                    case "buy":
+                        order.order_Type = "收购";
+                        break;
+                    case "sell":
+                        order.order_Type = "出售";
+                        break;
+                }
+
+                switch (order.status)
+                {
+                    case "ingame":
+                        order.status = "游戏内在线";
+                        break;
+                    case "online":
+                        order.status = "WM在线";
+                        break;
+                    case "offline":
+                        order.status = "离线";
+                        break;
+                }
+            }
+
+        }
+
 
     }
 

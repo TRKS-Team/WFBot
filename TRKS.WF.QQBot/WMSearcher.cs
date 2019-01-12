@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Settings;
@@ -10,18 +11,38 @@ namespace TRKS.WF.QQBot
     public class WMSearcher
     {
         private readonly WFTranslator translator = WFResource.WFTranslator;
+        private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
+                             !string.IsNullOrEmpty(Config.Instance.ClientSecret);
         public WMInfo GetWMInfo(string searchword)
         {
             var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item");
             return info;
         }
 
+        public WMInfoEx GetWMINfoEx(string searchword)
+        {
+            var header = new WebHeaderCollection();
+            header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
+            var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/pc/wm/{searchword}", header);
+            return info;
+        }
+
         public void OrderWMInfo(WMInfo info)
         {
             info.payload.orders = info.payload.orders
-                .Where(type => type.order_type == "sell")
-                .Where(status => status.user.status == "online" || status.user.status == "ingame")
-                .OrderBy(plat => plat.platinum)
+                .Where(order => order.order_type == "sell")
+                .Where(order => order.user.status == "online" || order.user.status == "ingame")
+                .OrderBy(order => order.platinum)
+                .Take(3)
+                .ToArray();
+        }
+
+        public void OrderWMInfoEx(WMInfoEx info)
+        {
+            info.orders = info.orders
+                .Where(order => order.order_Type == "sell")
+                .Where(order => order.status == "online" || order.status == "ingame")
+                .OrderBy(order => order.platinum)
                 .Take(3)
                 .ToArray();
         }
@@ -42,10 +63,23 @@ namespace TRKS.WF.QQBot
                 Messenger.SendGroup(group, sb.ToString().Trim());
                 return;
             }
-            var info = GetWMInfo(searchword);
-            OrderWMInfo(info);
-            translator.TranslateWMOrder(info, searchword);
-            var msg = WFFormatter.ToString(info);
+
+            var msg = "";
+            if (isWFA)
+            {
+                var infoEx = GetWMINfoEx(searchword);
+                OrderWMInfoEx(infoEx);
+                translator.TranslateWMOrderEx(infoEx);
+                msg = WFFormatter.ToString(infoEx);
+            }
+            else
+            {
+                var info = GetWMInfo(searchword);
+                OrderWMInfo(info);
+                translator.TranslateWMOrder(info, searchword);
+                msg = WFFormatter.ToString(info);
+            }
+
             Messenger.SendGroup(group, msg);
         }
     }

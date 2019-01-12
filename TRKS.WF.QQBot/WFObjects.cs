@@ -3,9 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace TRKS.WF.QQBot
 {
+
+    public class WMInfoEx
+    {
+        public OrderEx[] orders { get; set; }
+        public Info info { get; set; }
+    }
+
+    public class Info
+    {
+        public int ducats { get; set; }
+        public int tradingTax { get; set; }
+        public int advicePrice { get; set; }
+        [JsonIgnore]
+        public string enName { get; set; }
+        [JsonIgnore]
+        public string zhName { get; set; }
+    }
+
+    public class OrderEx
+    {
+        public string userName { get; set; }
+        public int platinum { get; set; }
+        public int quantity { get; set; }
+        public string status { get; set; }
+        public string itemName { get; set; }
+        public int mod_Level { get; set; }
+        public string order_Type { get; set; }
+    }
 
     public class Event
     {

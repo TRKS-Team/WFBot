@@ -230,6 +230,24 @@ namespace TRKS.WF.QQBot
             // 以后不好看了再说
             return sb.ToString().Trim();
         }
+        public static string ToString(WMInfoEx info)
+        {
+            var sb = new StringBuilder();
+            var item = info.info;
+            sb.AppendLine($"下面是物品: {item.zhName} 按价格从小到大的{info.orders.Length}条信息");
+            sb.AppendLine();
+            
+            foreach (var order in info.orders)
+            {
+                sb.AppendLine($"[{order.userName}]   {order.status}");
+                sb.AppendLine($"{order.order_Type}  {order.platinum} 白鸡");
+                sb.AppendLine(
+                    $"- 快捷回复: /w {order.userName} Hi! I want to buy: {item.enName} for {order.platinum} platinum. (warframe.market)");
+                sb.AppendLine();
+            }
+            // 这已经很难看了好吧
+            return sb.ToString().Trim();
+        }
 
         public static string ToString(Defenderreward reward)
         {

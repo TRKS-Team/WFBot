@@ -14,6 +14,9 @@ namespace TRKS.WF.QQBot
     {
         private Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
         private WFTranslator translator = WFResource.WFTranslator;
+
+        private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
+                             !string.IsNullOrEmpty(Config.Instance.ClientSecret);
         public RMSearcher()
         {
             UpdateAccessToken();
@@ -39,7 +42,7 @@ namespace TRKS.WF.QQBot
 
         public void UpdateAccessToken()
         {
-            if (!string.IsNullOrEmpty(Config.Instance.ClientId) && !string.IsNullOrEmpty(Config.Instance.ClientSecret))
+            if (isWFA)
             {
                 if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7))
                 {
@@ -61,7 +64,7 @@ namespace TRKS.WF.QQBot
 
         public void SendRiveninfos(string group, string weapon)
         {
-            if (!string.IsNullOrEmpty(Config.Instance.ClientId) && !string.IsNullOrEmpty(Config.Instance.ClientSecret))
+            if (isWFA)
             {
                 if (translator.ContainsWeapon(weapon.Format()))
                 {
