@@ -69,7 +69,7 @@ namespace TRKS.WF.QQBot
             {
                 var infoEx = GetWMINfoEx(searchword);
                 OrderWMInfoEx(infoEx);
-                translator.TranslateWMOrderEx(infoEx);
+                translator.TranslateWMOrderEx(infoEx, searchword);
                 msg = WFFormatter.ToString(infoEx);
             }
             else

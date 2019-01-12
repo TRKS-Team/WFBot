@@ -492,10 +492,10 @@ namespace TRKS.WF.QQBot
             }
 
         }
-        public void TranslateWMOrderEx(WMInfoEx info)
+        public void TranslateWMOrderEx(WMInfoEx info, string searchword)
         {
             info.info.enName = info.orders.First().itemName;
-            info.info.zhName = searchwordTranslator["Item"].Translate(info.info.enName);
+            info.info.zhName = searchwordTranslator["Item"].Translate(searchword);
 
             foreach (var order in info.orders)
             {
