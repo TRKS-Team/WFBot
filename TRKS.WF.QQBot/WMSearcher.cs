@@ -57,8 +57,8 @@ namespace TRKS.WF.QQBot
                 formateditem = item + "一套";
                 if (formateditem == searchword)
                 {
-                    searchword = translator.TranslateSearchWord(item.Replace("p", "prime"));
-                    formateditem = item.Replace("p", "prime");
+                    searchword = translator.TranslateSearchWord(item.Replace("p", "prime").Replace("总图", "蓝图"));
+                    formateditem = item.Replace("p", "prime").Replace("总图", "蓝图");
                     if (formateditem == searchword)
                     {
                         searchword = translator.TranslateSearchWord(item.Replace("p", "prime") + "一套");

@@ -18,3 +18,12 @@
 ## Q: 我是自己编译的机器人, 部署后直接爆炸
 
 - A: 删除 `YUELUO\TRKS.WF.QQBot\TRKS.WF.QQBot.dll.config`.
+
+---
+
+## Q: 应用加载错误 - TRKS.WF.QQBot.dll 读取错误或超时
+
+![Timeout](images/Timeout.png)
+
+- A: 本弹窗的原因很复杂 最有可能是的是因为服务器配置太低导致读取时间过长  
+    尝试不要关闭这个窗口 等待五分钟 如果机器人仍然没有正常启动 就使用Github Issue或者直接加群反馈
