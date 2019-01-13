@@ -14,6 +14,21 @@ namespace TRKS.WF.QQBot
 {
     public static class Messenger
     {
+        public static Dictionary<string, int> GroupCallDic = new Dictionary<string, int>();
+
+        public static void IncreaseCallCounts(string group)
+        {
+            if (GroupCallDic.ContainsKey(group))
+            {
+                GroupCallDic[group]++;
+            }
+            else
+            {
+                GroupCallDic[group] = 1;
+            }
+            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task => GroupCallDic[group] = 0);
+
+        }
         public static void SendDebugInfo(string content)
         {
             if (content.StartsWith("System.Threading.ThreadAbortException")) return;
@@ -54,25 +69,25 @@ namespace TRKS.WF.QQBot
                 var count = 1;
                 foreach (var group in Config.Instance.WFGroupList)
                 {
-                    SendGroup(group, content + Environment.NewLine + ($"发送次序: {count++}"));
+                    SendGroup(@group, content + Environment.NewLine + ($"发送次序: {count++}"));
                     Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
         }
         public static void SendHelpdoc(string group)
         {
-            SendGroup(group, @"欢迎查看机器人唯一指定帮助文档
+            SendGroup(@group, @"欢迎查看机器人唯一指定帮助文档
 宣传贴地址:https://warframe.love/thread-230.htm
 在线最新文档:https://github.com/TRKS-Team/WFBot/blob/master/README.md (绝对最新的文档)
 开源地址:https://github.com/TheRealKamisama/WFBot 
 本机器人为公益项目,持续维护中.");
             if (File.Exists("data/image/帮助文档.png"))
             {
-                SendGroup(group, @"[CQ:image,file=\帮助文档.png]");
+                SendGroup(@group, @"[CQ:image,file=\帮助文档.png]");
             }
             else
             {
-                SendGroup(group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
+                SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
 作者:TheRealKamisama 开源地址:https://github.com/TheRealKamisama/WFBot
     警报: 可使用 /警报 来查询当前的所有警报.
         新警报也会自动发送到启用了通知功能的群.

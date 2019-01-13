@@ -26,7 +26,7 @@ namespace Settings
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label5.Text = $"当前的口令为: {Config.Instance.Code}";
+            label2.Text = $"当前的口令为: {Config.Instance.Code}";
             if (string.IsNullOrEmpty(Config.Instance.QQ))
             {
                 label5.Text = $"当前不发送任何报错.";
@@ -41,6 +41,7 @@ namespace Settings
             textBox4.Text = Config.Instance.ClientId;
             textBox5.Text = Config.Instance.ClientSecret;
             checkBox11.Checked = Config.Instance.IsSlashRequired;
+            textBox6.Text = Config.Instance.CallperMinute.ToString();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -197,6 +198,26 @@ namespace Settings
         private void checkBox11_CheckedChanged(object sender, EventArgs e)
         {
             Config.Instance.IsSlashRequired = checkBox11.Checked;
+            Config.Save();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (textBox6.Text.IsNumber())
+            {
+                Config.Instance.CallperMinute = int.Parse(textBox6.Text);
+                Config.Save();
+            }
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

@@ -50,18 +50,34 @@ namespace TRKS.WF.QQBot
         public void SendWMInfo(string item, string group)
         {
             var searchword = translator.TranslateSearchWord(item);
+            var formateditem = item;
             if (item == searchword)
             {
-                var sb = new StringBuilder();
-                var similarlist = translator.GetSimilarItem(item.Format());
-                sb.AppendLine($"物品{item}不存在或格式错误.");
-                sb.AppendLine($"请问这下面有没有你要找的物品呢?:");
-                foreach (var similarresult in similarlist)
+                searchword = translator.TranslateSearchWord(item + "一套");
+                formateditem = item + "一套";
+                if (formateditem == searchword)
                 {
-                    sb.AppendLine($"    {similarresult}");
+                    searchword = translator.TranslateSearchWord(item.Replace("p", "prime"));
+                    formateditem = item.Replace("p", "prime");
+                    if (formateditem == searchword)
+                    {
+                        searchword = translator.TranslateSearchWord(item.Replace("p", "prime") + "一套");
+                        formateditem = item.Replace("p", "prime") + "一套";
+                        if (formateditem == searchword)
+                        {
+                            var sb = new StringBuilder();
+                            var similarlist = translator.GetSimilarItem(item.Format());
+                            sb.AppendLine($"物品{item}不存在或格式错误.");
+                            sb.AppendLine($"请问这下面有没有你要找的物品呢?:");
+                            foreach (var similarresult in similarlist)
+                            {
+                                sb.AppendLine($"    {similarresult}");
+                            }
+                            Messenger.SendGroup(group, sb.ToString().Trim());
+                            return;
+                        }
+                    }
                 }
-                Messenger.SendGroup(group, sb.ToString().Trim());
-                return;
             }
 
             var msg = "";

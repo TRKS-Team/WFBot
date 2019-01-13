@@ -29,6 +29,8 @@ namespace TRKS.WF.QQBot
         public string GithubOAuthKey;
 
         public bool IsSlashRequired = true;
+
+        public int CallperMinute = 0;
     }
 
     [Configuration("CoquettishConfig")]
@@ -47,6 +49,7 @@ namespace TRKS.WF.QQBot
 
         public string word { get;}
         public string result { get;}
-    }
+    }
+
 
 }

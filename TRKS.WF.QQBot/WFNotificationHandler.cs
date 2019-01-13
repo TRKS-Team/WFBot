@@ -17,7 +17,6 @@ namespace TRKS.WF.QQBot
         private static readonly object InvasionLocker = new object();
         private static readonly object AlertLocker = new object();
         private static readonly object WFAlertLocker = new object();
-
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private bool _inited;
