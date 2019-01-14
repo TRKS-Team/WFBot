@@ -110,7 +110,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         {
                             if (Config.Instance.WFGroupList.Contains(strs[2]))
                             {
-                                Messenger.SendGroup(context.FromQq, "群号已经存在.");
+                                Messenger.SendPrivate(context.FromQq, "群号已经存在.");
                             }
                             else
                             {
@@ -124,7 +124,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 2
+                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 3
                         }
                     }
                     else
