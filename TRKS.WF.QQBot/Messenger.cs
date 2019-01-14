@@ -54,6 +54,7 @@ namespace TRKS.WF.QQBot
 
             previousMessageDic[qq] = content;
 
+            IncreaseCallCounts(qq);
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
