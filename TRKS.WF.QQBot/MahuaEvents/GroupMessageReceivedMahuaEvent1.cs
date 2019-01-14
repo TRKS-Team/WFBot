@@ -31,7 +31,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (Messenger.GroupCallDic.ContainsKey(context.FromGroup))
             {
-                if (Config.Instance.CallperMinute > Messenger.GroupCallDic[context.FromGroup] && Config.Instance.CallperMinute != 0) return;
+                if (Messenger.GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;
             }
             else
             {
