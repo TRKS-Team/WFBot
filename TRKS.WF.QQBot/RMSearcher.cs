@@ -59,14 +59,14 @@ namespace TRKS.WF.QQBot
             header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
             header.Add("Platform", "pc");
             header.Add("Weapon", weapon.ToBase64());
-            return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList();
+            return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }
 
         public void SendRiveninfos(string group, string weapon)
         {
             if (isWFA)
             {
-                if (translator.ContainsWeapon(weapon.Format()))
+                if (translator.ContainsWeapon(weapon))
                 {
                     var info = GetRiveninfos(weapon);
                     var msg = "";
@@ -87,7 +87,7 @@ namespace TRKS.WF.QQBot
             }
             else
             {
-                Messenger.SendGroup(group, "本机器人没有API授权,请联系机器人管理员.");
+                Messenger.SendGroup(group, "本机器人没有WFA授权,本功能无法使用,请联系机器人管理员.");
             }
 
             

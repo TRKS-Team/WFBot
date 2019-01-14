@@ -28,8 +28,9 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
-        {           
-            
+        {
+            if (Config.Instance.CallperMinute > Messenger.GroupCallDic[context.FromGroup]) return;            
+
             if (HotUpdateInfo.PreviousVersion) return;
 
             try
@@ -110,7 +111,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         {
                             if (command.Substring(2).StartsWith(" "))
                             {
-                                var weapon = command.Substring(3).Format();
+                                var weapon = command.Substring(3).Replace("&amp;", "&").Format();
                                 _rmSearcher.SendRiveninfos(context.FromGroup, weapon);
                             }
 

@@ -68,7 +68,7 @@ namespace TRKS.WF.QQBot
             foreach (var invasion in invasions)
             {
                 translator.TranslateInvasion(invasion);
-                invasion.activation= GetRealTime(invasion.activation);
+                invasion.activation = GetRealTime(invasion.activation);
             }
 
             return invasions;
@@ -118,30 +118,6 @@ namespace TRKS.WF.QQBot
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
-        /*
-        public async Task<List<SyndicateMission>> GetSyndicateMissions()// 这里暂时不着急改
-        {
-            try
-            {
-                var mission = await client.GetSyndicateMissionsAsync(Platform.PC);
-            }
-            catch (TaskCanceledException)
-            {
-                // nah
-            }
-            catch (HttpRequestException)
-            {
-                // nah
-            }
-            catch (Exception e)
-            {
-                var qq = Config.Instance.QQ;
-                Messenger.SendPrivate(qq, $"赏金获取报错:{e}");
-            }
-
-            return null;
-        }
-        */
 
 
         public Sortie GetSortie()
