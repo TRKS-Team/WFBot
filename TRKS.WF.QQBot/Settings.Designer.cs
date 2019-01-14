@@ -77,7 +77,7 @@
             // 
             // button1
             // 
-            this.button1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.button1.Location = new System.Drawing.Point(292, 141);
             this.button1.Name = "button1";
@@ -89,7 +89,7 @@
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(382, 92);
@@ -99,7 +99,7 @@
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(12, 101);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(382, 37);
@@ -109,7 +109,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox1.Location = new System.Drawing.Point(17, 233);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(99, 21);
@@ -123,7 +123,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox2.Location = new System.Drawing.Point(17, 255);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(87, 21);
@@ -137,7 +137,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox3.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox3.Location = new System.Drawing.Point(17, 277);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(99, 21);
@@ -151,7 +151,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox4.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox4.Location = new System.Drawing.Point(17, 299);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(75, 21);
@@ -192,7 +192,7 @@
             // checkBox5
             // 
             this.checkBox5.AutoSize = true;
-            this.checkBox5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox5.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox5.Location = new System.Drawing.Point(149, 233);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(176, 21);
@@ -207,7 +207,7 @@
             // checkBox6
             // 
             this.checkBox6.AutoSize = true;
-            this.checkBox6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox6.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox6.Location = new System.Drawing.Point(149, 255);
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(137, 21);
@@ -221,7 +221,7 @@
             // checkBox7
             // 
             this.checkBox7.AutoSize = true;
-            this.checkBox7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox7.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox7.Location = new System.Drawing.Point(149, 277);
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(92, 21);
@@ -235,7 +235,7 @@
             // checkBox8
             // 
             this.checkBox8.AutoSize = true;
-            this.checkBox8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox8.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox8.Location = new System.Drawing.Point(149, 299);
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(151, 21);
@@ -249,7 +249,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Font = new System.Drawing.Font("SimHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.Location = new System.Drawing.Point(3, 188);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(349, 19);
@@ -261,13 +261,13 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(12, 432);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(262, 21);
+            this.textBox2.Size = new System.Drawing.Size(262, 20);
             this.textBox2.TabIndex = 13;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label4
             // 
-            this.label4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.Location = new System.Drawing.Point(8, 330);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(275, 49);
@@ -277,7 +277,7 @@
             // 
             // button2
             // 
-            this.button2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button2.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.Location = new System.Drawing.Point(292, 432);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 32);
@@ -288,7 +288,7 @@
             // 
             // label5
             // 
-            this.label5.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label5.Location = new System.Drawing.Point(10, 379);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(267, 42);
@@ -298,7 +298,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Font = new System.Drawing.Font("SimHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label6.Location = new System.Drawing.Point(8, 474);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 19);
@@ -312,7 +312,7 @@
             this.checkBox9.Location = new System.Drawing.Point(17, 515);
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.checkBox9.Size = new System.Drawing.Size(120, 16);
+            this.checkBox9.Size = new System.Drawing.Size(122, 17);
             this.checkBox9.TabIndex = 18;
             this.checkBox9.Text = "接收所有入群邀请";
             this.checkBox9.UseVisualStyleBackColor = true;
@@ -323,7 +323,7 @@
             this.checkBox10.AutoSize = true;
             this.checkBox10.Location = new System.Drawing.Point(149, 514);
             this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(120, 16);
+            this.checkBox10.Size = new System.Drawing.Size(122, 17);
             this.checkBox10.TabIndex = 19;
             this.checkBox10.Text = "接收所有加群申请";
             this.checkBox10.UseVisualStyleBackColor = true;
@@ -333,13 +333,13 @@
             // 
             this.textBox3.Location = new System.Drawing.Point(13, 628);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(262, 21);
+            this.textBox3.Size = new System.Drawing.Size(262, 20);
             this.textBox3.TabIndex = 20;
             this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged_1);
             // 
             // button3
             // 
-            this.button3.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3.Location = new System.Drawing.Point(293, 628);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 35);
@@ -351,7 +351,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label7.Location = new System.Drawing.Point(9, 587);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(261, 20);
@@ -363,7 +363,7 @@
             this.textBox4.AcceptsReturn = true;
             this.textBox4.Location = new System.Drawing.Point(13, 723);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(262, 21);
+            this.textBox4.Size = new System.Drawing.Size(262, 20);
             this.textBox4.TabIndex = 23;
             // 
             // textBox5
@@ -371,14 +371,14 @@
             this.textBox5.AllowDrop = true;
             this.textBox5.Location = new System.Drawing.Point(13, 775);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(262, 21);
+            this.textBox5.Size = new System.Drawing.Size(262, 20);
             this.textBox5.TabIndex = 24;
             this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label8.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label8.Location = new System.Drawing.Point(13, 695);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(69, 21);
@@ -389,7 +389,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label9.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label9.Location = new System.Drawing.Point(12, 747);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(101, 21);
@@ -399,7 +399,7 @@
             // 
             // button4
             // 
-            this.button4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button4.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button4.Location = new System.Drawing.Point(281, 775);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 30);
@@ -411,7 +411,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label10.Font = new System.Drawing.Font("Microsoft YaHei", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label10.Location = new System.Drawing.Point(8, 669);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(394, 26);
@@ -421,7 +421,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label11.Location = new System.Drawing.Point(8, 808);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(122, 21);
@@ -434,7 +434,7 @@
             this.checkBox11.AutoSize = true;
             this.checkBox11.Location = new System.Drawing.Point(18, 842);
             this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(102, 16);
+            this.checkBox11.Size = new System.Drawing.Size(103, 17);
             this.checkBox11.TabIndex = 30;
             this.checkBox11.Text = "命令前需要加/";
             this.checkBox11.UseVisualStyleBackColor = true;
@@ -444,7 +444,7 @@
             // 
             this.textBox6.Location = new System.Drawing.Point(300, 550);
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(35, 21);
+            this.textBox6.Size = new System.Drawing.Size(35, 20);
             this.textBox6.TabIndex = 31;
             this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
@@ -452,7 +452,7 @@
             // 
             this.button5.Location = new System.Drawing.Point(342, 550);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(38, 23);
+            this.button5.Size = new System.Drawing.Size(49, 23);
             this.button5.TabIndex = 32;
             this.button5.Text = "确认";
             this.button5.UseVisualStyleBackColor = true;
@@ -461,7 +461,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label12.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label12.Location = new System.Drawing.Point(9, 548);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 21);
