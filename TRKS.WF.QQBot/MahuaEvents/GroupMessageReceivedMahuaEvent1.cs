@@ -29,7 +29,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            if (Config.Instance.CallperMinute > Messenger.GroupCallDic[context.FromGroup] && Config.Instance.CallperMinute != 0) return;            
+            if (Messenger.GroupCallDic.ContainsKey(context.FromGroup))
+            {
+                if (Config.Instance.CallperMinute > Messenger.GroupCallDic[context.FromGroup] && Config.Instance.CallperMinute != 0) return;
+            }
+            else
+            {
+                Messenger.GroupCallDic[context.FromGroup] = 0;
+            }                             
 
             if (HotUpdateInfo.PreviousVersion) return;
 
