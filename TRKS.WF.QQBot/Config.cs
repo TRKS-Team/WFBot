@@ -31,6 +31,8 @@ namespace TRKS.WF.QQBot
         public bool IsSlashRequired = true;
 
         public int CallperMinute = 0;
+
+        public bool IsThirdPartyLexicon = true;
     }
 
     [Configuration("CoquettishConfig")]

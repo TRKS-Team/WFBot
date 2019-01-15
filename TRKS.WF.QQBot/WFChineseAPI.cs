@@ -174,7 +174,7 @@ namespace TRKS.WF.QQBot
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
-        private WFApi translateApi = GetTranslateApi();
+        private WFApi translateApi = Config.Instance.IsThirdPartyLexicon ? GetThirdPartyTranslateApi() : GetTranslateApi();
 
         public WFTranslator()
         {
@@ -251,6 +251,34 @@ namespace TRKS.WF.QQBot
             var translateApi = new WFApi
             {
                 Alert = alerts, Dict = dicts, Invasion = invasions, Relic = relic, Riven = riven, Sale = sales, Modifier = modifier
+            };
+            return translateApi;
+        }
+        private static WFApi GetThirdPartyTranslateApi()
+        {
+            var alerts = WebHelper.DownloadJson<Alert[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Alert.json");
+            var dicts = WebHelper.DownloadJson<Dict[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Dict.json");
+            var invasions = WebHelper.DownloadJson<Invasion[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Invasion.json");
+            var sales = WebHelper.DownloadJson<Sale[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Sale.json");
+            var riven = WebHelper.DownloadJson<Riven[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Riven.json");
+            var relic = WebHelper.DownloadJson<Relic[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Relic.json");
+            var modifier = WebHelper.DownloadJson<Modifier[]>(
+                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Modifier.json");
+            var translateApi = new WFApi
+            {
+                Alert = alerts,
+                Dict = dicts,
+                Invasion = invasions,
+                Relic = relic,
+                Riven = riven,
+                Sale = sales,
+                Modifier = modifier
             };
             return translateApi;
         }

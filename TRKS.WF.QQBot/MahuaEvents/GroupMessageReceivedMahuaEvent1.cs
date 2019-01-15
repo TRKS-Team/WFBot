@@ -100,8 +100,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         {
                             if (command.Length > 3)
                             {
-                                var item = command.Substring(3).Format();
-                                _wmSearcher.SendWMInfo(item, context.FromGroup);
+                                if (command.Substring(2).StartsWith(" "))
+                                {
+                                    var item = command.Substring(3).Format();
+                                    _wmSearcher.SendWMInfo(item, context.FromGroup);
+                                }
                             }
                             else
                             {

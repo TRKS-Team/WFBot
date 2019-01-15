@@ -42,6 +42,7 @@ namespace Settings
             textBox5.Text = Config.Instance.ClientSecret;
             checkBox11.Checked = Config.Instance.IsSlashRequired;
             textBox6.Text = Config.Instance.CallperMinute.ToString();
+            checkBox12.Checked = Config.Instance.IsThirdPartyLexicon;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -216,6 +217,17 @@ namespace Settings
         }
 
         private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox12_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.IsThirdPartyLexicon = checkBox12.Checked;
+            Config.Save();
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
         {
 
         }

@@ -407,13 +407,6 @@ namespace TRKS.WF.QQBot
         public float Ratio { get; set; }
     }
 
-    public class Statuscode
-    {
-        public int Id { get; set; }
-        public int Code { get; set; }
-        public string Zh { get; set; }
-        public string En { get; set; }
-    }
 
     public class Relic
     {
