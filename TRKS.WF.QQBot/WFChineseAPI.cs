@@ -296,7 +296,7 @@ namespace TRKS.WF.QQBot
                     {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();*/
                 var zhResults = translateApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
                 var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
-                if (!(zhResults.Any() && enResults.Any()))
+                if (!zhResults.Any() && !enResults.Any())
                 {
                     sb.AppendLine("并没有查询到任何翻译,请检查源名.");
                 }
