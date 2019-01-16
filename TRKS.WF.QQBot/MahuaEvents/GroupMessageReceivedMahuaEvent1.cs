@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Humanizer;
 using Settings;
+using System.Text.RegularExpressions;
 
 namespace TRKS.WF.QQBot.MahuaEvents
 {
@@ -133,10 +134,24 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                         
                     }
-
+                    if (command.StartsWith("翻译"))
+                    {
+                        if (command.Length >= 3)
+                        {
+                            if (command.Substring(2).StartsWith(" "))
+                            {
+                                var word = command.Substring(3).Format();
+                                _wFStatus.SendTranslateResult(context.FromGroup, word);
+                            }
+                        }
+                        else
+                        {
+                            Messenger.SendGroup(context.FromGroup, "缺少源名.");
+                        }
+                    }
                     if (command.StartsWith("遗物"))
                     {
-                        if (command.Length >= 3 )
+                        if (command.Length >= 3)
                         {
                             if (command.Substring(2).StartsWith(" "))
                             {
