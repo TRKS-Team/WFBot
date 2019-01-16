@@ -292,10 +292,10 @@ namespace TRKS.WF.QQBot
             }
             else
             {
-                var formatedDict = translateApi.Dict.Select(dict => new Dict
-                    {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();
-                var zhResults = formatedDict.Where(dict => dict.Zh.Format() == str).ToList();
-                var enResults = formatedDict.Where(dict => dict.En.Format() == str).ToList();
+                /*var formatedDict = translateApi.Dict.Select(dict => new Dict
+                    {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();*/
+                var zhResults = translateApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
+                var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
                 if (!(zhResults.Any() && enResults.Any()))
                 {
                     sb.AppendLine("并没有查询到任何翻译,请检查源名.");
