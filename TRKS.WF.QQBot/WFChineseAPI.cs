@@ -283,7 +283,44 @@ namespace TRKS.WF.QQBot
             };
             return translateApi;
         }
+        public string GetTranslateResult(string str)
+        {
+            var sb = new StringBuilder();
+            if (string.IsNullOrEmpty(str))
+            {
+                sb.AppendLine("关键词为空啊.");
+            }
+            else
+            {
+                var formatedDict = translateApi.Dict.Select(dict => new Dict
+                    {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();
+                var zhResults = formatedDict.Where(dict => dict.Zh.Format() == str).ToList();
+                var enResults = formatedDict.Where(dict => dict.En.Format() == str).ToList();
+                if (!(zhResults.Any() && enResults.Any()))
+                {
+                    sb.AppendLine("并没有查询到任何翻译,请检查源名.");
+                }
+                if (zhResults.Any())
+                {
+                    sb.AppendLine("下面是中文 => 英文的结果:");
+                    foreach (var zhResult in zhResults)
+                    {
+                        sb.AppendLine($"{zhResult.Zh} |=>| {zhResult.En}");
+                    }
+                }
 
+                if (enResults.Any())
+                {
+                    sb.AppendLine("下面是 英文 => 中文的结果:");
+                    foreach (var enResult in enResults)
+                    {
+                        sb.AppendLine($"{enResult.En} |=>| {enResult.Zh}");
+                    }
+                }
+
+            }
+            return sb.ToString().Trim();
+        }
         public List<string> GetSimilarItem(string word)
         {
             Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(word);
