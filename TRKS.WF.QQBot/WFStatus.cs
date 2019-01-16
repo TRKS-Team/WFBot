@@ -111,5 +111,9 @@ namespace TRKS.WF.QQBot
                 Messenger.SendGroup(group, "目前游戏内没有任何活动(尸鬼,豺狼,舰队).");
             }
         }
+        public void SendTranslateResult(string group, string str)
+        {
+            api.SendTranslateResult(group, str);
+        }
     }
 }

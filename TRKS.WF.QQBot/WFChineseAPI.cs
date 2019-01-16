@@ -165,6 +165,56 @@ namespace TRKS.WF.QQBot
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
+        private Dict[] dicts = GetDictFromJson();
+        private static Dict[] GetDictFromJson()
+        {
+            if (Config.Instance.IsThirdPartyLexicon)
+            {
+                var dicts = WebHelper.DownloadJson<Dict[]>(
+                        "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Dict.json");
+                return dicts;
+            }
+            //这俩有区别吗？
+            else
+            {
+                var dicts = WebHelper.DownloadJson<Dict[]>(
+                            "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
+                return dicts;
+            }
+        }
+        public void SendTranslateResult(string group, string str)
+        {
+            string msg = "";
+            if (str == "")
+            {
+                msg = "你是在为难我胖虎?!";
+                Messenger.SendGroup(group, msg);
+                return;
+            }
+            str = str.ToLower();
+            int count = 0;
+            msg = $"以下是物品{str}的翻译结果\n\n";
+            foreach (var dict in dicts)
+            {
+                if (dict.Zh.ToLower().IndexOf(str) >= 0)
+                {
+                    msg += dict.Zh + "  |==|  " + dict.En + "\n";
+                    count++;
+                }
+                if (dict.En.ToLower().IndexOf(str) >= 0)
+                {
+                    msg += dict.En + "  |==|  " + dict.Zh + "\n";
+                    count++;
+                }
+                if (count == 10)
+                {
+                    msg += "\n\n若未查找到您需要的物品，请确认后再翻译";
+                }
+            }
+            if (count == 0)
+                msg = $"不存在物品[{str}],请确认物品名再翻译";
+            Messenger.SendGroup(group, msg);
+        }
     }
 
     public class WFTranslator
