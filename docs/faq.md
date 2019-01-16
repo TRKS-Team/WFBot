@@ -35,3 +35,12 @@
 - A: 在解压酷 Q 及插件文件之前, 先选择解除锁定，并点击确定，再解压压缩文件。
 
 ![Unlock](images/Unlock.png)
+
+---
+
+## Q: 我的机器人发出来的时间怎么是英文的
+
+![Languagebug](images/Languagebug.png)
+
+- A: 请将 `YUELUO\TRKS.WF.QQBot\zh-CN` 这个文件夹扔到机器人的根目录.  
+    TODO:永久修复这个问题  
