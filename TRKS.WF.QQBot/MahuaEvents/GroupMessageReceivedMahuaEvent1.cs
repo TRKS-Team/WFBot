@@ -137,14 +137,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     if (command.StartsWith("翻译"))
                     {
                         string[] strs = Regex.Split(command, "翻译");
-                        if (strs.Count() == 2)
+                        if (strs.Count() == 2 &&  command.Substring(2).StartsWith(" "))
                         {
                             strs[1] = strs[1].Trim();
                             _wFStatus.SendTranslateResult(context.FromGroup, strs[1]);
                         }
                         else
                         {
-                            Messenger.SendGroup(context.FromGroup, "格式错误，示例:[翻译致残突击]");
+                            Messenger.SendGroup(context.FromGroup, "格式错误，示例:/翻译 致残突击");
                         }
                     }
                     if (command.StartsWith("遗物"))
