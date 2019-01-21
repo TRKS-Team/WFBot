@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,6 +44,7 @@ namespace Settings
             checkBox11.Checked = Config.Instance.IsSlashRequired;
             textBox6.Text = Config.Instance.CallperMinute.ToString();
             checkBox12.Checked = Config.Instance.IsThirdPartyLexicon;
+            UpdatePlatformRadioButtons();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -91,10 +93,6 @@ namespace Settings
                 var items = new HashSet<string>(((string[])checkbox.Tag));
                 var invRewards = Config.Instance.InvationRewardList;
                 checkbox.Checked = items.Intersect(invRewards).Any();
-                foreach (var item in items)
-                {
-                    Config.Instance.InvationRewardList.Remove(item);
-                }
  
             }
         }
@@ -231,6 +229,54 @@ namespace Settings
         {
 
         }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UpdatePlatform(object sender, EventArgs e)
+        {
+            var radiobutton = (RadioButton)sender;
+            if (radiobutton.Checked)
+            {
+                switch (radiobutton.Text)
+                {
+                    case "pc":
+                        Config.Instance.Platform = Platform.PC;
+                        break;
+                    case "ps4":
+                        Config.Instance.Platform = Platform.PS4;
+                        break;
+                    case "xbox":
+                        Config.Instance.Platform = Platform.XBOX;
+                        break;
+                    case "switch":
+                        Config.Instance.Platform = Platform.NS;
+                        break;
+                }
+                Config.Save();
+            }
+        }
+
+        private void UpdatePlatformRadioButtons()
+        {
+            switch (Config.Instance.Platform)
+            {
+                case Platform.PC:
+                    radioButton1.Checked = true;
+                    break;
+                case Platform.XBOX:
+                    radioButton2.Checked = true;
+                    break;
+                case Platform.PS4:
+                    radioButton3.Checked = true;
+                    break;
+                case Platform.NS:
+                    radioButton4.Checked = true;
+                    break;
+            }
+        }
     }
 
     public static class StringExtensions
@@ -250,5 +296,45 @@ namespace Settings
         {
             return source.Replace(" ", "").ToLower().Trim();
         }
+    }
+
+    public enum Platform
+    {
+        [Symbol("pc")]PC,
+        [Symbol("xbox")]XBOX,
+        [Symbol("ps4")]PS4,
+        [Symbol("swi")]NS
+    }
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class)] // 谢啦 嫖代码真的爽
+    class SymbolAttribute : Attribute
+    {
+        public string[] Symbols { get; }
+
+        public SymbolAttribute(params string[] symbols)
+        {
+            Symbols = symbols;
+        }
+    }
+
+    public static class EnumExtensions
+    {
+        public static string[] GetSymbols<TEnum>(this TEnum obj)
+        {
+            try
+            {
+                return obj.GetType().GetMember(obj.ToString()).First()
+                    .GetCustomAttribute<SymbolAttribute>().Symbols;
+            }
+            catch (Exception)
+            {
+                // 在这里给你自己发信息 告诉你自己代码出错了.
+                // 非机器人的写法为: 
+                // Debug.Assert(xxx); 如果xxx是false就会提醒你这里有一个代码bug
+                // assert 为断言 不用看 这只是一种习惯
+                Messenger.SendDebugInfo("你猜怎么着?你最不想看到的那部分,也就是自定义平台,他报错啦!!!机器人要炸啦!!!你要被用户骂死啦!!!(检查一下你的enum贴没贴symbol)");
+                return new string[0];
+            }
+        }
+
     }
 }

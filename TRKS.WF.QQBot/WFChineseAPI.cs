@@ -61,10 +61,11 @@ namespace TRKS.WF.QQBot
     public class WFChineseAPI
     {
         private WFTranslator translator = WFResource.WFTranslator;
+        private string platform => Config.Instance.Platform.GetSymbols().First();
 
         public List<WFInvasion> GetInvasions()
         {
-            var invasions = WebHelper.DownloadJson<List<WFInvasion>>("https://api.warframestat.us/pc/invasions");
+            var invasions = WebHelper.DownloadJson<List<WFInvasion>>($"https://api.warframestat.us/{platform}/invasions");
             foreach (var invasion in invasions)
             {
                 translator.TranslateInvasion(invasion);
@@ -78,7 +79,7 @@ namespace TRKS.WF.QQBot
         {
             try
             {
-                var alerts = WebHelper.DownloadJson<List<WFAlert>>("https://api.warframestat.us/pc/alerts");
+                var alerts = WebHelper.DownloadJson<List<WFAlert>>($"https://api.warframestat.us/{platform}/alerts");
                 foreach (var alert in alerts)
                 {
                     translator.TranslateAlert(alert);
@@ -107,14 +108,14 @@ namespace TRKS.WF.QQBot
 
         public CetusCycle GetCetusCycle()
         {
-            var cycle = WebHelper.DownloadJson<CetusCycle>("https://api.warframestat.us/pc/cetusCycle");
+            var cycle = WebHelper.DownloadJson<CetusCycle>($"https://api.warframestat.us/{platform}/cetusCycle");
             cycle.Expiry = GetRealTime(cycle.Expiry);
             return cycle;
         }
 
         public VallisCycle GetVallisCycle()
         {
-            var cycle = WebHelper.DownloadJson<VallisCycle>("https://api.warframestat.us/pc/vallisCycle");
+            var cycle = WebHelper.DownloadJson<VallisCycle>($"https://api.warframestat.us/{platform}/vallisCycle");
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
@@ -122,20 +123,20 @@ namespace TRKS.WF.QQBot
 
         public Sortie GetSortie()
         {
-            var sortie = WebHelper.DownloadJson<Sortie>("https://api.warframestat.us/pc/sortie");
+            var sortie = WebHelper.DownloadJson<Sortie>($"https://api.warframestat.us/{platform}/sortie");
             translator.TranslateSortie(sortie);
             return sortie;
         }
 
         public List<SyndicateMission> GetSyndicateMissions()
         {
-            var missions = WebHelper.DownloadJson<List<SyndicateMission>>("https://api.warframestat.us/pc/syndicateMissions");
+            var missions = WebHelper.DownloadJson<List<SyndicateMission>>($"https://api.warframestat.us/{platform}/syndicateMissions");
             translator.TranslateSyndicateMission(missions);
             return missions;
         }
         public VoidTrader GetVoidTrader()
         {
-            var trader = WebHelper.DownloadJson<VoidTrader>("https://api.warframestat.us/pc/voidTrader");
+            var trader = WebHelper.DownloadJson<VoidTrader>($"https://api.warframestat.us/{platform}/voidTrader");
             trader.activation = GetRealTime(trader.activation);
             trader.expiry = GetRealTime(trader.expiry);
             translator.TranslateVoidTrader(trader);
@@ -144,14 +145,14 @@ namespace TRKS.WF.QQBot
 
         public List<Fissure> GetFissures()
         {
-            var fissures = WebHelper.DownloadJson<List<Fissure>>("https://api.warframestat.us/pc/fissures");
+            var fissures = WebHelper.DownloadJson<List<Fissure>>($"https://api.warframestat.us/{platform}/fissures");
             translator.TranslateFissures(fissures);
             return fissures;
         }
 
         public List<Event> GetEvents()
         {
-            var events = WebHelper.DownloadJson<List<Event>>("https://api.warframestat.us/pc/events");
+            var events = WebHelper.DownloadJson<List<Event>>($"https://api.warframestat.us/{platform}/events");
             translator.TranslateEvents(events);
             foreach (var @event in events)
             {
@@ -167,6 +168,7 @@ namespace TRKS.WF.QQBot
         }
         
     }
+    
 
     public class WFTranslator
     {

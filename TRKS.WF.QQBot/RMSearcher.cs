@@ -17,6 +17,8 @@ namespace TRKS.WF.QQBot
 
         private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
                              !string.IsNullOrEmpty(Config.Instance.ClientSecret);
+
+        private string platform = Config.Instance.Platform.ToString();
         public RMSearcher()
         {
             UpdateAccessToken();
@@ -56,8 +58,13 @@ namespace TRKS.WF.QQBot
         {
             var header = new WebHeaderCollection();
             var count = 5;
+            var platform = Config.Instance.Platform.GetSymbols().First();
+            if (Config.Instance.Platform == Platform.NS)
+            {
+                platform = "ns";
+            }
             header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
-            header.Add("Platform", "pc");
+            header.Add("Platform", platform);
             header.Add("Weapon", weapon.ToBase64());
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }
@@ -78,7 +85,7 @@ namespace TRKS.WF.QQBot
                     {
                         msg = $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.";
                     }
-                    Messenger.SendGroup(group, msg);
+                    Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
                 }
                 else
                 {

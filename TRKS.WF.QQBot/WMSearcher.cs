@@ -13,8 +13,17 @@ namespace TRKS.WF.QQBot
         private readonly WFTranslator translator = WFResource.WFTranslator;
         private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
                              !string.IsNullOrEmpty(Config.Instance.ClientSecret);
+
+        private string platform => Config.Instance.Platform.ToString();
         public WMInfo GetWMInfo(string searchword)
         {
+            var header = new WebHeaderCollection();
+            var platform = Config.Instance.Platform.GetSymbols().First();
+            if (Config.Instance.Platform == Platform.NS)
+            {
+                platform = "switch";
+            }
+            header.Add("platform", platform);
             var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item");
             return info;
         }
@@ -23,7 +32,12 @@ namespace TRKS.WF.QQBot
         {
             var header = new WebHeaderCollection();
             header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
-            var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/pc/wm/{searchword}", header);
+            var platform = Config.Instance.Platform.GetSymbols().First();
+            if (Config.Instance.Platform == Platform.NS)
+            {
+                platform = "ns";
+            }
+            var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);
             return info;
         }
 
@@ -96,7 +110,7 @@ namespace TRKS.WF.QQBot
                 msg = WFFormatter.ToString(info);
             }
 
-            Messenger.SendGroup(group, msg);
+            Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
         }
     }
 }

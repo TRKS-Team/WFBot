@@ -33,6 +33,8 @@ namespace TRKS.WF.QQBot
         public int CallperMinute = 0;
 
         public bool IsThirdPartyLexicon = true;
+
+        public Settings.Platform Platform = Settings.Platform.PC;
     }
 
     [Configuration("CoquettishConfig")]

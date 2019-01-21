@@ -22,6 +22,7 @@ namespace TRKS.WF.QQBot
         private bool _inited;
         public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         private readonly WFChineseAPI api = WFResource.WFChineseApi;
+        private string platform => Config.Instance.Platform.ToString();
 
         public WFNotificationHandler()
         {
@@ -88,7 +89,7 @@ namespace TRKS.WF.QQBot
                             var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                              $"{WFFormatter.ToString(inv)}";
 
-                            Messenger.Broadcast(notifyText);
+                            Messenger.Broadcast(notifyText + $"\r\n机器人目前运行的平台是: {platform}");
                             sendedInvSet.Add(inv.id);
                         }
                     }
@@ -129,7 +130,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim());
+            Messenger.SendGroup(group, sb.ToString().Trim() + $"\r\n机器人目前运行的平台是: {platform}");
         }
 
         private void UpdateAlerts()
@@ -163,7 +164,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim());
+            Messenger.SendGroup(group, sb.ToString().Trim() + $"\r\n机器人目前运行的平台是: {platform}");
         }
 
         private void SendWFAlert(WFAlert alert)
@@ -175,7 +176,9 @@ namespace TRKS.WF.QQBot
                 {
                     var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                                  WFFormatter.ToString(alert) +
-                                 "\r\n可使用: /help来查看机器人的更多说明.";
+                                 "\r\n可使用: /help来查看机器人的更多说明." + 
+                                 $"\r\n机器人目前运行的平台是: {platform}"
+                                 ;
                     Messenger.Broadcast(result);
                     sendedAlertsSet.Add(alert.Id);
                 }
