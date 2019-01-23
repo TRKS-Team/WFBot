@@ -55,29 +55,35 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     {
                         command = message;
                     }
-                    var syndicates = new [] {"赏金", "平原赏金", "地球赏金", "金星赏金", "金星平原赏金", "地球平原赏金"};
-                    var fissures = new [] {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
-                    if (syndicates.Any(ostron => command.StartsWith(ostron)))
-                    {
-                        Messenger.SendGroup(context.FromGroup, "赏金查询已改版，请使用 /金星赏金 或者 /地球赏金.");
-                        /*var indexString = command.Substring(syndicates.First(ostron => command.StartsWith(ostron)).Length);
-                        if (indexString.IsNumber())
-                        {
-                            var index = int.Parse(indexString);
-                            if (index <= 5 && 0 < index)
-                            {
-                                _wFStatus.SendSyndicateMissions(context.FromGroup, index);
-                            }
-                            else
-                            {
-                                _wFStatus.SendSyndicateMissions(context.FromGroup, 1);
-                            }
 
-                        }
-                        else
+                    var fortuna = new[] {"金星赏金", "金星平原赏金", "福尔图娜赏金", "奥布山谷赏金"};
+                    var ostron = new[] {"地球赏金", "地球平原赏金", "希图斯赏金"};
+                    var fissures = new [] {"裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙"};
+                    if (ostron.Any(word => command.StartsWith(word)))
+                    {
+                        var index = 0;
+                        if (command.Length > ostron.First(syn => command.StartsWith(syn)).Length + 1)
                         {
-                            Messenger.SendGroup(context.FromGroup, "需要参数, e.g. /赏金 4");
-                        }*/
+                            var indexString = command.Substring(ostron.First(syn => command.StartsWith(syn)).Length);
+                            if (indexString.IsNumber())
+                            {
+                                index = int.Parse(indexString);
+                            }
+                        }
+                        _wFStatus.SendCetusMissions(context.FromGroup, index);
+                    }
+                    if (fortuna.Any(word => command.StartsWith(word)))
+                    {
+                        var index = 0;
+                        if (command.Length > fortuna.First(syn => command.StartsWith(syn)).Length + 1)
+                        {
+                            var indexString = command.Substring(fortuna.First(syn => command.StartsWith(syn)).Length);
+                            if (indexString.IsNumber())
+                            {
+                                index = int.Parse(indexString);
+                            }
+                        }
+                        _wFStatus.SendFortunaMissions(context.FromGroup, index);
                     }
 
                     if (fissures.Any(fissure => command.StartsWith(fissure)))
@@ -194,16 +200,6 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "活动":
                         case "事件":
                             _wFStatus.SendEvent(context.FromGroup);
-                            break;
-                        case "金星赏金":
-                        case "福尔图娜赏金":
-                        case "金星平原赏金":
-                            _wFStatus.SendFortunaMissions(context.FromGroup);
-                            break;
-                        case "地球赏金":
-                        case "希图斯赏金":
-                        case "地球平原赏金":
-                            _wFStatus.SendCetusMissions(context.FromGroup);
                             break;
                         case "裂隙":
                         case "裂缝":
