@@ -18,10 +18,11 @@ namespace TRKS.WF.QQBot
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
-        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() => new WebClientEx2() { Encoding = Encoding.UTF8 });
+        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() => new WebClientEx2 { Encoding = Encoding.UTF8 });
         public static T DownloadJson<T>(string url)
         {
-            while (true)
+            var count = 0;
+            while (count < 3)
             {
                 try
                 {
@@ -29,10 +30,10 @@ namespace TRKS.WF.QQBot
                 }
                 catch (Exception)
                 {
-                                 
+                    count++;
                 }
             }
-
+            throw new WebException();
         }
 
         public static T DownloadJson<T>(string url, WebHeaderCollection header)
