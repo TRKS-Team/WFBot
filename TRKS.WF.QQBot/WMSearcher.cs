@@ -48,7 +48,7 @@ namespace TRKS.WF.QQBot
                 .Where(order => order.user.status == "online" || order.user.status == "ingame")
                 .OrderBy(order => order.platinum)
                 .Take(3)
-                .ToArray();
+                .ToArray();            
         }
 
         public void OrderWMInfoEx(WMInfoEx info)
@@ -58,7 +58,7 @@ namespace TRKS.WF.QQBot
                 .Where(order => order.status == "online" || order.status == "ingame")
                 .OrderBy(order => order.platinum)
                 .Take(3)
-                .ToArray();
+                .ToArray();           
         }
 
         public void SendWMInfo(string item, string group)
@@ -98,16 +98,31 @@ namespace TRKS.WF.QQBot
             if (isWFA)
             {
                 var infoEx = GetWMINfoEx(searchword);
-                OrderWMInfoEx(infoEx);
-                translator.TranslateWMOrderEx(infoEx, searchword);
-                msg = WFFormatter.ToString(infoEx);
+                if (infoEx.orders.Any())
+                {
+                    OrderWMInfoEx(infoEx);
+                    translator.TranslateWMOrderEx(infoEx, searchword);
+                    msg = WFFormatter.ToString(infoEx);
+                }
+                else
+                {
+                    msg = $"抱歉,WarframeMarket上目前还没有售卖{item}的用户";
+                }
             }
             else
             {
                 var info = GetWMInfo(searchword);
-                OrderWMInfo(info);
-                translator.TranslateWMOrder(info, searchword);
-                msg = WFFormatter.ToString(info);
+                if (info.payload.orders.Any())
+                {
+                    OrderWMInfo(info);
+                    translator.TranslateWMOrder(info, searchword);
+                    msg = WFFormatter.ToString(info);
+                }
+                else
+                {
+                    msg = $"抱歉,WarframeMarket上目前还没有售卖{item}的用户";
+                }
+
             }
 
             Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
