@@ -409,9 +409,15 @@ namespace TRKS.WF.QQBot
 
         private string TranslateNode(string node)
         {
-            var strings = node.Split('(');
-            var nodeRegion = strings[1].Split(')')[0];
-            return strings[0] + dictTranslators["Star"].Translate(nodeRegion);
+            var result = "";
+            if (!string.IsNullOrEmpty(node))
+            {
+                var strings = node.Split('(');
+                var nodeRegion = strings[1].Split(')')[0];
+                result = strings[0] + dictTranslators["Star"].Translate(nodeRegion);
+            }
+
+            return result;
         }
 
         public bool ContainsWeapon(string weapon)
