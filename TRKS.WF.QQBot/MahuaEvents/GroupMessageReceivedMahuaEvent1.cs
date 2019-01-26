@@ -64,10 +64,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         var index = 0;
                         if (command.Length > ostron.First(syn => command.StartsWith(syn)).Length + 1)
                         {
-                            var indexString = command.Substring(ostron.First(syn => command.StartsWith(syn)).Length);
-                            if (indexString.IsNumber())
+                            if (ostron.All(syn => command != syn))
                             {
-                                index = int.Parse(indexString);
+                                var indexString = command.Substring(ostron.First(syn => command.StartsWith(syn)).Length);
+                                if (indexString.IsNumber())
+                                {
+                                    index = int.Parse(indexString);
+                                }
                             }
                         }
                         _WFStatus.SendCetusMissions(context.FromGroup, index);
@@ -77,10 +80,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         var index = 0;
                         if (command.Length > fortuna.First(syn => command.StartsWith(syn)).Length + 1)
                         {
-                            var indexString = command.Substring(fortuna.First(syn => command.StartsWith(syn)).Length);
-                            if (indexString.IsNumber())
+                            if (fortuna.All(syn => command != syn))
                             {
-                                index = int.Parse(indexString);
+                                var indexString = command.Substring(fortuna.First(syn => command.StartsWith(syn)).Length);
+                                if (indexString.IsNumber())
+                                {
+                                    index = int.Parse(indexString);
+                                }
                             }
                         }
                         _WFStatus.SendFortunaMissions(context.FromGroup, index);

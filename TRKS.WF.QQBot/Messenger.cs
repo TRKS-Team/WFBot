@@ -72,10 +72,10 @@ namespace TRKS.WF.QQBot
                 {
                     var sb = new StringBuilder();
                     sb.AppendLine(content);
-                    sb.AppendLine($"发送次序: {count++} (这个通知与真实延迟{6 * count}秒)");
+                    sb.AppendLine($"发送次序: {count++}(与真实延迟了{6 * count}秒)");
                     if (count >= 40)
                     {
-                        sb.AppendLine("好吧,这个群的次序太靠后了,如果想要最快获得通知,请自行部署机器人,可使用 /help 来查看教程.");
+                        sb.AppendLine("如果想要最快获得通知,请自行部署机器人.");
                     }
                     SendGroup(group,sb.ToString().Trim());                    
                     Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
