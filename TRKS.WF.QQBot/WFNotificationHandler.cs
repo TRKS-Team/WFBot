@@ -17,11 +17,12 @@ namespace TRKS.WF.QQBot
         private static readonly object InvasionLocker = new object();
         private static readonly object AlertLocker = new object();
         private static readonly object WFAlertLocker = new object();
+        private static readonly object StalkerLocker = new object();
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
         private bool _inited;
-        public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+        public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(3).TotalMilliseconds);
         private readonly WFChineseAPI api = WFResource.WFChineseApi;
         private string platform => Config.Instance.Platform.ToString();
 
@@ -68,21 +69,24 @@ namespace TRKS.WF.QQBot
 
         private void UpdatePersistentEnemies()
         {
-            var enemies = api.GetPersistentEnemies();
-            var sb = new StringBuilder();
-            if (enemies.Any(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime)))
+            lock (StalkerLocker)
             {
-                sb.AppendLine("我看到有小小黑冒头了?干!");
-                foreach (var enemy in enemies)
+                var enemies = api.GetPersistentEnemies();
+                var sb = new StringBuilder();
+                if (enemies.Any(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime)))
                 {
-                    if (enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime))
+                    sb.AppendLine("我看到有小小黑冒头了?干!");
+                    foreach (var enemy in enemies)
                     {
-                        sb.AppendLine(WFFormatter.ToString(enemy));
-                        sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+                        if (enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime))
+                        {
+                            sb.AppendLine(WFFormatter.ToString(enemy));
+                            sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+                        }
                     }
+                    Messenger.Broadcast(sb.ToString().Trim());
                 }
-                Messenger.Broadcast(sb.ToString().Trim());
-            }           
+            }     
         }
         private void UpdateWFGroups()
         {
