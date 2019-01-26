@@ -60,7 +60,7 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+            Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
         public static void Broadcast(string content)

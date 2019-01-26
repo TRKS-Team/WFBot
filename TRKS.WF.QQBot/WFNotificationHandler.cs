@@ -87,10 +87,7 @@ namespace TRKS.WF.QQBot
         private void UpdateWFGroups()
         {
             var groups = GetGroups().Select(group => group.Group).ToList();
-            foreach (var group in Config.Instance.WFGroupList.Where(group => !groups.Contains(group)))
-            {
-                Config.Instance.WFGroupList.Remove(group);
-            }
+            Config.Instance.WFGroupList.RemoveAll(group => !groups.Contains(group));
             Config.Save();
         }
 

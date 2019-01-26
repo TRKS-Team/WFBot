@@ -34,7 +34,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"[{enemy.agentType}]");
             if (enemy.isDiscovered)
             {
-                sb.AppendLine($"- 位置: {enemy.lastDiscoveredAt}");
+                sb.AppendLine($"- 出现在: {enemy.lastDiscoveredAt}");
             }
             sb.AppendLine($"- 剩余点数: {enemy.healthPercent:P}");
             return sb.ToString().Trim();
