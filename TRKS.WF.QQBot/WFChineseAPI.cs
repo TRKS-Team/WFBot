@@ -106,6 +106,7 @@ namespace TRKS.WF.QQBot
             return new List<WFAlert>();
         }
 
+
         public CetusCycle GetCetusCycle()
         {
             var cycle = WebHelper.DownloadJson<CetusCycle>($"https://api.warframestat.us/{platform}/cetusCycle");
@@ -162,11 +163,18 @@ namespace TRKS.WF.QQBot
             return events;
         }
 
+        public List<PersistentEnemie> GetPersistentEnemies()
+        {
+            var enemies = WebHelper.DownloadJson<List<PersistentEnemie>>("https://api.warframestat.us/pc/persistentEnemies");
+            translator.TranslatePersistentEnemies(enemies);
+            return enemies;
+        }
+
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
-        
+
     }
     
 
@@ -340,7 +348,19 @@ namespace TRKS.WF.QQBot
         {
             return translateApi.Relic.Where(relic => relic.Name.Format().Contains(word)).ToList();
         }
-
+        private static DateTime GetRealTime(DateTime time)
+        {
+            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+        }
+        public void TranslatePersistentEnemies(List<PersistentEnemie> enemies)
+        {
+            foreach (var enemy in enemies)
+            {
+                enemy.agentType = dictTranslators["Word"].Translate(enemy.agentType);
+                enemy.lastDiscoveredAt = TranslateNode(enemy.lastDiscoveredAt);
+                enemy.lastDiscoveredTime = GetRealTime(enemy.lastDiscoveredTime);
+            }
+        }
         public void TranslateEvents(List<Event> events)
         {
             foreach (var @event in events)

@@ -28,6 +28,18 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
 
+        public static string ToString(PersistentEnemie enemy)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"[{enemy.agentType}]");
+            if (enemy.isDiscovered)
+            {
+                sb.AppendLine($"- 位置: {enemy.lastDiscoveredAt}");
+            }
+            sb.AppendLine($"- 剩余点数: {enemy.healthPercent:P}");
+            return sb.ToString().Trim();
+
+        }
         public static string ToString(WFAlert alert)
         {
             var mission = alert.Mission;

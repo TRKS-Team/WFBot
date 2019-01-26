@@ -19,6 +19,7 @@ namespace TRKS.WF.QQBot
         private static readonly object WFAlertLocker = new object();
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
+        private readonly HashSet<DateTime> sendedStalker = new HashSet<DateTime>();
         private bool _inited;
         public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
         private readonly WFChineseAPI api = WFResource.WFChineseApi;
@@ -62,6 +63,24 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        private void UpdatePersistentEnemies()
+        {
+            var enemies = api.GetPersistentEnemies();
+            var sb = new StringBuilder();
+            if (enemies.Any(enemy => enemy.isDiscovered && !sendedStalker.Contains(enemy.lastDiscoveredTime)))
+            {
+                sb.AppendLine("我看到有小小黑冒头了?干!");
+                foreach (var enemy in enemies)
+                {
+                    if (enemy.isDiscovered && !sendedStalker.Contains(enemy.lastDiscoveredTime))
+                    {
+                        sb.AppendLine(WFFormatter.ToString(enemy));
+                        sendedStalker.Add(enemy.lastDiscoveredTime);
+                    }
+                }
+                Messenger.Broadcast(sb.ToString().Trim());
+            }           
+        }
         private void UpdateWFGroups()
         {
             var groups = GetGroups().Select(group => group.Group).ToList();
@@ -118,6 +137,17 @@ namespace TRKS.WF.QQBot
             return list;
         }
 
+        public void SendAllPersistentEnemies(string group)
+        {
+            var enemies = api.GetPersistentEnemies();
+            var sb = new StringBuilder();
+            sb.AppendLine("下面是全太阳系内的小小黑,快去锤爆?");
+            foreach (var enemy in enemies)
+            {
+                sb.AppendLine(WFFormatter.ToString(enemy));
+            }
+            Messenger.SendGroup(group, sb.ToString().Trim());
+        }
         public void SendAllInvasions(string group)
         {
             var invasions = api.GetInvasions();

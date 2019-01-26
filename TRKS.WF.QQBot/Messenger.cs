@@ -60,7 +60,7 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+            //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
         public static void Broadcast(string content)
@@ -70,7 +70,14 @@ namespace TRKS.WF.QQBot
                 var count = 1;
                 foreach (var group in Config.Instance.WFGroupList)
                 {
-                    SendGroup(@group, content + Environment.NewLine + ($"发送次序: {count++}"));
+                    var sb = new StringBuilder();
+                    sb.AppendLine(content);
+                    sb.AppendLine($"发送次序: {count++} (这个通知与真实延迟{6 * count}秒)");
+                    if (count >= 40)
+                    {
+                        sb.AppendLine("好吧,这个群的次序太靠后了,如果想要最快获得通知,请自行部署机器人,可使用 /help 来查看教程.");
+                    }
+                    SendGroup(group,sb.ToString().Trim());                    
                     Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);

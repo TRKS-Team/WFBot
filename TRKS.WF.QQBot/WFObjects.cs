@@ -8,6 +8,22 @@ using Newtonsoft.Json;
 namespace TRKS.WF.QQBot
 {
 
+    public class PersistentEnemie
+    {
+        public string id { get; set; }
+        public string agentType { get; set; }
+        public string locationTag { get; set; }
+        public int rank { get; set; }
+        public float healthPercent { get; set; }
+        public int fleeDamage { get; set; }
+        public int region { get; set; }
+        public DateTime lastDiscoveredTime { get; set; }
+        public string lastDiscoveredAt { get; set; }
+        public bool isDiscovered { get; set; }
+        public bool isUsingTicketing { get; set; }
+        public string pid { get; set; }
+    }
+
     public class WMInfoEx
     {
         public OrderEx[] orders { get; set; }

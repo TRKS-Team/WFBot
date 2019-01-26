@@ -17,8 +17,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-        internal static readonly WFNotificationHandler _wFAlert = new WFNotificationHandler();
-        private static readonly WFStatus _wFStatus = new WFStatus();
+        internal static readonly WFNotificationHandler _WfNotificationHandler = new WFNotificationHandler();
+        private static readonly WFStatus _WFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
 
@@ -70,7 +70,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                                 index = int.Parse(indexString);
                             }
                         }
-                        _wFStatus.SendCetusMissions(context.FromGroup, index);
+                        _WFStatus.SendCetusMissions(context.FromGroup, index);
                     }
                     if (fortuna.Any(word => command.StartsWith(word)))
                     {
@@ -83,7 +83,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                                 index = int.Parse(indexString);
                             }
                         }
-                        _wFStatus.SendFortunaMissions(context.FromGroup, index);
+                        _WFStatus.SendFortunaMissions(context.FromGroup, index);
                     }
 
                     if (fissures.Any(fissure => command.StartsWith(fissure)))
@@ -147,7 +147,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             if (command.Substring(2).StartsWith(" "))
                             {
                                 var word = command.Substring(3).Format();
-                                _wFStatus.SendTranslateResult(context.FromGroup, word);
+                                _WFStatus.SendTranslateResult(context.FromGroup, word);
                             }
                         }
                         else
@@ -162,7 +162,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                             if (command.Substring(2).StartsWith(" "))
                             {
                                 var word = command.Substring(3).Format();
-                                _wFStatus.SendRelicInfo(context.FromGroup, word);
+                                _WFStatus.SendRelicInfo(context.FromGroup, word);
                             }
                         }
                         else
@@ -173,7 +173,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     switch (command)
                     {
                         case "警报":
-                            _wFAlert.SendAllAlerts(context.FromGroup);
+                            _WfNotificationHandler.SendAllAlerts(context.FromGroup);
                             break;
                         case "平野":
                         case "夜灵平野":
@@ -184,26 +184,36 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         case "金星平原温度":
                         case "平原温度":
                         case "平原时间":
-                            _wFStatus.SendCycles(context.FromGroup);
+                            _WFStatus.SendCycles(context.FromGroup);
                             break;
                         case "入侵":
-                            _wFAlert.SendAllInvasions(context.FromGroup);
+                            _WfNotificationHandler.SendAllInvasions(context.FromGroup);
                             break;
                         case "突击":
-                            _wFStatus.SendSortie(context.FromGroup);
+                            _WFStatus.SendSortie(context.FromGroup);
                             break;
                         case "奸商":
                         case "虚空商人":
                         case "商人":
-                            _wFStatus.SendVoidTrader(context.FromGroup);
+                            _WFStatus.SendVoidTrader(context.FromGroup);
                             break;
                         case "活动":
                         case "事件":
-                            _wFStatus.SendEvent(context.FromGroup);
+                            _WFStatus.SendEvent(context.FromGroup);
                             break;
                         case "裂隙":
                         case "裂缝":
-                            _wFStatus.SendFissures(context.FromGroup);
+                            _WFStatus.SendFissures(context.FromGroup);
+                            break;
+                        case "小小黑":
+                        case "追随者":
+                        case "焦虑":
+                        case "怨恨":
+                        case "躁狂":
+                        case "苦难":
+                        case "折磨":
+                        case "暴力":
+                            _WfNotificationHandler.SendAllPersistentEnemies(context.FromGroup);
                             break;
                         case "help":
                         case "帮助":
