@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,11 +19,11 @@ namespace TRKS.WF.QQBot
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
-        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() => new WebClientEx2 { Encoding = Encoding.UTF8 });
+        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() => new WebClientEx2());
         public static T DownloadJson<T>(string url)
         {
-            var count = 0;
-            while (count < 3)
+            var count = 3;
+            while (count --> 0)
             {
                 try
                 {
@@ -30,36 +31,33 @@ namespace TRKS.WF.QQBot
                 }
                 catch (Exception)
                 {
-                    count++;
                 }
             }
-            throw new WebException();
+            throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
         }
 
         public static T DownloadJson<T>(string url, WebHeaderCollection header)
         {
-            var wc = webClient;
-            wc.Value.Headers = header;
-            return wc.Value.DownloadString(url).JsonDeserialize<T>();
+            var wc = new WebClientEx2();
+            wc.Headers = header;
+            return wc.DownloadString(url).JsonDeserialize<T>();
         }
-
 
         public static T UploadJson<T>(string url, string body)
         {
             return webClient.Value.UploadString(url, body).JsonDeserialize<T>();
         }
+
         public static T UploadJson<T>(string url, string body, WebHeaderCollection header)
         {
-            var wc = webClient;
-            wc.Value.Headers = header;
-            return wc.Value.UploadString(url, body).JsonDeserialize<T>();
+            var wc = new WebClientEx2();
+            wc.Headers = header;
+            return wc.UploadString(url, body).JsonDeserialize<T>();
         }
-        public static void DowloadFile(string url, string path, string name)
+
+        public static void DownloadFile(string url, string path, string name)
         {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            Directory.CreateDirectory(path);
             webClient.Value.DownloadFile(url, Path.Combine(path, name));
             /*var img = Image.FromFile(Path.Combine(path, name));
             var fullname = name;
@@ -81,6 +79,11 @@ namespace TRKS.WF.QQBot
 
     public class WebClientEx2 : WebClient
     {
+        public WebClientEx2()
+        {
+            Encoding = Encoding.UTF8;
+        }
+
         protected override WebRequest GetWebRequest(Uri address)
         {
             var rq = (HttpWebRequest)base.GetWebRequest(address);
