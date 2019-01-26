@@ -73,11 +73,8 @@ namespace TRKS.WF.QQBot
                     var sb = new StringBuilder();
                     sb.AppendLine(content);
                     sb.AppendLine($"发送次序: {count++}(与真实延迟了{6 * count}秒)");
-                    if (count >= 40)
-                    {
-                        sb.AppendLine("如果想要最快获得通知,请自行部署机器人.");
-                    }
-                    SendGroup(group,sb.ToString().Trim());                    
+                    sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                    SendGroup(group, sb.ToString().Trim());                    
                     Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
@@ -97,13 +94,14 @@ namespace TRKS.WF.QQBot
             {
                 SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
 作者:TheRealKamisama 开源地址:https://github.com/TheRealKamisama/WFBot
+如果群里没有自动通知 请务必检查是否启用了通知功能
     警报: 可使用 /警报 来查询当前的所有警报.
         新警报也会自动发送到启用了通知功能的群.
     入侵: 可使用 /入侵 来查询当前的所有入侵.
         新入侵也会自动发送到启用了通知功能的群.
     突击: 可使用 /突击 来查询当前的所有突击.
         突击的奖励池为一般奖励池.
-    平原时间: 可使用 /平原 来查询 地球平原 现在的时间 和 奥布山谷 (金星平原) 现在的温度.
+    平原时间: 可使用 /平原 来查询 地球平原 现在的时间 和 金星平原 现在的温度.
     活动:可使用 /活动 来查看目前的所有活动
     虚空商人信息: 可使用 /虚空商人 (或奸商) 来查询奸商的状态.
         如果虚空商人已经抵达将会输出所有的商品和价格, 长度较长.
@@ -112,9 +110,9 @@ namespace TRKS.WF.QQBot
     紫卡市场: 可使用 /紫卡 [武器名称]
         数据来自 WFA 紫卡市场
     地球赏金: 可使用 /地球赏金 来查询地球平原的全部赏金任务.
-        目前不需要输入数字了.
+        可以输入数字来单一查询.
     金星赏金: 可使用 /金星赏金 来查询金星平原的全部赏金任务.
-        目前不需要输入数字了.
+        可以输入数字来单一查询.
     裂隙: 可使用 /裂隙 来查询全部裂隙.
         目前不需要输入任何关键词了.
     遗物: 可使用 /遗物 [关键词] (eg. 后纪 s3, 前纪 B3) 来查询所有与关键词有关的遗物.
