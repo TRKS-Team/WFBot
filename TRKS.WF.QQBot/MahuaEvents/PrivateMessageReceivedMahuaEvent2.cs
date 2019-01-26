@@ -35,7 +35,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     if (line.StartsWith("url"))
                     {
                         var url = line.Substring(4);
-                        WebHelper.DowloadFile(url, path, name);
+                        WebHelper.DownloadFile(url, path, name);
                     }
                 }
             }
@@ -84,6 +84,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     Messenger.SendPrivate(context.FromQq, "已经移除.");
                 }
             }
+
             if (context.FromQq == Config.Instance.QQ)
             {
                 if (context.Message == $"没有开启通知的群 {Config.Instance.Code}")
@@ -124,7 +125,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                         else
                         {
-                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 3
+                            Messenger.SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 4 皮笑肉不笑
                         }
                     }
                     else
