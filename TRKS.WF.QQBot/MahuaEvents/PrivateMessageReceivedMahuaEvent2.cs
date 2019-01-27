@@ -53,7 +53,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
     public partial class PrivateMessageHandler
     {
-        [Matchers("没有开启通知的群")]
+        [Matchers("自动更新")]
         [RequireAdmin, RequireCode]
         void RunAutoUpdate()
         {
