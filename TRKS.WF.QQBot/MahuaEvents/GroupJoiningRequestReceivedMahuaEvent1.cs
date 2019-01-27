@@ -24,11 +24,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
             if (Config.Instance.AcceptJoiningRequest)
             {
-                using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-                {
-                    var api = robotSession.MahuaApi;
-                    api.AcceptGroupJoiningRequest(context.GroupJoiningRequestId, context.ToGroup, context.FromQq);
-                }
+                _mahuaApi.AcceptGroupJoiningRequest(context.GroupJoiningRequestId, context.ToGroup, context.FromQq);
                 Messenger.SendDebugInfo($"{context.FromQq}加入了群{context.ToGroup}.");
             }
         }

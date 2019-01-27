@@ -207,6 +207,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TextCommandCore, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TextCommandCore.1.2.0\lib\net462\TextCommandCore.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -217,10 +220,12 @@
     <Compile Include="MahuaEvents\GroupJoiningInvitationReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\GroupJoiningRequestReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\InitEvent1.cs" />
+    <Compile Include="MahuaEvents\ISender.cs" />
     <Compile Include="MahuaEvents\MahuaMenuClickedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\PrivateMessageReceivedMahuaEvent2.cs" />
     <Compile Include="MahuaEvents\UpdatedEvent1.cs" />
     <Compile Include="MahuaEvents\UpdatingEvent1.cs" />
+    <Compile Include="MessageProcessors.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="ReleaseGetter.cs" />
     <Compile Include="RMSearcher.cs" />
