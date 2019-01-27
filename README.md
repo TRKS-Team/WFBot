@@ -50,10 +50,6 @@
 2. Clone 这个仓库, 并使用`TRKS.WF.QQBot\build.bat`来生成一份插件.
 3. 将生成的所有`TRKS.WF.QQBot\bin\[对应 QQ 平台]`文件夹内的所有文件拖入机器人根目录.
 
----
-
-> 提示: 由于某些玄学问题可能导致报错, 请在自己编译后请删除`YUELUO\TRKS.WF.QQBot\TRKS.WF.QQBot.dll.config`. 从 GitHub Release 下载不受此影响.
-
 ### 第三步: 自定义
 
 需要在插件设置内修改一些奇怪的东西.  
@@ -136,6 +132,7 @@
 |          [Costura](https://github.com/Fody/Costura)          |    MIT     |       集成引用文件       |
 |             [Fody](https://github.com/Fody/Fody)             |    MIT     |       Costura 依赖       |
 |  [Fastenshtein](https://github.com/DanHarltey/Fastenshtein)  |    MIT     |     字符串相似度比较     |
+| [TextMessageCore](https://github.com/Cyl18/TextCommandCore)|WTFPL|我写的我写的!命令库|
 
 ---
 
