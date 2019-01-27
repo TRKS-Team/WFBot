@@ -64,13 +64,6 @@ namespace TRKS.WF.QQBot.MahuaEvents
             _WFStatus.SendCetusMissions(Group, index);
         }
 
-        [Obsolete]
-        [Matchers("裂隙", "裂缝", "虚空裂隙", "查询裂缝", "查询裂隙")]
-        string FissuresOb()
-        {
-            return "裂隙查询已经改版，请直接使用 /裂隙.";
-        }
-
         [Matchers("查询")]
         [CombineParams]
         void WM(string word)
