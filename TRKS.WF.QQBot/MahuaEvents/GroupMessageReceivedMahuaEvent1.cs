@@ -37,7 +37,9 @@ namespace TRKS.WF.QQBot.MahuaEvents
             }
 
             var message = HttpUtility.HtmlDecode(context.Message).ToLower();
-            message = message.StartsWith("/") && !Config.Instance.IsSlashRequired ? message.Substring(1) : message;
+            if (message.StartsWith("/") && Config.Instance.IsSlashRequired) Messenger.SendDebugInfo("有一位用户忘了在前面加/");
+
+            message = message.StartsWith("/") ? message.Substring(1) : message;
 
             var handler = new GroupMessageHandler(context.FromQq, context.FromGroup);
             handler.ProcessCommandInput(context.FromGroup, context.Message);
