@@ -68,29 +68,8 @@ namespace TRKS.WF.QQBot
         //public void SendFissures(string group, List<string> words)
         public void SendFissures(string group)
         {
-            var fissures = api.GetFissures();
-            var result = new List<Fissure>();
-            fissures = fissures.Where(fissure => fissure.active).ToList();
-            /*if (words.Count > 1)
-            {
-                fissures = fissures.Where(fissure => fissure.missionType == words[0] || fissure.tier == words[0])
-                    .ToList();
-                words.RemoveAt(0);
-                foreach (var word in words)
-                {
-                    result = result.Concat(fissures.Where(fissure => fissure.missionType == word || fissure.tier == word)).ToList();
-                }
-            }
-            else
-            {
-                foreach (var word in words)
-                {
-                    result = fissures.Where(fissure => fissure.missionType == word || fissure.tier == word).ToList();
-                }
-            }*/
-            result.AddRange(fissures);
-            var msg = $"{WFFormatter.ToString(result)}\r\n机器人目前运行的平台是: {platform}";
-                //$你正在查看与{string.Join(" ", words)}有关的所有裂隙.";
+            var fissures = api.GetFissures().Where(fissure => fissure.active).ToList();
+            var msg = $"{WFFormatter.ToString(fissures)}\r\n机器人目前运行的平台是: {platform}";
             Messenger.SendGroup(group, msg);
         }
 

@@ -16,6 +16,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
+        private static readonly object Locker = new object();
         internal static readonly WFNotificationHandler _WfNotificationHandler = new WFNotificationHandler();
 
         public GroupMessageReceivedMahuaEvent1(
@@ -26,23 +27,26 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            if (HotUpdateInfo.PreviousVersion) return;
-            if (GroupCallDic.ContainsKey(context.FromGroup))
+            lock (Locker)
             {
-                if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;
+                if (HotUpdateInfo.PreviousVersion) return;
+                if (GroupCallDic.ContainsKey(context.FromGroup))
+                {
+                    if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;
+                }
+                else
+                {
+                    GroupCallDic[context.FromGroup] = 0;
+                }
+
+                var message = HttpUtility.HtmlDecode(context.Message).ToLower();
+                if (message.StartsWith("/") && Config.Instance.IsSlashRequired) return;
+
+                message = message.StartsWith("/") ? message.Substring(1) : message;
+
+                var handler = new GroupMessageHandler(context.FromQq, context.FromGroup);
+                handler.ProcessCommandInput(context.FromGroup, message);
             }
-            else
-            {
-                GroupCallDic[context.FromGroup] = 0;
-            }
-
-            var message = HttpUtility.HtmlDecode(context.Message).ToLower();
-            if (message.StartsWith("/") && Config.Instance.IsSlashRequired) return;
-
-            message = message.StartsWith("/") ? message.Substring(1) : message;
-
-            var handler = new GroupMessageHandler(context.FromQq, context.FromGroup);
-            handler.ProcessCommandInput(context.FromGroup, message);
         }
     }
 
