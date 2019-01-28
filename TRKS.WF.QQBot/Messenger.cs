@@ -72,9 +72,10 @@ namespace TRKS.WF.QQBot
                 {
                     var sb = new StringBuilder();
                     sb.AppendLine(content);
-                    sb.AppendLine($"发送次序: {count++}(与真实延迟了{6 * count}秒)");
+                    sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
-                    SendGroup(group, sb.ToString().Trim());                    
+                    SendGroup(group, sb.ToString().Trim());
+                    count++;
                     Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
@@ -117,6 +118,11 @@ namespace TRKS.WF.QQBot
         目前不需要输入任何关键词了.
     遗物: 可使用 /遗物 [关键词] (eg. 后纪 s3, 前纪 B3) 来查询所有与关键词有关的遗物.
     翻译: 可使用 /翻译 [关键词]（eg. 致残突击 犀牛prime） 来 中->英 英 -> 中 翻译.
+    小小黑: 可使用 /小小黑 来查询目前小小黑的信息.
+私聊管理命令:
+    启用群通知: 可使用 添加群 ******* 群号 来启用[群号]对应的群的通知功能.
+    禁用群通知: 可使用 删除群 ******* 群号 来禁用[群号]对应的群的通知功能.
+    不启用通知功能新的任务将不会通知到群内.
 ");
             }
         }
