@@ -117,7 +117,7 @@ namespace TRKS.WF.QQBot
     裂隙: 可使用 /裂隙 来查询全部裂隙.
         目前不需要输入任何关键词了.
     遗物: 可使用 /遗物 [关键词] (eg. 后纪 s3, 前纪 B3) 来查询所有与关键词有关的遗物.
-    翻译: 可使用 /翻译 [关键词]（eg. 致残突击 犀牛prime） 来 中->英 英 -> 中 翻译.
+    翻译: 可使用 /翻译 [关键词]（eg. 致残突击 犀牛prime） 来 中 -> 英 / 英 -> 中 翻译.
     小小黑: 可使用 /小小黑 来查询目前小小黑的信息.
 私聊管理命令:
     启用群通知: 可使用 添加群 ******* 群号 来启用[群号]对应的群的通知功能.
@@ -127,7 +127,8 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        /* 当麻理解不了下面的代码
+        /* 当麻理解不了下面的代码 */
+        // 现在可以了
         public static void SendToGroup(this string content, string qq)
         {
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
@@ -145,6 +146,6 @@ namespace TRKS.WF.QQBot
                 api.SendPrivateMessage(qq, content);
             }
         }
-        */
+        
     }
 }

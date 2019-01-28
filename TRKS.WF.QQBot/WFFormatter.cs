@@ -139,8 +139,7 @@ namespace TRKS.WF.QQBot
 
                 sb.AppendLine();
             }
-
-
+            
             return sb.ToString().Trim();
         }
         public static string ToString(WFInvasion inv)

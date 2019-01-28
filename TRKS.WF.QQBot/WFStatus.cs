@@ -25,7 +25,6 @@ namespace TRKS.WF.QQBot
                       $"{WFFormatter.ToString(valliscycle)}" +
                       $"\r\n机器人目前运行的平台是: {platform}";
 
-
             Messenger.SendGroup(group, msg);
         }
 
@@ -49,7 +48,7 @@ namespace TRKS.WF.QQBot
         {
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
-            sb.AppendLine(WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Solaris United").ToList().First(), index));
+            sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index));
             sb.AppendLine($"您正在查看 福尔图娜 的全部赏金任务,使用: /地球赏金 来查询希图斯的赏金任务.");
             sb.AppendLine($"机器人目前运行的平台是: {platform}");
             Messenger.SendGroup(group, sb.ToString());
@@ -59,7 +58,7 @@ namespace TRKS.WF.QQBot
         {
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
-            sb.AppendLine(WFFormatter.ToString(missions.Where(mission => mission.syndicate == "Ostrons").ToList().First(), index));
+            sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index));
             sb.AppendLine("您正在查看 希图斯 的全部赏金任务,使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
             sb.AppendLine($"机器人目前运行的平台是: {platform}");
             Messenger.SendGroup(group, sb.ToString());
@@ -102,7 +101,5 @@ namespace TRKS.WF.QQBot
             var msg = translator.GetTranslateResult(str);
             Messenger.SendGroup(group, msg);
         }
-
-        
     }
 }
