@@ -94,7 +94,7 @@ namespace TRKS.WF.QQBot
             else
             {
                 SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
-作者:TheRealKamisama 开源地址:https://github.com/TheRealKamisama/WFBot
+作者: TheRealKamisama 开源地址:https://github.com/TheRealKamisama/WFBot
 如果群里没有自动通知 请务必检查是否启用了通知功能
     警报: 可使用 /警报 来查询当前的所有警报.
         新警报也会自动发送到启用了通知功能的群.
@@ -123,6 +123,10 @@ namespace TRKS.WF.QQBot
     启用群通知: 可使用 添加群 ******* 群号 来启用[群号]对应的群的通知功能.
     禁用群通知: 可使用 删除群 ******* 群号 来禁用[群号]对应的群的通知功能.
     不启用通知功能新的任务将不会通知到群内.
+贡献者: [排名不分先后]
+    代码贡献者: TheRealKamisama(项目发起人 主要开发者 文档撰写) Cyl18(部分代码维护 文档修改 苦力) qiutong123(提供了翻译功能的代码)
+    问题贡献者: wosiwq Aujin JJins mengpf
+    捐助者列表: KonyCN
 ");
             }
         }
