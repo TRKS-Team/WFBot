@@ -39,7 +39,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     GroupCallDic[context.FromGroup] = 0;
                 }
 
-                var message = HttpUtility.HtmlDecode(context.Message).ToLower();
+                var message = HttpUtility.HtmlDecode(context.Message)?.ToLower();
                 if (message.StartsWith("/") && Config.Instance.IsSlashRequired) return;
 
                 message = message.StartsWith("/") ? message.Substring(1) : message;
