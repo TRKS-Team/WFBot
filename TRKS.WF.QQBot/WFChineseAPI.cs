@@ -55,9 +55,10 @@ namespace TRKS.WF.QQBot
     }
     public static class WFResource
     {
-        public static WFTranslator WFTranslator = new WFTranslator();
-        public static WFChineseAPI WFChineseApi = new WFChineseAPI();
+        public static WFTranslator WFTranslator { get; } = new WFTranslator();
+        public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
     }
+
     public class WFChineseAPI
     {
         private WFTranslator translator = WFResource.WFTranslator;
@@ -174,7 +175,6 @@ namespace TRKS.WF.QQBot
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
-
     }
     
 

@@ -250,22 +250,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="build.bat" />
-    <None Include="build.ps1" />
-    <None Include="buildTools\packages.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MahuaApis\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="buildTools\7z.exe" />
-    <Content Include="buildTools\nuget.exe" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj">

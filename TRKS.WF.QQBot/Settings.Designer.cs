@@ -74,20 +74,20 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 141);
+            this.textBox1.Location = new System.Drawing.Point(12, 153);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(262, 21);
+            this.textBox1.Size = new System.Drawing.Size(262, 22);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // button1
             // 
-            this.button1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button1.Location = new System.Drawing.Point(292, 141);
+            this.button1.Location = new System.Drawing.Point(292, 153);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 33);
+            this.button1.Size = new System.Drawing.Size(75, 36);
             this.button1.TabIndex = 1;
             this.button1.Text = "确认";
             this.button1.UseVisualStyleBackColor = true;
@@ -95,28 +95,28 @@
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(12, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(382, 92);
+            this.label1.Size = new System.Drawing.Size(382, 100);
             this.label1.TabIndex = 2;
             this.label1.Text = "用于修改机器人的口令  私聊机器人：\r\n添加群 口令 群号\r\n删除群 口令 群号.";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(12, 101);
+            this.label2.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(12, 109);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(382, 37);
+            this.label2.Size = new System.Drawing.Size(382, 40);
             this.label2.TabIndex = 3;
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox1.Location = new System.Drawing.Point(17, 233);
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox1.Location = new System.Drawing.Point(17, 252);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(99, 21);
             this.checkBox1.TabIndex = 4;
@@ -129,8 +129,8 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox2.Location = new System.Drawing.Point(17, 255);
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox2.Location = new System.Drawing.Point(17, 276);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(87, 21);
             this.checkBox2.TabIndex = 5;
@@ -143,8 +143,8 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox3.Location = new System.Drawing.Point(17, 277);
+            this.checkBox3.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox3.Location = new System.Drawing.Point(17, 300);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(99, 21);
             this.checkBox3.TabIndex = 6;
@@ -157,8 +157,8 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox4.Location = new System.Drawing.Point(17, 299);
+            this.checkBox4.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox4.Location = new System.Drawing.Point(17, 324);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(75, 21);
             this.checkBox4.TabIndex = 7;
@@ -198,8 +198,8 @@
             // checkBox5
             // 
             this.checkBox5.AutoSize = true;
-            this.checkBox5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox5.Location = new System.Drawing.Point(149, 233);
+            this.checkBox5.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox5.Location = new System.Drawing.Point(149, 252);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(176, 21);
             this.checkBox5.TabIndex = 8;
@@ -213,8 +213,8 @@
             // checkBox6
             // 
             this.checkBox6.AutoSize = true;
-            this.checkBox6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox6.Location = new System.Drawing.Point(149, 255);
+            this.checkBox6.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox6.Location = new System.Drawing.Point(149, 276);
             this.checkBox6.Name = "checkBox6";
             this.checkBox6.Size = new System.Drawing.Size(137, 21);
             this.checkBox6.TabIndex = 9;
@@ -227,8 +227,8 @@
             // checkBox7
             // 
             this.checkBox7.AutoSize = true;
-            this.checkBox7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox7.Location = new System.Drawing.Point(149, 277);
+            this.checkBox7.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox7.Location = new System.Drawing.Point(149, 300);
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(92, 21);
             this.checkBox7.TabIndex = 10;
@@ -241,8 +241,8 @@
             // checkBox8
             // 
             this.checkBox8.AutoSize = true;
-            this.checkBox8.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox8.Location = new System.Drawing.Point(149, 299);
+            this.checkBox8.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBox8.Location = new System.Drawing.Point(149, 324);
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(151, 21);
             this.checkBox8.TabIndex = 11;
@@ -256,8 +256,8 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(3, 188);
+            this.label3.Font = new System.Drawing.Font("SimHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Location = new System.Drawing.Point(3, 204);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(349, 19);
             this.label3.TabIndex = 12;
@@ -266,28 +266,28 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 432);
+            this.textBox2.Location = new System.Drawing.Point(12, 468);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(262, 21);
+            this.textBox2.Size = new System.Drawing.Size(262, 20);
             this.textBox2.TabIndex = 13;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label4
             // 
-            this.label4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(8, 330);
+            this.label4.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.Location = new System.Drawing.Point(8, 358);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(275, 49);
+            this.label4.Size = new System.Drawing.Size(275, 53);
             this.label4.TabIndex = 14;
             this.label4.Text = "接收所有插件报错的QQ号\r\n(填入本人QQ号,留空为不接收报错)";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // button2
             // 
-            this.button2.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button2.Location = new System.Drawing.Point(292, 432);
+            this.button2.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button2.Location = new System.Drawing.Point(292, 468);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 32);
+            this.button2.Size = new System.Drawing.Size(75, 35);
             this.button2.TabIndex = 15;
             this.button2.Text = "确认";
             this.button2.UseVisualStyleBackColor = true;
@@ -295,18 +295,18 @@
             // 
             // label5
             // 
-            this.label5.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(10, 379);
+            this.label5.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(10, 411);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(267, 42);
+            this.label5.Size = new System.Drawing.Size(267, 46);
             this.label5.TabIndex = 16;
             this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label6.Location = new System.Drawing.Point(8, 474);
+            this.label6.Font = new System.Drawing.Font("SimHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(8, 514);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 19);
             this.label6.TabIndex = 17;
@@ -316,10 +316,10 @@
             // checkBox9
             // 
             this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(17, 515);
+            this.checkBox9.Location = new System.Drawing.Point(17, 558);
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.checkBox9.Size = new System.Drawing.Size(120, 16);
+            this.checkBox9.Size = new System.Drawing.Size(122, 17);
             this.checkBox9.TabIndex = 18;
             this.checkBox9.Text = "接收所有入群邀请";
             this.checkBox9.UseVisualStyleBackColor = true;
@@ -328,9 +328,9 @@
             // checkBox10
             // 
             this.checkBox10.AutoSize = true;
-            this.checkBox10.Location = new System.Drawing.Point(149, 514);
+            this.checkBox10.Location = new System.Drawing.Point(149, 557);
             this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(120, 16);
+            this.checkBox10.Size = new System.Drawing.Size(122, 17);
             this.checkBox10.TabIndex = 19;
             this.checkBox10.Text = "接收所有加群申请";
             this.checkBox10.UseVisualStyleBackColor = true;
@@ -338,18 +338,18 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(13, 684);
+            this.textBox3.Location = new System.Drawing.Point(13, 741);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(262, 21);
+            this.textBox3.Size = new System.Drawing.Size(262, 20);
             this.textBox3.TabIndex = 20;
             this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged_1);
             // 
             // button3
             // 
-            this.button3.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button3.Location = new System.Drawing.Point(293, 684);
+            this.button3.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.Location = new System.Drawing.Point(293, 734);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 35);
+            this.button3.Size = new System.Drawing.Size(75, 31);
             this.button3.TabIndex = 21;
             this.button3.Text = "发送";
             this.button3.UseVisualStyleBackColor = true;
@@ -358,8 +358,8 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label7.Location = new System.Drawing.Point(9, 643);
+            this.label7.Font = new System.Drawing.Font("Microsoft YaHei", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Location = new System.Drawing.Point(9, 697);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(261, 20);
             this.label7.TabIndex = 22;
@@ -368,26 +368,26 @@
             // textBox4
             // 
             this.textBox4.AcceptsReturn = true;
-            this.textBox4.Location = new System.Drawing.Point(13, 784);
+            this.textBox4.Location = new System.Drawing.Point(13, 849);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(262, 21);
+            this.textBox4.Size = new System.Drawing.Size(262, 20);
             this.textBox4.TabIndex = 23;
             this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
             // textBox5
             // 
             this.textBox5.AllowDrop = true;
-            this.textBox5.Location = new System.Drawing.Point(13, 836);
+            this.textBox5.Location = new System.Drawing.Point(13, 906);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(262, 21);
+            this.textBox5.Size = new System.Drawing.Size(262, 20);
             this.textBox5.TabIndex = 24;
             this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label8.Location = new System.Drawing.Point(12, 756);
+            this.label8.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label8.Location = new System.Drawing.Point(12, 819);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(69, 21);
             this.label8.TabIndex = 25;
@@ -397,8 +397,8 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label9.Location = new System.Drawing.Point(12, 810);
+            this.label9.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label9.Location = new System.Drawing.Point(12, 878);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(101, 21);
             this.label9.TabIndex = 26;
@@ -407,10 +407,10 @@
             // 
             // button4
             // 
-            this.button4.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button4.Location = new System.Drawing.Point(281, 831);
+            this.button4.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button4.Location = new System.Drawing.Point(281, 900);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 30);
+            this.button4.Size = new System.Drawing.Size(75, 33);
             this.button4.TabIndex = 27;
             this.button4.Text = "确认";
             this.button4.UseVisualStyleBackColor = true;
@@ -419,8 +419,8 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label10.Location = new System.Drawing.Point(8, 725);
+            this.label10.Font = new System.Drawing.Font("Microsoft YaHei", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label10.Location = new System.Drawing.Point(8, 785);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(394, 26);
             this.label10.TabIndex = 28;
@@ -429,8 +429,8 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.Location = new System.Drawing.Point(8, 864);
+            this.label11.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.Location = new System.Drawing.Point(8, 936);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(122, 21);
             this.label11.TabIndex = 29;
@@ -440,9 +440,9 @@
             // checkBox11
             // 
             this.checkBox11.AutoSize = true;
-            this.checkBox11.Location = new System.Drawing.Point(18, 898);
+            this.checkBox11.Location = new System.Drawing.Point(18, 973);
             this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(102, 16);
+            this.checkBox11.Size = new System.Drawing.Size(103, 17);
             this.checkBox11.TabIndex = 30;
             this.checkBox11.Text = "命令前需要加/";
             this.checkBox11.UseVisualStyleBackColor = true;
@@ -450,17 +450,17 @@
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(315, 548);
+            this.textBox6.Location = new System.Drawing.Point(315, 594);
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(53, 21);
+            this.textBox6.Size = new System.Drawing.Size(53, 20);
             this.textBox6.TabIndex = 31;
             this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(315, 575);
+            this.button5.Location = new System.Drawing.Point(315, 623);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(53, 25);
+            this.button5.Size = new System.Drawing.Size(53, 27);
             this.button5.TabIndex = 32;
             this.button5.Text = "确认";
             this.button5.UseVisualStyleBackColor = true;
@@ -469,8 +469,8 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label12.Location = new System.Drawing.Point(9, 548);
+            this.label12.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label12.Location = new System.Drawing.Point(9, 594);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 21);
             this.label12.TabIndex = 33;
@@ -480,9 +480,9 @@
             // checkBox12
             // 
             this.checkBox12.AutoSize = true;
-            this.checkBox12.Location = new System.Drawing.Point(275, 514);
+            this.checkBox12.Location = new System.Drawing.Point(275, 557);
             this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(84, 16);
+            this.checkBox12.Size = new System.Drawing.Size(86, 17);
             this.checkBox12.TabIndex = 34;
             this.checkBox12.Text = "第三方词典";
             this.checkBox12.UseVisualStyleBackColor = true;
@@ -491,8 +491,8 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("黑体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label13.Location = new System.Drawing.Point(32, 581);
+            this.label13.Font = new System.Drawing.Font("SimHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label13.Location = new System.Drawing.Point(32, 629);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(49, 19);
             this.label13.TabIndex = 39;
@@ -502,9 +502,9 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(117, 585);
+            this.radioButton1.Location = new System.Drawing.Point(117, 634);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(35, 16);
+            this.radioButton1.Size = new System.Drawing.Size(37, 17);
             this.radioButton1.TabIndex = 40;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "pc";
@@ -514,9 +514,9 @@
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(192, 584);
+            this.radioButton2.Location = new System.Drawing.Point(192, 633);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(47, 16);
+            this.radioButton2.Size = new System.Drawing.Size(47, 17);
             this.radioButton2.TabIndex = 41;
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "xbox";
@@ -526,9 +526,9 @@
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(117, 612);
+            this.radioButton3.Location = new System.Drawing.Point(117, 663);
             this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(41, 16);
+            this.radioButton3.Size = new System.Drawing.Size(42, 17);
             this.radioButton3.TabIndex = 42;
             this.radioButton3.TabStop = true;
             this.radioButton3.Text = "ps4";
@@ -538,9 +538,9 @@
             // radioButton4
             // 
             this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(192, 612);
+            this.radioButton4.Location = new System.Drawing.Point(192, 663);
             this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(59, 16);
+            this.radioButton4.Size = new System.Drawing.Size(55, 17);
             this.radioButton4.TabIndex = 43;
             this.radioButton4.TabStop = true;
             this.radioButton4.Text = "switch";
@@ -549,10 +549,10 @@
             // 
             // Settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(488, 385);
+            this.ClientSize = new System.Drawing.Size(488, 417);
             this.Controls.Add(this.radioButton4);
             this.Controls.Add(this.radioButton3);
             this.Controls.Add(this.radioButton2);
