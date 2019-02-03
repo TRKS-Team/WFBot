@@ -510,6 +510,7 @@ namespace TRKS.WF.QQBot
 
         public void TranslateFissures(List<Fissure> fissures)
         {
+            fissures = fissures.OrderBy(fissure => fissure.tierNum).ToList();
             foreach (var fissure in fissures)
             {
                 fissure.node = TranslateNode(fissure.node);
