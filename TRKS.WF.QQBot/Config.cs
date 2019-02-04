@@ -35,6 +35,8 @@ namespace TRKS.WF.QQBot
         public bool IsThirdPartyLexicon = true;
 
         public Settings.Platform Platform = Settings.Platform.PC;
+
+        public bool IsThirdPartyWM = false;
     }
 
     [Configuration("CoquettishConfig")]

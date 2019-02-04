@@ -95,19 +95,27 @@ namespace TRKS.WF.QQBot
             }
 
             var msg = "";
-            if (isWFA)
+            if (Config.Instance.IsThirdPartyWM)
             {
-                var infoEx = GetWMINfoEx(searchword);
-                if (infoEx.orders.Any())
+                if (isWFA)
                 {
-                    OrderWMInfoEx(infoEx);
-                    translator.TranslateWMOrderEx(infoEx, searchword);
-                    msg = WFFormatter.ToString(infoEx);
+                    var infoEx = GetWMINfoEx(searchword);
+                    if (infoEx.orders.Any())
+                    {
+                        OrderWMInfoEx(infoEx);
+                        translator.TranslateWMOrderEx(infoEx, searchword);
+                        msg = WFFormatter.ToString(infoEx);
+                    }
+                    else
+                    {
+                        msg = $"抱歉,WarframeMarket上目前还没有售卖{item}的用户";
+                    }
                 }
                 else
                 {
-                    msg = $"抱歉,WarframeMarket上目前还没有售卖{item}的用户";
+                    msg = "很抱歉,本机器人没有WFA授权,无法使用第三方WM,这很可能是由于错误设置导致的.请联系机器人负责人.";
                 }
+
             }
             else
             {

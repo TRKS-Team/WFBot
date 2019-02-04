@@ -44,7 +44,7 @@
 1. 下载 [.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462) 并安装.
 2. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 
-#### 自己编译
+#### 自己编译 (特殊需求)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 我们强烈建议在 Windows 平台下编译这个项目.
@@ -66,6 +66,7 @@
 - 是否自动同意别人邀请入群 **(无需群内管理)** 和申请入群 **(需群内管理)**
 - 对所有 **启用了通知功能** 的群发送一条通知
 - WFA 授权的 ClientId 和 ClientSecret (非必须, 见下)
+- 第三方词库和中转后的Warframemarket接口(需WFA授权)
 
 ### 启用 WFA 授权 **(非必须)**
 
@@ -74,8 +75,8 @@
 
 > **不启用授权不影响基本功能**
 
-> **WM 查询** 会使用中转过后的服务器 **速度更高**  
-> **紫卡市场** 的使用 **必须** 启用 WFA 授权
+> **WM 查询** 可使用中转过后的服务器 **速度更高**  
+> **紫卡市场** 使用 **必须** 启用 WFA 授权
 
 **授权获取** 请查看 **[API 文档](https://blog.richasy.cn/document/wfa/api/)**
 
@@ -171,4 +172,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者: KonyCN
+- 捐助者: KonyCN(真的RICH)

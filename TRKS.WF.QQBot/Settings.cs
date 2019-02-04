@@ -45,6 +45,7 @@ namespace Settings
             textBox6.Text = Config.Instance.CallperMinute.ToString();
             checkBox12.Checked = Config.Instance.IsThirdPartyLexicon;
             UpdatePlatformRadioButtons();
+            checkBox13.Checked = Config.Instance.IsThirdPartyWM;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -276,6 +277,12 @@ namespace Settings
                     radioButton4.Checked = true;
                     break;
             }
+        }
+
+        private void checkBox13_Click(object sender, EventArgs e)
+        {
+            Config.Instance.IsThirdPartyWM = checkBox13.Checked;
+            Config.Save();
         }
     }
 
