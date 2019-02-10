@@ -75,6 +75,7 @@ namespace TRKS.WF.QQBot
             {
                 if (translator.ContainsWeapon(weapon))
                 {
+                    Messenger.SendGroup(group, "好嘞,等着,着啥急啊,这不帮你查呢.");
                     var info = GetRiveninfos(weapon);
                     var msg = "";
                     if (info.Count > 0)

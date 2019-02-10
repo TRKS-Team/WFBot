@@ -95,6 +95,7 @@ namespace TRKS.WF.QQBot
             }
 
             var msg = "";
+            Messenger.SendGroup(group, "好嘞,等着,着啥急啊,这不帮你查呢.");
             if (Config.Instance.IsThirdPartyWM)
             {
                 if (isWFA)
