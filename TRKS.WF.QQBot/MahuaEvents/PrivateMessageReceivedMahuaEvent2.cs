@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Newbe.Mahua;
 using Newbe.Mahua.Internals;
 using Newbe.Mahua.MahuaEvents;
@@ -51,8 +53,34 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
     }
 
+
     public partial class PrivateMessageHandler
     {
+        private List<GroupInfo> GetGroups()
+        {
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            {
+                var mahuaApi = robotSession.MahuaApi;
+                var groups = mahuaApi.GetGroupsWithModel().Model.ToList();
+                return groups;
+            }
+        }
+        [Matchers("所有群")]
+        [RequireAdmin]
+        string DumpGroups()
+        {
+            SendPrivate(Sender, "正在dump所有群...请稍后...结果将存储于机器人根目录...");
+            var groups = GetGroups();
+            var sb = new StringBuilder();
+            foreach (var info in groups)
+            {
+                sb.AppendLine($"{info.Group} {info.Name}");
+            }
+
+            File.Create("所有群.txt");
+            File.WriteAllText("所有群.txt", sb.ToString());
+            return "搞完了,去机器人根目录看结果.";
+        }
         [Matchers("自动更新")]
         [RequireAdmin, RequireCode]
         void RunAutoUpdate()
