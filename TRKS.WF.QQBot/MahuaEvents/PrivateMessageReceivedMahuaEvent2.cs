@@ -77,8 +77,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 sb.AppendLine($"{info.Group} {info.Name}");
             }
 
-            File.Create("所有群.txt");
-            File.WriteAllText("所有群.txt", sb.ToString());
+            File.Create(@"所有群\所有群.txt");
+            File.WriteAllText(@"所有群\所有群.txt", sb.ToString());
             return "搞完了,去机器人根目录看结果.";
         }
         [Matchers("自动更新")]
