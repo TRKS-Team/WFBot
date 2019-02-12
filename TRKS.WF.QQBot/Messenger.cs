@@ -60,14 +60,14 @@ namespace TRKS.WF.QQBot
                 var api = robotSession.MahuaApi;
                 api.SendGroupMessage(qq, content);
             }
-            Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+            //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
         public static void Broadcast(string content)
         {
             Task.Factory.StartNew(() =>
             {
-                var count = 1;
+                var count = 0;
                 foreach (var group in Config.Instance.WFGroupList)
                 {
                     var sb = new StringBuilder();
@@ -76,7 +76,7 @@ namespace TRKS.WF.QQBot
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
                     SendGroup(group, sb.ToString().Trim());
                     count++;
-                    Thread.Sleep(6000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                    Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
         }
