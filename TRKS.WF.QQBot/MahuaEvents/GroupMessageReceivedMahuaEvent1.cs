@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Threading.Tasks;
+using System;
 using System.Web;
 using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
@@ -16,7 +17,6 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-        private static readonly object Locker = new object();
         internal static readonly WFNotificationHandler _WfNotificationHandler = new WFNotificationHandler();
 
         public GroupMessageReceivedMahuaEvent1(
@@ -27,18 +27,18 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            lock (Locker)
+            if (HotUpdateInfo.PreviousVersion) return;
+            if (GroupCallDic.ContainsKey(context.FromGroup))
             {
-                if (HotUpdateInfo.PreviousVersion) return;
-                if (GroupCallDic.ContainsKey(context.FromGroup))
-                {
-                    if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;
-                }
-                else
-                {
-                    GroupCallDic[context.FromGroup] = 0;
-                }
+                if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;
+            }
+            else
+            {
+                GroupCallDic[context.FromGroup] = 0;
+            }
 
+            Task.Run(() =>
+            {
                 var message = HttpUtility.HtmlDecode(context.Message)?.ToLower();
                 if (!message.StartsWith("/") && Config.Instance.IsSlashRequired) return;
 
@@ -46,7 +46,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                 var handler = new GroupMessageHandler(context.FromQq, context.FromGroup);
                 handler.ProcessCommandInput(context.FromGroup, message);
-            }
+            });
         }
     }
 
