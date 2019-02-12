@@ -37,7 +37,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 GroupCallDic[context.FromGroup] = 0;
             }
 
-            Task.Run(() =>
+            Task.Factory.StartNew(() =>
             {
                 var message = HttpUtility.HtmlDecode(context.Message)?.ToLower();
                 if (!message.StartsWith("/") && Config.Instance.IsSlashRequired) return;
@@ -46,7 +46,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                 var handler = new GroupMessageHandler(context.FromQq, context.FromGroup);
                 handler.ProcessCommandInput(context.FromGroup, message);
-            });
+            }, TaskCreationOptions.LongRunning);
         }
     }
 
