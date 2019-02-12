@@ -95,30 +95,40 @@ namespace TRKS.WF.QQBot
             }
 
             var msg = "";
-            Messenger.SendGroup(group, "好嘞,等着,着啥急啊,这不帮你查呢.");
+            Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+
+            var failed = false;
             if (Config.Instance.IsThirdPartyWM)
             {
-                if (isWFA)
+                try
                 {
-                    var infoEx = GetWMINfoEx(searchword);
-                    if (infoEx.orders.Any())
+                    if (isWFA)
                     {
-                        OrderWMInfoEx(infoEx);
-                        translator.TranslateWMOrderEx(infoEx, searchword);
-                        msg = WFFormatter.ToString(infoEx);
+                        var infoEx = GetWMINfoEx(searchword);
+                        if (infoEx.orders.Any())
+                        {
+                            OrderWMInfoEx(infoEx);
+                            translator.TranslateWMOrderEx(infoEx, searchword);
+                            msg = WFFormatter.ToString(infoEx);
+                        }
+                        else
+                        {
+                            msg = $"抱歉, WarframeMarket 上目前还没有售卖 {item} 的用户";
+                        }
                     }
                     else
                     {
-                        msg = $"抱歉,WarframeMarket上目前还没有售卖{item}的用户";
+                        msg = "很抱歉, 本机器人没有 WFA 授权, 无法使用第三方 WM, 这很可能是由于错误设置导致的. 请联系机器人负责人.";
                     }
                 }
-                else
+                catch (Exception)
                 {
-                    msg = "很抱歉,本机器人没有WFA授权,无法使用第三方WM,这很可能是由于错误设置导致的.请联系机器人负责人.";
+                    Messenger.SendGroup(group, "很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
+                    failed = true;
                 }
-
             }
-            else
+
+            if (!Config.Instance.IsThirdPartyWM || failed)
             {
                 var info = GetWMInfo(searchword);
                 if (info.payload.orders.Any())
@@ -129,7 +139,7 @@ namespace TRKS.WF.QQBot
                 }
                 else
                 {
-                    msg = $"抱歉,WarframeMarket上目前还没有售卖{item}的用户";
+                    msg = $"抱歉, WarframeMarket上目前还没有售卖 {item} 的用户";
                 }
 
             }

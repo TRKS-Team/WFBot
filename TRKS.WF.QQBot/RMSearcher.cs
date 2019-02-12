@@ -95,7 +95,7 @@ namespace TRKS.WF.QQBot
             }
             else
             {
-                Messenger.SendGroup(group, "本机器人没有WFA授权,本功能无法使用,请联系机器人管理员.");
+                Messenger.SendGroup(group, "本机器人没有WFA授权, 本功能无法使用, 请联系机器人管理员.");
             }
 
             
