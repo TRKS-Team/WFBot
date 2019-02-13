@@ -32,7 +32,7 @@ namespace TRKS.WF.QQBot
         public static void SendDebugInfo(string content)
         {
             if (content.StartsWith("System.Threading.ThreadAbortException")) return;
-            
+
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ, content);
         }
@@ -72,8 +72,8 @@ namespace TRKS.WF.QQBot
                 {
                     var sb = new StringBuilder();
                     sb.AppendLine(content);
-                    sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
-                    sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                    if (count > 5)
+                        sb.AppendLine($"这条消息与发送时间延迟了{7 * count}秒, 如果想要获取更好的体验, 请自行部署.");
                     SendGroup(group, sb.ToString().Trim());
                     count++;
                     Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
@@ -150,6 +150,6 @@ namespace TRKS.WF.QQBot
                 api.SendPrivateMessage(qq, content);
             }
         }
-        
+
     }
 }
