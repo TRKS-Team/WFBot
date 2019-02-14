@@ -44,7 +44,7 @@ namespace TRKS.WF.QQBot
                 sendedAlertsSet.Add(alert.Id);
             foreach (var inv in invs)
                 sendedInvSet.Add(inv.id);
-            foreach (var enemy in enemies)           
+            foreach (var enemy in enemies)  
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
             
             Timer.Elapsed += (sender, eventArgs) =>
@@ -102,7 +102,7 @@ namespace TRKS.WF.QQBot
                 try
                 {
                     foreach (var inv in api.GetInvasions().Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
-                    {   
+                    {
                         // 不发已经完成的入侵 你学的好快啊
                         // 不发已经发过的入侵
                         var list = GetAllInvasionsCountedItems(inv);
