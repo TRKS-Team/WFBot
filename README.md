@@ -51,12 +51,8 @@
 
 1. 安装 `Visual Studio 2017 / 2019`, 以及 `.NET Framework 4.6.2 SDK.`
 2. 下载这个仓库, 使用 `TRKS.WF.QQBot\build.bat` 来生成一份插件.
-
-   ```bash
-   git clone https://github.com/TRKS-Team/WFBot.git
-   ./WFBot/TRKS.WF.QQBot/build.bat
-   ```
-
+   > `git clone https://github.com/TRKS-Team/WFBot.git`  
+   > `./WFBot/TRKS.WF.QQBot/build.bat`
 3. 将生成的所有 `TRKS.WF.QQBot\bin\[对应 QQ 平台]` 文件夹内的所有文件拖入机器人根目录.
 
 ### 第三步: 自定义
@@ -70,7 +66,7 @@
 - 是否自动同意别人邀请入群 **(无需群内管理)** 和申请入群 **(需群内管理)**
 - 对所有 **启用了通知功能** 的群发送一条通知
 - WFA 授权的 ClientId 和 ClientSecret (非必须, 见下)
-- 第三方词库和中转后的 Warframemarket 接口(需 WFA 授权)
+- 第三方词库和中转后的Warframemarket接口(需WFA授权)
 
 ### 启用 WFA 授权 **(非必须)**
 
@@ -169,8 +165,6 @@
 > 如果有新的 他就发到群里  
 > 如果群里有人调用机器人 他就手动把信息发过去
 
-> ![Cyl18](docs/images/Cyl18.jpg)
-
 ## 贡献者列表 [排名不分先后]
 
 - 代码贡献:
@@ -178,4 +172,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者: KonyCN(真的 RICH) Cyl18
+- 捐助者: KonyCN(真的RICH)

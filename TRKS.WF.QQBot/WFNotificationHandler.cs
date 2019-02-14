@@ -44,9 +44,9 @@ namespace TRKS.WF.QQBot
                 sendedAlertsSet.Add(alert.Id);
             foreach (var inv in invs)
                 sendedInvSet.Add(inv.id);
-            foreach (var enemy in enemies)
+            foreach (var enemy in enemies)           
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-
+            
             Timer.Elapsed += (sender, eventArgs) =>
             {
                 UpdateAlerts();
@@ -86,7 +86,7 @@ namespace TRKS.WF.QQBot
                     }
                     Messenger.Broadcast(sb.ToString().Trim());
                 }
-            }
+            }     
         }
         private void UpdateWFGroups()
         {
@@ -102,7 +102,7 @@ namespace TRKS.WF.QQBot
                 try
                 {
                     foreach (var inv in api.GetInvasions().Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
-                    {
+                    {   
                         // 不发已经完成的入侵 你学的好快啊
                         // 不发已经发过的入侵
                         var list = GetAllInvasionsCountedItems(inv);
@@ -112,7 +112,7 @@ namespace TRKS.WF.QQBot
                             var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                              $"{WFFormatter.ToString(inv)}";
 
-                            Messenger.Broadcast(notifyText);
+                            Messenger.Broadcast(notifyText + $"\r\n机器人目前运行的平台是: {platform}");
                             sendedInvSet.Add(inv.id);
                         }
                     }
@@ -210,7 +210,8 @@ namespace TRKS.WF.QQBot
                 {
                     var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                                  WFFormatter.ToString(alert) +
-                                 "\r\n可使用: /help来查看机器人的更多说明."
+                                 "\r\n可使用: /help来查看机器人的更多说明." + 
+                                 $"\r\n机器人目前运行的平台是: {platform}"
                                  ;
                     Messenger.Broadcast(result);
                     sendedAlertsSet.Add(alert.Id);
