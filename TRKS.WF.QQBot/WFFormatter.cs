@@ -88,7 +88,7 @@ namespace TRKS.WF.QQBot
                         break;
                 }
 
-                sb.AppendLine($"- 价格:{info.item_Price}白鸡");
+                sb.AppendLine($"- 价格:{info.item_Price}白鸡 ({info.item_ResetNum}洗)");
                 sb.AppendLine($"- 属性:{info.item_Property}");
                 sb.AppendLine();
             }
