@@ -17,8 +17,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
 {
     public class InitEvent1 : IInitializationMahuaEvent
     {
-        private bool onlineBuild;
-        private int localVersion;
+        internal static bool onlineBuild;
+        internal static int localVersion;
         private static volatile bool updating;
         internal static Timer timer1;
 

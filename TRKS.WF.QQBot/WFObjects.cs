@@ -576,9 +576,9 @@ namespace TRKS.WF.QQBot
         public string startString { get; set; }
         public string node { get; set; }
         public string desc { get; set; }
-        public Attackerreward attackerReward { get; set; }
+        public RewardInfo attackerReward { get; set; }
         public string attackingFaction { get; set; }
-        public Defenderreward defenderReward { get; set; }
+        public RewardInfo defenderReward { get; set; }
         public string defendingFaction { get; set; }
         public bool vsInfestation { get; set; }
         public int count { get; set; }
@@ -589,7 +589,7 @@ namespace TRKS.WF.QQBot
         public string[] rewardTypes { get; set; }
     }
 
-    public class Attackerreward
+    public class RewardInfo
     {
         public object[] items { get; set; }
         public Counteditem[] countedItems { get; set; }
@@ -601,23 +601,6 @@ namespace TRKS.WF.QQBot
     }
 
     public class Counteditem
-    {
-        public int count { get; set; }
-        public string type { get; set; }
-    }
-
-    public class Defenderreward
-    {
-        public object[] items { get; set; }
-        public Counteditem1[] countedItems { get; set; }
-        public int credits { get; set; }
-        public string asString { get; set; }
-        public string itemString { get; set; }
-        public string thumbnail { get; set; }
-        public int color { get; set; }
-    }
-
-    public class Counteditem1
     {
         public int count { get; set; }
         public string type { get; set; }

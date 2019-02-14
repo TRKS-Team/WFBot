@@ -144,7 +144,7 @@ namespace TRKS.WF.QQBot
 
             }
 
-            Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
+            Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
     }
 }

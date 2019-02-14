@@ -381,20 +381,7 @@ namespace TRKS.WF.QQBot
             invasion.node = TranslateNode(invasion.node);
         }
 
-        private void TranslateReward(Defenderreward reward)
-        {
-            foreach (var item in reward.countedItems)
-            {
-                item.type = invasionTranslator.Translate(item.type);
-            }
-
-            foreach (var t in reward.countedItems)
-            {
-                t.type = alertTranslator.Translate(t.type);
-            }
-        }
-
-        private void TranslateReward(Attackerreward reward)
+        private void TranslateReward(RewardInfo reward)
         {
             foreach (var item in reward.countedItems)
             {
