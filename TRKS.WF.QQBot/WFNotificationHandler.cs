@@ -173,8 +173,9 @@ namespace TRKS.WF.QQBot
             {
                 try
                 {
-                    var alerts = api.GetAlerts();
-                    foreach (var alert in alerts.Where(alert => !sendedAlertsSet.Contains(alert.Id)))
+                    var alerts = api.GetAlerts().Where(alert => !sendedAlertsSet.Contains(alert.Id));
+                    // 后人不要尝试重构下面这行代码 她很好用 但是你别想着去重构
+                    foreach (var alert in Config.Instance.IsAlertRequiredRareItem ? alerts.Where(a => a.RewardTypes.Any(rewardtype => rewardtype != "endo") && a.Mission.Reward.Items.Any()) : alerts)
                     {
                         SendWFAlert(alert);
                     }

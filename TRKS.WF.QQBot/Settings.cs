@@ -46,6 +46,7 @@ namespace Settings
             checkBox12.Checked = Config.Instance.IsThirdPartyLexicon;
             UpdatePlatformRadioButtons();
             checkBox13.Checked = Config.Instance.IsThirdPartyWM;
+            checkBox14.Checked = Config.Instance.IsAlertRequiredRareItem;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -143,13 +144,13 @@ namespace Settings
 
         }
 
-        private void checkBox9_CheckedChanged(object sender, EventArgs e)
+        private void checkBox9_Click(object sender, EventArgs e)
         {
             Config.Instance.AcceptInvitation = checkBox9.Checked;
             Config.Save();
         }
 
-        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        private void checkBox10_Click(object sender, EventArgs e)
         {
             Config.Instance.AcceptJoiningRequest = checkBox10.Checked;
             Config.Save();
@@ -195,12 +196,11 @@ namespace Settings
 
         }
 
-        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        private void checkBox11_Click(object sender, EventArgs e)
         {
             Config.Instance.IsSlashRequired = checkBox11.Checked;
             Config.Save();
         }
-
         private void button5_Click(object sender, EventArgs e)
         {
             if (textBox6.Text.IsNumber())
@@ -220,7 +220,7 @@ namespace Settings
 
         }
 
-        private void checkBox12_CheckedChanged(object sender, EventArgs e)
+        private void checkBox12_Click(object sender, EventArgs e)
         {
             Config.Instance.IsThirdPartyLexicon = checkBox12.Checked;
             Config.Save();
@@ -283,6 +283,11 @@ namespace Settings
         {
             Config.Instance.IsThirdPartyWM = checkBox13.Checked;
             Config.Save();
+        }
+
+        private void checkBox14_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 
