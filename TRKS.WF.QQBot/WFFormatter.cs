@@ -22,7 +22,6 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine($"- 剩余点数: {@event.health}");
                 sb.AppendLine($"- 结束时间: {time} 后");
                 sb.AppendLine();
-
             }
 
             return sb.ToString().Trim();
@@ -60,8 +59,8 @@ namespace TRKS.WF.QQBot
             {
                 var rewards = relic.Rewards.Split(' ').Select(reward => $"[{reward.Replace("_", " ")}]");
                 var rewardstring = string.Join("", rewards);
-                sb.AppendLine($"-{relic.Name}");
-                sb.AppendLine($">{rewardstring}");
+                sb.AppendLine($"- {relic.Name}");
+                sb.AppendLine($"> {rewardstring}");
                 sb.AppendLine();
             }
 
@@ -88,8 +87,8 @@ namespace TRKS.WF.QQBot
                         break;
                 }
 
-                sb.AppendLine($"- 价格:{info.item_Price}白鸡 ({info.item_ResetNum}洗)");
-                sb.AppendLine($"- 属性:{info.item_Property}");
+                sb.AppendLine($"- 价格: {info.item_Price}白鸡 ({info.item_ResetNum}洗)");
+                sb.AppendLine($"- 属性: {info.item_Property}");
                 sb.AppendLine();
             }
 
@@ -271,7 +270,7 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
 
-        public static string ToString(Defenderreward reward)
+        public static string ToString(RewardInfo reward)
         {
             var rewards = new List<string>();
             if (reward.credits > 0)
@@ -286,22 +285,7 @@ namespace TRKS.WF.QQBot
 
             return string.Join(" + ", rewards);
         }
-
-        public static string ToString(Attackerreward reward)
-        {
-            var rewards = new List<string>();
-            if (reward.credits > 0)
-            {
-                rewards.Add($"{reward.credits} cr");
-            }
-
-            foreach (var item in reward.countedItems)
-            {
-                rewards.Add($"{item.count}x{item.type}");
-            }
-
-            return string.Join(" + ", rewards);
-        }
+        
         public static string ToString(Reward reward)
         {
             var rewards = new List<string>();

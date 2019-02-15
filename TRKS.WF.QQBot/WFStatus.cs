@@ -22,10 +22,9 @@ namespace TRKS.WF.QQBot
             var cetuscycle = api.GetCetusCycle();
             var valliscycle = api.GetVallisCycle();
             var msg = $"{WFFormatter.ToString(cetuscycle)}\r\n" +
-                      $"{WFFormatter.ToString(valliscycle)}" +
-                      $"\r\n机器人目前运行的平台是: {platform}";
+                      $"{WFFormatter.ToString(valliscycle)}";
 
-            Messenger.SendGroup(group, msg);
+            Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
         public void SendSortie(string group)
@@ -33,7 +32,7 @@ namespace TRKS.WF.QQBot
             var sortie = api.GetSortie();
             var msg = WFFormatter.ToString(sortie);
             
-            Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
+            Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
         public void SendVoidTrader(string group)
@@ -41,7 +40,7 @@ namespace TRKS.WF.QQBot
             var trader = api.GetVoidTrader();
             var msg = WFFormatter.ToString(trader);
 
-            Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
+            Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
         public void SendFortunaMissions(string group, int index)
@@ -49,9 +48,8 @@ namespace TRKS.WF.QQBot
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index));
-            sb.AppendLine($"您正在查看 福尔图娜 的全部赏金任务,使用: /地球赏金 来查询希图斯的赏金任务.");
-            sb.AppendLine($"机器人目前运行的平台是: {platform}");
-            Messenger.SendGroup(group, sb.ToString());
+            sb.AppendLine($"您正在查看 福尔图娜 的全部赏金任务, 使用: /地球赏金 来查询希图斯的赏金任务.");
+            Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
         }
 
         public void SendCetusMissions(string group, int index)
@@ -59,27 +57,25 @@ namespace TRKS.WF.QQBot
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index));
-            sb.AppendLine("您正在查看 希图斯 的全部赏金任务,使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
-            sb.AppendLine($"机器人目前运行的平台是: {platform}");
-            Messenger.SendGroup(group, sb.ToString());
+            sb.AppendLine("您正在查看 希图斯 的全部赏金任务, 使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
+            Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
         }
 
         //public void SendFissures(string group, List<string> words)
         public void SendFissures(string group)
         {
             var fissures = api.GetFissures().Where(fissure => fissure.active).ToList();
-            var msg = $"{WFFormatter.ToString(fissures)}\r\n机器人目前运行的平台是: {platform}";
-            Messenger.SendGroup(group, msg);
+            var msg = WFFormatter.ToString(fissures);
+            Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
         public void SendRelicInfo(string group, string word)
         {
             var relics = translator.GetRelicInfo(word);
             var msg = $"{WFFormatter.ToString(relics)}\r\n" +
-                      $"你正在查看与 {word} 有关的所有遗物." +
-                      $"\r\n机器人目前运行的平台是: {platform}";
+                      $"你正在查看与 {word} 有关的所有遗物.";
 
-            Messenger.SendGroup(group, msg);
+            Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
         public void SendEvent(string group)
@@ -88,11 +84,11 @@ namespace TRKS.WF.QQBot
             if (events.Count > 0)
             {
                 var msg = WFFormatter.ToString(events);
-                Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
+                Messenger.SendGroup(group, msg.AddPlatformInfo());
             }
             else
             {
-                Messenger.SendGroup(group, "目前游戏内没有任何活动(尸鬼,豺狼,舰队)." + $"\r\n机器人目前运行的平台是: {platform}");
+                Messenger.SendGroup(group, "目前游戏内没有任何活动(尸鬼, 豺狼, 舰队).".AddPlatformInfo());
             }
         }
 

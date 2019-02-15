@@ -14,10 +14,7 @@ namespace TRKS.WF.QQBot
 {
     public class WFNotificationHandler
     {
-        private static readonly object InvasionLocker = new object();
-        private static readonly object AlertLocker = new object();
-        private static readonly object WFAlertLocker = new object();
-        private static readonly object StalkerLocker = new object();
+        private static readonly object Locker = new object();
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
@@ -44,15 +41,18 @@ namespace TRKS.WF.QQBot
                 sendedAlertsSet.Add(alert.Id);
             foreach (var inv in invs)
                 sendedInvSet.Add(inv.id);
-            foreach (var enemy in enemies)  
+            foreach (var enemy in enemies)
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-            
+
             Timer.Elapsed += (sender, eventArgs) =>
             {
-                UpdateAlerts();
-                UpdateInvasions();
-                UpdateWFGroups();
-                UpdatePersistentEnemies();
+                lock (Locker)
+                {
+                    UpdateAlerts();
+                    UpdateInvasions();
+                    UpdateWFGroups();
+                    UpdatePersistentEnemies();
+                }
             };
             Timer.Start();
         }
@@ -69,25 +69,21 @@ namespace TRKS.WF.QQBot
 
         private void UpdatePersistentEnemies()
         {
-            lock (StalkerLocker)
+            var enemies = api.GetPersistentEnemies();
+            if (!enemies.Any(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime))) return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("我看到有小小黑冒头了? 干!");
+
+            foreach (var enemy in enemies.Where(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime)))
             {
-                var enemies = api.GetPersistentEnemies();
-                var sb = new StringBuilder();
-                if (enemies.Any(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime)))
-                {
-                    sb.AppendLine("我看到有小小黑冒头了?干!");
-                    foreach (var enemy in enemies)
-                    {
-                        if (enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime))
-                        {
-                            sb.AppendLine(WFFormatter.ToString(enemy));
-                            sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-                        }
-                    }
-                    Messenger.Broadcast(sb.ToString().Trim());
-                }
-            }     
+                sb.AppendLine(WFFormatter.ToString(enemy));
+                sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+            }
+
+            Messenger.Broadcast(sb.ToString().Trim());
         }
+
         private void UpdateWFGroups()
         {
             var groups = GetGroups().Select(group => group.Group).ToList();
@@ -97,55 +93,50 @@ namespace TRKS.WF.QQBot
 
         private void UpdateInvasions()
         {
-            lock (InvasionLocker)
+            try
             {
-                try
+                foreach (var inv in api.GetInvasions().Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
                 {
-                    foreach (var inv in api.GetInvasions().Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                    // 不发已经完成的入侵 你学的好快啊
+                    // 不发已经发过的入侵
+                    var list = GetAllInvasionsCountedItems(inv).ToArray();
+
+                    if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
                     {
-                        // 不发已经完成的入侵 你学的好快啊
-                        // 不发已经发过的入侵
-                        var list = GetAllInvasionsCountedItems(inv);
+                        var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
+                                         $"{WFFormatter.ToString(inv)}";
 
-                        if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
-                        {
-                            var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
-                                             $"{WFFormatter.ToString(inv)}";
-
-                            Messenger.Broadcast(notifyText + $"\r\n机器人目前运行的平台是: {platform}");
-                            sendedInvSet.Add(inv.id);
-                        }
+                        Messenger.Broadcast(notifyText.AddPlatformInfo());
+                        sendedInvSet.Add(inv.id);
                     }
                 }
-                catch (Exception e)
-                {
-                    // 问题有点大 我慌一下
-                    Messenger.SendDebugInfo(e.ToString());
-                }
             }
+            catch (Exception e)
+            {
+                // 问题有点大 我慌一下
+                Messenger.SendDebugInfo(e.ToString());
+            }
+
         }
 
-        private static List<string> GetAllInvasionsCountedItems(WFInvasion inv)
+        private static IEnumerable<string> GetAllInvasionsCountedItems(WFInvasion inv)
         {
-            var list = new List<string>();
             foreach (var reward in inv.attackerReward.countedItems)
             {
-                list.Add(reward.type);
+                yield return reward.type;
             }
 
             foreach (var reward in inv.defenderReward.countedItems)
             {
-                list.Add(reward.type);
+                yield return reward.type;
             }
-
-            return list;
         }
 
         public void SendAllPersistentEnemies(string group)
         {
             var enemies = api.GetPersistentEnemies();
             var sb = new StringBuilder();
-            sb.AppendLine("下面是全太阳系内的小小黑,快去锤爆?");
+            sb.AppendLine("下面是全太阳系内的小小黑, 快去锤爆?");
             foreach (var enemy in enemies)
             {
                 sb.AppendLine(WFFormatter.ToString(enemy));
@@ -164,26 +155,27 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim() + $"\r\n机器人目前运行的平台是: {platform}");
+            Messenger.SendGroup(group, sb.ToString().Trim().AddPlatformInfo());
         }
 
         private void UpdateAlerts()
         {
-            lock (AlertLocker)
+            try
             {
-                try
+                var alerts = api.GetAlerts().Where(alert => !sendedAlertsSet.Contains(alert.Id));
+                // 后人不要尝试重构下面这坨代码 她很好用 但是你别想着去重构
+                foreach (var alert in 
+                Config.Instance.IsAlertRequiredRareItem 
+                ? alerts.Where(a => a.RewardTypes.Any(rewardtype => rewardtype != "endo") && a.Mission.Reward.Items.Any()) 
+                : alerts.Where(a => a.Mission.Reward.Items.Any() || a.Mission.Reward.CountedItems.Any()))
                 {
-                    var alerts = api.GetAlerts().Where(alert => !sendedAlertsSet.Contains(alert.Id));
-                    // 后人不要尝试重构下面这行代码 她很好用 但是你别想着去重构
-                    foreach (var alert in Config.Instance.IsAlertRequiredRareItem ? alerts.Where(a => a.RewardTypes.Any(rewardtype => rewardtype != "endo") && a.Mission.Reward.Items.Any()) : alerts)
-                    {
-                        SendWFAlert(alert);
-                    }
+                    SendWFAlert(alert);
                 }
-                catch (Exception e)
-                {
-                    Messenger.SendDebugInfo(e.ToString());
-                }
+                
+            }
+            catch (Exception e)
+            {
+                Messenger.SendDebugInfo(e.ToString());
             }
         }
 
@@ -199,25 +191,15 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim() + $"\r\n机器人目前运行的平台是: {platform}");
+            Messenger.SendGroup(group, sb.ToString().Trim().AddPlatformInfo());
         }
 
         private void SendWFAlert(WFAlert alert)
         {
-            lock (WFAlertLocker)
-            {
-                var reward = alert.Mission.Reward;
-                if (reward.Items.Any() || reward.CountedItems.Any())
-                {
-                    var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
-                                 WFFormatter.ToString(alert) +
-                                 "\r\n可使用: /help来查看机器人的更多说明." + 
-                                 $"\r\n机器人目前运行的平台是: {platform}"
-                                 ;
-                    Messenger.Broadcast(result);
-                    sendedAlertsSet.Add(alert.Id);
-                }
-            }
+            var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
+                         WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
+            Messenger.Broadcast(result);
+            sendedAlertsSet.Add(alert.Id);
         }
 
         /* 以下是废弃的代码和注释

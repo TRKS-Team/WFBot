@@ -88,7 +88,7 @@ namespace TRKS.WF.QQBot
                         {
                             msg = $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.";
                         }
-                        Messenger.SendGroup(group, msg + $"\r\n机器人目前运行的平台是: {platform}");
+                        Messenger.SendGroup(group, msg.AddPlatformInfo());
                     }
                     else
                     {

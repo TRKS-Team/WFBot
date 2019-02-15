@@ -83,9 +83,9 @@ namespace TRKS.WF.QQBot
         public static void SendHelpdoc(string group)
         {
             SendGroup(@group, @"欢迎查看机器人唯一指定帮助文档
-宣传贴地址:https://warframe.love/thread-230.htm
-在线最新文档:https://github.com/TRKS-Team/WFBot/blob/master/README.md (绝对最新的文档)
-开源地址:https://github.com/TheRealKamisama/WFBot 
+宣传贴地址: https://warframe.love/thread-230.htm
+在线最新文档: https://github.com/TRKS-Team/WFBot/blob/master/README.md (绝对最新的文档)
+开源地址: https://github.com/TheRealKamisama/WFBot 
 本机器人为公益项目,持续维护中.");
             if (File.Exists("data/image/帮助文档.png"))
             {
@@ -94,7 +94,7 @@ namespace TRKS.WF.QQBot
             else
             {
                 SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
-作者: TheRealKamisama 开源地址:https://github.com/TheRealKamisama/WFBot
+作者: TheRealKamisama 开源地址: https://github.com/TheRealKamisama/WFBot
 如果群里没有自动通知 请务必检查是否启用了通知功能
     警报: 可使用 /警报 来查询当前的所有警报.
         新警报也会自动发送到启用了通知功能的群.
@@ -120,8 +120,8 @@ namespace TRKS.WF.QQBot
     翻译: 可使用 /翻译 [关键词]（eg. 致残突击 犀牛prime） 来 中 -> 英 / 英 -> 中 翻译.
     小小黑: 可使用 /小小黑 来查询目前小小黑的信息.
 私聊管理命令:
-    启用群通知: 可使用 添加群 ******* 群号 来启用[群号]对应的群的通知功能.
-    禁用群通知: 可使用 删除群 ******* 群号 来禁用[群号]对应的群的通知功能.
+    启用群通知: 默认可使用 添加群 ******* 群号 来启用[群号]对应的群的通知功能.
+    禁用群通知: 默认可使用 删除群 ******* 群号 来禁用[群号]对应的群的通知功能.
     不启用通知功能新的任务将不会通知到群内.
 贡献者: [排名不分先后]
     代码贡献者: TheRealKamisama(项目发起人 主要开发者 文档撰写) Cyl18(部分代码维护 文档修改 苦力) qiutong123(提供了翻译功能的代码)
