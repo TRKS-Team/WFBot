@@ -94,7 +94,7 @@ namespace TRKS.WF.QQBot
                 }
             }
 
-            var msg = "";
+            var msg = String.Empty;
             Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
 
             var failed = false;
