@@ -37,6 +37,8 @@ namespace TRKS.WF.QQBot
         public Settings.Platform Platform = Settings.Platform.PC;
 
         public bool IsThirdPartyWM = false;
+
+        public bool IsAlertRequiredRareItem = true;
     }
 
     [Configuration("CoquettishConfig")]
