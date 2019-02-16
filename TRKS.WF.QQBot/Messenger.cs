@@ -84,9 +84,10 @@ namespace TRKS.WF.QQBot
         {
             SendGroup(@group, @"欢迎查看机器人唯一指定帮助文档
 宣传贴地址: https://warframe.love/thread-230.htm
-在线最新文档: http://lopoteam.com/GAU (绝对最新的文档)
-开源地址: http://lopoteam.com/G6U
-上面的链接点击一次=>0.0001元进了我的兜.
+在线最新文档: https://github.com/TRKS-Team/WFBot/blob/master/README.md (绝对最新的文档)
+开源地址: https://github.com/TRKS-Team/WFBot
+乞讨地址: https://afdian.net/@TheRealKamisama
+没事就点点: http://lopoteam.com/G6U
 本机器人为公益项目,持续维护中.");
             if (File.Exists("data/image/帮助文档.png"))
             {
@@ -95,7 +96,7 @@ namespace TRKS.WF.QQBot
             else
             {
                 SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
-作者: TheRealKamisama 开源地址: http://lopoteam.com/G6U
+作者: TheRealKamisama 开源地址: https://github.com/TRKS-Team/WFBot
 如果群里没有自动通知 请务必检查是否启用了通知功能
     警报: 可使用 /警报 来查询当前的所有警报.
         新警报也会自动发送到启用了通知功能的群.
