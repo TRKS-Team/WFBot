@@ -9,6 +9,7 @@
 - 任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
 
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
+**或者你点几次[链接](http://lopoteam.com/G6U)也能支持到我**  
 **您的赞助...可能会让机器人变得更好吧..?**
 
 > 本插件附带自动更新.  
