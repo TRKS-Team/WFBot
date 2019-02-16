@@ -166,7 +166,8 @@ namespace TRKS.WF.QQBot
                 // 后人不要尝试重构下面这坨代码 她很好用 但是你别想着去重构
                 foreach (var alert in 
                 Config.Instance.IsAlertRequiredRareItem 
-                ? alerts.Where(a => a.RewardTypes.Any(rewardtype => rewardtype != "endo" && rewardtype == "kavatGene" && rewardtype == "nitain" && rewardtype == "other") || a.Mission.Reward.Items.Any()) 
+                ? alerts.Where(a => a.RewardTypes.Any(rewardtype => rewardtype == "kavatGene" && rewardtype == "nitain" && rewardtype == "other") || a.Mission.Reward.Items.Any())
+                .Where(a => a.RewardTypes.Any(rewardtype => rewardtype != "endo")) 
                 : alerts.Where(a => a.Mission.Reward.Items.Any() || a.Mission.Reward.CountedItems.Any()))
                 {
                     SendWFAlert(alert);
