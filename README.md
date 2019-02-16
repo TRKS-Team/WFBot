@@ -4,21 +4,22 @@
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
 基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.
 
-翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
-使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
-任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
+- 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻
+- 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理
+- 任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
 
-**~~骗钱网址~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
+**~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
 **您的赞助...可能会让机器人变得更好吧..?**
 
-> 自动更新将会把最新的插件部署到所有机器人上, 如果我手滑引爆了所有机器人, 请不要慌张.  
-> 如果真的全爆了 **没关系** 因为我的机器人也爆了.  
+> 本插件附带自动更新.  
+> 最新的插件 会通过 自动更新 部署到 自动更新版本的机器人 上, 如果我手滑引爆了所有机器人, 请不要慌张.  
+> 如果真的全爆了, **没关系** 因为我的机器人也爆了.  
 > 很快 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
 > 此处记录引爆次数: \*3
 
 > 目前有一个由我维护, 暂时稳定的机器人, 现在可以直接邀请入群 QQ: `2504645673`  
-> 个人用户可添加 QQ 群: `938873897`  
-> 目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**!  
+> 个人用户可添加 QQ 群: [938873897](http://shang.qq.com/wpa/qunwpa?idkey=0171441db21449373d1070bdcb5b26d272131bd3579f7816586446c0bbb8ec12)  
+> 目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**! 处在后面位置的群收到通知的速度会很慢!  
 > **自己按照下面的说明部署可以享受完全体**
 
 ## 如何部署
@@ -41,32 +42,41 @@
 
 #### 从 GitHub Release / AppVeyor (推荐)
 
-1. 下载 [.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462) 并安装.
+1. 下载 [.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. (Windows 10 最新版自带)
 2. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
+3. 享受这个插~~♂~~件的的快感吧!
 
-#### 自己编译 (特殊需求)
+#### 或者: 自己编译 (特殊需求)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 我们强烈建议在 Windows 平台下编译这个项目.
 
 1. 安装 `Visual Studio 2017 / 2019`, 以及 `.NET Framework 4.6.2 SDK.`
 2. 下载这个仓库, 使用 `TRKS.WF.QQBot\build.bat` 来生成一份插件.
-   > `git clone https://github.com/TRKS-Team/WFBot.git`  
-   > `./WFBot/TRKS.WF.QQBot/build.bat`
+
+   ```bash
+    git clone https://github.com/TRKS-Team/WFBot.git
+    ./WFBot/TRKS.WF.QQBot/build.bat
+   ```
+
 3. 将生成的所有 `TRKS.WF.QQBot\bin\[对应 QQ 平台]` 文件夹内的所有文件拖入机器人根目录.
 
 ### 第三步: 自定义
 
-需要在插件设置内修改一些奇怪的东西.  
-可修改的内容如下:
+可以在插件设置内干一些奇怪的事情.  
+可自定义的内容如下:
 
-- 修改群通知功能所用的口令 **(不修改将无法启用通知功能)**
-- 哪些入侵任务的奖励需要通知群内
+- 修改群通知功能所用的口令 **(默认为 7 个 \*)**
+- 是否需要前导`/`来启用执行命令 **(默认需要)**
+- 包含 哪些奖励的入侵任务 需要通知到群内 **(默认参见设置)**
 - 用于接收报错的 QQ 号 **(调试使用, 建议留空)**
-- 是否自动同意别人邀请入群 **(无需群内管理)** 和申请入群 **(需群内管理)**
+- 是否自动同意 别人邀请机器人入群 **(无需群内管理)** 和 自主申请入群 **(需群内管理)**
+- WFA 授权的 `ClientId` 和 `ClientSecret` (非必须, 见下)
+- 是否使用第三方词库 和 中转后的 WarframeMarket 接口 (需 WFA 授权)
+
+可以使用的功能如下:
+
 - 对所有 **启用了通知功能** 的群发送一条通知
-- WFA 授权的 ClientId 和 ClientSecret (非必须, 见下)
-- 第三方词库和中转后的Warframemarket接口(需WFA授权)
 
 ### 启用 WFA 授权 **(非必须)**
 
@@ -75,10 +85,10 @@
 
 > **不启用授权不影响基本功能**
 
-> **WM 查询** 可使用中转过后的服务器 **速度更高**  
+> **WM 查询** 可使用中转过后的服务器 **速度大概更高**  
 > **紫卡市场** 使用 **必须** 启用 WFA 授权
 
-**授权获取** 请查看 **[API 文档](https://blog.richasy.cn/document/wfa/api/)**
+**授权获取** 请查看 **[云之幻的 API 文档](https://blog.richasy.cn/document/wfa/api/)**
 
 ---
 
@@ -95,7 +105,7 @@
 - **突击**: 可使用 **/突击** 来查询当前的所有突击.
   > _突击的奖励池为一般奖励池._
 - **平原时间**: 可使用 **/平原** 来查询 **地球平原** 现在的时间 和 **奥布山谷 (金星平原)** 现在的温度.
-- **活动**:可使用 **/活动** 来查看目前的所有活动
+- **活动**: 可使用 **/活动** 来查看目前的所有活动
 - **虚空商人信息**: 可使用 **/虚空商人 (或奸商)** 来查询奸商的状态.
   > _如果虚空商人已经抵达将会输出**所有的商品和价格**, 长度较长._
 - **WarframeMarket** 可使用 **/查询 \[物品名称]**
@@ -103,8 +113,8 @@
   > - _查询未开紫卡请输入: 手枪未开紫卡_
 - **紫卡市场**: 可使用 **/紫卡 \[武器名称]**
   > _数据来自 [**WFA 紫卡市场**](https://riven.richasy.cn/#/)_
-- **地球赏金**: 可使用 **/地球赏金\[数字(可无)]** 来查询地球平原的 全部//单一 赏金任务.
-- **金星赏金**: 可使用 **/金星赏金 \[数字(可无)]** 来查询金星平原的 全部//单一 赏金任务.
+- **地球赏金**: 可使用 **/地球赏金 \[第几个(可选)]** 来查询地球平原的 全部/单一 赏金任务.
+- **金星赏金**: 可使用 **/金星赏金 \[第几个(可选)]** 来查询金星平原的 全部/单一 赏金任务.
 - **裂隙**: 可使用 **/裂隙** 来查询全部裂隙.
   > _目前不需要输入任何关键词了._
 - **遗物**: 可使用 **/遗物 \[关键词] (eg. 后纪 s3, 前纪 B3)** 来查询所有与关键词有关的遗物.
@@ -112,6 +122,8 @@
   > _关键词务必标准_
 - **小小黑**: 可使用 **/小小黑** 来查询目前追随者的信息.
   > _仅限此活动激活时可以使用_
+
+另外还有一些不影响大局的调试命令和命令别名, 可以自己在代码中 ([私聊](https://github.com/TRKS-Team/WFBot/blob/master/TRKS.WF.QQBot/MahuaEvents/PrivateMessageReceivedMahuaEvent2.cs#L68)/[群聊](https://github.com/TRKS-Team/WFBot/blob/master/TRKS.WF.QQBot/MahuaEvents/GroupMessageReceivedMahuaEvent1.cs#L53)) 查阅.
 
 ### **私聊**命令
 
@@ -172,4 +184,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者: KonyCN(真的RICH) Cyl18
+- 捐助者: KonyCN (真的 RICH)

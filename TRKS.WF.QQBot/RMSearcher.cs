@@ -22,10 +22,7 @@ namespace TRKS.WF.QQBot
         public RMSearcher()
         {
             UpdateAccessToken();
-            timer.Elapsed += (sender, eventArgs) =>
-            {
-                UpdateAccessToken();
-            };
+            timer.Elapsed += (s, e) => UpdateAccessToken();
             timer.Start();
         }
         public string GetAccessToken()
@@ -44,13 +41,10 @@ namespace TRKS.WF.QQBot
 
         public void UpdateAccessToken()
         {
-            if (isWFA)
+            if (isWFA && DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7))
             {
-                if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7))
-                {
-                    Config.Instance.AcessToken = GetAccessToken();
-                    Config.Save();
-                }
+                Config.Instance.AcessToken = GetAccessToken();
+                Config.Save();
             }
         }
 
@@ -92,21 +86,19 @@ namespace TRKS.WF.QQBot
                     }
                     else
                     {
-                        Messenger.SendGroup(group, $"武器{weapon}不存在, 请检查格式(请注意: 悦音prime)");
+                        Messenger.SendGroup(group, $"武器 {weapon} 不存在, 请检查格式(请注意: 悦音prime)");
                     }
                 }
                 else
                 {
-                    Messenger.SendGroup(group, "本机器人没有WFA授权, 本功能无法使用, 请联系机器人管理员.");
+                    Messenger.SendGroup(group, "本机器人没有 WFA 授权, 本功能无法使用, 请联系机器人管理员.");
                 }
             }
             catch (WebException)
             {
                 Messenger.SendGroup(group, "经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
-
             }
-
-
         }
+
     }
 }
