@@ -65,6 +65,22 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 return groups;
             }
         }
+
+        [Matchers("加载配置", "UpdateConfig")]
+        [RequireAdmin]
+        string UpdateConfig()
+        {
+            Config.Update();
+            return "搞完啦, 希望你没弄丢什么数据?";
+        }
+
+        [Matchers("保存配置", "SaveConfig")]
+        [RequireAdmin]
+        string SaveConfig()
+        {
+            Config.Save();
+            return "搞完啦, 希望你没弄丢什么数据?";
+        }
         [Matchers("所有群")]
         [RequireAdmin]
         string DumpGroups()
@@ -77,6 +93,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 sb.AppendLine($"{info.Group} {info.Name}");
             }
 
+            Directory.CreateDirectory("所有群");
             File.WriteAllText(@"所有群\所有群.txt", sb.ToString());
             return "搞完了,去机器人根目录看结果.";
         }

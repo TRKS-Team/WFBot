@@ -287,7 +287,8 @@ namespace Settings
 
         private void checkBox14_Click(object sender, EventArgs e)
         {
-            
+            Config.Instance.IsAlertRequiredRareItem = checkBox14.Checked;
+            Config.Save();
         }
     }
 
