@@ -50,7 +50,7 @@ namespace TRKS.WF.QQBot
                 {
                     UpdateAlerts();
                     UpdateInvasions();
-                    UpdateWFGroups();
+                    // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
                     UpdatePersistentEnemies();
                 }
             };
