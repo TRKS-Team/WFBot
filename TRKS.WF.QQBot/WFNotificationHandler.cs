@@ -172,10 +172,10 @@ namespace TRKS.WF.QQBot
                                  rewardtype == "other") || a.Mission.Reward.Items.Any()) &&
                             a.RewardTypes.Any(rewardtype => rewardtype != "endo"))
                         : alerts.Where(a => a.Mission.Reward.Items.Any() || a.Mission.Reward.CountedItems.Any());
-                /*foreach (var alert in result)
+                foreach (var alert in result)
                 {
                     SendWFAlert(alert);
-                }*/
+                }
 
             }
             catch (Exception e)
