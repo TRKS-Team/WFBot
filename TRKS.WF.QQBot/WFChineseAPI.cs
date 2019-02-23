@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -185,7 +186,10 @@ namespace TRKS.WF.QQBot
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
-        private WFApi translateApi = Config.Instance.IsThirdPartyLexicon ? GetThirdPartyTranslateApi() : GetTranslateApi();
+        private WFApi translateApi = GetTranslateApi();
+        private static string source = Config.Instance.IsThirdPartyLexicon ?
+            "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/" : 
+            "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/";
 
         public WFTranslator()
         {
@@ -245,54 +249,24 @@ namespace TRKS.WF.QQBot
 
         private static WFApi GetTranslateApi()
         {
-            var alerts = WebHelper.DownloadJson<Alert[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Alert.json");
-            var dicts = WebHelper.DownloadJson<Dict[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Dict.json");
-            var invasions = WebHelper.DownloadJson<Invasion[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Invasion.json");
-            var sales = WebHelper.DownloadJson<Sale[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Sale.json");
-            var riven = WebHelper.DownloadJson<Riven[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Riven.json");
-            var relic = WebHelper.DownloadJson<Relic[]>(
-                    "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Relic.json");
-            var modifier = WebHelper.DownloadJson<Modifier[]>(
-                "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/WF_Modifier.json");
-            var translateApi = new WFApi
-            {
-                Alert = alerts, Dict = dicts, Invasion = invasions, Relic = relic, Riven = riven, Sale = sales, Modifier = modifier
-            };
-            return translateApi;
+            var api = new WFApi();
+            Messenger.SendDebugInfo("正在加载翻译 API.");
+
+            var sw = Stopwatch.StartNew();
+            Task.WaitAll(
+                Downloader.GetCacheOrDownload<Alert[]>   ($"{source}WF_Alert.json"   , alerts    => api.Alert    = alerts),
+                Downloader.GetCacheOrDownload<Dict[]>    ($"{source}WF_Dict.json"    , dicts     => api.Dict     = dicts),
+                Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs      => api.Invasion = invs),
+                Downloader.GetCacheOrDownload<Sale[]>    ($"{source}WF_Sale.json"    , sales     => api.Sale     = sales),
+                Downloader.GetCacheOrDownload<Riven[]>   ($"{source}WF_Riven.json"   , rivens    => api.Riven    = rivens),
+                Downloader.GetCacheOrDownload<Relic[]>   ($"{source}WF_Relic.json"   , relics    => api.Relic    = relics),
+                Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers)
+            );
+
+            Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
+            return api;
         }
-        private static WFApi GetThirdPartyTranslateApi()
-        {
-            var alerts = WebHelper.DownloadJson<Alert[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Alert.json");
-            var dicts = WebHelper.DownloadJson<Dict[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Dict.json");
-            var invasions = WebHelper.DownloadJson<Invasion[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Invasion.json");
-            var sales = WebHelper.DownloadJson<Sale[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Sale.json");
-            var riven = WebHelper.DownloadJson<Riven[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Riven.json");
-            var relic = WebHelper.DownloadJson<Relic[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Relic.json");
-            var modifier = WebHelper.DownloadJson<Modifier[]>(
-                "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/WF_Modifier.json");
-            var translateApi = new WFApi
-            {
-                Alert = alerts,
-                Dict = dicts,
-                Invasion = invasions,
-                Relic = relic,
-                Riven = riven,
-                Sale = sales,
-                Modifier = modifier
-            };
-            return translateApi;
-        }
+
         public string GetTranslateResult(string str)
         {
             var sb = new StringBuilder();

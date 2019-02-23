@@ -1,6 +1,8 @@
-﻿using Newbe.Mahua;
+﻿using Fody;
+using Newbe.Mahua;
 using TRKS.WF.QQBot.MahuaEvents;
 
+[assembly: ConfigureAwait(false)]
 namespace TRKS.WF.QQBot
 {
     /// <summary>

@@ -127,6 +127,15 @@ namespace TRKS.WF.QQBot
         }
     }
 
+    public static class DictionaryExtensions
+    {
+        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> directory, TKey key, Func<TValue> creator = null) where TValue : new()
+        {
+            if (!directory.ContainsKey(key)) directory[key] = creator == null ? new TValue() : creator();
+            return directory[key];
+        }
+    }
+
     public class SerializeSettings : JsonSerializerSettings
     {
         public SerializeSettings()

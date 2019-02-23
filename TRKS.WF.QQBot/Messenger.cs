@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -35,6 +36,7 @@ namespace TRKS.WF.QQBot
             
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ, content);
+            Trace.WriteLine($"Debug message: {content}", "Message");
         }
 
         public static void SendPrivate(string qq, string content)

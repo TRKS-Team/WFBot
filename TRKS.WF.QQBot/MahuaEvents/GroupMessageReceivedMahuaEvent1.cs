@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System;
+using System.Diagnostics;
 using System.Web;
 using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
@@ -44,8 +45,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                 message = message.StartsWith("/") ? message.Substring(1) : message;
 
-                var handler = new GroupMessageHandler(context.FromQq, context.FromGroup);
-                handler.ProcessCommandInput(context.FromGroup, message);
+                var handler = new GroupMessageHandler(context.FromQq, context.FromGroup, message);
+                var (matched, result) = handler.ProcessCommandInput();
+                if (matched)
+                {
+                    Trace.WriteLine($"Message Processed: Group [{handler.Group}], QQ [{handler.Sender}], Message Content [{message}], Result [{result}].", "Message");
+                }
             }, TaskCreationOptions.LongRunning);
         }
     }
@@ -152,11 +157,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
     }
 
-    public partial class GroupMessageHandler : ICommandHandlerCollection<GroupMessageHandler>, ISender
+    public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender
     {
         public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendGroup(id, msg);
-        public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
+        public Action<Message> ErrorMessageSender { get; }
+
         public string Sender { get; }
+        public string Message { get; }
         public string Group { get; }
 
         internal static WFNotificationHandler WfNotificationHandler =>
@@ -166,10 +173,16 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
 
-        public GroupMessageHandler(string sender, string group)
+        public GroupMessageHandler(string sender, string group, string message)
         {
             Sender = sender;
             Group = group;
+            Message = message;
+
+            ErrorMessageSender = msg =>
+            {
+                SendDebugInfo(msg);
+            };
         }
 
     }

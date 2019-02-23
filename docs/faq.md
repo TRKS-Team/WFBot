@@ -38,4 +38,4 @@
 ![Languagebug](images/Languagebug.png)
 
 - A: 请将 `YUELUO\TRKS.WF.QQBot\zh-CN` 这个文件夹扔到机器人的根目录.  
-   TODO: 永久修复这个问题
+   在 GitHub Release 上已经修复完成. 如果你自己编译还是会遇到这个问题.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,28 +20,78 @@ namespace TRKS.WF.QQBot
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
-        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() => new WebClientEx2());
+        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() =>
+        {
+            var client = new WebClientEx2();
+            client.DownloadStringCompleted += (sender, args) =>
+            {
+                Trace.WriteLine(
+                    $"Download data completed: Size [{Encoding.UTF8.GetByteCount(args.Result) / 1024.0:N1}KB].",
+                    "Downloader");
+            };
+            return client;
+        });
         public static T DownloadJson<T>(string url)
         {
-            var count = 3;
-            while (count --> 0)
+            var sw = Stopwatch.StartNew();
+            try
             {
-                try
+                var count = 3;
+                while (count-- > 0)
                 {
-                    return webClient.Value.DownloadString(url).JsonDeserialize<T>();
+                    try
+                    {
+                        return webClient.Value.DownloadString(url).JsonDeserialize<T>();
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-                catch (Exception)
-                {
-                }
+                throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
             }
-            throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
+            finally
+            {
+                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+            }
+        }
+
+        public static async Task<T> DownloadJsonAsync<T>(string url)
+        {
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                var count = 3;
+                while (count-- > 0)
+                {
+                    try
+                    {
+                        return (await webClient.Value.DownloadStringTaskAsync(url)).JsonDeserialize<T>();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
+            }
+            finally
+            {
+                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+            }
         }
 
         public static T DownloadJson<T>(string url, WebHeaderCollection header)
         {
-            var wc = new WebClientEx2();
-            wc.Headers = header;
-            return wc.DownloadString(url).JsonDeserialize<T>();
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                var wc = new WebClientEx2();
+                wc.Headers = header;
+                return wc.DownloadString(url).JsonDeserialize<T>();
+            }
+            finally
+            {
+                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+            }
         }
 
         public static T UploadJson<T>(string url, string body)
@@ -50,9 +101,16 @@ namespace TRKS.WF.QQBot
 
         public static T UploadJson<T>(string url, string body, WebHeaderCollection header)
         {
-            var wc = new WebClientEx2();
-            wc.Headers = header;
-            return wc.UploadString(url, body).JsonDeserialize<T>();
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                var wc = new WebClientEx2 { Headers = header };
+                return wc.UploadString(url, body).JsonDeserialize<T>();
+            }
+            finally
+            {
+                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+            }
         }
 
         public static void DownloadFile(string url, string path, string name)

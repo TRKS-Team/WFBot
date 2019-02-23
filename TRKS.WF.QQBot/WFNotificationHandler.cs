@@ -46,6 +46,8 @@ namespace TRKS.WF.QQBot
 
             Timer.Elapsed += (sender, eventArgs) =>
             {
+                if (HotUpdateInfo.PreviousVersion) return;
+
                 lock (Locker)
                 {
                     UpdateAlerts();

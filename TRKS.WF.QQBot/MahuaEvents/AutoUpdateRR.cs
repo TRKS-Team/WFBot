@@ -21,8 +21,8 @@ namespace TRKS.WF.QQBot
                 WorkingDirectory = Directory.GetCurrentDirectory()
             });
 
-            GroupMessageReceivedMahuaEvent1._WfNotificationHandler?.Timer?.Stop();
-            InitEvent1.timer1?.Stop();
+            Trace.WriteLine("Started AutoUpdate.", "AutoUpdate");
+            HotUpdateInfo.PreviousVersion = true;
         }
     }
 }

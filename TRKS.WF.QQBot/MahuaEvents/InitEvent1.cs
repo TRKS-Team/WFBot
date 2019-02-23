@@ -22,6 +22,15 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private static volatile bool updating;
         internal static Timer timer1;
 
+        static InitEvent1()
+        {
+            Directory.CreateDirectory("WFBotLogs");
+            var listener = new TextWriterTraceListener(File.Open($"WFBotLogs\\WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log", FileMode.Append, FileAccess.Write, FileShare.ReadWrite)) { TraceOutputOptions = TraceOptions.Timestamp };
+            Trace.Listeners.Add(listener);
+            Trace.AutoFlush = true;
+            Trace.WriteLine($"WFBot started.", "WFBot Core");
+        }
+
         public InitEvent1()
         {
             onlineBuild = nameof(InitEvent1).Contains("_"); // trick
@@ -34,13 +43,13 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 timer.Elapsed += Timer_Elapsed;
                 timer.Start();
             }
-
-
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (HotUpdateInfo.PreviousVersion) return;
+
             try
             {
                 var releaseData = ReleaseGetter.Get();
@@ -72,7 +81,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (HotUpdateInfo.PreviousVersion) return;
 
-            Task.Delay(TimeSpan.FromSeconds(20)).ContinueWith(t =>
+            Task.Delay(TimeSpan.FromSeconds(10)).ContinueWith(t =>
             {
                 if (!onlineBuild)
                 {
@@ -82,6 +91,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     Messenger.SendDebugInfo("机器人已启动，你使用的是官方构建，自动更新功能已经启用。");
                 }
+
+                WFResource.WFTranslator.TranslateSearchWord("上辈子日了狗, 这辈子 OOP.");
             });
 
         }

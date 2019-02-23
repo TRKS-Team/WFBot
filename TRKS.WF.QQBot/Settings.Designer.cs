@@ -476,7 +476,7 @@
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(285, 21);
             this.label12.TabIndex = 33;
-            this.label12.Text = "每分钟每个群调用次数上限(0为无上限)";
+            this.label12.Text = "每分钟每个群调用次数上限 (0为无上限)";
             this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // checkBox12
@@ -486,7 +486,7 @@
             this.checkBox12.Name = "checkBox12";
             this.checkBox12.Size = new System.Drawing.Size(84, 16);
             this.checkBox12.TabIndex = 34;
-            this.checkBox12.Text = "第三方词典";
+            this.checkBox12.Text = "第三方词典 (需要重启才能生效.)";
             this.checkBox12.UseVisualStyleBackColor = true;
             this.checkBox12.Click += new System.EventHandler(this.checkBox12_Click);
             // 

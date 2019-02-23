@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GammaLibrary.Extensions;
 using Newbe.Mahua;
 using Newbe.Mahua.Internals;
 using Newbe.Mahua.MahuaEvents;
@@ -48,8 +49,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (HotUpdateInfo.PreviousVersion) return;
 
-            new PrivateMessageHandler(context.FromQq).ProcessCommandInput(context.FromQq, context.Message);
-            //                SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 5 皮笑肉不笑
+            new PrivateMessageHandler(context.FromQq, context.Message).ProcessCommandInput();
+            //                SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 6 皮笑肉不笑
         }
     }
 
@@ -85,17 +86,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [RequireAdmin]
         string DumpGroups()
         {
-            SendPrivate(Sender, "正在dump所有群...请稍后...结果将存储于机器人根目录...");
-            var groups = GetGroups();
-            var sb = new StringBuilder();
-            foreach (var info in groups)
-            {
-                sb.AppendLine($"{info.Group} {info.Name}");
-            }
+            SendPrivate(Sender, "正在dump所有群...请稍候...结果将存储于机器人根目录...");
 
             Directory.CreateDirectory("所有群");
-            File.WriteAllText(@"所有群\所有群.txt", sb.ToString());
-            return "搞完了,去机器人根目录看结果.";
+            File.WriteAllLines(@"所有群\所有群.txt", GetGroups().Select(info => $"{info.Group} {info.Name}"));
+
+            return "搞完了, 去机器人根目录看结果.";
         }
         [Matchers("自动更新")]
         [RequireAdmin, RequireCode]
@@ -114,7 +110,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 var groups = api.GetGroupsWithModel().Model.ToList();
                 var gs = groups.Where(g => !groups.Contains(g)).Select(g => $"{g.Group}-{g.Name}");
 
-                return string.Join("\r\n", gs);
+                return gs.Connect("\r\n");
             }
         }
 
@@ -148,15 +144,17 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
     }
 
-    public partial class PrivateMessageHandler : ICommandHandlerCollection<PrivateMessageHandler>, ISender
+    public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>, ISender
     {
         public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendPrivate(id, msg);
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
         public string Sender { get; }
+        public string Message { get; }
 
-        public PrivateMessageHandler(string sender)
+        public PrivateMessageHandler(string sender, string message)
         {
             Sender = sender;
+            Message = message;
         }
     }
 }

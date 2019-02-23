@@ -81,7 +81,7 @@ namespace TRKS.WF.QQBot
                         {
                             var sb = new StringBuilder();
                             var similarlist = translator.GetSimilarItem(item.Format());
-                            sb.AppendLine($"物品{item}不存在或格式错误.");
+                            sb.AppendLine($"物品 {item} 不存在或格式错误.");
                             sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
                             foreach (var similarresult in similarlist)
                             {
@@ -139,7 +139,7 @@ namespace TRKS.WF.QQBot
                 }
                 else
                 {
-                    msg = $"抱歉, WarframeMarket上目前还没有售卖 {item} 的用户";
+                    msg = $"抱歉, WarframeMarket 上目前还没有售卖 {item} 的用户";
                 }
 
             }

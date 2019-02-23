@@ -13,7 +13,6 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (HotUpdateInfo.PreviousVersion) return;
             //Messenger.SendDebugInfo("正在进行插件热更新。");
-            HotUpdateInfo.PreviousVersion = true;
         }
     }
 }
