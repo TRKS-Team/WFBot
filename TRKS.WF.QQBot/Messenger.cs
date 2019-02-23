@@ -88,8 +88,7 @@ namespace TRKS.WF.QQBot
 宣传贴地址: https://warframe.love/thread-230.htm
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/master/README.md (绝对最新的文档)
 开源地址: https://github.com/TRKS-Team/WFBot
-乞讨地址: https://afdian.net/@TheRealKamisama
-没事就点点: http://lopoteam.com/G6U
+赞助(乞讨)地址: https://afdian.net/@TheRealKamisama
 本机器人为公益项目,持续维护中.");
             if (File.Exists("data/image/帮助文档.png"))
             {
@@ -127,10 +126,6 @@ namespace TRKS.WF.QQBot
     启用群通知: 默认可使用 添加群 ******* 群号 来启用[群号]对应的群的通知功能.
     禁用群通知: 默认可使用 删除群 ******* 群号 来禁用[群号]对应的群的通知功能.
     不启用通知功能新的任务将不会通知到群内.
-贡献者: [排名不分先后]
-    代码贡献者: TheRealKamisama(项目发起人 主要开发者 文档撰写) Cyl18(部分代码维护 文档修改 苦力) qiutong123(提供了翻译功能的代码)
-    问题贡献者: wosiwq Aujin JJins mengpf
-    捐助者列表: KonyCN
 ");
             }
         }

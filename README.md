@@ -8,6 +8,7 @@
 - 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理
 - 任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
 
+![MONEY](docs/images/MONEY.png)  --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
 **或者你点几次[链接](http://lopoteam.com/G6U)也能支持到我**  
 **您的赞助...可能会让机器人变得更好吧..?**
@@ -68,7 +69,7 @@
 可自定义的内容如下:
 
 - 修改群通知功能所用的口令 **(默认为 7 个 \*)**
-- 是否需要前导`/`来启用执行命令 **(默认需要)**
+- 是否需要前导`/`来使用命令 **(默认需要)**
 - 包含 哪些奖励的入侵任务 需要通知到群内 **(默认参见设置)**
 - 用于接收报错的 QQ 号 **(调试使用, 建议留空)**
 - 是否自动同意 别人邀请机器人入群 **(无需群内管理)** 和 自主申请入群 **(需群内管理)**
@@ -81,7 +82,7 @@
 
 ### 启用 WFA 授权 **(非必须)**
 
-设置内填入 **从云之幻处获得授权的** `ClientId` 和 `ClientSecret` 即可启用  
+设置内填入从云之幻处授权的 `ClientId` 和 `ClientSecret` 即可启用  
 **如果你不知道这俩是干嘛的, 就别瞎填, 因为我的用户创造力都好强啊**
 
 > **不启用授权不影响基本功能**
@@ -185,4 +186,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者: KonyCN (真的 RICH)
+- 捐助者 **(真惨)**: KONYCN Trinitatem wosiwq Cyl18  爱发电用户_Ymhw 
