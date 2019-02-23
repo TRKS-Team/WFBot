@@ -47,10 +47,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                 var handler = new GroupMessageHandler(context.FromQq, context.FromGroup, message);
                 var (matched, result) = handler.ProcessCommandInput();
-                if (matched)
-                {
-                    Trace.WriteLine($"Message Processed: Group [{handler.Group}], QQ [{handler.Sender}], Message Content [{message}], Result [{result}].", "Message");
-                }
+
             }, TaskCreationOptions.LongRunning);
         }
     }
@@ -159,7 +156,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender
     {
-        public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendGroup(id, msg);
+        public Action<TargetID, Message> MessageSender { get; }
         public Action<Message> ErrorMessageSender { get; }
 
         public string Sender { get; }
@@ -176,13 +173,16 @@ namespace TRKS.WF.QQBot.MahuaEvents
         public GroupMessageHandler(string sender, string group, string message)
         {
             Sender = sender;
+            MessageSender = (id, msg) =>
+            {
+                SendGroup(id, msg);
+                Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg}].", "Message");
+
+            };
             Group = group;
             Message = message;
 
-            ErrorMessageSender = msg =>
-            {
-                SendDebugInfo(msg);
-            };
+            ErrorMessageSender = msg => SendDebugInfo(msg);
         }
 
     }

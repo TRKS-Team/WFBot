@@ -72,9 +72,11 @@ namespace TRKS.WF.QQBot
                 var count = 0;
                 foreach (var group in Config.Instance.WFGroupList)
                 {
+                    if (count > 20 && content.StartsWith("机器人开始了自动更新")) return;
+
                     var sb = new StringBuilder();
                     sb.AppendLine(content);
-                    sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
+                    if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
                     SendGroup(group, sb.ToString().Trim());
                     count++;
