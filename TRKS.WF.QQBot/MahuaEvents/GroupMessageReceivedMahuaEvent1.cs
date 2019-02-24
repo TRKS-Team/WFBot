@@ -176,7 +176,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             MessageSender = (id, msg) =>
             {
                 SendGroup(id, msg);
-                Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg}].", "Message");
+                Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg.Content}].", "Message");
 
             };
             Group = group;
