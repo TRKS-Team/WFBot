@@ -34,6 +34,7 @@ namespace TRKS.WF.QQBot
                             api.SendPrivateMessage(pair.Key, pair.Value);
                         }
                     }
+                    PrivateMessageDictionary.Clear();
                 }
                 
             };
