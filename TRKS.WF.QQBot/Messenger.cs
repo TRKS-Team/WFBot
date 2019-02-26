@@ -10,12 +10,35 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newbe.Mahua;
 using Settings;
+using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot
 {
     public static class Messenger
     {
         public static Dictionary<string, int> GroupCallDic = new Dictionary<string, int>();
+        public static Timer PrivateMessageTimer = new Timer(1000);
+        public static Dictionary<string, string> PrivateMessageDictionary = new Dictionary<string, string>();
+
+        static Messenger()
+        {
+            PrivateMessageTimer.Elapsed += (s, e) =>
+            {
+                lock (typeof(Messenger))
+                {
+                    foreach (var pair in PrivateMessageDictionary)
+                    {
+                        using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+                        {
+                            var api = robotSession.MahuaApi;
+                            api.SendPrivateMessage(pair.Key, pair.Value);
+                        }
+                    }
+                }
+                
+            };
+            PrivateMessageTimer.Start();
+        }
 
         public static void IncreaseCallCounts(string group)
         {
@@ -32,8 +55,6 @@ namespace TRKS.WF.QQBot
         }
         public static void SendDebugInfo(string content)
         {
-            if (content.StartsWith("System.Threading.ThreadAbortException")) return;
-            
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ, content);
             Trace.WriteLine($"Debug message: {content}", "Message");
@@ -41,10 +62,16 @@ namespace TRKS.WF.QQBot
 
         public static void SendPrivate(string qq, string content)
         {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            lock (typeof(Messenger))
             {
-                var api = robotSession.MahuaApi;
-                api.SendPrivateMessage(qq, content);
+                if (PrivateMessageDictionary.ContainsKey(qq))
+                {
+                    PrivateMessageDictionary[qq] += "\r\n" + content;
+                }
+                else
+                {
+                    PrivateMessageDictionary[qq] = content;
+                }
             }
         }
 
