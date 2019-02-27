@@ -5,10 +5,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 
 namespace TRKS.WF.QQBot
 {
@@ -41,7 +43,7 @@ namespace TRKS.WF.QQBot
                 {
                     try
                     {
-                        return webClient.Value.DownloadString(url).JsonDeserialize<T>();
+                        return new HttpClient().GetJsonAsync<T>(url).Result;
                     }
                     catch (Exception)
                     {
