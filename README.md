@@ -8,7 +8,7 @@
 - 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理
 - 任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
 
-![MONEY](docs/images/MONEY.png)  --by @Lasm_Gratel  
+![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
 **或者你点几次[链接](http://lopoteam.com/G6U)也能支持到我**  
 **您的赞助...可能会让机器人变得更好吧..?**
@@ -48,7 +48,7 @@
 2. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 3. 享受这个插~~♂~~件的的快感吧!
 
-#### 或者: 自己编译 (特殊需求)
+#### 或者: 自己编译 (特殊需求) (不推荐)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 我们强烈建议在 Windows 平台下编译这个项目.
@@ -186,4 +186,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者 **(真惨)**: KONYCN Trinitatem wosiwq Cyl18  爱发电用户_Ymhw 
+- 捐助者 **(真惨)**: KONYCN Trinitatem wosiwq Cyl18 爱发电用户\_Ymhw
