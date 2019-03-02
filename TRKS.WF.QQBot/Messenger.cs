@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newbe.Mahua;
 using Settings;
+using TRKS.WF.QQBot.MahuaEvents;
 using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot
@@ -111,6 +113,44 @@ namespace TRKS.WF.QQBot
                     Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
+        }
+
+        public static void SendBotStatus(string group)
+        {
+            var sb = new StringBuilder();
+            var statreply = WebHelper.Ping($"api.warframestat.us");
+            var wmreply = WebHelper.Ping("warframe.market");
+            var rmreply = WebHelper.Ping("riven.richasy.cn");
+            if (statreply.Status == IPStatus.Success && wmreply.Status == IPStatus.Success &&
+                rmreply.Status == IPStatus.Success)
+            {
+                sb.AppendLine("机器人状态: 一切正常");
+            }
+            else
+            {
+                sb.AppendLine("机器人状态: 离线");
+            }
+
+            sb.AppendLine($"    插件版本: {InitEvent1.localVersion}");
+            sb.AppendLine($"    任务API: {statreply.RoundtripTime}ms [{ToString(statreply)}]");
+            sb.AppendLine($"    WarframeMarket: {wmreply.RoundtripTime}ms [{ToString(wmreply)}]");
+            sb.AppendLine($"    WFA紫卡市场: {rmreply.RoundtripTime}ms [{ToString(rmreply)}]");
+
+        }
+
+        public static string ToString(PingReply reply)
+        {
+            switch (reply.Status)
+            {
+                case IPStatus.Unknown:
+                    return "未知";
+                case IPStatus.Success:
+                    return "正常";
+                case IPStatus.TimedOut:
+                    return "超时";
+                default:
+                    return "错误";
+            }
         }
         public static void SendHelpdoc(string group)
         {

@@ -152,6 +152,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             SendHelpdoc(Group);
         }
+        [Matchers("status", "状态", "机器人状态", "信息", "机器人信息")]
+        void Status()
+        {
+            SendBotStatus(Group);
+        }
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender

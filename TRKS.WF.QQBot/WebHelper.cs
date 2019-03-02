@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -33,6 +34,14 @@ namespace TRKS.WF.QQBot
             };
             return client;
         });
+
+        public static PingReply Ping(string url)
+        {
+            var ping = new Ping();
+            var reply = ping.Send(url);
+            ping.Dispose();
+            return reply;
+        }
         public static T DownloadJson<T>(string url)
         {
             var sw = Stopwatch.StartNew();
