@@ -152,7 +152,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             SendHelpdoc(Group);
         }
-        [Matchers("status", "状态", "机器人状态", "信息", "机器人信息")]
+        [Matchers("status", "状态", "机器人状态", "机器人信息", "我需要机器人")]
         void Status()
         {
             SendBotStatus(Group);
