@@ -13,7 +13,7 @@ namespace TRKS.WF.QQBot
         /// <summary>
         /// 版本号，建议采用 主版本.次版本.修订号 的形式
         /// </summary>
-        public string Version { get; set; } = InitEvent1.onlineBuild ? InitEvent1.localVersion.ToString() : "0";
+        public string Version { get; set; } = InitEvent1.onlineBuild ? InitEvent1.localVersion.ToString() : "1";
 
         /// <summary>
         /// 插件名称
