@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
@@ -118,24 +119,23 @@ namespace TRKS.WF.QQBot
         public static void SendBotStatus(string group)
         {
             var sb = new StringBuilder();
-            var statreply = WebHelper.Ping($"api.warframestat.us");
-            var wmreply = WebHelper.Ping("warframe.market");
-            var rmreply = WebHelper.Ping("riven.richasy.cn");
-            if (statreply.Status == IPStatus.Success && wmreply.Status == IPStatus.Success &&
-                rmreply.Status == IPStatus.Success)
+            var apistat = WebHelper.TryGet("https://warframestat.us");
+            var wmstat = WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item");
+            var wfastat = WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven");
+            if (apistat.IsOnline && wmstat.IsOnline && wfastat.IsOnline)
             {
                 sb.AppendLine("机器人状态: 一切正常");
             }
             else
             {
-                sb.AppendLine("机器人状态: 离线");
+                sb.AppendLine("机器人状态: 错误");
             }
 
             sb.AppendLine($"    插件版本: {InitEvent1.localVersion}");
-            sb.AppendLine($"    任务API: {statreply.RoundtripTime}ms [{ToString(statreply)}]");
-            sb.AppendLine($"    WarframeMarket: {wmreply.RoundtripTime}ms [{ToString(wmreply)}]");
-            sb.AppendLine($"    WFA紫卡市场: {rmreply.RoundtripTime}ms [{ToString(rmreply)}]");
-
+            sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline? "在线" : "离线")}]");
+            sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
+            sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
+            sb.ToString().Trim().AddPlatformInfo().SendToGroup(group);
         }
 
         public static string ToString(PingReply reply)

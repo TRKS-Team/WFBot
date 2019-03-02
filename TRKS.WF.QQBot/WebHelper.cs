@@ -15,6 +15,17 @@ using GammaLibrary.Extensions;
 
 namespace TRKS.WF.QQBot
 {
+    public class WebStatus
+    {
+        public WebStatus(bool isOnline, long latency)
+        {
+            IsOnline = isOnline;
+            Latency = latency;
+        }
+
+        public Boolean IsOnline { get; set; }
+        public long Latency { get; set; }
+    }
     public static class WebHelper
     {
         static WebHelper()
@@ -35,6 +46,13 @@ namespace TRKS.WF.QQBot
             return client;
         });
 
+        public static WebStatus TryGet(string url)
+        {
+            var client = new HttpClient();
+            var sw = Stopwatch.StartNew();
+            var response = client.GetAsync(url).Result;
+            return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
+        }
         public static PingReply Ping(string url)
         {
             var ping = new Ping();

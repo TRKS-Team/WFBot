@@ -52,7 +52,7 @@ namespace TRKS.WF.QQBot
             }
             catch (Exception e)
             {
-                Trace.WriteLine($"我操我上辈子是日了狗么, 缓存 {path} 无法保存. {e}", "Cache");
+                Trace.WriteLine($"我操我上辈子是日了狗么, 缓存 {path} 无法保存. {e}", "Cache"); //哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈啊哈哈哈哈哈哈哈哈哈哈 --2019年3月2日22:18:27
             }
             setter(content);
             finishedCount++;
