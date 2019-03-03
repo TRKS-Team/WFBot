@@ -131,7 +131,14 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine("机器人状态: 错误");
             }
 
-            sb.AppendLine($"    插件版本: {InitEvent1.localVersion}");
+            if (InitEvent1.onlineBuild)
+            {
+                sb.AppendLine($"插件版本: {InitEvent1.localVersion}");
+            }
+            else
+            {
+                sb.AppendLine($"插件版本: 非官方");
+            }
             sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline? "在线" : "离线")}]");
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
@@ -169,6 +176,7 @@ namespace TRKS.WF.QQBot
                 SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
 作者: TheRealKamisama 开源地址: https://github.com/TRKS-Team/WFBot
 如果群里没有自动通知 请务必检查是否启用了通知功能
+    机器人状态: 可使用 /机器人状态 来查看机器人目前的运行状态.
     警报: 可使用 /警报 来查询当前的所有警报.
         新警报也会自动发送到启用了通知功能的群.
     入侵: 可使用 /入侵 来查询当前的所有入侵.

@@ -6,7 +6,7 @@
 
 - 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻
 - 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理
-- 任务 [API](https://docs.warframestat.us/) 来自 WarframeStat
+- 任务 API 来自 [WarframeStat](https://docs.warframestat.us/) 
 
 ![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
@@ -32,7 +32,7 @@
 
 ### 第一步: 选择以下几种 QQ 机器人平台
 
-- [酷 Q Pro / Air](https://cqp.cc/) - 拥有免费阉割版 **需要开启开发者模式** 推荐
+- [酷 Q Pro / Air](https://cqp.cc/) - 拥有免费阉割版 **需要开启开发者模式**
 - [QQLight](https://www.52chat.cc/download.php) - 付费
 - [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) - 拥有免费阉割版
 - [MyPCQQ](https://mypcqq.cc/) - 付费
@@ -51,7 +51,8 @@
 #### 或者: 自己编译 (特殊需求) (不推荐)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
-> 我们强烈建议在 Windows 平台下编译这个项目.
+> 我们强烈建议在 Windows 平台下编译这个项目.  
+> **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
 
 1. 安装 `Visual Studio 2017 / 2019`, 以及 `.NET Framework 4.6.2 SDK.`
 2. 下载这个仓库, 使用 `TRKS.WF.QQBot\build.bat` 来生成一份插件.
@@ -100,6 +101,7 @@
 
 **设置内可以更改命令前无需斜杠.**
 
+- **机器人状态**: 可使用 **/机器人状态** 来查询机器人的运行状态.
 - **警报**: 可使用 **/警报** 来查询当前的所有警报.
   > _新警报也会自动发送到**启用了通知功能的群**._
 - **入侵**: 可使用 **/入侵** 来查询当前的所有入侵.
@@ -164,8 +166,8 @@
 ## 代码部分
 
 代码注释极少... 并且大部分都是一些瞎记的.  
-所以如果有 dalao 需要的话可以单独找我...  
-如果有 bug 或者你有好的想法作为 Feature 可以在[Github Issue](https://github.com/TRKS-Team/WFBot/issues)里直接提出, 我会尽量去修改和实现.  
+我不写注释是因为: **这代码这么难写 那他应该也难读**  
+如果发现 Bug 或者你有好的想法可以在[Github Issue](https://github.com/TRKS-Team/WFBot/issues)里直接提出, 我会尽量去修改和实现.  
 特别鸣谢 [@Cyl18](https://github.com/Cyl18)
 
 > Cyl18 是我雇佣的一个劳工  
