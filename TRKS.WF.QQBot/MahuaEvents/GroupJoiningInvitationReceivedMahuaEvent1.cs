@@ -29,7 +29,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     var api = robotSession.MahuaApi;
                     api.AcceptGroupJoiningInvitation(context.GroupJoiningRequestId, context.ToGroup, context.FromQq);
                 }
-                Config.Instance.WFGroupList.Add(context.ToGroup);
+
+                if (!Config.Instance.WFGroupList.Contains(context.ToGroup))
+                {
+                    Config.Instance.WFGroupList.Add(context.ToGroup);
+                }
                 Messenger.SendDebugInfo($"接受了来自{context.FromQq}邀请加入群{context.ToGroup}的邀请.");
                 Messenger.SendHelpdoc(context.ToGroup);
             }

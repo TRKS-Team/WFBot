@@ -247,6 +247,10 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        public void UpdateTranslateApi()
+        {
+            translateApi = GetTranslateApi();
+        }
         private static WFApi GetTranslateApi()
         {
             var api = new WFApi();
