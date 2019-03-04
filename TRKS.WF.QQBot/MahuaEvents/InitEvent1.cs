@@ -60,7 +60,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     updating = true;
 
                     Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
-                    Messenger.Broadcast($"机器人开始了自动更新, 大约在1分钟内机器人不会回答你的问题.");
+                    Messenger.Broadcast($"机器人开始了自动更新, 当前版本为v{localVersion}, 将会更新到v{ver}, 大约在1分钟内机器人不会回答你的问题.");
                     AutoUpdateRR.Execute();
                     Thread.Sleep(1000);
                 }
