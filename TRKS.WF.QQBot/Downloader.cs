@@ -35,7 +35,7 @@ namespace TRKS.WF.QQBot
                     }
                     catch (Exception)
                     {
-                        Trace.WriteLine($"Cache broken, redownloading...", "Cache");
+                        Trace.WriteLine($"缓存喂狗了, 正在重新下载...", "Cache");
                     }
                 }
 
@@ -59,7 +59,7 @@ namespace TRKS.WF.QQBot
 
             if (finishedCount == expectedCount && expectedCount >= 6)
             {
-                Messenger.SendDebugInfo("可缓存的玩意全部下载完成.");
+                Messenger.SendDebugInfo("可缓存的玩意看起来全部下载完成.");
             }
         }
     }
