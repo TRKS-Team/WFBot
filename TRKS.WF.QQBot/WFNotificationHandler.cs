@@ -22,6 +22,9 @@ namespace TRKS.WF.QQBot
         public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(3).TotalMilliseconds);
         private readonly WFChineseAPI api = WFResource.WFChineseApi;
         private string platform => Config.Instance.Platform.ToString();
+        private List<WFAlert> AlertPool = new List<WFAlert>();
+        private List<WFInvasion> InvasionPool = new List<WFInvasion>();
+        private List<PersistentEnemie> StalkerPool = new List<PersistentEnemie>();
 
         public WFNotificationHandler()
         {
@@ -50,10 +53,10 @@ namespace TRKS.WF.QQBot
 
                 lock (Locker)
                 {
-                    UpdateAlerts();
-                    UpdateInvasions();
+                    UpdateAlertPool();
+                    UpdateInvasionPool();
                     // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
-                    UpdatePersistentEnemies();
+                    UpdatePersistentEnemiePool();
                 }
             };
             Timer.Start();
@@ -69,9 +72,9 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        private void UpdatePersistentEnemies()
+        private void CheckPersistentEnemies()
         {
-            var enemies = api.GetPersistentEnemies();
+            var enemies = StalkerPool;
             if (!enemies.Any(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime))) return;
 
             var sb = new StringBuilder();
@@ -93,11 +96,28 @@ namespace TRKS.WF.QQBot
             Config.Save();
         }
 
-        private void UpdateInvasions()
+        private void UpdatePersistentEnemiePool()
+        {
+            StalkerPool = api.GetPersistentEnemies();
+            CheckPersistentEnemies();
+        }
+        private void UpdateAlertPool()
+        {
+            AlertPool = api.GetAlerts();
+            CheckAlerts();
+        }
+
+        private void UpdateInvasionPool()
+        {
+            InvasionPool = api.GetInvasions();
+            CheckInvasions();
+        }
+
+        private void CheckInvasions()
         {
             try
             {
-                foreach (var inv in api.GetInvasions().Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
                 {
                     // 不发已经完成的入侵 你学的好快啊
                     // 不发已经发过的入侵
@@ -136,7 +156,7 @@ namespace TRKS.WF.QQBot
 
         public void SendAllPersistentEnemies(string group)
         {
-            var enemies = api.GetPersistentEnemies();
+            var enemies = StalkerPool;
             var sb = new StringBuilder();
             sb.AppendLine("下面是全太阳系内的小小黑, 快去锤爆?");
             foreach (var enemy in enemies)
@@ -147,7 +167,8 @@ namespace TRKS.WF.QQBot
         }
         public void SendAllInvasions(string group)
         {
-            var invasions = api.GetInvasions();
+            UpdateInvasionPool();
+            var invasions = InvasionPool;
             var sb = new StringBuilder();
             sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
 
@@ -160,11 +181,11 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, sb.ToString().Trim().AddPlatformInfo());
         }
 
-        private void UpdateAlerts()
+        private void CheckAlerts()
         {
             try
             {
-                var alerts = api.GetAlerts().Where(alert => !sendedAlertsSet.Contains(alert.Id));
+                var alerts = AlertPool.Where(alert => !sendedAlertsSet.Contains(alert.Id));
                 // 后人不要尝试重构下面这坨代码 她很好用 但是你别想着去重构
                 var result =
                     Config.Instance.IsAlertRequiredRareItem
@@ -188,7 +209,8 @@ namespace TRKS.WF.QQBot
 
         public void SendAllAlerts(string group)
         {
-            var alerts = api.GetAlerts();
+            UpdateAlertPool();
+            var alerts = AlertPool;
             var sb = new StringBuilder();
 
             sb.AppendLine("指挥官, 下面是太阳系内所有的警报任务, 供您挑选.");
