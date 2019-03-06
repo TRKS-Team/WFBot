@@ -8,6 +8,49 @@ using Newtonsoft.Json;
 namespace TRKS.WF.QQBot
 {
 
+    public class WFNightWave
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public int season { get; set; }
+        public string tag { get; set; }
+        public int phase { get; set; }
+        public Params _params { get; set; }
+        public object[] possibleChallenges { get; set; }
+        public Activechallenge[] activeChallenges { get; set; }
+        public string[] rewardTypes { get; set; }
+    }
+
+    public class Params
+    {
+        public int wgsc { get; set; }
+        public float wsr { get; set; }
+    }
+
+    public class Activechallenge
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public bool isDaily { get; set; }
+        public bool isElite { get; set; }
+        public string desc { get; set; }
+        public string title { get; set; }
+        public int reputation { get; set; }
+    }
+
+    public class NightWave
+    {
+        public int id { get; set; }
+        public string zh { get; set; }
+        public string en { get; set; }
+    }
+
     public class PersistentEnemie
     {
         public string id { get; set; }
@@ -374,6 +417,7 @@ namespace TRKS.WF.QQBot
         public Riven[] Riven { get; set; }
         public Relic[] Relic { get; set; }
         public Modifier[] Modifier { get; set; }
+        public NightWave[] NightWave { get; set; }
     }
 
     public class Modifier

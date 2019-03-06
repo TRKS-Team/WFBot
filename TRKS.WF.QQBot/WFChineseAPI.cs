@@ -108,7 +108,12 @@ namespace TRKS.WF.QQBot
             return new List<WFAlert>();
         }
 
-
+        public WFNightWave GetNightWave()
+        {
+            var wave = WebHelper.DownloadJson<WFNightWave>($"https://api.warframestat.us/{platform}/nightwave");
+            translator.TranslateNightWave(wave);
+            return wave;
+        }
         public CetusCycle GetCetusCycle()
         {
             var cycle = WebHelper.DownloadJson<CetusCycle>($"https://api.warframestat.us/{platform}/cetusCycle");
@@ -183,13 +188,12 @@ namespace TRKS.WF.QQBot
     {
         private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
         private Dictionary<string, Translator> searchwordTranslator = new Dictionary<string, Translator>();
+        private Translator nightwaveTranslator = new Translator();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
         private WFApi translateApi = GetTranslateApi();
-        private static string source = Config.Instance.IsThirdPartyLexicon ?
-            "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/" : 
-            "https://raw.githubusercontent.com/TheRealKamisama/WFA_Lexicon/master/";
+        private static string source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/";
 
         public WFTranslator()
         {
@@ -245,6 +249,11 @@ namespace TRKS.WF.QQBot
                 }
                 dictTranslators["Modifier"].AddEntry(modifier.en, modifier.zh);
             }
+
+            foreach (var wave in translateApi.NightWave)
+            {
+                nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
+            }
         }
 
         public void UpdateTranslateApi()
@@ -264,7 +273,8 @@ namespace TRKS.WF.QQBot
                 Downloader.GetCacheOrDownload<Sale[]>    ($"{source}WF_Sale.json"    , sales     => api.Sale     = sales),
                 Downloader.GetCacheOrDownload<Riven[]>   ($"{source}WF_Riven.json"   , rivens    => api.Riven    = rivens),
                 Downloader.GetCacheOrDownload<Relic[]>   ($"{source}WF_Relic.json"   , relics    => api.Relic    = relics),
-                Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers)
+                Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers),
+                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
             );
 
             Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
@@ -329,6 +339,16 @@ namespace TRKS.WF.QQBot
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+        }
+
+        public void TranslateNightWave(WFNightWave nightwave)
+        {
+            foreach (var challenge in nightwave.activeChallenges)
+            {
+                challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format());
+                challenge.title = nightwaveTranslator.Translate(challenge.title.Format());
+                challenge.expiry = GetRealTime(challenge.expiry);
+            }
         }
         public void TranslatePersistentEnemies(List<PersistentEnemie> enemies)
         {

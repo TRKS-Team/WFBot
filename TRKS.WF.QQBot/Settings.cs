@@ -43,7 +43,6 @@ namespace Settings
             textBox5.Text = Config.Instance.ClientSecret;
             checkBox11.Checked = Config.Instance.IsSlashRequired;
             textBox6.Text = Config.Instance.CallperMinute.ToString();
-            checkBox12.Checked = Config.Instance.IsThirdPartyLexicon;
             UpdatePlatformRadioButtons();
             checkBox13.Checked = Config.Instance.IsThirdPartyWM;
             checkBox14.Checked = Config.Instance.IsAlertRequiredRareItem;
@@ -220,11 +219,6 @@ namespace Settings
 
         }
 
-        private void checkBox12_Click(object sender, EventArgs e)
-        {
-            Config.Instance.IsThirdPartyLexicon = checkBox12.Checked;
-            Config.Save();
-        }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {

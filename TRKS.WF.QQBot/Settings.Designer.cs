@@ -64,7 +64,6 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.checkBox12 = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -474,21 +473,10 @@
             this.label12.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label12.Location = new System.Drawing.Point(9, 584);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(285, 21);
+            this.label12.Size = new System.Drawing.Size(290, 21);
             this.label12.TabIndex = 33;
             this.label12.Text = "每分钟每个群调用次数上限 (0为无上限)";
             this.label12.Click += new System.EventHandler(this.label12_Click);
-            // 
-            // checkBox12
-            // 
-            this.checkBox12.AutoSize = true;
-            this.checkBox12.Location = new System.Drawing.Point(293, 514);
-            this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(84, 16);
-            this.checkBox12.TabIndex = 34;
-            this.checkBox12.Text = "第三方词典 (需要重启才能生效.)";
-            this.checkBox12.UseVisualStyleBackColor = true;
-            this.checkBox12.Click += new System.EventHandler(this.checkBox12_Click);
             // 
             // label13
             // 
@@ -584,7 +572,6 @@
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.label13);
-            this.Controls.Add(this.checkBox12);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.textBox6);
@@ -665,7 +652,6 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox checkBox12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;

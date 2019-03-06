@@ -10,6 +10,49 @@ namespace TRKS.WF.QQBot
 {
     public static class WFFormatter
     {
+        public static string ToString(WFNightWave nightwave)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("午夜电波每日/每周挑战: ");
+            var challenges =
+                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(0) && challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
+            if (challenges.Any())
+            {
+                sb.AppendLine("一天内将过期: ");
+                sb.AppendLine("    ");
+                ToString(challenges.ToArray());
+            }
+
+            challenges =
+                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(1) && challenge.expiry - DateTime.Now < TimeSpan.FromDays(3));
+            if (challenges.Any())
+            {
+                sb.AppendLine("三天内将过期: ");
+                sb.AppendLine("    ");
+                ToString(challenges.ToArray());
+            }
+            challenges =
+                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(3));
+            if (challenges.Any())
+            {
+                sb.AppendLine("七天内将过期: ");
+                sb.AppendLine("    ");
+                ToString(challenges.ToArray());
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string ToString(Activechallenge[] challenges)
+        {
+            var sb = new StringBuilder();
+            foreach (var challenge in challenges)
+            {
+                sb.Append($"{challenge.reputation}声望[{challenge.desc}] ");
+            }
+
+            return sb.ToString().Trim();
+        }
         public static string ToString(List<Event> events)
         {
             var sb = new StringBuilder();

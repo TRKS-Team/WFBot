@@ -157,6 +157,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             SendBotStatus(Group);
         }
+
+        [Matchers("午夜电波", "电波", "每日任务", "每周任务", "每日任务", "每周挑战")]
+        void NightWave()
+        {
+            _WFStatus.SendNightWave(Group);
+        }
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender

@@ -92,6 +92,13 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        public void SendNightWave(string group)
+        {
+            var nightwave = api.GetNightWave();
+            var msg = WFFormatter.ToString(nightwave).AddPlatformInfo();
+            Messenger.SendGroup(group, msg);
+        }
+
         public void SendTranslateResult(string group, string str)
         {
             var msg = translator.GetTranslateResult(str);
