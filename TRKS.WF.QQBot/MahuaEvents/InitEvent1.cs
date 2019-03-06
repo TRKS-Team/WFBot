@@ -41,7 +41,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 var timer = new Timer(TimeSpan.FromSeconds(delay).TotalMilliseconds);
                 timer1 = timer;
                 timer.Elapsed += Timer_Elapsed;
-                timer.Start();
+                if (Config.Instance.AutoUpdate)
+                {
+                    timer.Start();
+                }
             }
         }
 
@@ -89,7 +92,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 }
                 else
                 {
-                    Messenger.SendDebugInfo("机器人已启动，你使用的是官方构建，自动更新功能已经启用。");
+                    Messenger.SendDebugInfo($"机器人已启动，你使用的是官方构建，自动更新功能{(Config.Instance.AutoUpdate ? "已经启用" : "已经被关闭")}。");
                 }
 
                 WFResource.WFTranslator.TranslateSearchWord("上辈子日了狗, 这辈子 OOP.");

@@ -37,6 +37,8 @@ namespace TRKS.WF.QQBot
         public bool IsThirdPartyWM = false;
 
         public bool IsAlertRequiredRareItem = true;
+
+        public bool AutoUpdate = true;
     }
 
     [Configuration("CoquettishConfig")]

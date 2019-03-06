@@ -46,6 +46,7 @@ namespace Settings
             UpdatePlatformRadioButtons();
             checkBox13.Checked = Config.Instance.IsThirdPartyWM;
             checkBox14.Checked = Config.Instance.IsAlertRequiredRareItem;
+            checkBox233.Checked = Config.Instance.AutoUpdate;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -282,6 +283,12 @@ namespace Settings
         private void checkBox14_Click(object sender, EventArgs e)
         {
             Config.Instance.IsAlertRequiredRareItem = checkBox14.Checked;
+            Config.Save();
+        }
+
+        private void CheckBox233_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.AutoUpdate = checkBox233.Checked;
             Config.Save();
         }
     }
