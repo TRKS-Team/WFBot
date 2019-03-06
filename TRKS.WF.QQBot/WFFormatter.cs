@@ -20,7 +20,7 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine("一天内将过期: ");
                 sb.AppendLine("    ");
-                ToString(challenges.ToArray());
+                sb.Append(ToString(challenges.ToArray()));
             }
 
             challenges =
@@ -29,7 +29,7 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine("三天内将过期: ");
                 sb.AppendLine("    ");
-                ToString(challenges.ToArray());
+                sb.Append(ToString(challenges.ToArray()));
             }
             challenges =
                 nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(3));
@@ -37,7 +37,7 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine("七天内将过期: ");
                 sb.AppendLine("    ");
-                ToString(challenges.ToArray());
+                sb.Append(ToString(challenges.ToArray()));
             }
 
             return sb.ToString().Trim();
