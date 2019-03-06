@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -10,6 +11,7 @@ namespace TRKS.WF.QQBot
 {
     public static class WFFormatter
     {
+        [Pure]
         public static string ToString(WFNightWave nightwave)
         {
             var sb = new StringBuilder();
@@ -19,8 +21,9 @@ namespace TRKS.WF.QQBot
             if (challenges.Any())
             {
                 sb.AppendLine("一天内将过期: ");
-                sb.AppendLine("    ");
+                sb.Append("    ");
                 sb.Append(ToString(challenges.ToArray()));
+                sb.AppendLine();
             }
 
             challenges =
@@ -28,16 +31,18 @@ namespace TRKS.WF.QQBot
             if (challenges.Any())
             {
                 sb.AppendLine("三天内将过期: ");
-                sb.AppendLine("    ");
+                sb.Append("    ");
                 sb.Append(ToString(challenges.ToArray()));
+                sb.AppendLine();
             }
             challenges =
                 nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(3));
             if (challenges.Any())
             {
                 sb.AppendLine("七天内将过期: ");
-                sb.AppendLine("    ");
+                sb.Append("    ");
                 sb.Append(ToString(challenges.ToArray()));
+                sb.AppendLine();
             }
 
             return sb.ToString().Trim();
@@ -53,6 +58,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
+        [Pure]
         public static string ToString(List<Event> events)
         {
             var sb = new StringBuilder();
@@ -69,7 +75,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-
+        [Pure]
         public static string ToString(PersistentEnemie enemy)
         {
             var sb = new StringBuilder();
@@ -82,6 +88,7 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
 
         }
+        [Pure]
         public static string ToString(WFAlert alert)
         {
             var mission = alert.Mission;
@@ -94,7 +101,7 @@ namespace TRKS.WF.QQBot
                    //$"-过期时间: {alert.Expiry}({time} 后)" +
                    $"- 过期时间: {time} 后";
         }
-
+        [Pure]
         public static string ToString(List<Relic> relics)
         {
             var sb = new StringBuilder();
@@ -109,6 +116,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
+        [Pure]
         public static string ToString(List<RivenInfo> infos)
         {
             var weapon = infos.First().item_Class;
@@ -137,6 +145,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
+        [Pure]
         public static string ToString(List<Fissure> fissures)
         {
             var sb = new StringBuilder();
@@ -151,6 +160,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
+        [Pure]
         public static string ToString(SyndicateMission mission, int index)
         {
             var sb = new StringBuilder();
@@ -184,6 +194,7 @@ namespace TRKS.WF.QQBot
             
             return sb.ToString().Trim();
         }
+        [Pure]
         public static string ToString(WFInvasion inv)
         {
             var sb = new StringBuilder();
@@ -202,7 +213,7 @@ namespace TRKS.WF.QQBot
             sb.Append($"进度 {100 - completion}%");
             return sb.ToString();
         }
-
+        [Pure]
         public static string ToString(CetusCycle cycle)
         {
             var time = (cycle.Expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
@@ -217,7 +228,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString();
         }
-
+        [Pure]
         public static string ToString(VallisCycle cycle)
         {
             var time = (cycle.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
@@ -231,7 +242,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString();
         }
-
+        [Pure]
         public static string ToString(Sortie sortie)
         {
             var sb = new StringBuilder();
@@ -248,7 +259,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-
+        [Pure]
         public static string ToString(VoidTrader trader)
         {
             var sb = new StringBuilder();
@@ -275,7 +286,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-
+        [Pure]
         public static string ToString(WMInfo info)
         {
             var sb = new StringBuilder();
@@ -294,6 +305,7 @@ namespace TRKS.WF.QQBot
             // 以后不好看了再说
             return sb.ToString().Trim();
         }
+        [Pure]
         public static string ToString(WMInfoEx info)
         {
             var sb = new StringBuilder();
@@ -312,7 +324,7 @@ namespace TRKS.WF.QQBot
             // 这已经很难看了好吧
             return sb.ToString().Trim();
         }
-
+        [Pure]
         public static string ToString(RewardInfo reward)
         {
             var rewards = new List<string>();
@@ -328,7 +340,7 @@ namespace TRKS.WF.QQBot
 
             return string.Join(" + ", rewards);
         }
-        
+        [Pure]
         public static string ToString(Reward reward)
         {
             var rewards = new List<string>();
