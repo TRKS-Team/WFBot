@@ -15,36 +15,39 @@ namespace TRKS.WF.QQBot
         public static string ToString(WFNightWave nightwave)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("午夜电波每日/每周挑战: ");
-            var challenges =
-                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(0) && challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
-            if (challenges.Any())
+            var onedayleft =
+                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
+            nightwave.activeChallenges.ToList()
+                .RemoveAll(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
+            var challenges = nightwave.activeChallenges;
+            if (onedayleft.Any())
             {
-                sb.AppendLine("一天内将过期: ");
-                sb.Append("    ");
-                sb.Append(ToString(challenges.ToArray()));
-                sb.AppendLine();
+                sb.AppendLine("一天内将会过期: ");
+                sb.AppendLine(ToString(onedayleft.ToArray()));
             }
 
-            challenges =
-                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(1) && challenge.expiry - DateTime.Now < TimeSpan.FromDays(3));
+            challenges = nightwave.activeChallenges.Where(challenge => challenge.isDaily).ToArray();
             if (challenges.Any())
             {
-                sb.AppendLine("三天内将过期: ");
-                sb.Append("    ");
-                sb.Append(ToString(challenges.ToArray()));
-                sb.AppendLine();
-            }
-            challenges =
-                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now > TimeSpan.FromDays(3));
-            if (challenges.Any())
-            {
-                sb.AppendLine("七天内将过期: ");
-                sb.Append("    ");
-                sb.Append(ToString(challenges.ToArray()));
-                sb.AppendLine();
+                sb.AppendLine("每日挑战(1000): ");
+                sb.AppendLine(ToString(challenges));
             }
 
+            challenges = nightwave.activeChallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToArray();
+            if (challenges.Any())
+            {
+                sb.AppendLine("每周挑战(3000): ");
+                sb.AppendLine(ToString(challenges));
+            }
+
+            challenges = nightwave.activeChallenges.Where(challenge => challenge.isElite).ToArray();
+            if(challenges.Any())
+            {
+                sb.AppendLine("精英每周挑战(5000): ");
+                sb.AppendLine(ToString(challenges));
+            }
+            // 不要尝试去读这个
+            // 你会发现我真是个傻逼    
             return sb.ToString().Trim();
         }
 
@@ -53,7 +56,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             foreach (var challenge in challenges)
             {
-                sb.Append($"{challenge.reputation}声望[{challenge.desc}] ");
+                sb.AppendLine($"[{challenge.desc}]({challenge.reputation}) ");
             }
 
             return sb.ToString().Trim();
