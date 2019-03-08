@@ -56,7 +56,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             foreach (var challenge in challenges)
             {
-                sb.AppendLine(withreputation? $"[{challenge.desc}]({challenge.reputation}) " : $"[{challenge.desc}] ");
+                sb.AppendLine(withreputation? $"    [{challenge.desc}]({challenge.reputation}) " : $"    [{challenge.desc}] ");
             }
 
             return sb.ToString().Trim();
