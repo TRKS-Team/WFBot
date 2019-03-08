@@ -23,40 +23,40 @@ namespace TRKS.WF.QQBot
             if (onedayleft.Any())
             {
                 sb.AppendLine("一天内将会过期: ");
-                sb.AppendLine(ToString(onedayleft.ToArray()));
+                sb.AppendLine(ToString(onedayleft.ToArray(), true));
             }
 
             challenges = nightwave.activeChallenges.Where(challenge => challenge.isDaily).ToArray();
             if (challenges.Any())
             {
                 sb.AppendLine("每日挑战(1000): ");
-                sb.AppendLine(ToString(challenges));
+                sb.AppendLine(ToString(challenges, false));
             }
 
             challenges = nightwave.activeChallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToArray();
             if (challenges.Any())
             {
                 sb.AppendLine("每周挑战(3000): ");
-                sb.AppendLine(ToString(challenges));
+                sb.AppendLine(ToString(challenges, false));
             }
 
             challenges = nightwave.activeChallenges.Where(challenge => challenge.isElite).ToArray();
             if(challenges.Any())
             {
                 sb.AppendLine("精英每周挑战(5000): ");
-                sb.AppendLine(ToString(challenges));
+                sb.AppendLine(ToString(challenges, false));
             }
             // 不要尝试去读这个
             // 你会发现我真是个傻逼    
             return sb.ToString().Trim();
         }
 
-        public static string ToString(Activechallenge[] challenges)
+        public static string ToString(Activechallenge[] challenges, bool withreputation)
         {
             var sb = new StringBuilder();
             foreach (var challenge in challenges)
             {
-                sb.AppendLine($"[{challenge.desc}]({challenge.reputation}) ");
+                sb.AppendLine(withreputation? $"[{challenge.desc}]({challenge.reputation}) " : $"[{challenge.desc}] ");
             }
 
             return sb.ToString().Trim();
