@@ -23,28 +23,28 @@ namespace TRKS.WF.QQBot
             if (onedayleft.Any())
             {
                 sb.AppendLine("一天内将会过期: ");
-                sb.AppendLine(ToString(onedayleft.ToArray(), true));
+                sb.AppendLine("    " + ToString(onedayleft.ToArray(), true));
             }
 
             challenges = nightwave.activeChallenges.Where(challenge => challenge.isDaily).ToArray();
             if (challenges.Any())
             {
                 sb.AppendLine("每日挑战(1000): ");
-                sb.AppendLine(ToString(challenges, false));
+                sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = nightwave.activeChallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToArray();
             if (challenges.Any())
             {
                 sb.AppendLine("每周挑战(3000): ");
-                sb.AppendLine(ToString(challenges, false));
+                sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = nightwave.activeChallenges.Where(challenge => challenge.isElite).ToArray();
             if(challenges.Any())
             {
                 sb.AppendLine("精英每周挑战(5000): ");
-                sb.AppendLine(ToString(challenges, false));
+                sb.AppendLine("    " + ToString(challenges, false));
             }
             // 不要尝试去读这个
             // 你会发现我真是个傻逼    
