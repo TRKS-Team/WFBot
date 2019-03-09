@@ -11,6 +11,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using Settings;
 
 namespace TRKS.WF.QQBot
@@ -268,12 +269,12 @@ namespace TRKS.WF.QQBot
             var sw = Stopwatch.StartNew();
             Task.WaitAll(
                 Downloader.GetCacheOrDownload<Alert[]>   ($"{source}WF_Alert.json"   , alerts    => api.Alert    = alerts),
-                Downloader.GetCacheOrDownload<Dict[]>    ($"{source}WF_Dict.json"    , dicts     => api.Dict     = dicts),
-                Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs      => api.Invasion = invs),
-                Downloader.GetCacheOrDownload<Sale[]>    ($"{source}WF_Sale.json"    , sales     => api.Sale     = sales),
-                Downloader.GetCacheOrDownload<Riven[]>   ($"{source}WF_Riven.json"   , rivens    => api.Riven    = rivens),
-                Downloader.GetCacheOrDownload<Relic[]>   ($"{source}WF_Relic.json"   , relics    => api.Relic    = relics),
-                Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers),
+                Downloader.GetCacheOrDownload<Dict[]>     ($"{source}WF_Dict.json"     , dicts     => api.Dict      = dicts),
+                Downloader.GetCacheOrDownload<Invasion[]> ($"{source}WF_Invasion.json" , invs      => api.Invasion  = invs),
+                Downloader.GetCacheOrDownload<Sale[]>     ($"{source}WF_Sale.json"     , sales     => api.Sale      = sales),
+                Downloader.GetCacheOrDownload<Riven[]>    ($"{source}WF_Riven.json"    , rivens    => api.Riven     = rivens),
+                Downloader.GetCacheOrDownload<Relic[]>    ($"{source}WF_Relic.json"    , relics    => api.Relic     = relics),
+                Downloader.GetCacheOrDownload<Modifier[]> ($"{source}WF_Modifier.json" , modifiers => api.Modifier  = modifiers),
                 Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
             );
 
@@ -283,45 +284,45 @@ namespace TRKS.WF.QQBot
 
         public string GetTranslateResult(string str)
         {
-            var sb = new StringBuilder();
-            if (string.IsNullOrEmpty(str))
+            if (str.IsNullOrEmpty())
             {
-                sb.AppendLine("关键词为空啊.");
+                 return "关键词为空啊.";
+            }
+
+
+            /*var formatedDict = translateApi.Dict.Select(dict => new Dict
+                    {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();*/
+            var zhResults = translateApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
+            var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
+            if (!zhResults.Any() && !enResults.Any())
+            {
+                return "并没有查询到任何翻译,请检查源名.";
+            }
+
+            var sb = new StringBuilder();
+
+            if (zhResults.Any())
+            {
+                sb.AppendLine("下面是中文 => 英文的结果:");
+                foreach (var zhResult in zhResults)
+                {
+                    sb.AppendLine($"{zhResult.Zh} |=>| {zhResult.En}");
+                }
             }
             else
             {
-                /*var formatedDict = translateApi.Dict.Select(dict => new Dict
-                    {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();*/
-                var zhResults = translateApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
-                var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
-                if (!zhResults.Any() && !enResults.Any())
+                sb.AppendLine("下面是 英文 => 中文的结果:");
+                foreach (var enResult in enResults)
                 {
-                    sb.AppendLine("并没有查询到任何翻译,请检查源名.");
+                    sb.AppendLine($"{enResult.En} |=>| {enResult.Zh}");
                 }
-                if (zhResults.Any())
-                {
-                    sb.AppendLine("下面是中文 => 英文的结果:");
-                    foreach (var zhResult in zhResults)
-                    {
-                        sb.AppendLine($"{zhResult.Zh} |=>| {zhResult.En}");
-                    }
-                }
-
-                if (enResults.Any())
-                {
-                    sb.AppendLine("下面是 英文 => 中文的结果:");
-                    foreach (var enResult in enResults)
-                    {
-                        sb.AppendLine($"{enResult.En} |=>| {enResult.Zh}");
-                    }
-                }
-
             }
+
             return sb.ToString().Trim();
         }
         public List<string> GetSimilarItem(string word)
         {
-            Fastenshtein.Levenshtein lev = new Fastenshtein.Levenshtein(word);
+            var lev = new Fastenshtein.Levenshtein(word);
             var distancelist = new SortedSet<StringInfo>();
             foreach (var sale in translateApi.Sale)
             {
@@ -395,7 +396,7 @@ namespace TRKS.WF.QQBot
         private string TranslateNode(string node)
         {
             var result = "";
-            if (!string.IsNullOrEmpty(node))
+            if (!node.IsNullOrEmpty())
             {
                 var strings = node.Split('(');
                 var nodeRegion = strings[1].Split(')')[0];

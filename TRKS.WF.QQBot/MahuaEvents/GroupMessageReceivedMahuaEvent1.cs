@@ -79,7 +79,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         void Riven(string word)
         {
             word = word.Format();
-            _rmSearcher.SendRiveninfos(Group, word);
+            _rmSearcher.SendRivenInfos(Group, word);
         }
 
         [Matchers("翻译")]

@@ -81,7 +81,7 @@ namespace TRKS.WF.QQBot
         public void SendEvent(string group)
         {
             var events = api.GetEvents();
-            if (events.Count > 0)
+            if (events.Any())
             {
                 var msg = WFFormatter.ToString(events);
                 Messenger.SendGroup(group, msg.AddPlatformInfo());
