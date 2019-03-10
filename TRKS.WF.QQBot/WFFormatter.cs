@@ -15,32 +15,35 @@ namespace TRKS.WF.QQBot
         public static string ToString(WFNightWave nightwave)
         {
             var sb = new StringBuilder();
+            sb.AppendLine("以下是午夜电波每日每周挑战: ");
+            sb.AppendLine();
             var onedayleft =
                 nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
-            nightwave.activeChallenges.ToList()
-                .RemoveAll(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
-            var challenges = nightwave.activeChallenges;
+            var elsechallenges = nightwave.activeChallenges.ToList();
+
+            elsechallenges.RemoveAll(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
+            var challenges = elsechallenges;
             if (onedayleft.Any())
             {
                 sb.AppendLine("一天内将会过期: ");
-                sb.AppendLine("    " + ToString(onedayleft.ToArray(), true));
+                sb.AppendLine("    " + ToString(onedayleft.ToList(), true));
             }
 
-            challenges = nightwave.activeChallenges.Where(challenge => challenge.isDaily).ToArray();
+            challenges = elsechallenges.Where(challenge => challenge.isDaily).ToList();
             if (challenges.Any())
             {
                 sb.AppendLine("每日挑战(1000): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
-            challenges = nightwave.activeChallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToArray();
+            challenges = elsechallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToList();
             if (challenges.Any())
             {
                 sb.AppendLine("每周挑战(3000): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
-            challenges = nightwave.activeChallenges.Where(challenge => challenge.isElite).ToArray();
+            challenges = elsechallenges.Where(challenge => challenge.isElite).ToList();
             if(challenges.Any())
             {
                 sb.AppendLine("精英每周挑战(5000): ");
@@ -51,7 +54,7 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
 
-        public static string ToString(Activechallenge[] challenges, bool withreputation)
+        public static string ToString(List<Activechallenge> challenges, bool withreputation)
         {
             var sb = new StringBuilder();
             foreach (var challenge in challenges)
