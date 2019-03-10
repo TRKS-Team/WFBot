@@ -159,6 +159,9 @@ namespace TRKS.WF.QQBot
         {
             return $"{str}\r\n可使用: /help来查看机器人的更多说明.";
         }
+
+        public static bool IsAllEnglishCharacter(this string source) => source.All(char.IsLetterOrDigit);
+
     }
 
 }

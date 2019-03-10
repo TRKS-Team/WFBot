@@ -346,11 +346,17 @@ namespace TRKS.WF.QQBot
         {
             foreach (var challenge in nightwave.activeChallenges)
             {
-                challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format());
-                challenge.title = nightwaveTranslator.Translate(challenge.title.Format());
+                var desc = nightwaveTranslator.Translate(challenge.desc.Format());
+                challenge.desc = desc.IsAllEnglishCharacter() ? challenge.desc : desc;
+
+                var title = nightwaveTranslator.Translate(challenge.title.Format());
+                challenge.title = title.IsAllEnglishCharacter() ? challenge.title : title;
+
                 challenge.expiry = GetRealTime(challenge.expiry);
             }
         }
+
+
         public void TranslatePersistentEnemies(List<PersistentEnemie> enemies)
         {
             foreach (var enemy in enemies)
