@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Newbe.Mahua;
@@ -150,11 +151,11 @@ namespace TRKS.WF.QQBot
         private static string ToString(CommitData[] commits)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("以下是Github的3条Commit");
+            sb.AppendLine("以下是 GitHub 的 3 条 Commit");
             foreach (var commit in commits.Take(3))
             {
                 sb.AppendLine(
-                    $"  {commit.commit.committer.date} {commit.commit.committer.name}: [{commit.commit.message.Replace(Environment.NewLine, "")}]");
+                    $"  {commit.commit.committer.date} {commit.commit.committer.name}: [{Regex.Replace(commit.commit.message, @"\r\n?|\n", "")}]");
             }
 
             return sb.ToString().Trim();

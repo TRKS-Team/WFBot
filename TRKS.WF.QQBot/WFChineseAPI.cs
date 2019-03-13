@@ -353,7 +353,7 @@ namespace TRKS.WF.QQBot
         {
             foreach (var challenge in nightwave.activeChallenges)
             {
-                challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format());
+                challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format().Replace(",", ""));
                 challenge.title = nightwaveTranslator.Translate(challenge.title.Format());
                 challenge.expiry = GetRealTime(challenge.expiry);
             }

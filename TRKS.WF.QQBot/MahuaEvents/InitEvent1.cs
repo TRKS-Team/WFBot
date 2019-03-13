@@ -55,6 +55,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
             WFResource.WFTranslator.UpdateTranslateApi();
             Config.Instance.localsha = sha;
+            Config.Save();
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
