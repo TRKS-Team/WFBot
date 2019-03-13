@@ -142,22 +142,22 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline? "在线" : "离线")}]");
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
+            var commit = CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits");
+            sb.AppendLine(ToString(commit));
             sb.ToString().Trim().AddPlatformInfo().SendToGroup(group);
         }
 
-        public static string ToString(PingReply reply)
+        private static string ToString(CommitData[] commits)
         {
-            switch (reply.Status)
+            var sb = new StringBuilder();
+            sb.AppendLine("以下是Github的3条Commit");
+            foreach (var commit in commits.Take(3))
             {
-                case IPStatus.Unknown:
-                    return "未知";
-                case IPStatus.Success:
-                    return "正常";
-                case IPStatus.TimedOut:
-                    return "超时";
-                default:
-                    return "错误";
+                sb.AppendLine(
+                    $"  {commit.commit.committer.date} {commit.commit.committer.name}: [{commit.commit.message.Replace(Environment.NewLine, "")}]");
             }
+
+            return sb.ToString().Trim();
         }
         public static void SendHelpdoc(string group)
         {
