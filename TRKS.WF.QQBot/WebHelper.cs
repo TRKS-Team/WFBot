@@ -53,13 +53,6 @@ namespace TRKS.WF.QQBot
             var response = client.GetAsync(url).Result;
             return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
         }
-        public static PingReply Ping(string url)
-        {
-            var ping = new Ping();
-            var reply = ping.Send(url);
-            ping.Dispose();
-            return reply;
-        }
         public static T DownloadJson<T>(string url)
         {
             var sw = Stopwatch.StartNew();

@@ -21,6 +21,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         internal static int localVersion;
         private static volatile bool updating;
         internal static Timer timer1;
+        private static LexiconUpdater lexiconUpdater = new LexiconUpdater();
 
         static InitEvent1()
         {
@@ -95,7 +96,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     Messenger.SendDebugInfo($"机器人已启动，你使用的是官方构建，自动更新功能{(Config.Instance.AutoUpdate ? "已经启用" : "已经被关闭")}。");
                 }
 
-                WFResource.WFTranslator.TranslateSearchWord("上辈子日了狗, 这辈子 OOP.");
+                WFResource.WFTranslator.TranslateSearchWord("上辈子日了狗, 这辈子 OOP."); // ???????????????????????
             });
 
         }

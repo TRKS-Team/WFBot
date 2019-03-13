@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -57,7 +58,7 @@ namespace TRKS.WF.QQBot
     }
     public static class WFResource
     {
-        public static WFTranslator WFTranslator { get; } = new WFTranslator();
+        public static WFTranslator WFTranslator { get; set; } = new WFTranslator();
         public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
     }
 
@@ -187,8 +188,8 @@ namespace TRKS.WF.QQBot
 
     public class WFTranslator
     {
-        private Dictionary<string /*type*/, Translator> dictTranslators = new Dictionary<string, Translator>();
-        private Dictionary<string, Translator> searchwordTranslator = new Dictionary<string, Translator>();
+        private ConcurrentDictionary<string /*type*/, Translator> dictTranslators = new ConcurrentDictionary<string, Translator>();
+        private ConcurrentDictionary<string, Translator> searchwordTranslator = new ConcurrentDictionary<string, Translator>();
         private Translator nightwaveTranslator = new Translator();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
@@ -198,45 +199,50 @@ namespace TRKS.WF.QQBot
 
         public WFTranslator()
         {
-            dictTranslators.Add("All", new Translator());
-            dictTranslators.Add("WM", new Translator());
+            InitTranslators();
+        }
 
+        private void InitTranslators()
+        {
+            dictTranslators.Clear();
+                dictTranslators.TryAdd("All", new Translator());
+                dictTranslators.TryAdd("WM", new Translator());
             foreach (var dict in translateApi.Dict)
             {
                 var type = dict.Type;
                 if (!dictTranslators.ContainsKey(type))
                 {
-                    dictTranslators.Add(type, new Translator()); 
-                }               
+                    dictTranslators.TryAdd(type, new Translator());
+                }
                 dictTranslators["All"].AddEntry(dict.En, dict.Zh);
                 dictTranslators[type].AddEntry(dict.En, dict.Zh);
             }
-            
+            searchwordTranslator.Clear();
             foreach (var sale in translateApi.Sale)
             {
                 if (!searchwordTranslator.ContainsKey("Word"))
                 {
-                    searchwordTranslator.Add("Word", new Translator());
+                    searchwordTranslator.TryAdd("Word", new Translator());
                 }
 
                 if (!searchwordTranslator.ContainsKey("Item"))
                 {
-                    searchwordTranslator.Add("Item", new Translator());
+                    searchwordTranslator.TryAdd("Item", new Translator());
                 }
                 searchwordTranslator["Word"].AddEntry(sale.Zh.Format(), sale.Search);
                 searchwordTranslator["Item"].AddEntry(sale.Search, sale.Zh);
             }
-
+            invasionTranslator.Clear();
             foreach (var invasion in translateApi.Invasion)
             {
                 invasionTranslator.AddEntry(invasion.En, invasion.Zh);
             }
-
+            alertTranslator.Clear();
             foreach (var alert in translateApi.Alert)
             {
                 alertTranslator.AddEntry(alert.En, alert.Zh);
             }
-
+            weapons.Clear();
             foreach (var riven in translateApi.Riven)
             {
                 weapons.Add(riven.Name.Format());
@@ -246,11 +252,11 @@ namespace TRKS.WF.QQBot
             {
                 if (!dictTranslators.ContainsKey("Modifier"))
                 {
-                    dictTranslators.Add("Modifier", new Translator());
+                    dictTranslators.TryAdd("Modifier", new Translator());
                 }
                 dictTranslators["Modifier"].AddEntry(modifier.en, modifier.zh);
             }
-
+            nightwaveTranslator.Clear();
             foreach (var wave in translateApi.NightWave)
             {
                 nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
@@ -260,6 +266,7 @@ namespace TRKS.WF.QQBot
         public void UpdateTranslateApi()
         {
             translateApi = GetTranslateApi();
+            InitTranslators();
         }
         private static WFApi GetTranslateApi()
         {
@@ -618,6 +625,11 @@ namespace TRKS.WF.QQBot
         public void AddEntry(string source, string target)
         {
             dic[source] = target;
+        }
+
+        public void Clear()
+        {
+            dic.Clear();
         }
     }
 }

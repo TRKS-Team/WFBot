@@ -222,6 +222,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="Downloader.cs" />
+    <Compile Include="LexiconUpdater.cs" />
     <Compile Include="MahuaEvents\AutoUpdateRR.cs" />
     <Compile Include="Cylib.cs" />
     <Compile Include="MahuaEvents\HotUpdateInfo.cs" />

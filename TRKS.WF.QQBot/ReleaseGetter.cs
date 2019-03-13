@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TRKS.WF.QQBot;
 
-namespace WTF
+namespace TRKS.WF.QQBot
 {
     public static class ReleaseGetter
     {

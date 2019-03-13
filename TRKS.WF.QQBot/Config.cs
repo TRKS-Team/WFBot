@@ -39,6 +39,8 @@ namespace TRKS.WF.QQBot
         public bool IsAlertRequiredRareItem = true;
 
         public bool AutoUpdate = true;
+
+        public string localsha;
     }
 
     [Configuration("CoquettishConfig")]
