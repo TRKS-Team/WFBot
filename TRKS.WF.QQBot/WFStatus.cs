@@ -13,8 +13,8 @@ namespace TRKS.WF.QQBot
 
     public class WFStatus
     {
-        private readonly WFChineseAPI api = WFResource.WFChineseApi;
-        private readonly WFTranslator translator = WFResource.WFTranslator;
+        private WFChineseAPI api => WFResource.WFChineseApi;
+        private WFTranslator translator => WFResource.WFTranslator;
         private string platform => Config.Instance.Platform.ToString();
 
         public void SendCycles(string group)

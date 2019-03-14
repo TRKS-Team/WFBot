@@ -20,7 +20,7 @@ namespace TRKS.WF.QQBot
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
         private bool _inited;
         public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(3).TotalMilliseconds);
-        private readonly WFChineseAPI api = WFResource.WFChineseApi;
+        private WFChineseAPI api => WFResource.WFChineseApi;
         private string platform => Config.Instance.Platform.ToString();
         private List<WFAlert> AlertPool = new List<WFAlert>();
         private List<WFInvasion> InvasionPool = new List<WFInvasion>();

@@ -14,7 +14,7 @@ namespace TRKS.WF.QQBot
     public class RMSearcher
     {
         private Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
-        private WFTranslator translator = WFResource.WFTranslator;
+        private WFTranslator translator => WFResource.WFTranslator;
 
         private bool isWFA = !Config.Instance.ClientId.IsNullOrWhiteSpace() &&
                              !Config.Instance.ClientSecret.IsNullOrWhiteSpace();

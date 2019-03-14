@@ -58,13 +58,41 @@ namespace TRKS.WF.QQBot
     }
     public static class WFResource
     {
-        public static WFTranslator WFTranslator { get; set; } = new WFTranslator();
+        public static WFTranslator WFTranslator { get; private set; } = new WFTranslator();
         public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
+        public static WFApi WFApi { get; private set; } = GetTranslateApi();
+        private static WFApi GetTranslateApi()
+        {
+            var api = new WFApi();
+            Messenger.SendDebugInfo("正在加载翻译 API.");
+            var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/";
+            var sw = Stopwatch.StartNew();
+            Task.WaitAll(
+                Downloader.GetCacheOrDownload<Alert[]>($"{source}WF_Alert.json", alerts => api.Alert = alerts),
+                Downloader.GetCacheOrDownload<Dict[]>($"{source}WF_Dict.json", dicts => api.Dict = dicts),
+                Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs => api.Invasion = invs),
+                Downloader.GetCacheOrDownload<Sale[]>($"{source}WF_Sale.json", sales => api.Sale = sales),
+                Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
+                Downloader.GetCacheOrDownload<Relic[]>($"{source}WF_Relic.json", relics => api.Relic = relics),
+                Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers),
+                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
+            );
+
+            Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
+            // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
+            return api;
+        }
+
+        public static void UpdateTranslateApi()
+        {
+            WFApi = GetTranslateApi();
+            WFTranslator = new WFTranslator();
+        }
     }
 
     public class WFChineseAPI
     {
-        private WFTranslator translator = WFResource.WFTranslator;
+        private WFTranslator translator => WFResource.WFTranslator;
         private string platform => Config.Instance.Platform.GetSymbols().First();
 
         public List<WFInvasion> GetInvasions()
@@ -194,8 +222,8 @@ namespace TRKS.WF.QQBot
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
-        private WFApi translateApi = GetTranslateApi();
-        private static string source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/";
+        private WFApi translateApi => WFResource.WFApi;
+
 
         public WFTranslator()
         {
@@ -261,32 +289,6 @@ namespace TRKS.WF.QQBot
             {
                 nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
             }
-        }
-
-        public void UpdateTranslateApi()
-        {
-            translateApi = GetTranslateApi();
-            InitTranslators();
-        }
-        private static WFApi GetTranslateApi()
-        {
-            var api = new WFApi();
-            Messenger.SendDebugInfo("正在加载翻译 API.");
-
-            var sw = Stopwatch.StartNew();
-            Task.WaitAll(
-                Downloader.GetCacheOrDownload<Alert[]>   ($"{source}WF_Alert.json"   , alerts    => api.Alert    = alerts),
-                Downloader.GetCacheOrDownload<Dict[]>     ($"{source}WF_Dict.json"     , dicts     => api.Dict      = dicts),
-                Downloader.GetCacheOrDownload<Invasion[]> ($"{source}WF_Invasion.json" , invs      => api.Invasion  = invs),
-                Downloader.GetCacheOrDownload<Sale[]>     ($"{source}WF_Sale.json"     , sales     => api.Sale      = sales),
-                Downloader.GetCacheOrDownload<Riven[]>    ($"{source}WF_Riven.json"    , rivens    => api.Riven     = rivens),
-                Downloader.GetCacheOrDownload<Relic[]>    ($"{source}WF_Relic.json"    , relics    => api.Relic     = relics),
-                Downloader.GetCacheOrDownload<Modifier[]> ($"{source}WF_Modifier.json" , modifiers => api.Modifier  = modifiers),
-                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
-            );
-
-            Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
-            return api;
         }
 
         public string GetTranslateResult(string str)

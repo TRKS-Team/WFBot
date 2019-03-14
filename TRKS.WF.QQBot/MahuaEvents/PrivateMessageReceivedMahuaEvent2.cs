@@ -146,7 +146,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [Matchers("更新翻译API")]
         void UpdateTranslateApi()
         {
-            WFResource.WFTranslator.UpdateTranslateApi();
+            WFResource.UpdateTranslateApi();
         }
     }
 

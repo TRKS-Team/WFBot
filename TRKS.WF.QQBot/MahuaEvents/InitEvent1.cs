@@ -53,7 +53,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             var sha = commit.First().sha;
             if (sha == Config.Instance.localsha) return;
             Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
-            WFResource.WFTranslator.UpdateTranslateApi();
+            WFResource.UpdateTranslateApi();
             Config.Instance.localsha = sha;
             Config.Save();
         }

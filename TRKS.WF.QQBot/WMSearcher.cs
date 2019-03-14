@@ -10,7 +10,7 @@ namespace TRKS.WF.QQBot
 {
     public class WMSearcher
     {
-        private readonly WFTranslator translator = WFResource.WFTranslator;
+        private WFTranslator translator => WFResource.WFTranslator;
         private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
                              !string.IsNullOrEmpty(Config.Instance.ClientSecret);
 
