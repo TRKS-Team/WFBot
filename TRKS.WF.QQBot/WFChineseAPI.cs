@@ -58,9 +58,10 @@ namespace TRKS.WF.QQBot
     }
     public static class WFResource
     {
-        public static WFTranslator WFTranslator { get; private set; } = new WFTranslator();
-        public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
         public static WFApi WFApi { get; private set; } = GetTranslateApi();
+        public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
+        public static WFTranslator WFTranslator { get; private set; } = new WFTranslator();
+
         private static WFApi GetTranslateApi()
         {
             var api = new WFApi();
