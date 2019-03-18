@@ -63,7 +63,7 @@ namespace TRKS.WF.QQBot
                 {
                     try
                     {
-                        return new HttpClient().GetJsonAsync<T>(url).Result;
+                        return new HttpClient().GetStringAsync(url).Result.JsonDeserialize<T>();
                     }
                     catch (Exception)
                     {
