@@ -35,7 +35,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     Config.Instance.WFGroupList.Add(context.ToGroup);
                 }
                 Messenger.SendDebugInfo($"接受了来自{context.FromQq}邀请加入群{context.ToGroup}的邀请.");
-                Messenger.SendHelpdoc(context.ToGroup);
+                Messenger.SendHelpdoc(context.ToGroup.ToGroupNumber());
             }
         }
     }

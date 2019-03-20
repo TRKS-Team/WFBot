@@ -165,7 +165,7 @@ namespace Settings
         {
             foreach (var group in Config.Instance.WFGroupList)
             {
-                Messenger.SendGroup(group, $"[来自管理者]通知: {textBox3.Text}");
+                Messenger.SendGroup(group.ToGroupNumber(), $"[来自管理者]通知: {textBox3.Text}");
             }
         }
 

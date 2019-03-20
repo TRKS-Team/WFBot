@@ -61,7 +61,7 @@ namespace TRKS.WF.QQBot
                 .ToArray();           
         }
 
-        public void SendWMInfo(string item, string group)
+        public void SendWMInfo(string item, GroupNumber group)
         {
             var searchword = translator.TranslateSearchWord(item);
             var formateditem = item;

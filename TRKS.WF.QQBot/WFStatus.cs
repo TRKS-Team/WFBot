@@ -17,7 +17,7 @@ namespace TRKS.WF.QQBot
         private WFTranslator translator => WFResource.WFTranslator;
         private string platform => Config.Instance.Platform.ToString();
 
-        public void SendCycles(string group)
+        public void SendCycles(GroupNumber group)
         {
             var cetuscycle = api.GetCetusCycle();
             var valliscycle = api.GetVallisCycle();
@@ -27,7 +27,7 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
-        public void SendSortie(string group)
+        public void SendSortie(GroupNumber group)
         {
             var sortie = api.GetSortie();
             var msg = WFFormatter.ToString(sortie);
@@ -35,7 +35,7 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
-        public void SendVoidTrader(string group)
+        public void SendVoidTrader(GroupNumber group)
         {
             var trader = api.GetVoidTrader();
             var msg = WFFormatter.ToString(trader);
@@ -43,7 +43,7 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
-        public void SendFortunaMissions(string group, int index)
+        public void SendFortunaMissions(GroupNumber group, int index)
         {
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
@@ -52,7 +52,7 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
         }
 
-        public void SendCetusMissions(string group, int index)
+        public void SendCetusMissions(GroupNumber group, int index)
         {
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
@@ -62,14 +62,14 @@ namespace TRKS.WF.QQBot
         }
 
         //public void SendFissures(string group, List<string> words)
-        public void SendFissures(string group)
+        public void SendFissures(GroupNumber group)
         {
             var fissures = api.GetFissures().Where(fissure => fissure.active).ToList();
             var msg = WFFormatter.ToString(fissures);
             Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
-        public void SendRelicInfo(string group, string word)
+        public void SendRelicInfo(GroupNumber group, string word)
         {
             var relics = translator.GetRelicInfo(word);
             var msg = $"{WFFormatter.ToString(relics)}\r\n" +
@@ -78,7 +78,7 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, msg.AddPlatformInfo());
         }
 
-        public void SendEvent(string group)
+        public void SendEvent(GroupNumber group)
         {
             var events = api.GetEvents();
             if (events.Any())
@@ -92,14 +92,14 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        public void SendNightWave(string group)
+        public void SendNightWave(GroupNumber group)
         {
             var nightwave = api.GetNightWave();
             var msg = WFFormatter.ToString(nightwave).AddPlatformInfo();
             Messenger.SendGroup(group, msg);
         }
 
-        public void SendTranslateResult(string group, string str)
+        public void SendTranslateResult(GroupNumber group, string str)
         {
             var msg = translator.GetTranslateResult(str);
             Messenger.SendGroup(group, msg);
