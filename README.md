@@ -10,13 +10,13 @@
 
 ![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**   
-**您的赞助...可能会让机器人变得更好吧..?**
+**您的赞助会用来维持公用机器人,也能推动我继续维护本插件.**
 
 > 本插件附带自动更新.  
 > 最新的插件 会通过 自动更新 部署到 自动更新版本的机器人 上, 如果我手滑引爆了所有机器人, 请不要慌张.  
 > 如果真的全爆了, **没关系** 因为我的机器人也爆了.  
 > 很快 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
-> 此处记录引爆次数: \*3
+> 此处记录引爆次数: \*4
 
 > 目前有一个由我维护, 暂时稳定的机器人, 现在可以直接邀请入群 QQ: `2504645673`  
 > 个人用户可添加 QQ 群: [938873897](http://shang.qq.com/wpa/qunwpa?idkey=0171441db21449373d1070bdcb5b26d272131bd3579f7816586446c0bbb8ec12)  
@@ -43,7 +43,7 @@
 
 #### 从 GitHub Release / AppVeyor (推荐)
 
-1. 下载 [.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. (Windows 10 最新版自带)
+1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 .NET Framework 4.7.1 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带)
 2. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 3. 享受这个插~~♂~~件的的快感吧!
 

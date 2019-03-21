@@ -163,10 +163,7 @@ namespace Settings
 
         private void button3_Click(object sender, EventArgs e)
         {
-            foreach (var group in Config.Instance.WFGroupList)
-            {
-                Messenger.SendGroup(group.ToGroupNumber(), $"[来自管理者]通知: {textBox3.Text}");
-            }
+            Messenger.Broadcast($"[来自管理者]通知: {textBox3.Text}"); 
         }
 
         private void label9_Click(object sender, EventArgs e)
