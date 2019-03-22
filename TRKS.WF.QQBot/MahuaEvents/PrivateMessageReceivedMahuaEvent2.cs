@@ -148,6 +148,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             WFResource.UpdateTranslateApi();
         }
+        [RequireAdmin]
+        [Matchers("超级广播")]
+        void Broadcast(string content)
+        {
+            Messenger.Broadcast(content);
+        }
     }
 
     public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>, ISender
