@@ -2,6 +2,6 @@
 {
     public interface ISender
     {
-        string Sender { get; }
+        HumanQQNumber Sender { get; }
     }
 }

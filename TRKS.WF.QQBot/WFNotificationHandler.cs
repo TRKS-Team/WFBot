@@ -154,7 +154,7 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        public void SendAllPersistentEnemies(string group)
+        public void SendAllPersistentEnemies(GroupNumber group)
         {
             var enemies = StalkerPool;
             var sb = new StringBuilder();
@@ -165,7 +165,7 @@ namespace TRKS.WF.QQBot
             }
             Messenger.SendGroup(group, sb.ToString().Trim());
         }
-        public void SendAllInvasions(string group)
+        public void SendAllInvasions(GroupNumber group)
         {
             UpdateInvasionPool();
             var invasions = InvasionPool;
@@ -207,7 +207,7 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        public void SendAllAlerts(string group)
+        public void SendAllAlerts(GroupNumber group)
         {
             UpdateAlertPool();
             var alerts = AlertPool;

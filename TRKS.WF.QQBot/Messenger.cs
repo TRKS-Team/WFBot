@@ -61,12 +61,13 @@ namespace TRKS.WF.QQBot
         public static void SendDebugInfo(string content)
         {
             if (Config.Instance.QQ.IsNumber())
-                SendPrivate(Config.Instance.QQ, content);
+                SendPrivate(Config.Instance.QQ.ToHumanQQNumber(), content);
             Trace.WriteLine($"Debug message: {content}", "Message");
         }
 
-        public static void SendPrivate(string qq, string content)
+        public static void SendPrivate(HumanQQNumber humanQQ, string content)
         {
+            var qq = humanQQ.QQ;
             lock (typeof(Messenger))
             {
                 if (PrivateMessageDictionary.ContainsKey(qq))
@@ -82,8 +83,9 @@ namespace TRKS.WF.QQBot
 
         private static Dictionary<string, string> previousMessageDic = new Dictionary<string, string>();
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void SendGroup(string qq, string content)
+        public static void SendGroup(GroupNumber g, string content)
         {
+            var qq = g.QQ;
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
 
             previousMessageDic[qq] = content;
@@ -110,14 +112,14 @@ namespace TRKS.WF.QQBot
                     sb.AppendLine(content);
                     if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
-                    SendGroup(group, sb.ToString().Trim());
+                    SendGroup(group.ToGroupNumber(), sb.ToString().Trim());
                     count++;
                     Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
         }
 
-        public static void SendBotStatus(string group)
+        public static void SendBotStatus(GroupNumber group)
         {
             var sb = new StringBuilder();
             var apistat = WebHelper.TryGet("https://warframestat.us");
@@ -160,7 +162,7 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-        public static void SendHelpdoc(string group)
+        public static void SendHelpdoc(GroupNumber group)
         {
             SendGroup(@group, @"欢迎查看机器人唯一指定帮助文档
 宣传贴地址: https://warframe.love/thread-230.htm
@@ -208,23 +210,44 @@ namespace TRKS.WF.QQBot
 
         /* 当麻理解不了下面的代码 */
         // 现在可以了
-        public static void SendToGroup(this string content, string qq)
+        public static void SendToGroup(this string content, GroupNumber qq)
         {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-            {
-                var api = robotSession.MahuaApi;
-                api.SendGroupMessage(qq, content);
-            }
+            SendGroup(qq, content);
         }
 
-        public static void SendToPrivate(this string content, string qq)
+        public static void SendToPrivate(this string content, HumanQQNumber qq)
         {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-            {
-                var api = robotSession.MahuaApi;
-                api.SendPrivateMessage(qq, content);
-            }
+            SendPrivate(qq, content);
         }
-        
+
+        public static GroupNumber ToGroupNumber(this string qq)
+        {
+            return new GroupNumber(qq);
+        }
+
+        public static HumanQQNumber ToHumanQQNumber(this string qq)
+        {
+            return new HumanQQNumber(qq);
+        }
+    }
+
+    public class GroupNumber
+    {
+        public string QQ { get; }
+
+        public GroupNumber(string qq)
+        {
+            QQ = qq;
+        }
+    }
+
+    public class HumanQQNumber
+    {
+        public string QQ { get; }
+
+        public HumanQQNumber(string qq)
+        {
+            QQ = qq;
+        }
     }
 }

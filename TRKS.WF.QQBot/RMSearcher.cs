@@ -67,7 +67,7 @@ namespace TRKS.WF.QQBot
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }
 
-        public void SendRivenInfos(string group, string weapon)
+        public void SendRivenInfos(GroupNumber group, string weapon)
         {
             try
             {

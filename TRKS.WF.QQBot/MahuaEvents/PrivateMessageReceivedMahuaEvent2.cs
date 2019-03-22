@@ -49,7 +49,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             if (HotUpdateInfo.PreviousVersion) return;
 
-            new PrivateMessageHandler(context.FromQq, context.Message).ProcessCommandInput();
+            new PrivateMessageHandler(context.FromQq.ToHumanQQNumber(), context.Message).ProcessCommandInput();
             //                SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 6 皮笑肉不笑
         }
     }
@@ -123,7 +123,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (Config.Instance.WFGroupList.Contains(groupStr)) return "群号已经存在";
             Config.Instance.WFGroupList.Add(groupStr);
 
-            SendGroup(groupStr, $"{Sender}已经在私聊启用了此群的新任务通知功能.");
+            SendGroup(groupStr.ToGroupNumber(), $"{Sender}已经在私聊启用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}启用了通知功能.");
 
             return "完事.";
@@ -137,7 +137,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             var groupStr = group.ToString();
             Config.Instance.WFGroupList.Remove(groupStr);
 
-            SendGroup(groupStr, $"{Sender}已经在私聊禁用了此群的新任务通知功能.");
+            SendGroup(groupStr.ToGroupNumber(), $"{Sender}已经在私聊禁用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}禁用了通知功能.");
 
             return "完事.";
@@ -158,12 +158,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
     public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>, ISender
     {
-        public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendPrivate(id, msg);
+        public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendPrivate(id.ID.ToHumanQQNumber(), msg);
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
-        public string Sender { get; }
+        public HumanQQNumber Sender { get; }
         public string Message { get; }
 
-        public PrivateMessageHandler(string sender, string message)
+        string ICommandHandler<PrivateMessageHandler>.Sender => Sender.QQ;
+
+        public PrivateMessageHandler(HumanQQNumber sender, string message)
         {
             Sender = sender;
             Message = message;

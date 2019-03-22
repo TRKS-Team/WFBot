@@ -45,7 +45,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                 message = message.StartsWith("/") ? message.Substring(1) : message;
 
-                var handler = new GroupMessageHandler(context.FromQq, context.FromGroup, message);
+                var handler = new GroupMessageHandler(context.FromQq.ToHumanQQNumber(), context.FromGroup.ToGroupNumber(), message);
                 var (matched, result) = handler.ProcessCommandInput();
 
             }, TaskCreationOptions.LongRunning);
@@ -170,23 +170,25 @@ namespace TRKS.WF.QQBot.MahuaEvents
         public Action<TargetID, Message> MessageSender { get; }
         public Action<Message> ErrorMessageSender { get; }
 
-        public string Sender { get; }
+        public HumanQQNumber Sender { get; }
         public string Message { get; }
-        public string Group { get; }
+        public GroupNumber Group { get; }
 
         internal static WFNotificationHandler WfNotificationHandler =>
             GroupMessageReceivedMahuaEvent1._WfNotificationHandler;
+
+        string ICommandHandler<GroupMessageHandler>.Sender => Group.QQ;
 
         private static readonly WFStatus _WFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
 
-        public GroupMessageHandler(string sender, string group, string message)
+        public GroupMessageHandler(HumanQQNumber sender, GroupNumber group, string message)
         {
             Sender = sender;
             MessageSender = (id, msg) =>
             {
-                SendGroup(id, msg);
+                SendGroup(id.ID.ToGroupNumber(), msg);
                 Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg.Content}].", "Message");
 
             };
