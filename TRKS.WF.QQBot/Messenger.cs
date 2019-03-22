@@ -229,6 +229,30 @@ namespace TRKS.WF.QQBot
         {
             return new HumanQQNumber(qq);
         }
+        private static List<GroupInfo> GetGroups()
+        {
+            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+            {
+                var mahuaApi = robotSession.MahuaApi;
+                var groups = mahuaApi.GetGroupsWithModel().Model.ToList();
+                return groups;
+            }
+        }
+
+        public static void SuperBroadcast(string content)
+        {
+            var groups = GetGroups().Select(g => g.Group);
+            Task.Factory.StartNew(() =>
+            {
+                foreach (var group in groups)
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine(content);
+                    SendGroup(group.ToGroupNumber(), sb.ToString().Trim());
+                    Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                }
+            }, TaskCreationOptions.LongRunning);
+        }
     }
 
     public class GroupNumber

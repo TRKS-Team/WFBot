@@ -152,7 +152,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [Matchers("超级广播")]
         void Broadcast(string content)
         {
-            Messenger.Broadcast(content);
+            Messenger.SuperBroadcast(content);
         }
     }
 
