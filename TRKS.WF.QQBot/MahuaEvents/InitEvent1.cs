@@ -41,22 +41,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 var timer = new Timer(TimeSpan.FromSeconds(delay).TotalMilliseconds);
                 timer1 = timer;
                 timer.Elapsed += Timer_Elapsed;
-                if (Config.Instance.AutoUpdate)
-                {
-                    timer.Start();
-                }
+                timer.Start();
+                
             }
         }
-        private void UpdateLexion()
-        {
-            var commit = CommitsGetter.Get("https://api.github.com/repos/Richasy/WFA_Lexicon/commits");
-            var sha = commit.First().sha;
-            if (sha == Config.Instance.localsha) return;
-            Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
-            WFResource.UpdateTranslateApi();
-            Config.Instance.localsha = sha;
-            Config.Save();
-        }
+
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -65,18 +54,24 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
             try
             {
-                UpdateLexion();
-                var releaseData = ReleaseGetter.Get();
-                var ver = new Version(releaseData.tag_name).Build;
-                if (ver != localVersion)
+                if (Config.Instance.UpdateLexion)
                 {
-                    if (updating) return;
-                    updating = true;
+                    WFResource.UpdateLexion();
+                }
+                if (Config.Instance.AutoUpdate)
+                {
+                    var releaseData = ReleaseGetter.Get();
+                    var ver = new Version(releaseData.tag_name).Build;
+                    if (ver != localVersion)
+                    {
+                        if (updating) return;
+                        updating = true;
 
-                    Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
-                    Messenger.Broadcast($"机器人开始了自动更新, 当前版本为v{localVersion}, 将会更新到v{ver}, 大约在1分钟内机器人不会回答你的问题.");
-                    AutoUpdateRR.Execute();
-                    Thread.Sleep(1000);
+                        Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
+                        Messenger.Broadcast($"机器人开始了自动更新, 当前版本为v{localVersion}, 将会更新到v{ver}, 大约在1分钟内机器人不会回答你的问题.");
+                        AutoUpdateRR.Execute();
+                        Thread.Sleep(1000);
+                    }
                 }
             }
             catch (WebException)

@@ -40,6 +40,8 @@ namespace TRKS.WF.QQBot
 
         public bool AutoUpdate = true;
 
+        public bool UpdateLexion = true;
+
         public string localsha;
     }
 

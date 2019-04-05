@@ -47,6 +47,7 @@ namespace Settings
             checkBox13.Checked = Config.Instance.IsThirdPartyWM;
             checkBox14.Checked = Config.Instance.IsAlertRequiredRareItem;
             checkBox233.Checked = Config.Instance.AutoUpdate;
+            checkBox12.Checked = Config.Instance.UpdateLexion;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -287,6 +288,11 @@ namespace Settings
         {
             Config.Instance.AutoUpdate = checkBox233.Checked;
             Config.Save();
+        }
+
+        private void checkBox12_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.UpdateLexion = checkBox12.Checked;
         }
     }
 

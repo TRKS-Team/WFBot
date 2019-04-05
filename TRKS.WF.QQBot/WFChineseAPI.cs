@@ -83,8 +83,18 @@ namespace TRKS.WF.QQBot
             // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
             return api;
         }
+        public static void UpdateLexion()
+        {
+            var commit = CommitsGetter.Get("https://api.github.com/repos/Richasy/WFA_Lexicon/commits");
+            var sha = commit.First().sha;
+            if (sha == Config.Instance.localsha) return;
+            Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
+            UpdateTranslateApi();
+            Config.Instance.localsha = sha;
+            Config.Save();
+        }
 
-        public static void UpdateTranslateApi()
+        private static void UpdateTranslateApi()
         {
             WFApi = GetTranslateApi();
             WFTranslator = new WFTranslator();
