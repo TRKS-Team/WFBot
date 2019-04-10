@@ -263,6 +263,11 @@ namespace TRKS.WF.QQBot
         {
             QQ = qq;
         }
+
+        public override string ToString()
+        {
+            return QQ;
+        }
     }
 
     public class HumanQQNumber
@@ -272,6 +277,11 @@ namespace TRKS.WF.QQBot
         public HumanQQNumber(string qq)
         {
             QQ = qq;
+        }
+
+        public override string ToString()
+        {
+            return QQ;
         }
     }
 }
