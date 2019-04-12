@@ -89,7 +89,7 @@ namespace TRKS.WF.QQBot
             {
                 var commit = CommitsGetter.Get("https://api.github.com/repos/Richasy/WFA_Lexicon/commits");
                 var sha = commit.First().sha;
-                if (sha == Config.Instance.localsha) return;
+                if (sha == Config.Instance.localsha) return true;
                 Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
                 UpdateTranslateApi();
                 Config.Instance.localsha = sha;

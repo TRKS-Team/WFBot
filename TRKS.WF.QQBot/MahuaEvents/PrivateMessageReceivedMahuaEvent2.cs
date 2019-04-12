@@ -147,8 +147,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
         string UpdateTranslateApi()
         {
             if (!WFResource.UpdateLexion())
-                return "翻译API更新失败, 可能是请求次数过多, 请查看 FAQ 来了解如何解决这个问题."
+                return "翻译API更新失败, 可能是请求次数过多, 请查看 FAQ 来了解如何解决这个问题.";
+            return null;
         }
+
         [RequireAdmin]
         [Matchers("超级广播")]
         void Broadcast(string content)
