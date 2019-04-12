@@ -145,12 +145,12 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline? "在线" : "离线")}]");
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
-            var commit = CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits");
-            sb.AppendLine(ToString(commit));
+            var commit = CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits")?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
+            sb.AppendLine(commit);
             sb.ToString().Trim().AddPlatformInfo().SendToGroup(group);
         }
 
-        private static string ToString(CommitData[] commits)
+        private static string Format(this CommitData[] commits)
         {
             var sb = new StringBuilder();
             sb.AppendLine("以下是 GitHub 的 3 条 Commit");

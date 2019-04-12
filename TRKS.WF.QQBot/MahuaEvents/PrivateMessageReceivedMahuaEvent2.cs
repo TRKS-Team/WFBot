@@ -144,9 +144,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
         [RequireAdmin]
         [Matchers("更新翻译API")]
-        void UpdateTranslateApi()
+        string UpdateTranslateApi()
         {
-            WFResource.UpdateLexion();
+            if (!WFResource.UpdateLexion())
+                return "翻译API更新失败, 可能是请求次数过多, 请查看 FAQ 来了解如何解决这个问题."
         }
         [RequireAdmin]
         [Matchers("超级广播")]

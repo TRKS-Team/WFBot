@@ -41,3 +41,10 @@
 
 - A: 请将 `YUELUO\TRKS.WF.QQBot\zh-CN` 这个文件夹扔到机器人的根目录.  
    在 GitHub Release 上已经修复完成. 如果你自己编译还是会遇到这个问题.
+
+---
+
+## Q: GitHub Commit 获取异常, 可能是请求次数过多
+
+可以在设置文件 (WFBot.json) 中填写 GitHub 个人 Token 来解决, 如何申请请自行百度.
+我们不会上传你的个人 Token. 但请保管好运行这个机器人的电脑.

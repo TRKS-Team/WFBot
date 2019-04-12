@@ -14,15 +14,22 @@ namespace TRKS.WF.QQBot
     {
         public static CommitData[] Get(string url)
         {
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var wc = new WebClient { Encoding = Encoding.UTF8 };
-            wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
-            if (!string.IsNullOrWhiteSpace(Config.Instance.GithubOAuthKey))
+            try
             {
-                wc.Headers.Add("Authorization", $"Token {Config.Instance.GithubOAuthKey}");
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var wc = new WebClient { Encoding = Encoding.UTF8 };
+                wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+                if (!string.IsNullOrWhiteSpace(Config.Instance.GithubOAuthKey))
+                {
+                    wc.Headers.Add("Authorization", $"Token {Config.Instance.GithubOAuthKey}");
+                }
+                return wc.DownloadString(url).JsonDeserialize<CommitData[]>();
             }
-            return wc.DownloadString(url).JsonDeserialize<CommitData[]>();
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 
