@@ -48,7 +48,7 @@ namespace Settings
             checkBox14.Checked = Config.Instance.IsAlertRequiredRareItem;
             checkBox233.Checked = Config.Instance.AutoUpdate;
             checkBox12.Checked = Config.Instance.UpdateLexion;
-            GitHubTokenBox.Text = Config.Instance.GithubOAuthKey;
+            GitHubTokenBox.Text = Config.Instance.GitHubOAuthKey;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -299,7 +299,7 @@ namespace Settings
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            Config.Instance.GithubOAuthKey = GitHubTokenBox.Text;
+            Config.Instance.GitHubOAuthKey = GitHubTokenBox.Text;
             Config.Save();
         }
     }
