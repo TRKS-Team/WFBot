@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace TRKS.WF.QQBot
 {
@@ -26,7 +27,8 @@ namespace TRKS.WF.QQBot
 
         public DateTime Last_update;
 
-        public string GithubOAuthKey;
+        [JsonProperty("Git" + "hubOAuthKey")]
+        public string GitHubOAuthKey;
 
         public bool IsSlashRequired = true;
 

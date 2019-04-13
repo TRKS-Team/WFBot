@@ -6,20 +6,20 @@
 
 - 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻
 - 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理
-- 任务 API 来自 [WarframeStat](https://docs.warframestat.us/) 
+- 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
 
 ![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
-**~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**   
+**~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
 **您的赞助会用来维持公用机器人,也能推动我继续维护本插件.**
 
 > 本插件附带自动更新.  
 > 最新的插件 会通过 自动更新 部署到 自动更新版本的机器人 上, 如果我手滑引爆了所有机器人, 请不要慌张.  
 > 如果真的全爆了, **没关系** 因为我的机器人也爆了.  
-> 很快 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
+> 很快 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
 > 此处记录引爆次数: \*4
 
 > ~~目前有一个由我维护, 暂时稳定的机器人, 现在可以直接邀请入群 QQ: `2504645673`~~  
-**↑此公用机器人已经被永久封号,近期可能不会恢复了...有需求的请自行部署.**  
+> **↑ 此公用机器人已经被永久封号,近期可能不会恢复了...有需求的请自行部署.**  
 > 用户请务必添加 QQ 群: [878527767](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)  
 > ~~目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**! 处在后面位置的群收到通知的速度会很慢!~~  
 > **自己按照下面的说明部署可以享受完全体**
@@ -45,7 +45,7 @@
 #### 从 GitHub Release / AppVeyor (推荐)
 
 1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 .NET Framework 4.7.1 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带)
-2. 从 [Github Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
+2. 从 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 3. 享受这个插~~♂~~件的的快感吧!
 
 #### 或者: 自己编译 (特殊需求) (不推荐)
@@ -101,28 +101,28 @@
 
 **设置内可以更改命令前无需斜杠.**
 
-- ***午夜电波***: **/午夜电波** 每周/每日/即将过期 的挑战.
-- ***机器人状态***: **/机器人状态** 机器人的运行状态.
-- ***警报***: **/警报** 当前的所有警报.
+- **_午夜电波_**: **/午夜电波** 每周/每日/即将过期 的挑战.
+- **_机器人状态_**: **/机器人状态** 机器人的运行状态.
+- **_警报_**: **/警报** 当前的所有警报.
   > _新警报也会自动发送到**启用了通知功能的群**._
-- ***入侵***: **/入侵** 当前的所有入侵.
+- **_入侵_**: **/入侵** 当前的所有入侵.
   > _新入侵也会自动发送到**启用了通知功能的群**._
-- ***突击***: **/突击** 当前的所有突击.
-- ***平原时间***: **/平原**  **地球平原** 现在的时间 和 **奥布山谷 (金星平原)** 现在的温度.
-- ***活动***: **/活动** 目前的所有活动
-- ***虚空商人***: **/虚空商人 (或奸商)** 奸商的状态.
+- **_突击_**: **/突击** 当前的所有突击.
+- **_平原时间_**: **/平原** **地球平原** 现在的时间 和 **奥布山谷 (金星平原)** 现在的温度.
+- **_活动_**: **/活动** 目前的所有活动
+- **_虚空商人_**: **/虚空商人 (或奸商)** 奸商的状态.
   > _如果虚空商人已经抵达将会输出**所有的商品和价格**, 长度较长._
-- ***WarframeMarket***: **/查询 \[物品名称]**
+- **_WarframeMarket_**: **/查询 \[物品名称]**
   > - _目前模糊匹配功能十分强大,无需强制按照格式_
   > - _查询未开紫卡请输入: 手枪未开紫卡_
-- ***紫卡市场***: **/紫卡 \[武器名称]**
+- **_紫卡市场_**: **/紫卡 \[武器名称]**
   > _数据来自 [**WFA 紫卡市场**](https://riven.richasy.cn/#/)_
-- ***地球赏金***: **/地球赏金 \[第几个(可选)]** 地球平原的 全部/单一 赏金任务.
-- ***金星赏金***:  **/金星赏金 \[第几个(可选)]** 金星平原的 全部/单一 赏金任务.
-- ***裂隙***: **/裂隙** 全部裂隙.
-- ***遗物***: **/遗物 \[关键词] (eg. 后纪 s3, 前纪 B3)** 所有与关键词有关的遗物.
-- ***翻译***: **/遗物 \[关键词] (eg. 犀牛 prime, 致残突击)** 中 => 英 或 英 => 中
-- ***小小黑***: **/小小黑** 来查询目前追随者的信息.
+- **_地球赏金_**: **/地球赏金 \[第几个(可选)]** 地球平原的 全部/单一 赏金任务.
+- **_金星赏金_**: **/金星赏金 \[第几个(可选)]** 金星平原的 全部/单一 赏金任务.
+- **_裂隙_**: **/裂隙** 全部裂隙.
+- **_遗物_**: **/遗物 \[关键词] (eg. 后纪 s3, 前纪 B3)** 所有与关键词有关的遗物.
+- **_翻译_**: **/遗物 \[关键词] (eg. 犀牛 prime, 致残突击)** 中 => 英 或 英 => 中
+- **_小小黑_**: **/小小黑** 来查询目前追随者的信息.
   > _仅限此活动激活时可以使用_
 
 另外还有一些不影响大局的调试命令和命令别名, 可以自己在代码中 ([私聊](https://github.com/TRKS-Team/WFBot/blob/master/TRKS.WF.QQBot/MahuaEvents/PrivateMessageReceivedMahuaEvent2.cs#L68)/[群聊](https://github.com/TRKS-Team/WFBot/blob/master/TRKS.WF.QQBot/MahuaEvents/GroupMessageReceivedMahuaEvent1.cs#L53)) 查阅.
@@ -165,7 +165,7 @@
 
 代码注释极少... 并且大部分都是一些瞎记的.  
 我不写注释是因为: **这代码这么难写 那他应该也难读**  
-如果发现 Bug 或者你有好的想法可以在[Github Issue](https://github.com/TRKS-Team/WFBot/issues)里直接提出, 我会尽量去修改和实现.  
+如果发现 Bug 或者你有好的想法可以在[GitHub Issue](https://github.com/TRKS-Team/WFBot/issues)里直接提出, 我会尽量去修改和实现.  
 特别鸣谢 [@Cyl18](https://github.com/Cyl18)
 
 > Cyl18 是我雇佣的一个劳工  
