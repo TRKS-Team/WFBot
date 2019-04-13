@@ -2,7 +2,7 @@
 
 ## 申请一个 GitHub Token
 
-打开[这里](https://github.com/settings/tokens)
+打开[这里](https://github.com/settings/tokens/new)
 ![](images/token1.png)
 ![](images/token2.png)
 ![](images/token3.png)
