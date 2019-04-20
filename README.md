@@ -186,4 +186,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者 **(真惨)**: KONYCN Trinitatem wosiwq Cyl18 爱发电用户\_Ymhw
+- 捐助者 **(真惨)**: KONYCN Trinitatem 爱发电用户_pPYQ wosiwq 琪露诺 爱发电用户_Ymhw SM_Chicov Flashbang233 果汁 DreaM1ku 780712 苟Cy 君莫笑 Neptune 老腊肉 爱发电用户_mQps
