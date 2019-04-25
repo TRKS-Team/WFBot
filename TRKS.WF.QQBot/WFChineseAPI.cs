@@ -12,6 +12,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using GammaLibrary.Extensions;
 using Settings;
 
@@ -530,8 +531,11 @@ namespace TRKS.WF.QQBot
                 fissure.node = TranslateNode(fissure.node);
                 fissure.tier = dictTranslators["Word"].Translate(fissure.tier);
                 fissure.missionType = dictTranslators["Mission"].Translate(fissure.missionType);
+                fissure.expiry = GetRealTime(fissure.expiry);
+                Task.Delay(fissure.expiry - DateTime.Now).ContinueWith(a => fissure.active = false);
             }
         }
+
 
         public void TranslateVoidTrader(VoidTrader trader)
         {

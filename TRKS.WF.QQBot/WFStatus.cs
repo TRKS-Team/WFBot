@@ -13,9 +13,10 @@ namespace TRKS.WF.QQBot
 
     public class WFStatus
     {
-        private WFChineseAPI api => WFResource.WFChineseApi;
-        private WFTranslator translator => WFResource.WFTranslator;
+        private static WFChineseAPI api => WFResource.WFChineseApi;
+        private static WFTranslator translator => WFResource.WFTranslator;
         private string platform => Config.Instance.Platform.ToString();
+        private List<Fissure> _fissures = api.GetFissures();
 
         public void SendCycles(GroupNumber group)
         {
@@ -64,9 +65,10 @@ namespace TRKS.WF.QQBot
         //public void SendFissures(string group, List<string> words)
         public void SendFissures(GroupNumber group)
         {
-            var fissures = api.GetFissures().Where(fissure => fissure.active).ToList();
+            var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var msg = WFFormatter.ToString(fissures);
             Messenger.SendGroup(group, msg.AddPlatformInfo());
+            _fissures = api.GetFissures();
         }
 
         public void SendRelicInfo(GroupNumber group, string word)
