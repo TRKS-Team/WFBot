@@ -14,7 +14,7 @@ namespace TRKS.WF.QQBot
         public static void Execute()
         {
             var basePath = "YUELUO\\TRKS.WF.QQBot\\AutoUpdater.exe";
-            var path = Path.Combine(Path.GetTempPath(), Path.GetFileName(basePath));
+            var path = Path.GetTempFileName() + ".exe";
             File.Copy(basePath, path, true);
             Process.Start(new ProcessStartInfo(path)
             {
