@@ -48,11 +48,24 @@ namespace TRKS.WF.QQBot
 
         public static WebStatus TryGet(string url)
         {
-            var client = new HttpClient();
-            var sw = Stopwatch.StartNew();
-            var response = client.GetAsync(url).Result;
-            return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
+            var count = 3;
+            while (count-- > 0)
+            {
+                try
+                {
+                    var client = new HttpClient();
+                    var sw = Stopwatch.StartNew();
+                    var response = client.GetAsync(url).Result;
+                    return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
+                }
+                catch (Exception)
+                {
+                    //
+                }
+            }
+            return new WebStatus(false, 666);
         }
+
         public static T DownloadJson<T>(string url)
         {
             var sw = Stopwatch.StartNew();

@@ -152,12 +152,12 @@ namespace TRKS.WF.QQBot
 
         public static string AddPlatformInfo(this string str)
         {
-            return $"{str}\r\n机器人目前运行的平台是: {platform}";
+            return $"{str}\n\n以上信息来自 {platform} 平台.";
         }
 
         public static string AddHelpInfo(this string str)
         {
-            return $"{str}\r\n可使用: /help来查看机器人的更多说明.";
+            return $"{str}\n可使用: /help来查看机器人的更多说明.";
         }
     }
 

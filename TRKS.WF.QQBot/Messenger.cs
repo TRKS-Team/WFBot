@@ -26,6 +26,8 @@ namespace TRKS.WF.QQBot
 
         static Messenger()
         {
+            if (DebugAlternateHandler == null) return;
+
             PrivateMessageTimer.Elapsed += (s, e) =>
             {
                 lock (typeof(Messenger))
@@ -58,8 +60,18 @@ namespace TRKS.WF.QQBot
             Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task => GroupCallDic[group] = 0);
 
         }
+
+        public static Action<string> DebugAlternateHandler;
+        public static Action<string> MessageAlternateHandler;
+
         public static void SendDebugInfo(string content)
         {
+            if (DebugAlternateHandler != null)
+            {
+                DebugAlternateHandler(content);
+                return;
+            }
+
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ.ToHumanQQNumber(), content);
             Trace.WriteLine($"Debug message: {content}", "Message");
@@ -85,6 +97,12 @@ namespace TRKS.WF.QQBot
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(GroupNumber g, string content)
         {
+            if (MessageAlternateHandler != null)
+            {
+                MessageAlternateHandler(content);
+                return;
+            }
+
             var qq = g.QQ;
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
 
@@ -153,7 +171,7 @@ namespace TRKS.WF.QQBot
         private static string Format(this CommitData[] commits)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("以下是 GitHub 的 3 条 Commit");
+            sb.AppendLine("以下是 GitHub 的最后 3 条 Commit");
             foreach (var commit in commits.Take(3))
             {
                 sb.AppendLine(

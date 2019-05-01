@@ -232,7 +232,7 @@ namespace TRKS.WF.QQBot
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
     }
-    
+
 
     public class WFTranslator
     {
@@ -253,8 +253,8 @@ namespace TRKS.WF.QQBot
         private void InitTranslators()
         {
             dictTranslators.Clear();
-                dictTranslators.TryAdd("All", new Translator());
-                dictTranslators.TryAdd("WM", new Translator());
+            dictTranslators.TryAdd("All", new Translator());
+            dictTranslators.TryAdd("WM", new Translator());
             foreach (var dict in translateApi.Dict)
             {
                 var type = dict.Type;
@@ -315,7 +315,7 @@ namespace TRKS.WF.QQBot
         {
             if (str.IsNullOrEmpty())
             {
-                 return "关键词为空啊.";
+                return "关键词为空啊.";
             }
 
 
@@ -356,7 +356,7 @@ namespace TRKS.WF.QQBot
             foreach (var sale in translateApi.Sale)
             {
                 var distance = lev.DistanceFrom(sale.Zh.Format());
-                distancelist.Add(new StringInfo {LevDistance = distance, Name = sale.Zh});
+                distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
             }
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
@@ -504,7 +504,7 @@ namespace TRKS.WF.QQBot
                                 }
 
                                 sb.Append(dictTranslators["All"].Translate(item));
-                                job.rewardPool[i] = sb.ToString();
+                                job.rewardPool[i] = Regex.Replace(sb.ToString(), "(\\d+)(X)", "$1x");
                             }
                         }
                     }
@@ -532,7 +532,11 @@ namespace TRKS.WF.QQBot
                 fissure.tier = dictTranslators["Word"].Translate(fissure.tier);
                 fissure.missionType = dictTranslators["Mission"].Translate(fissure.missionType);
                 fissure.expiry = GetRealTime(fissure.expiry);
-                Task.Delay(fissure.expiry - DateTime.Now).ContinueWith(a => fissure.active = false);
+                var delay = fissure.expiry - DateTime.Now;
+                if (delay.Ticks > 0)
+                {
+                    Task.Delay(delay).ContinueWith(a => fissure.active = false);
+                }
             }
         }
 
@@ -553,7 +557,7 @@ namespace TRKS.WF.QQBot
             {
                 iteminset.zh.item_name = searchwordTranslator["Item"].Translate(searchword);
             }
-            
+
             foreach (var order in info.payload.orders)
             {
                 switch (order.order_type)
@@ -581,6 +585,7 @@ namespace TRKS.WF.QQBot
             }
 
         }
+
         public void TranslateWMOrderEx(WMInfoEx info, string searchword)
         {
             info.info.enName = info.orders.First().itemName;

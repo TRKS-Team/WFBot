@@ -51,15 +51,20 @@ namespace TRKS.WF.QQBot
             {
                 if (HotUpdateInfo.PreviousVersion) return;
 
-                lock (Locker)
-                {
-                    UpdateAlertPool();
-                    UpdateInvasionPool();
-                    // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
-                    UpdatePersistentEnemiePool();
-                }
+                Update();
             };
             Timer.Start();
+        }
+
+        public void Update()
+        {
+            lock (Locker)
+            {
+                UpdateAlertPool();
+                UpdateInvasionPool();
+                // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
+                UpdatePersistentEnemiePool(); //TODO 在机器人启动时可能会导致无任何输出.
+            }
         }
 
         private List<GroupInfo> GetGroups()
@@ -157,6 +162,12 @@ namespace TRKS.WF.QQBot
         public void SendAllPersistentEnemies(GroupNumber group)
         {
             var enemies = StalkerPool;
+            if (!enemies.Any())
+            {
+                Messenger.SendGroup(group, "目前没有小小黑出现.");
+                return;
+            }
+
             var sb = new StringBuilder();
             sb.AppendLine("下面是全太阳系内的小小黑, 快去锤爆?");
             foreach (var enemy in enemies)
@@ -171,6 +182,7 @@ namespace TRKS.WF.QQBot
             var invasions = InvasionPool;
             var sb = new StringBuilder();
             sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
+            sb.AppendLine();
 
             foreach (var invasion in invasions.Where(invasion => !invasion.completed))
             {

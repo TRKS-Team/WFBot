@@ -49,7 +49,8 @@ namespace TRKS.WF.QQBot
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index));
-            sb.AppendLine($"您正在查看 福尔图娜 的全部赏金任务, 使用: /地球赏金 来查询希图斯的赏金任务.");
+            sb.AppendLine();
+            sb.Append($"您正在查看 福尔图娜 的全部赏金任务, 使用: /地球赏金 来查询希图斯的赏金任务.");
             Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
         }
 
@@ -58,7 +59,8 @@ namespace TRKS.WF.QQBot
             var missions = api.GetSyndicateMissions();
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index));
-            sb.AppendLine("您正在查看 希图斯 的全部赏金任务, 使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
+            sb.AppendLine();
+            sb.Append("您正在查看 希图斯 的全部赏金任务, 使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
             Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
         }
 
@@ -75,7 +77,7 @@ namespace TRKS.WF.QQBot
         public void SendRelicInfo(GroupNumber group, string word)
         {
             var relics = translator.GetRelicInfo(word);
-            var msg = $"{WFFormatter.ToString(relics)}\r\n" +
+            var msg = $"{WFFormatter.ToString(relics)}\n\n" +
                       $"你正在查看与 {word} 有关的所有遗物.";
 
             Messenger.SendGroup(group, msg.AddPlatformInfo());
@@ -91,7 +93,7 @@ namespace TRKS.WF.QQBot
             }
             else
             {
-                Messenger.SendGroup(group, "目前游戏内没有任何活动(尸鬼, 豺狼, 舰队).".AddPlatformInfo());
+                Messenger.SendGroup(group, "目前游戏内没有任何活动 (尸鬼, 豺狼, 舰队).".AddPlatformInfo());
             }
         }
 
