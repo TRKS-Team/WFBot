@@ -80,8 +80,8 @@ namespace TRKS.WF.QQBot
             {
                 var time = (@event.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
                 sb.AppendLine($"[{@event.description}]");
-                sb.AppendLine($"- 剩余点数: {@event.health}");
-                sb.AppendLine($"- 结束时间: {time} 后");
+                sb.AppendLine($"  剩余点数: {@event.health}");
+                sb.AppendLine($"  结束时间: {time} 后");
                 sb.AppendLine();
             }
 
@@ -121,8 +121,8 @@ namespace TRKS.WF.QQBot
             {
                 var rewards = relic.Rewards.Split(' ').Select(reward => reward.Replace("_", " "));
                 var rewardstring = rewards.Connect();
-                sb.AppendLine($"- {relic.Name}");
-                sb.AppendLine($"> {rewardstring}");
+                sb.AppendLine($"> {relic.Name}");
+                sb.AppendLine($"  {rewardstring}");
                 sb.AppendLine();
             }
 
@@ -151,7 +151,7 @@ namespace TRKS.WF.QQBot
                 }
 
                 sb.AppendLine($"  价格: {info.item_Price}白鸡 ({info.item_ResetNum}洗)");
-                sb.AppendLine($"  属性: {info.item_Property.Replace("|", " | ")}");
+                sb.AppendLine($"  属性: {info.item_Property.Replace("|", "").Replace(" "," | ")}");
                 sb.AppendLine();
             }
 
