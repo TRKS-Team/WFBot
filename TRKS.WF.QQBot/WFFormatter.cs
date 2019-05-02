@@ -49,7 +49,7 @@ namespace TRKS.WF.QQBot
             }
 
             challenges = elsechallenges.Where(challenge => challenge.isElite).ToList();
-            if(challenges.Any())
+            if (challenges.Any())
             {
                 sb.AppendLine("精英每周挑战 (5000): ");
                 sb.AppendLine("  " + ToString(challenges, false));
@@ -65,7 +65,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             foreach (var challenge in challenges.OrderBy(c => c.desc))
             {
-                sb.AppendLine(withreputation? $"  {challenge.desc} ({challenge.reputation}) " : $"  {challenge.desc}. ");
+                sb.AppendLine(withreputation ? $"  {challenge.desc} ({challenge.reputation}) " : $"  {challenge.desc}. ");
             }
 
             return sb.ToString().Trim();
@@ -151,7 +151,7 @@ namespace TRKS.WF.QQBot
                 }
 
                 sb.AppendLine($"  价格: {info.item_Price}白鸡 ({info.item_ResetNum}洗)");
-                sb.AppendLine($"  属性: {info.item_Property.Replace("|", "").Replace(" "," | ")}");
+                sb.AppendLine($"  属性: {info.item_Property.Replace("|", "").Replace(" ", " | ")}");
                 sb.AppendLine();
             }
 
@@ -181,7 +181,7 @@ namespace TRKS.WF.QQBot
             var count = 0;
             if (index >= 1 && index <= 5)
             {
-                mission.jobs = new[]{mission.jobs[index - 1]};
+                mission.jobs = new[] { mission.jobs[index - 1] };
             }
             foreach (var job in mission.jobs)
             {
@@ -199,7 +199,7 @@ namespace TRKS.WF.QQBot
                 sb.AppendLine(job.rewardPool.Select(reward => reward.Trim()).OrderBy(it => it).Connect());
                 sb.AppendLine();
             }
-            
+
             return sb.ToString().Trim();
         }
         [Pure]
@@ -296,7 +296,7 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(WMInfo info)
+        public static string ToString(WMInfo info, bool quickReply)
         {
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
@@ -307,27 +307,30 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine($"[{order.user.ingame_name}]  {order.user.status}");
                 sb.AppendLine($"  {order.order_type} {order.platinum} 白鸡");
-                sb.AppendLine(
-                    $"  - 快捷回复: /w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+                if (quickReply)
+                    sb.AppendLine(
+                        $"  - 快捷回复: /w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+
                 sb.AppendLine();
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(WMInfoEx info)
+        public static string ToString(WMInfoEx info, bool quickReply)
         {
             var sb = new StringBuilder();
             var item = info.info;
             sb.AppendLine($"下面是物品: {item.zhName} 按价格从小到大的{info.orders.Length}条信息");
             sb.AppendLine();
-            
+
             foreach (var order in info.orders)
             {
                 sb.AppendLine($"[{order.userName}] {order.status}");
                 sb.AppendLine($"  {order.order_Type} {order.platinum} 白鸡");
-                sb.AppendLine(
-                    $"  - 快捷回复: /w {order.userName} Hi! I want to buy: {item.enName} for {order.platinum} platinum. (warframe.market)");
+                if (quickReply)
+                    sb.AppendLine(
+                        $"  - 快捷回复: /w {order.userName} Hi! I want to buy: {item.enName} for {order.platinum} platinum. (warframe.market)");
                 sb.AppendLine();
             }
             // 这已经很难看了好吧

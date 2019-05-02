@@ -61,7 +61,7 @@ namespace TRKS.WF.QQBot
                 .ToArray();           
         }
 
-        public void SendWMInfo(string item, GroupNumber group)
+        public void SendWMInfo(string item, GroupNumber group, bool quickReply)
         {
             var searchword = translator.TranslateSearchWord(item);
             var formateditem = item;
@@ -109,7 +109,7 @@ namespace TRKS.WF.QQBot
                         {
                             OrderWMInfoEx(infoEx);
                             translator.TranslateWMOrderEx(infoEx, searchword);
-                            msg = WFFormatter.ToString(infoEx);
+                            msg = WFFormatter.ToString(infoEx, quickReply);
                         }
                         else
                         {
@@ -135,13 +135,18 @@ namespace TRKS.WF.QQBot
                 {
                     OrderWMInfo(info);
                     translator.TranslateWMOrder(info, searchword);
-                    msg = WFFormatter.ToString(info);
+                    msg = WFFormatter.ToString(info, quickReply);
                 }
                 else
                 {
                     msg = $"抱歉, WarframeMarket 上目前还没有售卖 {item} 的用户";
                 }
 
+            }
+
+            if (!quickReply)
+            {
+                msg = $"{msg}\n\n如果你需要快捷回复, 请使用指令 <查询 {item} -QR>";
             }
 
             Messenger.SendGroup(group, msg.AddPlatformInfo());

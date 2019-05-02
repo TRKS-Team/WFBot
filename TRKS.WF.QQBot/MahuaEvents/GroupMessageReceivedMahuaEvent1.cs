@@ -70,8 +70,17 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [CombineParams]
         void WM(string word)
         {
-            word = word.Format();
-            _wmSearcher.SendWMInfo(word, Group);
+            const string quickReply = " -QR";
+            if (word.EndsWith(quickReply) || word.EndsWith(quickReply.ToLower()))
+            {
+                _wmSearcher.SendWMInfo(word.Replace(quickReply, "")
+                    .Replace(quickReply.ToLower(), "")
+                    .Format(), Group, true);
+            }
+            else
+            {
+                _wmSearcher.SendWMInfo(word.Format(), Group, false);
+            }
         }
 
         [Matchers("紫卡")]
