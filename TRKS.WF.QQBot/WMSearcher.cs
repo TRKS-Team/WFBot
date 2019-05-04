@@ -63,6 +63,23 @@ namespace TRKS.WF.QQBot
 
         public void SendWMInfo(string item, GroupNumber group, bool quickReply)
         {
+            // 下面 你将要 看到的 是 本项目 最大的  粪山
+            var words = new List<string>{"prime", "p", "甲"};
+            var heads = new List<string> { "头部神经光", "头部神经", "头部神", "头部", "头"};
+            foreach (var word in words)
+            {
+                foreach (var head in heads)
+                {
+                    if (!item.Contains("头部神经光元"))
+                    {
+                        if (item.Contains(word + head))
+                        {
+                            item = item.Replace(word + head, word + "头部神经光元");
+                            break;
+                        }
+                    }
+                }
+            }
             var searchword = translator.TranslateSearchWord(item);
             var formateditem = item;
             if (item == searchword)

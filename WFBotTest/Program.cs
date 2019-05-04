@@ -39,6 +39,21 @@ namespace WFBotTest
             Do("小小黑");
             Do("状态");
             Do("午夜电波");
+            /*
+            Do("查询 valkyr p 头");
+            Do("查询 valkyr prime 头");
+            Do("查询 valkyr prime 头部");
+            Do("查询 valkyr prime 头部神");
+            Do("查询 valkyr prime 头部神经");
+            Do("查询 valkyr prime 头部神经光");
+            Do("查询 valkyr prime 头部神经光元");
+            Do("查询 龙甲 头");
+            Do("查询 龙甲 头部");
+            Do("查询 龙甲 头部神");
+            Do("查询 龙甲 头部神经");
+            Do("查询 龙甲 头部神经光");
+            Do("查询 龙甲 头部神经光元");
+            */
 
             file.Flush();
             void Do(string msg)

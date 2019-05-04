@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Text.RegularExpressions;
 using Humanizer;
 using Humanizer.Localisation;
 namespace TRKS.WF.QQBot
@@ -57,7 +58,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(List<Activechallenge> challenges, bool withreputation)
         {
             var sb = new StringBuilder();
-            foreach (var challenge in challenges)
+            foreach (var challenge in challenges.OrderBy(c => c.desc))
             {
                 sb.AppendLine(withreputation ? $"    [{challenge.desc}]({challenge.reputation}) " : $"    [{challenge.desc}] ");
             }
@@ -145,7 +146,7 @@ namespace TRKS.WF.QQBot
                 }
 
                 sb.AppendLine($"- 价格: {info.item_Price}白鸡 ({info.item_ResetNum}洗)");
-                sb.AppendLine($"- 属性: {info.item_Property}");
+                sb.AppendLine($"  属性: {info.item_Property.Replace("|", "").Replace(" ", " | ")}");
                 sb.AppendLine();
             }
 
@@ -155,7 +156,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(List<Fissure> fissures)
         {
             var sb = new StringBuilder();
-            foreach (var fissure in fissures)
+            foreach (var fissure in fissures.OrderBy(f => f.tier))
             {
                 sb.AppendLine($"[{fissure.node}]");
                 sb.AppendLine($"类型:    {fissure.missionType}-{fissure.enemy}");
@@ -364,8 +365,9 @@ namespace TRKS.WF.QQBot
 
             foreach (var item in reward.Items)
             {
-                rewards.Add(item);
+                rewards.Add(Regex.Replace(item, "(\\d+)(X)", "$1x"));
             }
+
 
             foreach (var item in reward.CountedItems)
             {

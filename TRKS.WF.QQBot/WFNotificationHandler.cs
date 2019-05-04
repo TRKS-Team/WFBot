@@ -199,6 +199,7 @@ namespace TRKS.WF.QQBot
             {
                 var alerts = AlertPool.Where(alert => !sendedAlertsSet.Contains(alert.Id));
                 // 后人不要尝试重构下面这坨代码 她很好用 但是你别想着去重构
+                // 操他妈 这玩意刚写好警报就没了
                 var result =
                     Config.Instance.IsAlertRequiredRareItem
                         ? alerts.Where(a =>
