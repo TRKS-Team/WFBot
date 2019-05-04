@@ -24,12 +24,22 @@ namespace TRKS.WF.QQBot
                 {
                     wc.Headers.Add("Authorization", $"Token {Config.Instance.GitHubOAuthKey}");
                 }
-                return wc.DownloadString(url).JsonDeserialize<CommitData[]>();
+                var cd = wc.DownloadString(url).JsonDeserialize<CommitData[]>();
+                foreach (var commit in cd)
+                {
+                    commit.commit.committer.date = GetRealTime(commit.commit.committer.date);
+                }
+
+                return cd;
             }
             catch (Exception)
             {
                 return null;
             }
+        }
+        private static DateTime GetRealTime(DateTime time)
+        {
+            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
     }
 
