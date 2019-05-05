@@ -54,7 +54,7 @@
 > 我们强烈建议在 Windows 平台下编译这个项目.  
 > **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
 
-1. 安装 `Visual Studio 2017 / 2019`, 以及 `.NET Framework 4.6.2 SDK.`
+1. 安装 `Visual Studio 2019` (由于某个人的偷懒 不支持 VS2017.), 以及 `.NET Framework 4.6.2 SDK.`
 2. 下载这个仓库, 使用 `TRKS.WF.QQBot\build.bat` 来生成一份插件.
 
    ```bash
