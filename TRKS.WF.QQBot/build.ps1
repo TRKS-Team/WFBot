@@ -4,25 +4,25 @@ properties {
     $nugetexe = "$rootNow\buildTools\NuGet.exe"
     $configuration = "Debug"
     $releaseBase = "$rootNow\bin"
-    $pluginName = (Get-ChildItem *.csproj).Name.Replace(".csproj", "")
+    $pluginName = "trks.wf.qqbot"
     $mahuaDownloadTempDir = "$($env:TEMP)\Newbe\Newbe.Mahua"
     $assetDirName = "YUELUO"
 }
 
 $pkgNames = @{
     "platform"  = @(
-    "Newbe.Mahua.CQP",
-    "Newbe.Mahua.MPQ",
-    "Newbe.Mahua.QQLight",
-    "Newbe.Mahua.CleverQQ"
+        "Newbe.Mahua.CQP",
+        "Newbe.Mahua.MPQ",
+        "Newbe.Mahua.QQLight",
+        "Newbe.Mahua.CleverQQ"
     )
     "framework" = @(
-    "Newbe.Mahua",
-    "Newbe.Mahua.PluginLoader"
+        "Newbe.Mahua",
+        "Newbe.Mahua.PluginLoader"
     )
     "ext"       = @(
-    "Newbe.Mahua.Administration",
-    "Newbe.Mahua.CQP.ApiExtensions"
+        "Newbe.Mahua.Administration",
+        "Newbe.Mahua.CQP.ApiExtensions"
     )
 }
 
@@ -37,7 +37,7 @@ function Get-MahuaPackage {
     param (
         [string]$id
     )
-    $re = ($installedAll | Where-Object { $_.id -eq $id})
+    $re = ($installedAll | Where-Object { $_.id -eq $id })
     $re
     return $re[0]
 }
@@ -113,11 +113,35 @@ Task Nuget -depends Init -Description "nuget restore" {
     }
 }
 
+Function Find-MsBuild([int] $MaxVersion = 2017) {
+    $agentPath = "$Env:programfiles (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\msbuild.exe"
+    $devPath = "$Env:programfiles (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe"
+    $proPath = "$Env:programfiles (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\msbuild.exe"
+    $communityPath = "$Env:programfiles (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe"
+    $fallback2015Path = "${Env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+    $fallback2013Path = "${Env:ProgramFiles(x86)}\MSBuild\12.0\Bin\MSBuild.exe"
+    $fallbackPath = "C:\Windows\Microsoft.NET\Framework\v4.0.30319"
+		
+    If ((2017 -le $MaxVersion) -And (Test-Path $agentPath)) { return $agentPath } 
+    If ((2017 -le $MaxVersion) -And (Test-Path $devPath)) { return $devPath } 
+    If ((2017 -le $MaxVersion) -And (Test-Path $proPath)) { return $proPath } 
+    If ((2017 -le $MaxVersion) -And (Test-Path $communityPath)) { return $communityPath } 
+    If ((2015 -le $MaxVersion) -And (Test-Path $fallback2015Path)) { return $fallback2015Path } 
+    If ((2013 -le $MaxVersion) -And (Test-Path $fallback2013Path)) { return $fallback2013Path } 
+    If (Test-Path $fallbackPath) { return $fallbackPath } 
+        
+    throw "Yikes - Unable to find msbuild"
+}
+
+$msb = Find-MsBuild
+
 Task Build -depends Nuget -Description "编译" {
     Exec {
-        msbuild /p:Configuration=$configuration
+        & $msb "/p:Configuration=$configuration"
     }
 }
+
+
 
 # 生成CQP的JSON文件
 function WriteCqpJsonFile ($targetFilePath) {
@@ -155,7 +179,7 @@ function WriteCqpJsonFile ($targetFilePath) {
 }
 
 Task PackCQP -depends DonwloadPackages, Build -Description "CQP打包" {
-    $InstalledPlatforms | Where-Object {$_.id -eq "Newbe.Mahua.CQP"} | ForEach-Object {
+    $InstalledPlatforms | Where-Object { $_.id -eq "Newbe.Mahua.CQP" } | ForEach-Object {
         Exec {
             $toolBase = Get-Download-Package-ToolsDir -package $_
             New-Item -ItemType Directory "$releaseBase\CQP"
@@ -178,7 +202,7 @@ Task PackCQP -depends DonwloadPackages, Build -Description "CQP打包" {
 }
 
 Task PackQQLight -depends DonwloadPackages, Build -Description "QQLight打包" {
-    $InstalledPlatforms | Where-Object {$_.id -eq "Newbe.Mahua.QQLight"}  | ForEach-Object {
+    $InstalledPlatforms | Where-Object { $_.id -eq "Newbe.Mahua.QQLight" } | ForEach-Object {
         Exec {
             $toolBase = Get-Download-Package-ToolsDir -package $_
             New-Item -ItemType Directory "$releaseBase\QQLight"
@@ -200,7 +224,7 @@ Task PackQQLight -depends DonwloadPackages, Build -Description "QQLight打包" {
 }
 
 Task PackMPQ -depends DonwloadPackages, Build -Description "MPQ打包" {
-    $InstalledPlatforms | Where-Object {$_.id -eq "Newbe.Mahua.MPQ"}| ForEach-Object {
+    $InstalledPlatforms | Where-Object { $_.id -eq "Newbe.Mahua.MPQ" } | ForEach-Object {
         Exec {
             $toolBase = Get-Download-Package-ToolsDir -package $_
             New-Item -ItemType Directory "$releaseBase\MPQ"
@@ -222,7 +246,7 @@ Task PackMPQ -depends DonwloadPackages, Build -Description "MPQ打包" {
 }
 
 Task PackCleverQQ -depends DonwloadPackages, Build -Description "CleverQQ打包" {
-    $InstalledPlatforms | Where-Object {$_.id -eq "Newbe.Mahua.CleverQQ"}| ForEach-Object {
+    $InstalledPlatforms | Where-Object { $_.id -eq "Newbe.Mahua.CleverQQ" } | ForEach-Object {
         Exec {
             $toolBase = Get-Download-Package-ToolsDir -package $_
             New-Item -ItemType Directory "$releaseBase\CleverQQ"
