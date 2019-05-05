@@ -113,7 +113,6 @@ Task Nuget -depends Init -Description "nuget restore" {
     }
 }
 
-$msb = Find-MsBuild
 
 Task Build -depends Nuget -Description "编译" {
     Exec {
