@@ -104,6 +104,8 @@ namespace TRKS.WF.QQBot
                             {
                                 sb.AppendLine($"    {similarresult}");
                             }
+
+                            sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
                             Messenger.SendGroup(group, sb.ToString().Trim());
                             return;
                         }
