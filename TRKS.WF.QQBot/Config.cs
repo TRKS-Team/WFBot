@@ -45,6 +45,10 @@ namespace TRKS.WF.QQBot
         public bool UpdateLexion = true;
 
         public string localsha;
+
+        public int WMSearchCount = 3;
+
+        public int WFASearchCount = 5;
     }
 
     [Configuration("CoquettishConfig")]

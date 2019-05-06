@@ -55,7 +55,7 @@ namespace TRKS.WF.QQBot
         public List<RivenInfo> GetRivenInfos(string weapon)
         {
             var header = new WebHeaderCollection();
-            var count = 5;
+            var count = Config.Instance.WFASearchCount;
             var platform = Config.Instance.Platform.GetSymbols().First();
             if (Config.Instance.Platform == Platform.NS)
             {

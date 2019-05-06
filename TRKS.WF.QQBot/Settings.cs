@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GammaLibrary.Extensions;
 using Newbe.Mahua.MahuaEvents;
 using TRKS.WF.QQBot;
 
@@ -49,6 +50,8 @@ namespace Settings
             checkBox233.Checked = Config.Instance.AutoUpdate;
             checkBox12.Checked = Config.Instance.UpdateLexion;
             GitHubTokenBox.Text = Config.Instance.GitHubOAuthKey;
+            textBox7.Text = Config.Instance.WMSearchCount.ToString();
+            textBox8.Text = Config.Instance.WFASearchCount.ToString();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -301,6 +304,32 @@ namespace Settings
         {
             Config.Instance.GitHubOAuthKey = GitHubTokenBox.Text;
             Config.Save();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (textBox7.Text.IsNumber())
+            {
+                Config.Instance.WMSearchCount = textBox7.Text.ToInt();
+                Config.Save();
+            }
+            else
+            {
+                MessageBox.Show("您输入的参数不是数字嗷?");
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (textBox8.Text.IsNumber())
+            {
+                Config.Instance.WFASearchCount = textBox8.Text.ToInt();
+                Config.Save();
+            }
+            else
+            {
+                MessageBox.Show("您输入的参数不是数字嗷?");
+            }
         }
     }
 

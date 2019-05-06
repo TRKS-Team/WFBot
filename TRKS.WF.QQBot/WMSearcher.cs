@@ -47,7 +47,7 @@ namespace TRKS.WF.QQBot
                 .Where(order => order.order_type == "sell")
                 .Where(order => order.user.status == "online" || order.user.status == "ingame")
                 .OrderBy(order => order.platinum)
-                .Take(3)
+                .Take(Config.Instance.WMSearchCount)
                 .ToArray();            
         }
 
@@ -57,7 +57,7 @@ namespace TRKS.WF.QQBot
                 .Where(order => order.order_Type == "sell")
                 .Where(order => order.status == "online" || order.status == "ingame")
                 .OrderBy(order => order.platinum)
-                .Take(3)
+                .Take(Config.Instance.WMSearchCount)
                 .ToArray();           
         }
 
