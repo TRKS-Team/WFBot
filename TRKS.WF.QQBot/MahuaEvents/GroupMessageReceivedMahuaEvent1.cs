@@ -176,7 +176,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [Matchers("wiki", "维基", "灰机wiki", "灰机维基")]
         string Wiki()
         {
-            return "为指挥官献上wiki链接: https://warframe.huijiwiki.com/wiki";
+            return "为指挥官献上wiki链接: https://warframe.huijiwiki.com/wiki/";
             // 这简直就是官方吞mod最形象的解释
         }
     }
