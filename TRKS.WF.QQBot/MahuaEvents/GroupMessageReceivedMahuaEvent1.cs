@@ -173,11 +173,11 @@ namespace TRKS.WF.QQBot.MahuaEvents
             _WFStatus.SendNightWave(Group);
         }
 
+        [CombineParams]
         [Matchers("wiki", "维基", "灰机wiki", "灰机维基")]
-        string Wiki()
+        String WikiSearch(String word = "")
         {
-            return "为指挥官献上wiki链接: https://warframe.huijiwiki.com/wiki/";
-            // 这简直就是官方吞mod最形象的解释
+            return _WikiSearch.wikiSearch(word.Format());
         }
     }
 
@@ -198,6 +198,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private static readonly WFStatus _WFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
+        private static readonly WIKISearch _WikiSearch = new WIKISearch();
 
         public GroupMessageHandler(HumanQQNumber sender, GroupNumber group, string message)
         {
