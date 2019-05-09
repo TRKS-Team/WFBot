@@ -172,13 +172,15 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             _WFStatus.SendNightWave(Group);
         }
+        
 
-        [CombineParams]
         [Matchers("wiki", "维基", "灰机wiki", "灰机维基")]
+        [CombineParams]
         String WikiSearch(String word = "")
         {
-            return _WikiSearch.wikiSearch(word.Format());
+            return WikiSearcher.wikiSearch(word.Format());
         }
+        
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender
@@ -198,7 +200,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private static readonly WFStatus _WFStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
-        private static readonly WIKISearch _WikiSearch = new WIKISearch();
+        private static readonly WikiSearcher WikiSearcher = new WikiSearcher();
 
         public GroupMessageHandler(HumanQQNumber sender, GroupNumber group, string message)
         {

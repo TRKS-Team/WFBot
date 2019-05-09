@@ -54,6 +54,8 @@ namespace WFBotTest
             Do("查询 龙甲 头部神经光");
             Do("查询 龙甲 头部神经光元");
             */
+            Do("查询 limboooprime");
+            Do("查询 波之武丈 PRIME");
 
             file.Flush();
             void Do(string msg)

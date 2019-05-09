@@ -349,40 +349,69 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-        public List<string> GetSimilarItem(string word)
+        public List<string> GetSimilarItem(string word, Sale[] list)
         {
             var subword = word.Substring(0, 1);
             var lev = new Fastenshtein.Levenshtein(word);
             var distancelist = new SortedSet<StringInfo>();
-            foreach (var sale in translateApi.Sale)
+            foreach (var sale in list)
             {
-                if (subword != " " && subword != null)
-                {
-                    var saleZh = sale.Zh;
-                    var saleEn = sale.En;
-                    if (subword != "" && subword != null)
-                    {
-                        if (saleZh.Contains(subword))
-                        {
-                            var distance = lev.DistanceFrom(sale.Zh.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
-                        }
-                        if (saleEn.Contains(subword))
-                        {
-                            var distance = lev.DistanceFrom(sale.En.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.En });
-                        }
-                    }
-                }
-                else
+                if (sale.Zh.StartsWith(subword))
                 {
                     var distance = lev.DistanceFrom(sale.Zh.Format());
-                    distancelist.Add(new StringInfo { LevDistance = distance, Name = "没找到你想要什么，请核对查询的物品" });
+                    distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
                 }
+                /*if (saleEn.Contains(subword))
+                {
+                    var distance = lev.DistanceFrom(sale.En.Format());
+                    distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.En });
+                }*/
+                // 改天再说
             }
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
         }
+        public List<string> GetSimilarItem(string word, Dict[] list)
+        {
+            var subword = word.Substring(0, 1);
+            var lev = new Fastenshtein.Levenshtein(word);
+            var distancelist = new SortedSet<StringInfo>();
+            foreach (var dict in list)
+            {
+                if (dict.Zh.StartsWith(subword))
+                {
+                    var distance = lev.DistanceFrom(dict.Zh.Format());
+                    distancelist.Add(new StringInfo { LevDistance = distance, Name = dict.Zh });
+                }
+                /*if (saleEn.Contains(subword))
+                {
+                    var distance = lev.DistanceFrom(sale.En.Format());
+                    distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.En });
+                }*/
+                // 改天再说
+            }
+
+            return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
+        }
+        public List<string> GetSimilarItem(string word, Riven[] list)
+        {
+            var subword = word.Substring(0, 1);
+            var lev = new Fastenshtein.Levenshtein(word);
+            var distancelist = new SortedSet<StringInfo>();
+            foreach (var weapon in list)
+            {
+                if (weapon.Name.StartsWith(subword))
+                {
+                    var distance = lev.DistanceFrom(weapon.Name.Format());
+                    distancelist.Add(new StringInfo {LevDistance = distance, Name = weapon.Name});
+                }
+
+            }
+
+            return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
+        }
+
+
 
         public List<Relic> GetRelicInfo(string word)
         {
