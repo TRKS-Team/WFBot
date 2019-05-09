@@ -56,6 +56,8 @@ namespace WFBotTest
             */
             Do("查询 limboooprime");
             Do("查询 波之武丈 PRIME");
+            Do("紫卡 瘟疫克利帕斯");
+            Do("wiki 川流不息p");
 
             file.Flush();
             void Do(string msg)

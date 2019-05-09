@@ -361,12 +361,11 @@ namespace TRKS.WF.QQBot
                     var distance = lev.DistanceFrom(sale.Zh.Format());
                     distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
                 }
-                /*if (saleEn.Contains(subword))
+                if (sale.En.StartsWith(subword))
                 {
                     var distance = lev.DistanceFrom(sale.En.Format());
                     distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.En });
-                }*/
-                // 改天再说
+                }
             }
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();

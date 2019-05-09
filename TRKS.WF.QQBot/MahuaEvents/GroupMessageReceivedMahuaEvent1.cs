@@ -178,7 +178,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [CombineParams]
         String WikiSearch(String word = "")
         {
-            return WikiSearcher.wikiSearch(word.Format());
+            return WikiSearcher.Search(word.Format());
         }
         
     }
