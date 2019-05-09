@@ -351,12 +351,34 @@ namespace TRKS.WF.QQBot
         }
         public List<string> GetSimilarItem(string word)
         {
+            var subword = word.Substring(0, 1);
             var lev = new Fastenshtein.Levenshtein(word);
             var distancelist = new SortedSet<StringInfo>();
             foreach (var sale in translateApi.Sale)
             {
-                var distance = lev.DistanceFrom(sale.Zh.Format());
-                distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
+                if (subword != " " && subword != null)
+                {
+                    var saleZh = sale.Zh;
+                    var saleEn = sale.En;
+                    if (subword != "" && subword != null)
+                    {
+                        if (saleZh.Contains(subword))
+                        {
+                            var distance = lev.DistanceFrom(sale.Zh.Format());
+                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
+                        }
+                        if (saleEn.Contains(subword))
+                        {
+                            var distance = lev.DistanceFrom(sale.En.Format());
+                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.En });
+                        }
+                    }
+                }
+                else
+                {
+                    var distance = lev.DistanceFrom(sale.Zh.Format());
+                    distancelist.Add(new StringInfo { LevDistance = distance, Name = "没找到你想要什么，请核对查询的物品" });
+                }
             }
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
