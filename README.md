@@ -2,6 +2,8 @@
 
 ![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
+此项目使用 AGPL 协议授权. 如果你修改了源代码并应用到了机器人上, 请将其开源.  
+我们不提倡任何商业用途, 如果需要, 请联系我们.  
 基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.
 
 - 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻
@@ -186,4 +188,4 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者 **(真惨)**: KONYCN Trinitatem 爱发电用户_pPYQ wosiwq 琪露诺 爱发电用户_Ymhw SM_Chicov Flashbang233 果汁 DreaM1ku 780712 苟Cy 君莫笑 Neptune 老腊肉 爱发电用户_mQps
+- 捐助者 **(真惨)**: KONYCN Trinitatem 爱发电用户\_pPYQ wosiwq 琪露诺 爱发电用户\_Ymhw SM_Chicov Flashbang233 果汁 DreaM1ku 780712 苟 Cy 君莫笑 Neptune 老腊肉 爱发电用户\_mQps
