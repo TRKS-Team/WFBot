@@ -54,12 +54,6 @@ namespace WFBotTest
             Do("查询 龙甲 头部神经光");
             Do("查询 龙甲 头部神经光元");
             */
-            Do("查询 龙");
-            Do("紫卡 瘟疫");
-            Do("wiki");
-            Do("wiki 川流不息prime");
-            Do("wiki 川流不");
-            Do("wiki Primed");
 
             file.Flush();
             void Do(string msg)

@@ -50,9 +50,6 @@
     <Reference Include="GammaLibrary, Version=1.1.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GammaLibrary.1.1.9\lib\netstandard2.0\GammaLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.4.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.4\lib\Net45\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="Humanizer, Version=2.5.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\packages\Humanizer.Core.2.5.1\lib\netstandard2.0\Humanizer.dll</HintPath>
     </Reference>
@@ -259,7 +256,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WFObjects.cs" />
     <Compile Include="WFStatus.cs" />
-    <Compile Include="WikiSearcher.cs" />
     <Compile Include="WMSearcher.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -77,12 +77,7 @@ namespace TRKS.WF.QQBot
                 Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
                 Downloader.GetCacheOrDownload<Relic[]>($"{source}WF_Relic.json", relics => api.Relic = relics),
                 Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers),
-                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave),
-                Downloader.GetCacheOrDownload<WikiQuery>("https://warframe.huijiwiki.com/api.php?action=query&format=json&prop=revisions&titles=UserDict&formatversion=2&rvprop=content", wiki =>
-                {
-                    api.wiki = wiki;
-                    api.wiki.query.pages.First().revisions.First().wiki = wiki.query.pages.First().revisions.First().content.JsonDeserialize<Wiki>();
-                })
+                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
             );
 
             Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
@@ -243,12 +238,10 @@ namespace TRKS.WF.QQBot
     {
         private ConcurrentDictionary<string /*type*/, Translator> dictTranslators = new ConcurrentDictionary<string, Translator>();
         private ConcurrentDictionary<string, Translator> searchwordTranslator = new ConcurrentDictionary<string, Translator>();
-        private Translator wikiTranslator = new Translator();
         private Translator nightwaveTranslator = new Translator();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
-        private List<string> wikiwords = new List<string>();
         private WFApi translateApi => WFResource.WFApi;
 
 
@@ -316,33 +309,6 @@ namespace TRKS.WF.QQBot
             {
                 nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
             }
-
-            var wiki = translateApi.wiki.query.pages.First().revisions.First().wiki;
-            var reversewiki = new Wiki{
-                Category = wiki.Category
-                    .SelectMany(k => k.Value
-                    .Select(v => new { Key = v, Value = k.Key }))
-                    .ToDictionary(t => t.Key.ToString(), t => t.Value),
-                Text = wiki.Text
-                    .SelectMany(k => k.Value
-                    .Select(v => new { Key = v, Value = k.Key }))
-                    .ToDictionary(t => t.Key.ToString(), t => t.Value)
-            };
-            wikiwords.AddRange(wiki.Category.Keys.Select(k => k.Format()));
-            wikiwords.AddRange(wiki.Category.Values.Select(v => v.Format()));
-            wikiwords.AddRange(wiki.Text.Keys.Select(k => k.Format()));
-            wikiwords.AddRange(wiki.Text.Values.Select(v => v.Format()));
-            foreach (var key in reversewiki.Category.Keys)
-            {
-                wikiTranslator.AddEntry(key.Format(), reversewiki.Category[key].Replace(" ", "_"));
-                wikiTranslator.AddEntry(reversewiki.Category[key].Format(), reversewiki.Category[key].Replace(" ", ""));
-            }
-
-            foreach (var key in reversewiki.Text.Keys)
-            {
-                wikiTranslator.AddEntry(key.Format(), reversewiki.Text[key].Replace(" ", "_"));
-                wikiTranslator.AddEntry(reversewiki.Text[key].Format(), reversewiki.Text[key].Replace(" ", ""));
-            }
         }
 
         public string GetTranslateResult(string str)
@@ -383,45 +349,15 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-        public List<string> GetSimilarItem(string word, string mode)
+        public List<string> GetSimilarItem(string word)
         {
-            var lev = new Fastenshtein.Levenshtein(word.Format());
+            var lev = new Fastenshtein.Levenshtein(word);
             var distancelist = new SortedSet<StringInfo>();
-            var str = word.Substring(0, 1);
-            switch (mode)
+            foreach (var sale in translateApi.Sale)
             {
-                case "wm":
-                    foreach (var sale in translateApi.Sale)
-                    {
-                        if (sale.Zh.StartsWith(str))
-                        {
-                            var distance = lev.DistanceFrom(sale.Zh.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
-                        }
-                    }
-                    break;
-                case "rm":
-                    foreach (var weapon in weapons)
-                    {
-                        if (weapon.StartsWith(str))
-                        {
-                            var distance = lev.DistanceFrom(weapon.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = weapon });
-                        }
-                    }
-                    break;
-                case "wiki":
-                    foreach (var wiki in wikiwords)
-                    {
-                        if (wiki.StartsWith(str) || Regex.IsMatch(word, @"[a-z]"))
-                        {
-                            var distance = lev.DistanceFrom(wiki.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = wiki });
-                        }
-                    }                  
-                    break;
+                var distance = lev.DistanceFrom(sale.Zh.Format());
+                distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
             }
-
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
         }
@@ -502,11 +438,6 @@ namespace TRKS.WF.QQBot
         public bool ContainsWeapon(string weapon)
         {
             return weapons.Contains(weapon);
-        }
-
-        public bool ContainsWikiword(string word)
-        {
-            return wikiwords.Contains(word);
         }
 
         public void TranslateAlert(WFAlert alert)

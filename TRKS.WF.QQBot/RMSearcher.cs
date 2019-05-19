@@ -69,7 +69,6 @@ namespace TRKS.WF.QQBot
 
         public void SendRivenInfos(GroupNumber group, string weapon)
         {
-            var sb = new StringBuilder();
             try
             {
                 if (isWFA)
@@ -80,33 +79,23 @@ namespace TRKS.WF.QQBot
                         var info = GetRivenInfos(weapon);
                         var msg = info.Any() ? WFFormatter.ToString(info) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.";
 
-                        sb.AppendLine(msg.AddPlatformInfo());
+                        Messenger.SendGroup(group, msg.AddPlatformInfo());
                     }
                     else
                     {
-                        sb.AppendLine($"武器 {weapon} 不存在.");
-                        var similarlist = translator.GetSimilarItem(weapon, "rm");
-                        if (similarlist.Any())
-                        {
-                            sb.AppendLine("请问这下面有没有你要找的武器呢?（可尝试复制下面的名称来进行搜索)");
-                            foreach (var item in similarlist)
-                            {
-                                sb.AppendLine($"    {item}");
-                            }
-                        }
-
+                        Messenger.SendGroup(group, $"武器 {weapon} 不存在, 请检查格式(请注意: 悦音prime)");
                     }
                 }
                 else
                 {
-                    sb.AppendLine("本机器人没有 WFA 授权, 本功能无法使用, 请联系机器人管理员.");
+                    Messenger.SendGroup(group, "本机器人没有 WFA 授权, 本功能无法使用, 请联系机器人管理员.");
                 }
             }
             catch (WebException)
             {
-                sb.AppendLine("经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
+                Messenger.SendGroup(group, "经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
             }
-            Messenger.SendGroup(group, sb.ToString().Trim());
         }
+
     }
 }

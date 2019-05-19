@@ -333,16 +333,6 @@ namespace Settings
         }
     }
 
-    public static class DictionaryExtensions
-    {
-        /*public static Dictionary<T1, T2> Reverse<T1, T2>(this Dictionary<T2, T1> dic)
-        {
-            dic.SelectMany(k => k.Value
-                    .Select(v => new { Key = v, Value = k.Key }))
-                .ToDictionary(t => t.Key, t => t.Value);
-        }*/ 
-        // 不会写泛型(
-    }
     public static class StringExtensions
     {
         public static bool IsNumber(this string source)
