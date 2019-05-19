@@ -159,6 +159,11 @@ namespace TRKS.WF.QQBot
         {
             return $"{str}\n可使用: /help来查看机器人的更多说明.";
         }
+
+        public static string AddRemainCallCount(this string str, GroupNumber group)
+        {
+            return Config.Instance.CallperMinute == 0 ? string.Empty : $"{str}\n本群每分钟还能调用{Config.Instance.CallperMinute - Messenger.GroupCallDic[group.ToString()]}次.";
+        }
     }
 
 }

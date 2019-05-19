@@ -106,7 +106,7 @@ namespace TRKS.WF.QQBot
                             }
 
                             sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
-                            Messenger.SendGroup(group, sb.ToString().Trim());
+                            Messenger.SendGroup(group, sb.ToString().Trim().AddRemainCallCount(group));
                             return;
                         }
                     }
@@ -168,7 +168,7 @@ namespace TRKS.WF.QQBot
                 msg = $"{msg}\n\n如果你需要快捷回复, 请使用指令 <查询 {item} -QR>";
             }
 
-            Messenger.SendGroup(group, msg.AddPlatformInfo());
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
     }
 }

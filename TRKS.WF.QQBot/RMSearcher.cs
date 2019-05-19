@@ -77,23 +77,23 @@ namespace TRKS.WF.QQBot
                     {
                         Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         var info = GetRivenInfos(weapon);
-                        var msg = info.Any() ? WFFormatter.ToString(info) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.";
+                        var msg = info.Any() ? WFFormatter.ToString(info) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
 
-                        Messenger.SendGroup(group, msg.AddPlatformInfo());
+                        Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
                     }
                     else
                     {
-                        Messenger.SendGroup(group, $"武器 {weapon} 不存在, 请检查格式(请注意: 悦音prime)");
+                        Messenger.SendGroup(group, $"武器 {weapon} 不存在, 请检查格式(请注意: 悦音prime)".AddRemainCallCount(group));
                     }
                 }
                 else
                 {
-                    Messenger.SendGroup(group, "本机器人没有 WFA 授权, 本功能无法使用, 请联系机器人管理员.");
+                    Messenger.SendGroup(group, "本机器人没有 WFA 授权, 本功能无法使用, 请联系机器人管理员.".AddRemainCallCount(group));
                 }
             }
             catch (WebException)
             {
-                Messenger.SendGroup(group, "经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
+                Messenger.SendGroup(group, "经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.".AddRemainCallCount(group));
             }
         }
 
