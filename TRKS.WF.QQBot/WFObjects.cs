@@ -9,6 +9,56 @@ using Newtonsoft.Json;
 namespace TRKS.WF.QQBot
 {
 
+    public class WikiQuery
+    {
+        public bool batchcomplete { get; set; }
+        public Query query { get; set; }
+    }
+
+    public class Query
+    {
+        public Page[] pages { get; set; }
+    }
+
+    public class Page
+    {
+        public int pageid { get; set; }
+        public int ns { get; set; }
+        public string title { get; set; }
+        public Revision[] revisions { get; set; }
+    }
+
+    public class Revision
+    {
+        public string contentformat { get; set; }
+        public string contentmodel { get; set; }
+        private string _content;
+
+        public string content
+        {
+            get => _content;
+            set
+            {
+                _content = value;
+                wiki = value.JsonDeserialize<Wiki>();
+            }
+        }
+
+        [JsonIgnore]
+        public Wiki wiki
+        {
+            get;
+            set;
+            // ↑超牛逼的写法 
+        }
+    }
+
+    public class Wiki
+    {
+        public Dictionary<string, string> Text { get; set; }
+        public Dictionary<string, string> Category { get; set; }
+    }
+
     public class WFNightWave
     {
         public string id { get; set; }
@@ -419,6 +469,7 @@ namespace TRKS.WF.QQBot
         public Relic[] Relic { get; set; }
         public Modifier[] Modifier { get; set; }
         public NightWave[] NightWave { get; set; }
+        public WikiQuery wiki { get; set; }
     }
 
     public class Modifier
