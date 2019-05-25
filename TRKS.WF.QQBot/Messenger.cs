@@ -186,10 +186,11 @@ namespace TRKS.WF.QQBot
 宣传贴地址: https://warframe.love/thread-230.htm
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/master/README.md (绝对最新的文档)
 ↑这个文档你们多读一读,机器人最新最好玩的功能都写在里面了.
-开源地址: https://github.com/TRKS-Team/WFBot
+项目地址: https://github.com/TRKS-Team/WFBot
 赞助(乞讨)地址: https://afdian.net/@TheRealKamisama
 您的赞助会用来维持公用机器人,也能推动我继续维护本插件.
-本机器人为公益项目,持续维护中.");
+本机器人为公益项目,持续维护中.
+如果你见到有人使用本插件盈利,请在上方项目地址反馈.");
             if (File.Exists("data/image/帮助文档.png"))
             {
                 SendGroup(@group, @"[CQ:image,file=\帮助文档.png]");
@@ -199,6 +200,7 @@ namespace TRKS.WF.QQBot
                 SendGroup(@group, @"欢迎查看破机器人的帮助文档,如有任何bug和崩溃请多多谅解.
 作者: TheRealKamisama 开源地址: https://github.com/TRKS-Team/WFBot
 如果群里没有自动通知 请务必检查是否启用了通知功能
+    Wiki: /wiki [关键词] 搜索wiki上的页面
     午夜电波: /午夜电波 每日每周即将过期的挑战
     机器人状态: /机器人状态 机器人目前的运行状态.
     警报: /警报 当前的所有警报.

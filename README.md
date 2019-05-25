@@ -2,8 +2,8 @@
 
 ![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
-此项目使用 AGPL 协议授权. 如果你修改了源代码并应用到了机器人上, 请将其开源.  
-我们不提倡任何商业用途, 如果需要, 请联系我们.  
+此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
+我们**不允许**任何商业用途, 如果你发现有人违反, 请向我反馈.  
 基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.
 
 - 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻
@@ -53,6 +53,7 @@
 #### 或者: 自己编译 (特殊需求) (不推荐)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
+> 如果你修改了代码并应用到机器人上, 请在GitHub上开源其最新版本.  
 > 我们强烈建议在 Windows 平台下编译这个项目.  
 > **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
 
@@ -103,6 +104,7 @@
 
 **设置内可以更改命令前无需斜杠.**
 
+- **_Wiki_**: **/wiki [关键词]** 搜索[Wiki](https://warframe.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5)上的页面
 - **_午夜电波_**: **/午夜电波** 每周/每日/即将过期 的挑战.
 - **_机器人状态_**: **/机器人状态** 机器人的运行状态.
 - **_警报_**: **/警报** 当前的所有警报.

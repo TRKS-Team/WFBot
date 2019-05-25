@@ -19,7 +19,7 @@ namespace TRKS.WF.QQBot
             return Task.Run(() =>
             {
                 Directory.CreateDirectory("WFCaches");
-                var fileName = url.Split('/').Last();
+                var fileName = url.Split('/').Last().Split('?').First();
                 var path = $"WFCaches\\{fileName}";
                 expectedCount++;
 
