@@ -25,7 +25,7 @@ namespace TRKS.WF.QQBot
             var msg = $"{WFFormatter.ToString(cetuscycle)}\r\n" +
                       $"{WFFormatter.ToString(valliscycle)}";
 
-            Messenger.SendGroup(group, msg.AddPlatformInfo());
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
 
         public void SendSortie(GroupNumber group)
@@ -33,7 +33,7 @@ namespace TRKS.WF.QQBot
             var sortie = api.GetSortie();
             var msg = WFFormatter.ToString(sortie);
             
-            Messenger.SendGroup(group, msg.AddPlatformInfo());
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
 
         public void SendVoidTrader(GroupNumber group)
@@ -41,7 +41,7 @@ namespace TRKS.WF.QQBot
             var trader = api.GetVoidTrader();
             var msg = WFFormatter.ToString(trader);
 
-            Messenger.SendGroup(group, msg.AddPlatformInfo());
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
 
         public void SendFortunaMissions(GroupNumber group, int index)
@@ -51,7 +51,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index));
             sb.AppendLine();
             sb.Append($"您正在查看 福尔图娜 的全部赏金任务, 使用: /地球赏金 来查询希图斯的赏金任务.");
-            Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
+            Messenger.SendGroup(group, sb.ToString().AddPlatformInfo().AddRemainCallCount(group));
         }
 
         public void SendCetusMissions(GroupNumber group, int index)
@@ -61,7 +61,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index));
             sb.AppendLine();
             sb.Append("您正在查看 希图斯 的全部赏金任务, 使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
-            Messenger.SendGroup(group, sb.ToString().AddPlatformInfo());
+            Messenger.SendGroup(group, sb.ToString().AddPlatformInfo().AddRemainCallCount(group));
         }
 
         //public void SendFissures(string group, List<string> words)
@@ -70,7 +70,7 @@ namespace TRKS.WF.QQBot
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var fissures = api.GetFissures().Where(fissure => fissure.active).ToList();
             var msg = WFFormatter.ToString(fissures);
-            Messenger.SendGroup(group, msg.AddPlatformInfo());
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
             // _fissures = api.GetFissures();
         }
 
@@ -80,7 +80,7 @@ namespace TRKS.WF.QQBot
             var msg = $"{WFFormatter.ToString(relics)}\n\n" +
                       $"你正在查看与 {word} 有关的所有遗物.";
 
-            Messenger.SendGroup(group, msg.AddPlatformInfo());
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
 
         public void SendEvent(GroupNumber group)
@@ -89,24 +89,24 @@ namespace TRKS.WF.QQBot
             if (events.Any())
             {
                 var msg = WFFormatter.ToString(events);
-                Messenger.SendGroup(group, msg.AddPlatformInfo());
+                Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
             }
             else
             {
-                Messenger.SendGroup(group, "目前游戏内没有任何活动 (尸鬼, 豺狼, 舰队).".AddPlatformInfo());
+                Messenger.SendGroup(group, "目前游戏内没有任何活动 (尸鬼, 豺狼, 舰队).".AddPlatformInfo().AddRemainCallCount(group));
             }
         }
 
         public void SendNightWave(GroupNumber group)
         {
             var nightwave = api.GetNightWave();
-            var msg = WFFormatter.ToString(nightwave).AddPlatformInfo();
+            var msg = WFFormatter.ToString(nightwave).AddPlatformInfo().AddRemainCallCount(group);
             Messenger.SendGroup(group, msg);
         }
 
         public void SendTranslateResult(GroupNumber group, string str)
         {
-            var msg = translator.GetTranslateResult(str);
+            var msg = translator.GetTranslateResult(str).AddRemainCallCount(group);
             Messenger.SendGroup(group, msg);
         }
     }
