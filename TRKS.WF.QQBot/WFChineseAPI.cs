@@ -77,12 +77,7 @@ namespace TRKS.WF.QQBot
                 Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
                 Downloader.GetCacheOrDownload<Relic[]>($"{source}WF_Relic.json", relics => api.Relic = relics),
                 Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers),
-                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave),
-                Downloader.GetCacheOrDownload<WikiQuery>("https://warframe.huijiwiki.com/api.php?action=query&format=json&prop=revisions&titles=UserDict&formatversion=2&rvprop=content", wiki =>
-                {
-                    api.wiki = wiki;
-                    api.wiki.query.pages.First().revisions.First().wiki = wiki.query.pages.First().revisions.First().content.JsonDeserialize<Wiki>();
-                })
+                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
             );
 
             Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
@@ -316,33 +311,6 @@ namespace TRKS.WF.QQBot
             {
                 nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
             }
-
-            var wiki = translateApi.wiki.query.pages.First().revisions.First().wiki;
-            var reversewiki = new Wiki{
-                Category = wiki.Category
-                    .SelectMany(k => k.Value
-                    .Select(v => new { Key = v, Value = k.Key }))
-                    .ToDictionary(t => t.Key.ToString(), t => t.Value),
-                Text = wiki.Text
-                    .SelectMany(k => k.Value
-                    .Select(v => new { Key = v, Value = k.Key }))
-                    .ToDictionary(t => t.Key.ToString(), t => t.Value)
-            };
-            wikiwords.AddRange(wiki.Category.Keys.Select(k => k.Format()));
-            wikiwords.AddRange(wiki.Category.Values.Select(v => v.Format()));
-            wikiwords.AddRange(wiki.Text.Keys.Select(k => k.Format()));
-            wikiwords.AddRange(wiki.Text.Values.Select(v => v.Format()));
-            foreach (var key in reversewiki.Category.Keys)
-            {
-                wikiTranslator.AddEntry(key.Format(), reversewiki.Category[key].Replace(" ", "_"));
-                wikiTranslator.AddEntry(reversewiki.Category[key].Format(), reversewiki.Category[key].Replace(" ", ""));
-            }
-
-            foreach (var key in reversewiki.Text.Keys)
-            {
-                wikiTranslator.AddEntry(key.Format(), reversewiki.Text[key].Replace(" ", "_"));
-                wikiTranslator.AddEntry(reversewiki.Text[key].Format(), reversewiki.Text[key].Replace(" ", ""));
-            }
         }
 
         public string GetTranslateResult(string str)
@@ -410,6 +378,7 @@ namespace TRKS.WF.QQBot
                         }
                     }
                     break;
+                /*                
                 case "wiki":
                     foreach (var wiki in wikiwords)
                     {
@@ -420,6 +389,8 @@ namespace TRKS.WF.QQBot
                         }
                     }                  
                     break;
+                    */
+                //木大
             }
 
 

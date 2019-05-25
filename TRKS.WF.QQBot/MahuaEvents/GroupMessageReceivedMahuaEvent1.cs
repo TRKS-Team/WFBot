@@ -177,7 +177,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [CombineParams]
         string Wiki(string word)
         {
-            return _wikiSearcher.Search(word);
+            return _wikiSearcher.SendSearch(word);
             // 这简直就是官方吞mod最形象的解释
         }
     }
