@@ -78,7 +78,7 @@ namespace TRKS.WF.QQBot
                     {
                         Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         var info = GetRivenInfos(weapon);
-                        var msg = info.Any() ? WFFormatter.ToString(info) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.";
+                        var msg = info.Any() ? WFFormatter.ToString(info) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
 
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
