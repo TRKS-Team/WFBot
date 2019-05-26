@@ -97,13 +97,17 @@ namespace TRKS.WF.QQBot
                         if (formateditem == searchword)
                         {
                             var sb = new StringBuilder();
-                            var similarlist = translator.GetSimilarItem(item.Format());
+                            var similarlist = translator.GetSimilarItem(item.Format(), "wm");
                             sb.AppendLine($"物品 {item} 不存在或格式错误.");
-                            sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
-                            foreach (var similarresult in similarlist)
+                            if (similarlist.Any())
                             {
-                                sb.AppendLine($"    {similarresult}");
+                                sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                                foreach (var similarresult in similarlist)
+                                {
+                                    sb.AppendLine($"    {similarresult}");
+                                }
                             }
+
 
                             sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
                             Messenger.SendGroup(group, sb.ToString().Trim().AddRemainCallCount(group));

@@ -238,10 +238,12 @@ namespace TRKS.WF.QQBot
     {
         private ConcurrentDictionary<string /*type*/, Translator> dictTranslators = new ConcurrentDictionary<string, Translator>();
         private ConcurrentDictionary<string, Translator> searchwordTranslator = new ConcurrentDictionary<string, Translator>();
+        private Translator wikiTranslator = new Translator();
         private Translator nightwaveTranslator = new Translator();
         private Translator invasionTranslator = new Translator();
         private Translator alertTranslator = new Translator();
         private List<string> weapons = new List<string>();
+        private List<string> wikiwords = new List<string>();
         private WFApi translateApi => WFResource.WFApi;
 
 
@@ -349,15 +351,48 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString().Trim();
         }
-        public List<string> GetSimilarItem(string word)
+        public List<string> GetSimilarItem(string word, string mode)
         {
-            var lev = new Fastenshtein.Levenshtein(word);
+            var lev = new Fastenshtein.Levenshtein(word.Format());
             var distancelist = new SortedSet<StringInfo>();
-            foreach (var sale in translateApi.Sale)
+            var str = word.Substring(0, 1);
+            switch (mode)
             {
-                var distance = lev.DistanceFrom(sale.Zh.Format());
-                distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
+                case "wm":
+                    foreach (var sale in translateApi.Sale)
+                    {
+                        if (sale.Zh.StartsWith(str))
+                        {
+                            var distance = lev.DistanceFrom(sale.Zh.Format());
+                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
+                        }
+                    }
+                    break;
+                case "rm":
+                    foreach (var weapon in weapons)
+                    {
+                        if (weapon.StartsWith(str))
+                        {
+                            var distance = lev.DistanceFrom(weapon.Format());
+                            distancelist.Add(new StringInfo { LevDistance = distance, Name = weapon });
+                        }
+                    }
+                    break;
+                /*                
+                case "wiki":
+                    foreach (var wiki in wikiwords)
+                    {
+                        if (wiki.StartsWith(str) || Regex.IsMatch(word, @"[a-z]"))
+                        {
+                            var distance = lev.DistanceFrom(wiki.Format());
+                            distancelist.Add(new StringInfo { LevDistance = distance, Name = wiki });
+                        }
+                    }                  
+                    break;
+                    */
+                //木大
             }
+
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
         }
@@ -446,6 +481,11 @@ namespace TRKS.WF.QQBot
         public bool ContainsWeapon(string weapon)
         {
             return weapons.Contains(weapon);
+        }
+
+        public bool ContainsWikiword(string word)
+        {
+            return wikiwords.Contains(word);
         }
 
         public void TranslateAlert(WFAlert alert)
