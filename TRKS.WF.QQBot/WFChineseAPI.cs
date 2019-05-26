@@ -428,8 +428,16 @@ namespace TRKS.WF.QQBot
             if (!node.IsNullOrEmpty())
             {
                 var strings = node.Split('(');
-                var nodeRegion = strings[1].Split(')')[0];
-                result = strings[0] + dictTranslators["Star"].Translate(nodeRegion);
+                if (strings.Length >= 2)
+                {
+                    var nodeRegion = strings[1].Split(')')[0];
+                    result = strings[0] + dictTranslators["Star"].Translate(nodeRegion);
+                }
+                else
+                {
+                    return dictTranslators["Star"].Translate(node);
+                }
+
             }
 
             return result;
