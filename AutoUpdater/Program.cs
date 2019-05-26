@@ -25,7 +25,7 @@ namespace AutoUpdater
                 if (Path.GetFileNameWithoutExtension(name)
                     .Equals(MahuaPlatformValueProvider.CurrentPlatform.Value.ToString(), StringComparison.OrdinalIgnoreCase))
                 {
-                    var webClient = new WebClientEx(new CookieContainer());
+                    var webClient = new GammaLibrary.Enhancements.WebClientEx();
                     if (File.Exists(name)) File.Delete(name);
                     webClient.Headers.Add("Authorization", "Bearer 6k1w2i924vgqpylm547l");
                     webClient.Headers.Add("Content-Type", "application/json");

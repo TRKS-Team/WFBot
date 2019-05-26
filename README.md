@@ -2,7 +2,7 @@
 
 ![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
-此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
+**重要**: 如果你修改了此项目,并将其应用到机器人上, 除了需要遵守 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议以外, 还需要遵守以下[补充条款](docs/extralicense.md).  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我反馈.  
 基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.
 
@@ -53,7 +53,7 @@
 #### 或者: 自己编译 (特殊需求) (不推荐)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
-> 如果你修改了代码并应用到机器人上, 请在GitHub上开源其最新版本.  
+> 如果你修改了代码并应用到机器人上, 请在 GitHub 上开源其最新版本.  
 > 我们强烈建议在 Windows 平台下编译这个项目.  
 > **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
 
