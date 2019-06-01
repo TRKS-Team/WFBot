@@ -19,7 +19,7 @@ namespace TRKS.WF.QQBot
             var wiki = GetWiki(word);
             if (wiki.query.search.Select(s => s.title.Format()).Contains(word.Format()))
             {
-                return $"为指挥官献上[{word}]的链接: {wikilink + word.Format()}";
+                return $"为指挥官献上[{word}]的链接: {wikilink + translator.TranslateWikiSearchWord(word.Format())}";
             }
             var sb = new StringBuilder();
             sb.AppendLine($"Wiki页面 {word} 不存在.");

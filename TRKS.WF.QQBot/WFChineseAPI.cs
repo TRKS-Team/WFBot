@@ -177,6 +177,13 @@ namespace TRKS.WF.QQBot
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
+        public EarthCycle GetEarthCycle()
+        {
+            var cycle = WebHelper.DownloadJson<EarthCycle>($"https://api.warframestat.us/{platform}/earthCycle");
+            cycle.expiry = GetRealTime(cycle.expiry);
+            return cycle;
+        }
+
 
 
         public Sortie GetSortie()
@@ -313,6 +320,10 @@ namespace TRKS.WF.QQBot
             }
         }
 
+        public string TranslateWikiSearchWord(string word)
+        {
+            return dictTranslators["All"].Translate(word);
+        }
         public string GetTranslateResult(string str)
         {
             if (str.IsNullOrEmpty())

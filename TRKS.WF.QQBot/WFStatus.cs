@@ -22,8 +22,10 @@ namespace TRKS.WF.QQBot
         {
             var cetuscycle = api.GetCetusCycle();
             var valliscycle = api.GetVallisCycle();
+            var earthcycle = api.GetEarthCycle();
             var msg = $"{WFFormatter.ToString(cetuscycle)}\r\n" +
-                      $"{WFFormatter.ToString(valliscycle)}";
+                      $"{WFFormatter.ToString(valliscycle)}\r\n" +
+                      $"{WFFormatter.ToString(earthcycle)}";
 
             Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }

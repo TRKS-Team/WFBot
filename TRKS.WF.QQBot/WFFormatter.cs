@@ -235,6 +235,20 @@ namespace TRKS.WF.QQBot
 
             return sb.ToString();
         }
+        public static string ToString(EarthCycle cycle)
+        {
+            var time = (cycle.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
+                TimeUnit.Hour, TimeUnit.Second, " ");
+            var status = cycle.isDay ? "白天" : "夜晚";
+            var nextTime = !cycle.isDay ? "白天" : "夜晚";
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"现在地球的时间是: {status}");
+            //sb.AppendLine($"将在 {cycle.Expiry} 变为 {nextTime}");
+            sb.Append($"距离 {nextTime} 还有 {time}");
+
+            return sb.ToString();
+        }
         [Pure]
         public static string ToString(VallisCycle cycle)
         {

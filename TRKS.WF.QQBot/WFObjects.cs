@@ -59,6 +59,17 @@ namespace TRKS.WF.QQBot
             public Dictionary<string, string> Category { get; set; }
         }*/
 
+
+    public class EarthCycle
+    {
+        public string id { get; set; }
+        public DateTime expiry { get; set; }
+        public DateTime activation { get; set; }
+        public bool isDay { get; set; }
+        public string state { get; set; }
+        public string timeLeft { get; set; }
+    }
+
     public class Wiki
     {
         public bool batchcomplete { get; set; }
