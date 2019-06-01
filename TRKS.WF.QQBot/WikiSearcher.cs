@@ -26,7 +26,7 @@ namespace TRKS.WF.QQBot
             var similarlist = wiki.query.search.Select(s => s.title).Take(3);
             if (similarlist.Any())
             {
-                sb.AppendLine("请问这下面有没有你要找的呢?（可尝试复制下面的名称来进行搜索)");
+                sb.AppendLine("相似内容:（可复制下面来搜索)");
                 foreach (var item in similarlist)
                 {
                     sb.AppendLine($"    {item}");
