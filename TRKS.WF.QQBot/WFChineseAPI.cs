@@ -320,10 +320,6 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        public string TranslateWikiSearchWord(string word)
-        {
-            return dictTranslators["All"].Translate(word);
-        }
         public string GetTranslateResult(string str)
         {
             if (str.IsNullOrEmpty())
