@@ -26,7 +26,8 @@ namespace TRKS.WF.QQBot
 
         static Messenger()
         {
-            if (DebugAlternateHandler == null) return;
+            // 大家都知道你很蠢啦
+            if (DebugAlternateHandler != null) return;
 
             PrivateMessageTimer.Elapsed += (s, e) =>
             {
