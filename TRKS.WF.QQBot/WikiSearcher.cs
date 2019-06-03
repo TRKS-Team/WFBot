@@ -11,7 +11,7 @@ namespace TRKS.WF.QQBot
         private const string wikilink = "https://warframe.huijiwiki.com/wiki/";
         public string SendSearch(string word)
         {
-            if (word.IsNullOrEmpty())
+            if (word == "wiki")
             {
                 return $"为指挥官献上wiki的链接: {wikilink}";
             }
