@@ -42,8 +42,8 @@
     <Reference Include="ConfigureAwait, Version=3.0.0.0, Culture=neutral, PublicKeyToken=233850a516558a98, processorArchitecture=MSIL">
       <HintPath>..\packages\ConfigureAwait.Fody.3.0.0\lib\net452\ConfigureAwait.dll</HintPath>
     </Reference>
-    <Reference Include="GammaLibrary, Version=1.1.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GammaLibrary.1.1.9\lib\netstandard2.0\GammaLibrary.dll</HintPath>
+    <Reference Include="GammaLibrary, Version=1.1.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GammaLibrary.1.1.10\lib\netstandard2.0\GammaLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Newbe.Mahua, Version=1.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Newbe.Mahua.1.15.0\lib\net452\Newbe.Mahua.dll</HintPath>
@@ -65,8 +65,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="TextCommandCore, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\TextCommandCore.1.5.1\lib\netstandard2.0\TextCommandCore.dll</HintPath>
+    <Reference Include="TextCommandCore, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TextCommandCore.1.6.0\lib\netstandard2.0\TextCommandCore.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
