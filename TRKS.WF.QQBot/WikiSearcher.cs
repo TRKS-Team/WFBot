@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using GammaLibrary.Extensions;
 using Settings;
@@ -7,7 +8,6 @@ namespace TRKS.WF.QQBot
 {
     public class WikiSearcher
     {
-        private static WFTranslator translator => WFResource.WFTranslator;
         private const string wikilink = "https://warframe.huijiwiki.com/wiki/";
         public string SendSearch(string word)
         {
@@ -19,7 +19,7 @@ namespace TRKS.WF.QQBot
             var wiki = GetWiki(word);
             if (wiki.query.search.Select(s => s.title.Format()).Contains(word.Format()))
             {
-                return $"为指挥官献上[{word}]的链接: {wikilink + translator.TranslateWikiSearchWord(word.Format())}";
+                return $"为指挥官献上[{word}]的链接: {wikilink + Uri.EscapeUriString(word.Format())}";
             }
             var sb = new StringBuilder();
             sb.AppendLine($"Wiki页面 {word} 不存在.");
