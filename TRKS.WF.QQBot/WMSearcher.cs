@@ -24,7 +24,7 @@ namespace TRKS.WF.QQBot
                 platform = "switch";
             }
             header.Add("platform", platform);
-            var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item");
+            var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
             return info;
         }
 
