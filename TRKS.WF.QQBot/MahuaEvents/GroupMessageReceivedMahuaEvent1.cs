@@ -203,6 +203,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
         public GroupMessageHandler(HumanQQNumber sender, GroupNumber group, string message)
         {
+            _ = InitEvent1.localVersion;
             Sender = sender;
             MessageSender = (id, msg) =>
             {

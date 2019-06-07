@@ -147,7 +147,6 @@ namespace TRKS.WF.QQBot
 
                 sb.AppendLine($"- 价格: {info.item_Price}白鸡 ({info.item_ResetNum}洗)");
                 sb.AppendLine($"  属性: {info.item_Property.Replace("|", "").Replace(" ", " | ")}");
-                sb.AppendLine();
             }
 
             return sb.ToString().Trim();
@@ -317,15 +316,12 @@ namespace TRKS.WF.QQBot
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {
-                sb.AppendLine($"[{order.user.ingame_name}]   {order.user.status}");
-                sb.AppendLine($"{order.order_type}  {order.platinum} 白鸡");
+                sb.AppendLine($"{order.order_type} {order.platinum} 白鸡 [{order.user.ingame_name}] {order.user.status} ");
                 if (withQR)
                 {
                     sb.AppendLine(
                         $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
                 }
-
-                sb.AppendLine();
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
@@ -340,14 +336,12 @@ namespace TRKS.WF.QQBot
 
             foreach (var order in info.orders)
             {
-                sb.AppendLine($"[{order.userName}]   {order.status}");
-                sb.AppendLine($"{order.order_Type}  {order.platinum} 白鸡");
+                sb.AppendLine($"{order.order_Type} {order.platinum} 白鸡 [{order.userName}] {order.status}");
                 if (withQR)
                 {
                     sb.AppendLine(
                         $"- 快捷回复: /w {order.userName} Hi! I want to buy: {item.enName} for {order.platinum} platinum. (warframe.market)");
                 }
-                sb.AppendLine();
             }
             // 这已经很难看了好吧
             return sb.ToString().Trim();

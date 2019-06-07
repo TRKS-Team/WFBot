@@ -18,6 +18,12 @@ using Timer = System.Timers.Timer;
 
 namespace TRKS.WF.QQBot
 {
+    public static class MessengerHandlers
+    {
+        public static Action<string> DebugAlternateHandler;
+        public static Action<string> MessageAlternateHandler;
+    }
+
     public static class Messenger
     {
         public static Dictionary<string, int> GroupCallDic = new Dictionary<string, int>();
@@ -27,23 +33,29 @@ namespace TRKS.WF.QQBot
         static Messenger()
         {
             // 大家都知道你很蠢啦
-            if (DebugAlternateHandler != null) return;
 
             PrivateMessageTimer.Elapsed += (s, e) =>
             {
+                if (MessengerHandlers.DebugAlternateHandler != null) return;
                 lock (typeof(Messenger))
                 {
-                    foreach (var pair in PrivateMessageDictionary)
+                    try
                     {
-                        using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+                        foreach (var pair in PrivateMessageDictionary)
                         {
-                            var api = robotSession.MahuaApi;
-                            api.SendPrivateMessage(pair.Key, pair.Value);
+                            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+                            {
+                                var api = robotSession.MahuaApi;
+                                api.SendPrivateMessage(pair.Key, pair.Value);
+                            }
                         }
+                        PrivateMessageDictionary.Clear();
                     }
-                    PrivateMessageDictionary.Clear();
+                    catch (Exception)
+                    {
+                    }
                 }
-                
+
             };
             PrivateMessageTimer.Start();
         }
@@ -62,14 +74,11 @@ namespace TRKS.WF.QQBot
 
         }
 
-        public static Action<string> DebugAlternateHandler;
-        public static Action<string> MessageAlternateHandler;
-
         public static void SendDebugInfo(string content)
         {
-            if (DebugAlternateHandler != null)
+            if (MessengerHandlers.DebugAlternateHandler != null)
             {
-                DebugAlternateHandler(content);
+                MessengerHandlers.DebugAlternateHandler(content);
                 return;
             }
 
@@ -98,9 +107,9 @@ namespace TRKS.WF.QQBot
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(GroupNumber g, string content)
         {
-            if (MessageAlternateHandler != null)
+            if (MessengerHandlers.MessageAlternateHandler != null)
             {
-                MessageAlternateHandler(content);
+                MessengerHandlers.MessageAlternateHandler(content);
                 return;
             }
 
@@ -161,7 +170,7 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine($"插件版本: 非官方");
             }
-            sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline? "在线" : "离线")}]");
+            sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
             var commit = CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits")?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";

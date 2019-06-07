@@ -152,7 +152,7 @@ namespace TRKS.WF.QQBot
 
         public static string AddPlatformInfo(this string str)
         {
-            return $"{str}\n\n以上信息来自 {platform} 平台.";
+            return $"{str}\n\n[{platform} 平台]";
         }
 
         public static string AddHelpInfo(this string str)

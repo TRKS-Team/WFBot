@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoUpdater", "AutoUpdater\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFBotTest", "WFBotTest\WFBotTest.csproj", "{0D59DA72-F68D-42A9-838C-6341356C89DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFBotExamplePlugin", "WFBotExamplePlugin\WFBotExamplePlugin.csproj", "{67442F2C-E4D2-4454-B3CD-7F504B96AAE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67442F2C-E4D2-4454-B3CD-7F504B96AAE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67442F2C-E4D2-4454-B3CD-7F504B96AAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67442F2C-E4D2-4454-B3CD-7F504B96AAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67442F2C-E4D2-4454-B3CD-7F504B96AAE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

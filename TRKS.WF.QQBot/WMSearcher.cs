@@ -169,7 +169,7 @@ namespace TRKS.WF.QQBot
 
             if (!quickReply)
             {
-                msg = $"{msg}\n\n如果你需要快捷回复, 请使用指令 <查询 {item} -QR>";
+                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {item} -QR>";
             }
 
             Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
