@@ -3,12 +3,12 @@
 ![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
-我们**不允许**任何商业用途, 如果你发现有人违反, 请向我反馈.  
-基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.
+我们**不允许**任何商业用途, 如果你发现有人违反, 请向我反馈.
 
-- 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻
-- 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理
-- 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
+> 基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.  
+> 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
+> 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
+> 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
 
 ![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
@@ -48,12 +48,18 @@
 
 1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 .NET Framework 4.7.1 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带)
 2. 从 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
-3. 享受这个插~~♂~~件的的快感吧!
+3. 享受这个插件的的快感吧!
 
-#### 或者: 自己编译 (特殊需求) (不推荐)
+#### 或者: 自己编译
+
+```diff
++ 新! 针对改代码(如文字提示)又想~~享受~~自动更新的客户 你可以写一个 WFBot 的插件 👇
+```
+
+请查看[这里](docs/plugin.md)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
-> 如果你修改了代码并应用到机器人上, 请在GitHub上开源其最新版本.  
+> 如果你修改了代码并应用到机器人上, 请在 GitHub 上开源其最新版本.  
 > 我们强烈建议在 Windows 平台下编译这个项目.  
 > **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
 

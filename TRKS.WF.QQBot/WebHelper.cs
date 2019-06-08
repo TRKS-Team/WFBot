@@ -66,12 +66,12 @@ namespace TRKS.WF.QQBot
             return new WebStatus(false, 666);
         }
 
-        public static T DownloadJson<T>(string url)
+        public static T DownloadJson<T>(string url, bool throwException = true)
         {
             var sw = Stopwatch.StartNew();
             try
             {
-                var count = 3;
+                var count = 2;
                 while (count-- > 0)
                 {
                     try
@@ -82,12 +82,36 @@ namespace TRKS.WF.QQBot
                     {
                     }
                 }
-                throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
+
+                if (throwException)
+                {
+                    throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
+                }
+                else
+                {
+                    return default;
+                }
             }
             finally
             {
                 Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
             }
+        }
+
+        public static T DownloadJsonParallel<T>(params string[] urls)
+        {
+            var tasks = urls.Select(url => Task.Run(() => DownloadJson<T>(url, false))).ToList();
+
+            while (tasks.Any())
+            {
+                Task.WaitAny(tasks.ToArray<Task>());
+                foreach (var task in tasks.Where(task => task.IsCompleted && task.Result != null))
+                    return task.Result;
+
+                tasks.RemoveAll(task => task.IsCompleted && task.Result == null);
+            }
+
+            throw new WebException($"在下载[{urls.FirstOrDefault()}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
         }
 
         public static async Task<T> DownloadJsonAsync<T>(string url)
