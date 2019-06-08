@@ -19,45 +19,44 @@ namespace AutoUpdater
     {
         static void Main(string[] args)
         {
-            var platformNames = new[] { "CleverQQ", "MPQ", "CQP", "QQLight" };
-            foreach (var name in platformNames)
+            try
             {
-                if (Path.GetFileNameWithoutExtension(name)
-                    .Equals(MahuaPlatformValueProvider.CurrentPlatform.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                var platformNames = new[] { "CleverQQ", "MPQ", "CQP", "QQLight" };
+                foreach (var name in platformNames)
                 {
-                    var webClient = new GammaLibrary.Enhancements.WebClientEx();
-                    if (File.Exists(name)) File.Delete(name);
-                    webClient.Headers.Add("Authorization", "Bearer 6k1w2i924vgqpylm547l");
-                    webClient.Headers.Add("Content-Type", "application/json");
-                    webClient.Encoding = Encoding.UTF8;
-                    var content = webClient.DownloadString("https://ci.appveyor.com/api/projects/TRKS-Team/WFBot");
-                    dynamic jsonInfo =
-                        (JObject)JsonConvert.DeserializeObject(content);
-                    var value = webClient.DownloadString(
-                        $"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts");
-                    dynamic jsonArt = new JArray(JsonConvert.DeserializeObject(value));
-                    foreach (dynamic art in jsonArt[0])
+                    if (Path.GetFileNameWithoutExtension(name)
+                        .Equals(MahuaPlatformValueProvider.CurrentPlatform.Value.ToString(), StringComparison.OrdinalIgnoreCase))
                     {
-                        string n = art.fileName;
-                        if (Path.GetFileNameWithoutExtension(n).Equals(name, StringComparison.OrdinalIgnoreCase))
+                        var webClient = new GammaLibrary.Enhancements.WebClientEx();
+                        if (File.Exists(name)) File.Delete(name);
+                        webClient.Headers.Add("Authorization", "Bearer 6k1w2i924vgqpylm547l");
+                        webClient.Headers.Add("Content-Type", "application/json");
+                        webClient.Encoding = Encoding.UTF8;
+                        var content = webClient.DownloadString("https://ci.appveyor.com/api/projects/TRKS-Team/WFBot");
+                        dynamic jsonInfo =
+                            (JObject)JsonConvert.DeserializeObject(content);
+                        try
                         {
-                            a:
-                            try
-                            {
-                                webClient.DownloadFile($"https://ci.appveyor.com/api/buildjobs/{jsonInfo.build.jobs[0].jobId.Value}/artifacts/{art.fileName.Value}", name);
-                                
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e);
-                                goto a;
-                            }
-                            //Directory.Delete("YUELUO", true);
-                            Unzip(ZipFile.OpenRead(name));
+                            webClient.DownloadFile($"http://cy.origind.ac.cn:8000/builds/{jsonInfo.build.version}/{name}.zip", name);
                         }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                        //Directory.Delete("YUELUO", true);
+                        Unzip(ZipFile.OpenRead(name));
+
+
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("自动更新失败. 请手动下载.");
+                Console.ReadKey();
+            }
+            
         }
 
         private static void Unzip(ZipArchive archive)
@@ -66,7 +65,7 @@ namespace AutoUpdater
             foreach (ZipArchiveEntry entry in archive.Entries)
             {
                 if (!entry.FullName.Contains("YUELUO")) continue;
-                
+
                 var fullPath = Path.GetFullPath(entry.FullName);
                 if (Path.GetFileName(fullPath).Length == 0)
                 {

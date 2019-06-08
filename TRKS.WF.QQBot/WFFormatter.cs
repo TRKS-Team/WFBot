@@ -73,7 +73,7 @@ namespace TRKS.WF.QQBot
 
             foreach (var @event in events)
             {
-                var time = (@event.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+                var time = (@event.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
                 sb.AppendLine($"[{@event.description}]");
                 sb.AppendLine($"- 剩余点数: {@event.health}");
                 sb.AppendLine($"- 结束时间: {time} 后");
@@ -100,7 +100,7 @@ namespace TRKS.WF.QQBot
         {
             var mission = alert.Mission;
             var reward = mission.Reward;
-            var time = (alert.Expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+            var time = (alert.Expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
 
             return $"[{mission.Node}] 等级{mission.MinEnemyLevel}~{mission.MaxEnemyLevel}:\r\n" +
                    $"- 类型:     {mission.Type} - {mission.Faction}\r\n" +
