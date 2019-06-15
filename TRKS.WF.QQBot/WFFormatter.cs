@@ -16,7 +16,7 @@ namespace TRKS.WF.QQBot
         public static string ToString(WFNightWave nightwave)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("以下是午夜电波每日每周挑战: ");
+            sb.AppendLine("以下是午夜电波挑战: ");
             sb.AppendLine();
             var onedayleft =
                 nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
@@ -33,21 +33,21 @@ namespace TRKS.WF.QQBot
             challenges = elsechallenges.Where(challenge => challenge.isDaily).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("每日挑战(1000): ");
+                sb.AppendLine("每日挑战: ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = elsechallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("每周挑战(3000): ");
+                sb.AppendLine("每周挑战: ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = elsechallenges.Where(challenge => challenge.isElite).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("精英每周挑战(5000): ");
+                sb.AppendLine("精英每周挑战: ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
             // 不要尝试去读这个
