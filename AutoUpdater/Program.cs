@@ -38,13 +38,26 @@ namespace AutoUpdater
                         try
                         {
                             webClient.DownloadFile($"http://cy.origind.ac.cn:8000/builds/{jsonInfo.build.version}/{name}.zip", name);
+                        Unzip(ZipFile.OpenRead(name));
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e);
+                            try
+                            {
+                                webClient.DownloadFile($"http://origind.ddns.net:8000/builds/{jsonInfo.build.version}/{name}.zip", name);
+
+                                Unzip(ZipFile.OpenRead(name));
+
+                            }
+                            catch (Exception e2)
+                            {
+                                Console.WriteLine(e2);
+
+                            }
+
                         }
                         //Directory.Delete("YUELUO", true);
-                        Unzip(ZipFile.OpenRead(name));
 
 
                     }
@@ -53,7 +66,7 @@ namespace AutoUpdater
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine("自动更新失败. 请手动下载.");
+                Console.WriteLine("自动更新失败. 请手动下载. https://github.com/TRKS-Team/WFBot");
                 Console.ReadKey();
             }
             

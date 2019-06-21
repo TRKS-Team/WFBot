@@ -222,8 +222,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TextCommandCore, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\TextCommandCore.1.6.0\lib\netstandard2.0\TextCommandCore.dll</HintPath>
+    <Reference Include="TextCommandCore, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TextCommandCore.1.6.1\lib\netstandard2.0\TextCommandCore.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
