@@ -44,4 +44,20 @@ namespace WFBotExamplePlugin
             return false;
         }
     }
+
+    [HarmonyPatch(typeof(WFFormatter))]
+    [HarmonyPatch("Translate")]
+    [HarmonyPatch(new[] { typeof(string) })]
+    class Patch3
+    {
+        // __instance 为该方法执行时的 this
+        // __result 是如果你想修改这个方法的返回值 改这个
+        // 更多信息请查看 https://github.com/pardeike/Harmony/wiki/Patching
+        static bool Prefix(Translator __instance, ref string __result, string source)
+        {
+            Console.WriteLine("Translator is fucked");
+            __result = $"AWSL: {source}";
+            return false;
+        }
+    }
 }
