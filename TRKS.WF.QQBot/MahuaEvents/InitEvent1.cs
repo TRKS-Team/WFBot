@@ -59,20 +59,25 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     WFResource.UpdateLexion();
                 }
-                if (Config.Instance.AutoUpdate)
+                var releaseData = ReleaseGetter.Get();
+                var ver = new Version(releaseData.tag_name).Build;
+                if (ver != localVersion)
                 {
-                    var releaseData = ReleaseGetter.Get();
-                    var ver = new Version(releaseData.tag_name).Build;
-                    if (ver != localVersion)
+                    if (updating) return;
+                    if (Config.Instance.AutoUpdate)
                     {
-                        if (updating) return;
                         updating = true;
 
                         Messenger.SendDebugInfo($"开始自动更新。当前版本为v{localVersion}, 将会更新到v{ver}");
-                        Messenger.Broadcast($"机器人开始了自动更新, 当前版本为v{localVersion}, 将会更新到v{ver}, 大约在1分钟内机器人不会回答你的问题.");
+                        Messenger.Broadcast($"WFBot开始了自动更新, 当前版本为v{localVersion}, 将会更新到v{ver}, 大约在1分钟内机器人不会回答你的问题.");
                         AutoUpdateRR.Execute();
                         Thread.Sleep(1000);
                     }
+                    else
+                    {
+                        Messenger.SendDebugInfo($"→ WFBot插件本体{ver}版本发布了, 不去看看更了啥?");
+                    }
+
                 }
             }
             catch (WebException)

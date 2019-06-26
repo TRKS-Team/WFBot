@@ -12,11 +12,13 @@
 
 ![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
-**您的赞助会用来维持公用机器人,也能推动我继续维护本插件.**
+**您的赞助~~会用来维持公用机器人~~,也能推动我继续维护本插件.**
 
+![](http://assets.processon.com/chart_image/5d137fc7e4b049d86c316ddd.png)
 > 本插件附带自动更新.  
-> 最新的插件 会通过 自动更新 部署到 自动更新版本的机器人 上, 如果我手滑引爆了所有机器人, 请不要慌张.  
-> 如果真的全爆了, **没关系** 因为我的机器人也爆了.  
+> 最新的插件 部署到 自动更新版本的机器人 上. 
+> 如果我手滑引爆了所有机器人, 请不要慌张.  
+> 如果真的全爆了, **没关系** 因为~~我的机器人~~也爆了.  
 > 很快 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
 > 此处记录引爆次数: \*4
 
@@ -34,10 +36,10 @@
 
 ### 第一步: 选择以下几种 QQ 机器人平台
 
-- [酷 Q Pro / Air](https://cqp.cc/) - 拥有免费阉割版 **需要开启开发者模式**
-- [QQLight](https://www.52chat.cc/download.php) - 拥有免费阉割版
-- [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) - 拥有免费阉割版
-- [MyPCQQ](https://mypcqq.cc/) - 免费
+- [酷 Q Pro / Air](https://cqp.cc/) - 拥有免费阉割版 **需要开启开发者模式** (CQP.zip)
+- [QQLight](https://www.52chat.cc/download.php) - 拥有免费阉割版 (QQLight.zip)
+- [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) - 拥有免费阉割版 (CleverQQ.zip)
+- [MyPCQQ](https://mypcqq.cc/) - 免费 (MPQ.zip)
 
 > **酷 Q 平台 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法参见 [FAQ](docs/faq.md).**  
 > **我们建议你将你选择的机器人放在一台 24 小时运行的电脑/服务器上.**
@@ -52,11 +54,9 @@
 
 #### 或者: 自己编译
 
-```diff
-+ 新! 针对改代码(如文字提示)又想~~享受~~自动更新的客户 你可以写一个 WFBot 的插件 👇
-```
++ 新! 针对改代码(如文字提示)又想~~享受~~自动更新的客户 你可以写一个 WFBot 的[插件](docs/plugin.md) 
 
-请查看[这里](docs/plugin.md)
+
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 如果你修改了代码并应用到机器人上, 请在 GitHub 上开源其最新版本.  
