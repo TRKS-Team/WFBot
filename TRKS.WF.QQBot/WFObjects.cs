@@ -325,7 +325,7 @@ namespace TRKS.WF.QQBot
         public bool visible { get; set; }
         public int quantity { get; set; }
         public User user { get; set; }
-        public int platinum { get; set; }
+        public double platinum { get; set; }
         public DateTime creation_date { get; set; }
         public string region { get; set; }
         public DateTime last_update { get; set; }
