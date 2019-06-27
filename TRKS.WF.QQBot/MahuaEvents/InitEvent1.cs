@@ -19,6 +19,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
     {
         internal static bool onlineBuild;
         internal static int localVersion;
+        private static bool IsNotified = false;
         private static volatile bool updating;
         internal static Timer timer1;
 
@@ -44,6 +45,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 timer.Elapsed += Timer_Elapsed;
                 timer.Start();
                 
+            }
+            else
+            {
+                var releaseData = ReleaseGetter.Get();
+                var ver = new Version(releaseData.tag_name).Build;
+                Messenger.SendDebugInfo($"→ WFBot插件最新官方{ver}版本, 不去看看你错过了什么新Feature(Bug)?");
             }
         }
 
@@ -75,9 +82,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     }
                     else
                     {
-                        Messenger.SendDebugInfo($"→ WFBot插件本体{ver}版本发布了, 不去看看更了啥?");
+                        if (!IsNotified)
+                        {
+                            IsNotified = true;
+                            Messenger.SendDebugInfo($"→ WFBot插件本体{ver}版本发布了, 不考虑体验一下新Feature(Bug)?");
+                        }
                     }
 
+                    
                 }
             }
             catch (WebException)
