@@ -11,7 +11,8 @@
 
 ![LoadLibraryFailed](images/LoadLibraryFailed.png)
 
-- A: 下载 [.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462) 并安装.
+- A: 下载 ~~~[.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462)~~~ 并安装.  
+**经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及[以上版本](https://dotnet.microsoft.com/download/thank-you/net472)可用**
 
 ---
 
