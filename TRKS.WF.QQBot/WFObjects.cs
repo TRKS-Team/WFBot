@@ -60,6 +60,28 @@ namespace TRKS.WF.QQBot
         }*/
 
 
+    public class Kuva
+    {
+        public DateTime start { get; set; }
+        public DateTime end { get; set; }
+        public string missiontype { get; set; }
+        public string solnode { get; set; }
+        public Solnodedata solnodedata { get; set; }
+        public DateTime realtime { get; set; }
+    }
+
+    public class Solnodedata
+    {
+        public string name { get; set; }
+        public string tile { get; set; }
+        public string planet { get; set; }
+        public string enemy { get; set; }
+        public string type { get; set; }
+        public string node_type { get; set; }
+        public bool archwing { get; set; }
+        public bool sharkwing { get; set; }
+    }
+
     public class EarthCycle
     {
         public string id { get; set; }
