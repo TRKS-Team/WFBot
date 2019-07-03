@@ -47,6 +47,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
                 var handler = new GroupMessageHandler(context.FromQq.ToHumanQQNumber(), context.FromGroup.ToGroupNumber(), message);
                 var (matched, result) = handler.ProcessCommandInput();
+                if (matched)
+                {
+                    IncreaseCallCounts(context.FromGroup);
+                }
 
             }, TaskCreationOptions.LongRunning);
         }

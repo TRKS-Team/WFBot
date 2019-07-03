@@ -70,7 +70,7 @@ namespace TRKS.WF.QQBot
             {
                 GroupCallDic[group] = 1;
             }
-            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task => GroupCallDic[group] = 0);
+            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task => GroupCallDic[group]--);
 
         }
 
@@ -118,7 +118,6 @@ namespace TRKS.WF.QQBot
 
             previousMessageDic[qq] = content;
 
-            IncreaseCallCounts(qq);
             using (var robotSession = MahuaRobotManager.Instance.CreateSession())
             {
                 var api = robotSession.MahuaApi;
