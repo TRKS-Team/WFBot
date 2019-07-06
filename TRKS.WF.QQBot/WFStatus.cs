@@ -117,7 +117,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             var kuvas = api.GetKuvaMissions();
             sb.AppendLine("以下是所有赤毒任务: \n\n");
-            foreach (var kuva in kuvas.Where(k => k.missiontype.ToLower().Contains("kuva")))
+            foreach (var kuva in kuvas.Where(k => k.missiontype.Contains("KuvaMission") && k.start < DateTime.Now && DateTime.Now < k.end))
             {
                 sb.AppendLine(WFFormatter.ToString(kuva));
                 sb.AppendLine();
@@ -129,7 +129,7 @@ namespace TRKS.WF.QQBot
         {
             var sb = new StringBuilder();
             var kuvas = api.GetKuvaMissions();
-            var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.solnodedata.node_type == "NT_MISSION");
+            var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.start < DateTime.Now && DateTime.Now < k.end);
             sb.AppendLine("以下是仲裁警报的信息: ");
             sb.AppendLine(WFFormatter.ToString(mission));
             Messenger.SendGroup(group, sb.ToString().Trim());
