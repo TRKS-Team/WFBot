@@ -158,6 +158,12 @@ namespace TRKS.WF.QQBot
             return new List<WFAlert>();
         }
 
+        public List<Kuva> GetKuvaMissions()
+        {
+            var kuvas = WebHelper.DownloadJson<List<Kuva>>("https://10o.io/kuvalog.json");
+            translator.TranslateKuvaMission(kuvas);
+            return kuvas;
+        }
         public WFNightWave GetNightWave()
         {
             var wave = WebHelper.DownloadJson<WFNightWave>($"https://api.warframestat.us/{platform}/nightwave");
@@ -269,10 +275,19 @@ namespace TRKS.WF.QQBot
                 var type = dict.Type;
                 if (!dictTranslators.ContainsKey(type))
                 {
+
                     dictTranslators.TryAdd(type, new Translator());
                 }
                 dictTranslators["All"].AddEntry(dict.En, dict.Zh);
-                dictTranslators[type].AddEntry(dict.En, dict.Zh);
+                if (type == "Star")
+                {
+                    dictTranslators[type].AddEntry(dict.En.Format(), dict.Zh);
+                }
+                else
+                {
+                    dictTranslators[type].AddEntry(dict.En, dict.Zh);
+                }
+
             }
             searchwordTranslator.Clear();
             foreach (var sale in translateApi.Sale)
@@ -413,6 +428,17 @@ namespace TRKS.WF.QQBot
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
 
+        public void TranslateKuvaMission(List<Kuva> kuvas)
+        {
+            foreach (var kuva in kuvas)
+            {
+                kuva.start = GetRealTime(kuva.start);
+                kuva.end = GetRealTime(kuva.end);
+                kuva.solnodedata.name = TranslateNode(kuva.solnodedata.name.Replace("[", "(").Replace("]", ")"));
+                // trick
+                kuva.solnodedata.type = dictTranslators["Mission"].Translate(kuva.solnodedata.type);
+            }
+        }
         public void TranslateNightWave(WFNightWave nightwave)
         {
             foreach (var challenge in nightwave.activeChallenges)
@@ -473,11 +499,11 @@ namespace TRKS.WF.QQBot
                 if (strings.Length >= 2)
                 {
                     var nodeRegion = strings[1].Split(')')[0];
-                    result = strings[0] + dictTranslators["Star"].Translate(nodeRegion);
+                    result = strings[0] + dictTranslators["Star"].Translate(nodeRegion.Format());
                 }
                 else
                 {
-                    return dictTranslators["Star"].Translate(node);
+                    return dictTranslators["Star"].Translate(node.Format());
                 }
 
             }
@@ -603,7 +629,7 @@ namespace TRKS.WF.QQBot
             {
                 inventory.item = dictTranslators["All"].Translate(inventory.item);
             }
-            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了
+            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了 呜呜呜呜电男loki出库我没刷我穷死了
         }
 
         public void TranslateWMOrder(WMInfo info, string searchword)

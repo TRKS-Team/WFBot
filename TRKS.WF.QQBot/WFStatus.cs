@@ -111,5 +111,29 @@ namespace TRKS.WF.QQBot
             var msg = translator.GetTranslateResult(str).AddRemainCallCount(group);
             Messenger.SendGroup(group, msg);
         }
+
+        public void SendKuvaMissions(GroupNumber group)
+        {
+            var sb = new StringBuilder();
+            var kuvas = api.GetKuvaMissions();
+            sb.AppendLine("以下是所有赤毒任务: \n\n");
+            foreach (var kuva in kuvas.Where(k => k.missiontype.Contains("KuvaMission") && k.start < DateTime.Now && DateTime.Now < k.end))
+            {
+                sb.AppendLine(WFFormatter.ToString(kuva));
+                sb.AppendLine();
+            }
+            Messenger.SendGroup(group, sb.ToString().Trim());
+        }
+
+        public void SendArbitrationMission(GroupNumber group)
+        {
+            var sb = new StringBuilder();
+            var kuvas = api.GetKuvaMissions();
+            var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.start < DateTime.Now && DateTime.Now < k.end);
+            sb.AppendLine("以下是仲裁警报的信息: ");
+            sb.AppendLine(WFFormatter.ToString(mission));
+            Messenger.SendGroup(group, sb.ToString().Trim());
+
+        }
     }
 }

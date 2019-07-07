@@ -154,7 +154,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             _WFStatus.SendFissures(Group);
         }
 
-        [Matchers("小小黑", "追随者", "焦虑", "怨恨", "躁狂", "苦难", "折磨", "暴力")]
+        [Matchers("小小黑", "追随者")]
         void AllPersistentEnemies()
         {
             WfNotificationHandler.SendAllPersistentEnemies(Group);
@@ -183,6 +183,18 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             return _wikiSearcher.SendSearch(word).Replace("'", "%27");
             // 这简直就是官方吞mod最形象的解释
+        }
+
+        [Matchers("仲裁", "仲裁警报", "精英警报")]
+        void Arbitration()
+        {
+            _WFStatus.SendArbitrationMission(Group);
+        }
+
+        [Matchers("赤毒", "赤毒虹吸器", "赤毒洪潮", "赤毒任务")]
+        void Kuva()
+        {
+            _WFStatus.SendKuvaMissions(Group);
         }
     }
 

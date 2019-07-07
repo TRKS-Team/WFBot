@@ -27,6 +27,8 @@ namespace WFBotTest
 
             Do("查询 加速赋能 -QR");
             Do("查询 加速赋能");
+            Do("赤毒");
+            Do("仲裁");
 
             //Do("金星赏金");
             /*

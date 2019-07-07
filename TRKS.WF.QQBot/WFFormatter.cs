@@ -13,6 +13,15 @@ namespace TRKS.WF.QQBot
     public static class WFFormatter
     {
         [Pure]
+        public static string ToString(Kuva kuva)
+        {
+            var sb = new StringBuilder();
+            var time = (kuva.end - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+            sb.AppendLine($"[{kuva.solnodedata.name}] {time} 后过期");
+            sb.AppendLine($"-类型:    {kuva.solnodedata.type}-{kuva.solnodedata.enemy}");
+            return sb.ToString().Trim();
+        }
+        [Pure]
         public static string ToString(WFNightWave nightwave)
         {
             var sb = new StringBuilder();
@@ -33,21 +42,21 @@ namespace TRKS.WF.QQBot
             challenges = elsechallenges.Where(challenge => challenge.isDaily).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("每日挑战: ");
+                sb.AppendLine("每日挑战(1000): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = elsechallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("每周挑战: ");
+                sb.AppendLine("每周挑战(6000): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = elsechallenges.Where(challenge => challenge.isElite).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("精英每周挑战: ");
+                sb.AppendLine("精英每周挑战(9000): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
             // 不要尝试去读这个
