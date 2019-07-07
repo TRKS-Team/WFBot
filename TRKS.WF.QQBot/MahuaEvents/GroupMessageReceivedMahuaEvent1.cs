@@ -181,7 +181,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [CombineParams]
         string Wiki(string word = "wiki")
         {
-            return _wikiSearcher.SendSearch(word);
+            return _wikiSearcher.SendSearch(word).Replace("'", "%27");
             // 这简直就是官方吞mod最形象的解释
         }
     }
