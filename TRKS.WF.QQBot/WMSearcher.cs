@@ -41,29 +41,41 @@ namespace TRKS.WF.QQBot
             return info;
         }
 
-        public void OrderWMInfo(WMInfo info)
+        public void OrderWMInfo(WMInfo info, bool isbuyer)
         {
-            info.payload.orders = info.payload.orders
-                .Where(order => order.order_type == "sell")
+            info.payload.orders = (isbuyer ? info.payload.orders
+                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
                 .Where(order => order.user.status == "online" || order.user.status == "ingame")
-                .OrderBy(order => order.platinum)
+                .OrderByDescending(order => order.platinum)
+                : info.payload.orders
+                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
+                .Where(order => order.user.status == "online" || order.user.status == "ingame")
+                .OrderBy(order => order.platinum))
                 .Take(Config.Instance.WMSearchCount)
-                .ToArray();            
+                .ToArray();
+
         }
 
-        public void OrderWMInfoEx(WMInfoEx info)
+        public void OrderWMInfoEx(WMInfoEx info, bool isbuyer)
         {
-            info.orders = info.orders
-                .Where(order => order.order_Type == "sell")
+            info.orders = (isbuyer ? info.orders
+                .Where(order => order.order_Type == (isbuyer ? "buy" : "sell"))
+                .Where(order => order.status == "online" || order.status == "ingame") 
+                .OrderByDescending(order => order.platinum)
+                : info.orders
+                .Where(order => order.order_Type == (isbuyer ? "buy" : "sell"))
                 .Where(order => order.status == "online" || order.status == "ingame")
-                .OrderBy(order => order.platinum)
+                .OrderBy(order => order.platinum))
                 .Take(Config.Instance.WMSearchCount)
-                .ToArray();           
+                .ToArray();
+
+
         }
 
-        public void SendWMInfo(string item, GroupNumber group, bool quickReply)
+        public void SendWMInfo(string item, GroupNumber group, bool quickReply, bool isbuyer)
         {
             // 下面 你将要 看到的 是 本项目 最大的  粪山
+            // Actually 这粪山挺好用的
             var words = new List<string>{"prime", "p", "甲"};
             var heads = new List<string> { "头部神经光", "头部神经", "头部神", "头部", "头"};
             foreach (var word in words)
@@ -130,9 +142,9 @@ namespace TRKS.WF.QQBot
                         var infoEx = GetWMINfoEx(searchword);
                         if (infoEx.orders.Any())
                         {
-                            OrderWMInfoEx(infoEx);
+                            OrderWMInfoEx(infoEx, isbuyer);
                             translator.TranslateWMOrderEx(infoEx, searchword);
-                            msg = WFFormatter.ToString(infoEx, quickReply);
+                            msg = WFFormatter.ToString(infoEx, quickReply, isbuyer);
                         }
                         else
                         {
@@ -156,9 +168,9 @@ namespace TRKS.WF.QQBot
                 var info = GetWMInfo(searchword);
                 if (info.payload.orders.Any())
                 {
-                    OrderWMInfo(info);
+                    OrderWMInfo(info, isbuyer);
                     translator.TranslateWMOrder(info, searchword);
-                    msg = WFFormatter.ToString(info, quickReply);
+                    msg = WFFormatter.ToString(info, quickReply, isbuyer);
                 }
                 else
                 {
@@ -170,6 +182,11 @@ namespace TRKS.WF.QQBot
             if (!quickReply)
             {
                 msg = $"{msg}\n\n快捷回复请使用指令 <查询 {item} -QR>";
+            }
+
+            if (!isbuyer)
+            {
+                msg = $"{msg}\n\n查询买家请使用指令 <查询 {item} -B>";
             }
 
             Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));

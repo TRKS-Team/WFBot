@@ -75,17 +75,21 @@ namespace TRKS.WF.QQBot.MahuaEvents
         void WM(string word)
         {
             const string quickReply = " -QR";
-            if (word.EndsWith(quickReply) || word.EndsWith(quickReply.ToLower()))
+            const string buyer = " -B";
+            var QR = false;
+            var B = false;
+            if (word.Contains(quickReply) || word.Contains(quickReply.ToLower()))
             {
-                _wmSearcher.SendWMInfo(word.Replace(quickReply, "")
-                    .Replace(quickReply.ToLower(), "")
-                    .Format(), Group, true);
+                QR = true;
             }
-            else
+
+            if (word.Contains(buyer) || word.Contains(buyer.ToLower()))
             {
-                _wmSearcher.SendWMInfo(word.Format(), Group, false);
+                B = true;
             }
-        }
+            // 小屎山
+            _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), ""), Group, QR, B);
+        } 
 
         [Matchers("紫卡")]
         [CombineParams]

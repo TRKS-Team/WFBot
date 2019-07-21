@@ -26,6 +26,8 @@ namespace WFBotTest
             GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
 
             Do("查询 加速赋能 -QR");
+            Do("查询 加速赋能 -QR -B");
+            Do("查询 加速赋能 -B");
             Do("查询 加速赋能");
             Do("赤毒");
             Do("仲裁");

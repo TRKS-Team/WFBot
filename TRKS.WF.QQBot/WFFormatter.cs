@@ -316,12 +316,12 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(WMInfo info, bool withQR)
+        public static string ToString(WMInfo info, bool withQR, bool isbuyer)
         {
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
             var item = itemItemsInSet.Where(i => i.zh.item_name != i.en.item_name).ToList().Last();
-            sb.AppendLine($"下面是物品: {item.zh.item_name} 按价格从小到大的{info.payload.orders.Length}条信息");
+            sb.AppendLine($"下面是物品: {item.zh.item_name} 按价格{(isbuyer ? "从大到小": "从小到大")}的{info.payload.orders.Length}条{(isbuyer ? "买家" : "卖家")}信息");
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {
@@ -329,18 +329,19 @@ namespace TRKS.WF.QQBot
                 if (withQR)
                 {
                     sb.AppendLine(
-                        $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to buy: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+                        $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to {(isbuyer ? "sell" : "buy")}: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
                 }
+
             }
             // 以后不好看了再说
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(WMInfoEx info, bool withQR)
+        public static string ToString(WMInfoEx info, bool withQR, bool isbuyer)
         {
             var sb = new StringBuilder();
             var item = info.info;
-            sb.AppendLine($"下面是物品: {item.zhName} 按价格从小到大的{info.orders.Length}条信息");
+            sb.AppendLine($"下面是物品: {item.zhName} 按价格{(isbuyer ? "从大到小" : "从小到大")}的{info.orders.Length}条{(isbuyer ? "买家" : "卖家")}信息");
             sb.AppendLine();
 
             foreach (var order in info.orders)
@@ -349,7 +350,7 @@ namespace TRKS.WF.QQBot
                 if (withQR)
                 {
                     sb.AppendLine(
-                        $"- 快捷回复: /w {order.userName} Hi! I want to buy: {item.enName} for {order.platinum} platinum. (warframe.market)");
+                        $"- 快捷回复: /w {order.userName} Hi! I want to {(isbuyer ? "sell" : "buy")}: {item.enName} for {order.platinum} platinum. (warframe.market)");
                 }
             }
             // 这已经很难看了好吧

@@ -5,7 +5,7 @@
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我反馈.
 
-> 基于 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.  
+> 基于 傻屌[Newbe](https://github.com/newbe36524) 的 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.  
 > 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
 > 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
@@ -35,11 +35,14 @@
 [**部署 FAQ (常见问题解答)**](docs/faq.md)
 
 ### 第一步: 选择以下几种 QQ 机器人平台
+|                             官网                             |  收费性质  |         插件压缩包名         |
+| :----------------------------------------------------------: | :--------: | :----------------------: |
+|        [酷 Q Pro / Air](https://cqp.cc/)        |    免费阉割版/收费     |        CQP.zip **(需要启用开发者模式)**       |
+|        [QQLight](https://www.52chat.cc/download.php)         | 免费阉割版/收费 |        QQLight.zip        |
+|        [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) |    免费阉割版/收费     |        CleverQQ.zip        |
+|        [MyPCQQ](https://mypcqq.cc/)         |             免费阉割版/收费     |        MPQ.zip        |
 
-- [酷 Q Pro / Air](https://cqp.cc/) - 拥有免费阉割版 **需要开启开发者模式** (CQP.zip)
-- [QQLight](https://www.52chat.cc/download.php) - 拥有免费阉割版 (QQLight.zip)
-- [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) - 拥有免费阉割版 (CleverQQ.zip)
-- [MyPCQQ](https://mypcqq.cc/) - 免费 (MPQ.zip)
+
 
 > **酷 Q 平台 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法参见 [FAQ](docs/faq.md).**  
 > **我们建议你将你选择的机器人放在一台 24 小时运行的电脑/服务器上.**
@@ -48,7 +51,7 @@
 
 #### 从 GitHub Release / AppVeyor (推荐)
 
-1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 .NET Framework 4.7.1 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带)
+1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带4.7.1)
 2. 从 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 3. 享受这个插件的的快感吧!
 
@@ -110,9 +113,11 @@
 
 **设置内可以更改命令前无需斜杠.**
 
+- **__赤毒__**: **/赤毒** 当前的所有赤毒任务
+- **__仲裁__**: **/仲裁** 当前的仲裁警报
 - **_Wiki_**: **/wiki [关键词]** 搜索[Wiki](https://warframe.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5)上的页面
 - **_午夜电波_**: **/午夜电波** 每周/每日/即将过期 的挑战.
-- **_机器人状态_**: **/机器人状态** 机器人的运行状态.
+- **_机器人状态_**: **/status** 机器人的运行状态.
 - **_警报_**: **/警报** 当前的所有警报.
   > _新警报也会自动发送到**启用了通知功能的群**._
 - **_入侵_**: **/入侵** 当前的所有入侵.
