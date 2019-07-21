@@ -169,6 +169,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             SendHelpdoc(Group);
         }
+
+        [DoNotMeasureTime]
         [Matchers("status", "状态", "机器人状态", "机器人信息", "我需要机器人")]
         void Status()
         {
@@ -185,7 +187,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         [CombineParams]
         string Wiki(string word = "wiki")
         {
-            return _wikiSearcher.SendSearch(word);
+            return _wikiSearcher.SendSearch(word).Replace("'", "%27");
             // 这简直就是官方吞mod最形象的解释
         }
 

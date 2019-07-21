@@ -149,17 +149,23 @@ namespace TRKS.WF.QQBot
         public static void SendBotStatus(GroupNumber group)
         {
             var sb = new StringBuilder();
-            var apistat = WebHelper.TryGet("https://warframestat.us");
-            var wmstat = WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item");
-            var wfastat = WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven");
-            var kuvastat = WebHelper.TryGet("https://10o.io/kuvalog.json");
+            var q1 = Task.Run(() => WebHelper.TryGet("https://warframestat.us"));
+            var q2 = Task.Run(() => WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item"));
+            var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
+            var q4 = Task.Run(() => WebHelper.TryGet("https://10o.io/kuvalog.json"));
+            Task.WaitAll(q1, q2, q3, q4);
+
+            var apistat = q1.Result;
+            var wmstat = q2.Result;
+            var wfastat = q3.Result;
+            var kuvastat = q4.Result;
             if (apistat.IsOnline && wmstat.IsOnline && wfastat.IsOnline && kuvastat.IsOnline)
             {
                 sb.AppendLine("机器人状态: 一切正常");
             }
             else
             {
-                sb.AppendLine("机器人状态: 错误");
+                sb.AppendLine("机器人状态: 不正常");
             }
 
             if (InitEvent1.onlineBuild)
