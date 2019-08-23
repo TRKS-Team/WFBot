@@ -12,7 +12,7 @@
 
 ![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
-**您的赞助~~会用来维持公用机器人~~,也能推动我继续维护本插件.**
+**您的赞助当然~~你妈~~会用来维持公用机器人, 也能推动我继续维护本插件.**
 
 →[思维导图](https://www.processon.com/view/link/5d1e2622e4b0fdb331d33d23#map)←  
 
