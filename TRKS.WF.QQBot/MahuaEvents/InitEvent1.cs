@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Harmony;
+using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
 using WTF;
 using Timer = System.Timers.Timer;
@@ -22,6 +25,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private static bool IsNotified = false;
         private static volatile bool updating;
         internal static Timer timer1;
+        public static WebSocketHandler websocket;
 
         static InitEvent1()
         {
@@ -52,7 +56,44 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 var ver = new Version(releaseData.tag_name).Build;
                 Messenger.SendDebugInfo($"→ WFBot插件最新官方{ver}版本, 不去看看你错过了什么新Feature(Bug)?");
             }
+
+            if (Config.Instance.IsPublicBot)
+            {
+                websocket = new WebSocketHandler();
+            }
         }
+/*
+        static void StartServer()
+        {
+
+            if (Config.Instance.IsPublicBot)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    var server = new NamedPipeServerStream("WFBot878527767");
+                    server.WaitForConnection();
+                    StreamReader reader = new StreamReader(server);
+                    StreamWriter writer = new StreamWriter(server);
+                    while (true)
+                    {
+                        var line = reader.ReadLine();
+                        if (line.Contains("Update"))
+                        {
+                            string result;
+                            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
+                            {
+                                var mahuaApi = robotSession.MahuaApi;
+                                var members = mahuaApi.GetGroupMemebersWithModel("878527767").Model.ToList();
+                                result = string.Join(" ", members.Select(g => g.Qq));
+                            }
+                            writer.WriteLine(result);
+                            writer.Flush();
+                        }
+                    }
+                });
+            }
+        }
+        */
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]

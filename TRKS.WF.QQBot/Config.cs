@@ -49,6 +49,8 @@ namespace TRKS.WF.QQBot
         public int WMSearchCount = 3;
 
         public int WFASearchCount = 5;
+
+        public bool IsPublicBot = false;// 大聪明用户, 别改这个参数.
     }
 
     [Configuration("CoquettishConfig")]

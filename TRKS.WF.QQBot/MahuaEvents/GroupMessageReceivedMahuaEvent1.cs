@@ -88,7 +88,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 B = true;
             }
             // 小屎山
-            _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), ""), Group, QR, B);
+            _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), Group, QR, B);
         } 
 
         [Matchers("紫卡")]

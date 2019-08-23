@@ -206,7 +206,8 @@ namespace TRKS.WF.QQBot
 赞助(乞讨)地址: https://afdian.net/@TheRealKamisama
 您的赞助会用来维持公用机器人, 也能推动我继续维护本插件.
 本机器人为公益项目, 持续维护中.
-如果你见到有人使用本插件盈利, 请在上方项目地址反馈.");
+如果你见到有人使用本插件盈利, 请在上方项目地址反馈.
+如果你想给你的群也整个机器人, 请在上方项目地址了解");
             if (File.Exists("data/image/帮助文档.png"))
             {
                 SendGroup(@group, @"[CQ:image,file=\帮助文档.png]");

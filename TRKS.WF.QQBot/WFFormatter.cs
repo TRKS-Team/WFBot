@@ -42,25 +42,26 @@ namespace TRKS.WF.QQBot
             challenges = elsechallenges.Where(challenge => challenge.isDaily).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("每日挑战(1000): ");
+                sb.AppendLine($"每日挑战({challenges.First().reputation}): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = elsechallenges.Where(challenge => !challenge.isDaily && !challenge.isElite).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("每周挑战(6000): ");
+                sb.AppendLine($"每周挑战({challenges.First().reputation}): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
 
             challenges = elsechallenges.Where(challenge => challenge.isElite).ToList();
             if (challenges.Any())
             {
-                sb.AppendLine("精英每周挑战(9000): ");
+                sb.AppendLine($"精英每周挑战({challenges.First().reputation}): ");
                 sb.AppendLine("    " + ToString(challenges, false));
             }
             // 不要尝试去读这个
             // 你会发现我真是个傻逼    
+            // 其实 也有点大智若愚的感觉
             return sb.ToString().Trim();
         }
 

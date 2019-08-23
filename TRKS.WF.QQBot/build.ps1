@@ -116,7 +116,7 @@ Task Nuget -depends Init -Description "nuget restore" {
 
 Task Build -depends Nuget -Description "编译" {
     Exec {
-        & "msbuild.exe" "/p:Configuration=$configuration"
+        & "MSBuild.exe" "/p:Configuration=$configuration"
     }
 }
 

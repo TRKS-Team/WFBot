@@ -225,6 +225,9 @@
     <Reference Include="TextCommandCore, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\TextCommandCore.1.6.1\lib\netstandard2.0\TextCommandCore.dll</HintPath>
     </Reference>
+    <Reference Include="websocket-sharp.clone, Version=1.0.2.39869, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\websocket-sharp.clone.3.0.0\lib\net45\websocket-sharp.clone.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +258,7 @@
     </Compile>
     <Compile Include="UsageReports.cs" />
     <Compile Include="WebHelper.cs" />
+    <Compile Include="WebSocketHandler.cs" />
     <Compile Include="WFChineseAPI.cs" />
     <Compile Include="WFFormatter.cs" />
     <Compile Include="WFNotificationHandler.cs" />
