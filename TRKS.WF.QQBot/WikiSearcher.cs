@@ -18,6 +18,14 @@ namespace TRKS.WF.QQBot
             }
 
             var wiki = GetWiki(word);
+            if (wiki.error.code != "")
+            {
+                var sb1 = new StringBuilder();
+                sb1.AppendLine("灰机wikiApi出错");
+                sb1.AppendLine($"错误代码: {wiki.error.code}");
+                sb1.AppendLine($"错误描述: {wiki.error.info}");
+                return sb1.ToString().Trim();
+            }
             var words = wiki.query.search.Select(s => s.title).Where(w => w.Format() == word.Format()).ToArray();
             if (words.Any())
             {

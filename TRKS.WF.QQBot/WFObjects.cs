@@ -94,9 +94,18 @@ namespace TRKS.WF.QQBot
 
     public class Wiki
     {
+        public Error error { get; set; }
         public bool batchcomplete { get; set; }
         public Continue _continue { get; set; }
         public Query query { get; set; }
+    }
+
+
+    public class Error
+    {
+        public string code { get; set; }
+        public string info { get; set; }
+        public string docref { get; set; }
     }
 
     public class Continue

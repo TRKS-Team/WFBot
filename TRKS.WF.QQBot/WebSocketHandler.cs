@@ -18,7 +18,7 @@ namespace TRKS.WF.QQBot
         {
             Task.Factory.StartNew(() => {
                 webserver.AddWebSocketService<GetGroup>("/GetGroup");
-                webserver.AddWebSocketService<UpdateConfig>("/UpdateConfig");
+                webserver.AddWebSocketService<AddGroup>("/AddGroup");
                 webserver.Start();
             }, TaskCreationOptions.LongRunning);
         }
@@ -40,7 +40,7 @@ namespace TRKS.WF.QQBot
             await Send(result);
         }
     }
-    public class UpdateConfig : WebSocketBehavior
+    public class AddGroup : WebSocketBehavior
     {
         protected override async Task OnMessage(MessageEventArgs e)
         {
