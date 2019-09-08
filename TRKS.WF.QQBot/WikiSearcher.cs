@@ -18,7 +18,7 @@ namespace TRKS.WF.QQBot
             }
 
             var wiki = GetWiki(word);
-            if (string.IsNullOrEmpty(wiki.error?.code))
+            if (string.IsNullOrEmpty(wiki?.error?.code))
             {
                 var sb1 = new StringBuilder();
                 sb1.AppendLine("灰机wikiApi出错");
