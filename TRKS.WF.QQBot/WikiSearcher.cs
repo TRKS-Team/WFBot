@@ -12,6 +12,7 @@ namespace TRKS.WF.QQBot
 
         public string SendSearch(string word)
         {
+
             if (word == "wiki")
             {
                 return $"为指挥官献上wiki的链接: {wikilink}";
