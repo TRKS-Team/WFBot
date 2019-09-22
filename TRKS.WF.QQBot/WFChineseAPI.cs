@@ -160,9 +160,15 @@ namespace TRKS.WF.QQBot
 
         public List<Kuva> GetKuvaMissions()
         {
-            var kuvas = WebHelper.DownloadJson<List<Kuva>>("https://10o.io/kuvalog.json");
+            var kuvas = WebHelper.DownloadJson<List<Kuva>>("https://api.warframestat.us/pc/kuva");
             translator.TranslateKuvaMission(kuvas);
             return kuvas;
+        }
+        public Arbitration GetArbitrationMission()
+        {
+            var ar = WebHelper.DownloadJson<Arbitration>("https://api.warframestat.us/pc/arbitration");
+            translator.TranslateArbitrationMission(ar);
+            return ar;
         }
         public WFNightWave GetNightWave()
         {
@@ -432,12 +438,24 @@ namespace TRKS.WF.QQBot
         {
             foreach (var kuva in kuvas)
             {
-                kuva.start = GetRealTime(kuva.start);
-                kuva.end = GetRealTime(kuva.end);
-                kuva.solnodedata.name = TranslateNode(kuva.solnodedata.name.Replace("[", "(").Replace("]", ")"));
-                // trick
-                kuva.solnodedata.type = dictTranslators["Mission"].Translate(kuva.solnodedata.type);
+                kuva.activation = GetRealTime(kuva.activation);
+                kuva.expiry = GetRealTime(kuva.expiry);
+                kuva.name = TranslateNode(kuva.name);
+                // // trick
+                // 同↓
+                kuva.type = dictTranslators["Mission"].Translate(kuva.type);
             }
+        }
+        public void TranslateArbitrationMission(Arbitration ar)
+        {
+
+                ar.activation = GetRealTime(ar.activation);
+                ar.expiry = GetRealTime(ar.expiry);
+                ar.node = TranslateNode(ar.node);
+                // // trick
+                // 不需要trick了
+                ar.type = dictTranslators["Mission"].Translate(ar.type);
+            
         }
         public void TranslateNightWave(WFNightWave nightwave)
         {

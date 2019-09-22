@@ -60,18 +60,36 @@ namespace TRKS.WF.QQBot
         }*/
 
 
+    /*    public class Kuva
+        {
+            public DateTime start { get; set; }
+            public DateTime end { get; set; }
+            public string missiontype { get; set; }
+            public string solnode { get; set; }
+            public Solnodedata solnodedata { get; set; }
+            public DateTime realtime { get; set; }
+        }
+
+        public class Solnodedata
+        {
+            public string name { get; set; }
+            public string tile { get; set; }
+            public string planet { get; set; }
+            public string enemy { get; set; }
+            public string type { get; set; }
+            public string node_type { get; set; }
+            public bool archwing { get; set; }
+            public bool sharkwing { get; set; }
+        }*/
+
+
+
     public class Kuva
     {
-        public DateTime start { get; set; }
-        public DateTime end { get; set; }
-        public string missiontype { get; set; }
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
         public string solnode { get; set; }
-        public Solnodedata solnodedata { get; set; }
-        public DateTime realtime { get; set; }
-    }
-
-    public class Solnodedata
-    {
+        public string node { get; set; }
         public string name { get; set; }
         public string tile { get; set; }
         public string planet { get; set; }
@@ -81,6 +99,23 @@ namespace TRKS.WF.QQBot
         public bool archwing { get; set; }
         public bool sharkwing { get; set; }
     }
+
+    public class Arbitration
+    {
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
+        public string solnode { get; set; }
+        public string node { get; set; }
+        public string name { get; set; }
+        public string tile { get; set; }
+        public string planet { get; set; }
+        public string enemy { get; set; }
+        public string type { get; set; }
+        public string node_type { get; set; }
+        public bool archwing { get; set; }
+        public bool sharkwing { get; set; }
+    }
+
 
     public class EarthCycle
     {

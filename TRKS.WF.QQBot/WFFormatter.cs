@@ -16,9 +16,17 @@ namespace TRKS.WF.QQBot
         public static string ToString(Kuva kuva)
         {
             var sb = new StringBuilder();
-            var time = (kuva.end - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
-            sb.AppendLine($"[{kuva.solnodedata.name}] {time} 后过期");
-            sb.AppendLine($"-类型:    {kuva.solnodedata.type}-{kuva.solnodedata.enemy}");
+            var time = (kuva.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+            sb.AppendLine($"[{kuva.node}] {time} 后过期");
+            sb.AppendLine($"-类型:    {kuva.type}-{kuva.enemy}");
+            return sb.ToString().Trim();
+        }
+        public static string ToString(Arbitration ar)
+        {
+            var sb = new StringBuilder();
+            var time = (ar.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+            sb.AppendLine($"[{ar.node}] {time} 后过期");
+            sb.AppendLine($"-类型:    {ar.type}-{ar.enemy}");
             return sb.ToString().Trim();
         }
         [Pure]
