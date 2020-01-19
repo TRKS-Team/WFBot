@@ -12,6 +12,7 @@ namespace TRKS.WF.QQBot
 {
     public static class WFFormatter
     {
+        private static WFTranslator translator => WFResource.WFTranslator;
         [Pure]
         public static string ToString(Kuva kuva)
         {
@@ -142,11 +143,16 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(List<RivenInfo> infos)
+        public static string ToString(List<RivenInfo> infos, List<RivenData> datas)
         {
             var weapon = infos.First().item_Class;
             var sb = new StringBuilder();
-            sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息.");
+            var weaponinfo = WFResource.WFApi.Riven.First(d => d.Name == weapon);
+            sb.AppendLine($"下面是 {weapon} 紫卡的基本信息(来自DE)");
+            sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.Type)} 倾向: {weaponinfo.Level}星 倍率: {weaponinfo.Ratio}");
+            sb.AppendLine($"0洗均价: {datas.First(d => !d.rerolled).avg}白金");
+            sb.AppendLine($"全部均价: {datas.First(d => d.rerolled).avg}白金");
+            sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
             foreach (var info in infos)
             {
                 sb.Append($"[{info.user_Name}]  ");
@@ -330,7 +336,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
             var item = itemItemsInSet.Where(i => i.zh.item_name != i.en.item_name).ToList().Last();
-            sb.AppendLine($"下面是物品: {item.zh.item_name} 按价格{(isbuyer ? "从大到小": "从小到大")}的{info.payload.orders.Length}条{(isbuyer ? "买家" : "卖家")}信息");
+            sb.AppendLine($"下面是物品: {item.zh.item_name} 按价格{(isbuyer ? "从大到小": "从小到大")}的{info.payload.orders.Length}条 {(isbuyer ? "买家" : "卖家")} 信息");
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {

@@ -84,6 +84,36 @@ namespace TRKS.WF.QQBot
 
 
 
+
+    public class RivenData
+    {
+        public string itemType { get; set; }
+        public string compatibility { get; set; }
+        public bool rerolled { get; set; }
+        public float avg { get; set; }
+        public float stddev { get; set; }
+        public int min { get; set; }
+        public int max { get; set; }
+        public int pop { get; set; }
+        public float median { get; set; }
+    }
+
+    public class Outpost
+    {
+        public OMission mission { get; set; }
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public string id { get; set; }
+    }
+
+    public class OMission
+    {
+        public string node { get; set; }
+        public string faction { get; set; }
+        public string type { get; set; }
+    }
+
     public class Kuva
     {
         public DateTime activation { get; set; }
@@ -739,13 +769,13 @@ namespace TRKS.WF.QQBot
         public string Id { get; set; }
         public DateTime Activation { get; set; }
         public DateTime Expiry { get; set; }
-        public Mission Mission { get; set; }
+        public AMission Mission { get; set; }
         public bool Expired { get; set; }
         public string Eta { get; set; }
         public string[] RewardTypes { get; set; }
     }
 
-    public class Mission
+    public class AMission
     {
         public string Description { get; set; }
         public string Node { get; set; }

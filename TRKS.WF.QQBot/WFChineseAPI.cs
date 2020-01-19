@@ -285,13 +285,16 @@ namespace TRKS.WF.QQBot
                     dictTranslators.TryAdd(type, new Translator());
                 }
                 dictTranslators["All"].AddEntry(dict.En, dict.Zh);
-                if (type == "Star")
+                switch (type)
                 {
-                    dictTranslators[type].AddEntry(dict.En.Format(), dict.Zh);
-                }
-                else
-                {
-                    dictTranslators[type].AddEntry(dict.En, dict.Zh);
+                    case "Weapon":
+                    case "Star":
+                        dictTranslators[type].AddEntry(dict.En.Format(), dict.Zh);
+                        break;
+                    default:
+                        dictTranslators[type].AddEntry(dict.En, dict.Zh);
+                        break;
+
                 }
 
             }
@@ -434,6 +437,14 @@ namespace TRKS.WF.QQBot
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
 
+        public string TranslateWeapon(string weapon)
+        {
+            return dictTranslators["Weapon"].Translate(weapon);
+        }
+        public string TranslateWeaponType(string type)
+        {
+            return dictTranslators["Word"].Translate(type);
+        }
         public void TranslateKuvaMission(List<Kuva> kuvas)
         {
             foreach (var kuva in kuvas)

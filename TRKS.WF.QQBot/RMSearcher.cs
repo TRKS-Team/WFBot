@@ -67,6 +67,13 @@ namespace TRKS.WF.QQBot
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }
 
+        public List<RivenData> GetRivenDatas()
+        {
+            var info = WebHelper.DownloadJson<List<RivenData>>(
+                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
+            info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : translator.TranslateWeapon(d.compatibility.Replace("<ARCHWING> ", "").Format()));
+            return info;
+        }
         public void SendRivenInfos(GroupNumber group, string weapon)
         {
             var sb = new StringBuilder();
@@ -78,8 +85,8 @@ namespace TRKS.WF.QQBot
                     {
                         Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         var info = GetRivenInfos(weapon);
-                        var msg = info.Any() ? WFFormatter.ToString(info) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
-
+                        var data = GetRivenDatas().Where(d => d.compatibility.Format() == weapon).ToList();
+                        var msg = info.Any() ? WFFormatter.ToString(info, data) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else
