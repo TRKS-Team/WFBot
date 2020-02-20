@@ -24,11 +24,12 @@ namespace WFBotTest
             MessengerHandlers.DebugAlternateHandler = s => { Console.WriteLine(s); };
             MessengerHandlers.MessageAlternateHandler = s => { Console.WriteLine(s); };
             GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
-            Do("赤毒");
+            Do("紫卡 天顶之星");
+            /*Do("赤毒");
             Do("仲裁");
             Do("wiki test");
             Do("紫卡 绝路");
-            Do("紫卡 合成燃气炮");
+            Do("紫卡 合成燃气炮");*/
 
             //Do("金星赏金");
             /*

@@ -84,3 +84,14 @@ Task Build -depends Nuget -Description "编译" {
 MSBuild一般装了vs会附赠一个  
 在你的 {VS安装目录下}\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe 大概可以找到  
 如果实在找不到可以用Everything(软件)搜一个版本≥15的Msbuild
+
+## Q: 自己编译版本部署后无法启动
+
+
+部署后的机器人`./logs` 下最新 log 内含有
+
+```
+未能加载文件或程序集“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”或它的某一个依赖项。找到的程序集清单定义与程序集引用不匹配。 (异常来自 HRESULT:0x80131040)
+```
+
+- A: 删掉`YUELUO/TRKS.WF.QQBot/trks.wf.qqbot.dll.config`

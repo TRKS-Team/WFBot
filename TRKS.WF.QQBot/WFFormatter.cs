@@ -150,8 +150,17 @@ namespace TRKS.WF.QQBot
             var weaponinfo = WFResource.WFApi.Riven.First(d => d.Name == weapon);
             sb.AppendLine($"下面是 {weapon} 紫卡的基本信息(来自DE)");
             sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.Type)} 倾向: {weaponinfo.Level}星 倍率: {weaponinfo.Ratio}");
-            sb.AppendLine($"0洗均价: {datas.First(d => !d.rerolled).avg}白金");
-            sb.AppendLine($"全部均价: {datas.First(d => d.rerolled).avg}白金");
+            var rerolled = datas.Where(d => !d.rerolled);
+            if (rerolled.Any())
+            {
+                sb.AppendLine($"0洗均价: {rerolled.First().avg}白金");
+            }
+
+            rerolled = datas.Where(d => d.rerolled);
+            if (rerolled.Any())
+            {
+                sb.AppendLine($"全部均价: {rerolled.First().avg}白金");
+            }
             sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
             foreach (var info in infos)
             {

@@ -30,7 +30,10 @@
 > ~~目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**! 处在后面位置的群收到通知的速度会很慢!~~  
 > **自己按照下面的说明部署可以享受完全体**
 
-## (新)如何使用公用机器人
+## ~~如何使用公用机器人~~
+> **可惜的是 第二套公用机器人方案也因为封号被迫终止**  
+> **没有条件但是想用机器人的 未来将会提供新方案**  
+> **尽请期待**  
 
 > 如果你使用过我的公用机器人 你就知道在2019.4.1公用机器人停止了服务  
 > 从现在开始所提供的的公用机器人不一定稳定 但是我会尽量保证  
@@ -111,6 +114,8 @@
    ```
 
 3. 将生成的所有 `TRKS.WF.QQBot\bin\[对应 QQ 平台]` 文件夹内的所有文件拖入机器人根目录.
+
+4. 删除 `YUELUO\TRKS.WF.QQBot`下的 `trks.wf.qqbot.dll.config` 否则机器人将不会启动
 
 ### 第三步: 自定义
 
@@ -237,4 +242,36 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者 **(真惨)**: KONYCN Trinitatem 爱发电用户\_pPYQ wosiwq 琪露诺 爱发电用户\_Ymhw SM_Chicov Flashbang233 果汁 DreaM1ku 780712 苟 Cy 君莫笑 Neptune 老腊肉 爱发电用户\_mQps
+- 捐助者 **(真惨)**: 
+KONYCN
+Trinitatem
+Pharsaria
+爱发电用户_pPYQ
+L·A·Y
+aecine
+Zatermelon
+wosiwq
+琪露诺
+爱发电用户_Ymhw
+难喝的鸡汤
+玄白SAMA
+luoroz
+曲水流觞℡
+SM_Chicov
+Flashbang233
+果汁
+DreaM1ku
+780712
+苟Cy
+爱发电用户_JV6j
+大番茄一号
+爱发电用户_FtaS
+不够温柔
+爱发电用户_x9FU
+Deadwings
+君莫笑
+Neptune
+老腊肉
+爱发电用户_mQps
+
+***你们的赞助是这个开源项目的重要动力, 多谢了.***
