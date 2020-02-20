@@ -12,7 +12,7 @@
 ![LoadLibraryFailed](images/LoadLibraryFailed.png)
 
 - A: 下载 ~~~[.NET Framework 4.6.2](https://dotnet.microsoft.com/download/thank-you/net462)~~~ 并安装.  
-**经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及[以上版本](https://dotnet.microsoft.com/download/thank-you/net472)可用**
+  **经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及[以上版本](https://dotnet.microsoft.com/download/thank-you/net472)可用**
 
 ---
 
@@ -50,18 +50,19 @@
 申请 Token 请查看 [这里](token.md)
 我们不会上传你的个人 Token. 但请保管好运行这个机器人的电脑.
 
-## Q: Clone本库后使用build.bat后 TRKS.WF.QQBot\bin 无输出  
+## Q: Clone 本库后使用 build.bat 后 TRKS.WF.QQBot\bin 无输出
 
-请尝试使用Powershell运行build.bat此脚本  
+请尝试使用 Powershell 运行 build.bat 此脚本  
 运行后如果在最后出现大量红字报错  
-则检查上方的输出是否含有类似下方的输出  
+则检查上方的输出是否含有类似下方的输出
 
 ```
 Microsoft(R) 生成引擎版本 4.8.3752.0
 ```
 
-版本号小于15  
-用随便什么文本编辑器打开和build.bat同一目录下的build.ps1
+版本号小于 15  
+用随便什么文本编辑器打开和 build.bat 同一目录下的 build.ps1
+
 ```
 Task Build -depends Nuget -Description "编译" {
     Exec {
@@ -69,18 +70,35 @@ Task Build -depends Nuget -Description "编译" {
     }
 }
 ```
+
 这部分代码只将其中的
+
 ```
         & "MSBuild.exe" "/p:Configuration=$configuration"
 ```
+
 改为
+
 ```
         &"这里填入一个指向 MSBuild.exe 的路径"
 ```
+
 例如
+
 ```
         &"K:\Visual Studio\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
 ```
-MSBuild一般装了vs会附赠一个  
-在你的 {VS安装目录下}\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe 大概可以找到  
-如果实在找不到可以用Everything(软件)搜一个版本≥15的Msbuild
+
+MSBuild 一般装了 vs 会附赠一个  
+在你的 {VS 安装目录下}\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe 大概可以找到  
+如果实在找不到可以用 Everything(软件)搜一个版本 ≥15 的 Msbuild
+
+## Q: 自己编译版本部署后无法启动
+
+./logs 下最新 log 内含有
+
+```
+未能加载文件或程序集“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”或它的某一个依赖项。找到的程序集清单定义与程序集引用不匹配。 (异常来自 HRESULT:0x80131040)
+```
+
+- A: 删掉`YUELUO/TRKS.WF.QQBot/trks.wf.qqbot.dll.config`

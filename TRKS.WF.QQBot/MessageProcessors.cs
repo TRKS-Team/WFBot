@@ -37,7 +37,7 @@ namespace TRKS.WF.QQBot
             throw new CommandException("口令无效");
         }
     }
-
+    // 不写了 我去玩会destiny2 sb
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class RequireContainsCodeAttribute : Attribute, IPreProcessor
     {

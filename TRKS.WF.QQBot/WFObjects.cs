@@ -8,6 +8,37 @@ using Newtonsoft.Json;
 
 namespace TRKS.WF.QQBot
 {
+    public class SentientAnomaly
+    {
+        public string name { get; set; }
+        public DateTime start { get; set; }
+        public DateTime end { get; set; }
+        public DateTime projection { get; set; }
+    }
+    public class RawSentientAnomaly
+    {
+        public string name { get; set; }
+        public int start { get; set; }
+        public int end { get; set; }
+        public int projection { get; set; }
+    }
+
+    public class SentientOutposts
+    {
+        public Mission mission { get; set; }
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public string id { get; set; }
+    }
+
+    public class Mission
+    {
+        public string node { get; set; }
+        public string faction { get; set; }
+        public string type { get; set; }
+    }
+
     /*
         public class WikiQuery
         {
