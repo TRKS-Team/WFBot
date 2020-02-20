@@ -118,7 +118,7 @@ namespace TRKS.WF.QQBot
 
         public List<WFInvasion> GetInvasions()
         {
-            var invasions = WebHelper.DownloadJson<List<WFInvasion>>($"https://api.warframestat.us/{platform}/invasions");
+            var invasions = WebHelper.DownloadJson<List<WFInvasion>>($"https://api.warframestat.us/{platform}/invasio   ``ns");
             foreach (var invasion in invasions)
             {
                 translator.TranslateInvasion(invasion);
@@ -247,10 +247,17 @@ namespace TRKS.WF.QQBot
             return enemies;
         }
 
+        public SentientOutposts GetSentientOutposts()
+        {
+            var outposts = WebHelper.DownloadJson<SentientOutposts>("https://api.warframestat.us/pc/sentientOutposts");
+            return outposts;
+        }
+
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
+
     }
 
 

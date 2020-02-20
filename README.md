@@ -14,19 +14,20 @@
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
 **您的赞助当然~~你妈~~会用来维持公用机器人, 也能推动我继续维护本插件.**
 
-→[思维导图](https://www.processon.com/view/link/5d1e2622e4b0fdb331d33d23#map)←  
+→[思维导图](https://www.processon.com/view/link/5d1e2622e4b0fdb331d33d23#map)←
 
 ![Processon](docs/images/processon.png)
+
 > 本插件附带自动更新.  
-> 最新的插件 部署到 自动更新版本的机器人 上. 
+> 最新的插件 部署到 自动更新版本的机器人 上.
 > 如果我手滑引爆了所有机器人, 请不要慌张.  
-> 如果真的全爆了, **没关系** 因为~~我的机器人~~也爆了.  
+> 如果真的全爆了, **没关系** 因为我的机器人也爆了.  
 > 很快 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
 > 此处记录引爆次数: \*4
 
 > ~~目前有一个由我维护, 暂时稳定的机器人, 现在可以直接邀请入群 QQ: `2504645673`~~  
 > ~~↑ 此公用机器人已经被永久封号,近期可能不会恢复了...有需求的请自行部署.~~  
-> **用户请务必添加 QQ 群: [878527767](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)**   
+> **用户请务必添加 QQ 群: [878527767](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)**  
 > ~~目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**! 处在后面位置的群收到通知的速度会很慢!~~  
 > **自己按照下面的说明部署可以享受完全体**
 
@@ -35,25 +36,25 @@
 > **没有条件但是想用机器人的 未来将会提供新方案**  
 > **尽请期待**  
 
-> 如果你使用过我的公用机器人 你就知道在2019.4.1公用机器人停止了服务  
+> 如果你使用过我的公用机器人 你就知道在 2019.4.1 公用机器人停止了服务  
 > 从现在开始所提供的的公用机器人不一定稳定 但是我会尽量保证  
-> 这要建立在你们的支持上  
+> 这要建立在你们的支持上
 
 > 除了下面表单邮件内所认证的机器人  
-> 其他机器人的服务**不会**代表WFBot  
+> 其他机器人的服务**不会**代表 WFBot  
 > 如果你遇到其他机器人出现了问题 请先找对应负责人反映
 
 **第一步: Checkin**
 
-我们的公用机器人需要一个小审核:  
+我们的公用机器人需要一个小审核:
 
 1. 信息的真实度
-2. 申请人必须在[官方群](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)里  
+2. 申请人必须在[官方群](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)里
 
 不难理解吧  
 这两个条件只是为了能够联系到我的用户而已.
 
-**第二步: 填写Google表单**  
+**第二步: 填写 Google 表单**
 
 **[GoogleForm](https://docs.google.com/forms/d/e/1FAIpQLSfwOeuOgbbnaSnMsRtL5QMSkao3k2u26FWwF5F4mV0mMtAQMg/viewform?usp=sf_link)**  
 这个链接应该不需要科学上网就可以使用  
@@ -62,11 +63,12 @@
 **第三步: 收到邮件**
 
 你将会收到一封邮件  
-*(如果没有, 看看垃圾箱)*
+_(如果没有, 看看垃圾箱)_
 
 如果拒绝申请: 请回到**第一步**  
 如果通过申请：请按照**邮件**操作
-## 如何部署
+
+## 如何部署(目前使用机器人的唯一方案)
 
 > 如果你在部署过程中遇到了问题, 请先查看下面的 FAQ. 如果还是无法解决, 可以添加上面的个人 QQ 群或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
 
@@ -74,14 +76,12 @@
 
 ### 第一步: 选择以下几种 QQ 机器人平台
 
-|                             官网                             |  收费性质  |         插件压缩包名         |
-| :----------------------------------------------------------: | :--------: | :----------------------: |
-|        [酷 Q Pro / Air](https://cqp.cc/)        |    免费阉割版/收费     |        CQP.zip **(需要启用开发者模式)**       |
-|        [QQLight](https://www.52chat.cc/download.php)         | 免费阉割版/收费 |        QQLight.zip        |
-|        [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) |    免费阉割版/收费     |        CleverQQ.zip        |
-|        [MyPCQQ](https://mypcqq.cc/)         |             免费阉割版/收费     |        MPQ.zip        |
-
-
+|                     官网                      |    收费性质     |           插件压缩包名           |
+| :-------------------------------------------: | :-------------: | :------------------------------: |
+|       [酷 Q Pro / Air](https://cqp.cc/)       | 免费阉割版/收费 | CQP.zip **(需要启用开发者模式)** |
+| [QQLight](https://www.52chat.cc/download.php) | 免费阉割版/收费 |           QQLight.zip            |
+| [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) | 免费阉割版/收费 |           CleverQQ.zip           |
+|         [MyPCQQ](https://mypcqq.cc/)          | 免费阉割版/收费 |             MPQ.zip              |
 
 > **酷 Q 平台 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法参见 [FAQ](docs/faq.md).**  
 > **我们建议你将你选择的机器人放在一台 24 小时运行的电脑/服务器上.**
@@ -90,15 +90,13 @@
 
 #### 从 GitHub Release / AppVeyor (推荐)
 
-1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带4.7.1)
+1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带 4.7.1)
 2. 从 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
 3. 享受这个插件的的快感吧!
 
 #### 或者: 自己编译
 
-+ 新! 针对改代码(如文字提示)又想~~享受~~自动更新的客户 你可以写一个 WFBot 的[插件](docs/plugin.md) 
-
-
+- 新! 针对改代码(如文字提示)又想~~享受~~自动更新的客户 你可以写一个 WFBot 的[插件](docs/plugin.md)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 如果你修改了代码并应用到机器人上, 请在 GitHub 上开源其最新版本.  
@@ -154,8 +152,8 @@
 
 **设置内可以更改命令前无需斜杠.**
 
-- **__赤毒__**: **/赤毒** 当前的所有赤毒任务
-- **__仲裁__**: **/仲裁** 当前的仲裁警报
+- ****赤毒****: **/赤毒** 当前的所有赤毒任务
+- ****仲裁****: **/仲裁** 当前的仲裁警报
 - **_Wiki_**: **/wiki [关键词]** 搜索[Wiki](https://warframe.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5)上的页面
 - **_午夜电波_**: **/午夜电波** 每周/每日/即将过期 的挑战.
 - **_机器人状态_**: **/status** 机器人的运行状态.
@@ -242,36 +240,36 @@
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者 **(真惨)**: 
-KONYCN
-Trinitatem
-Pharsaria
-爱发电用户_pPYQ
-L·A·Y
-aecine
-Zatermelon
-wosiwq
-琪露诺
-爱发电用户_Ymhw
-难喝的鸡汤
-玄白SAMA
-luoroz
-曲水流觞℡
-SM_Chicov
-Flashbang233
-果汁
-DreaM1ku
-780712
-苟Cy
-爱发电用户_JV6j
-大番茄一号
-爱发电用户_FtaS
-不够温柔
-爱发电用户_x9FU
-Deadwings
-君莫笑
-Neptune
-老腊肉
-爱发电用户_mQps
+- 捐助者 **(真惨)**:
+  KONYCN
+  Trinitatem
+  Pharsaria
+  爱发电用户\_pPYQ
+  L·A·Y
+  aecine
+  Zatermelon
+  wosiwq
+  琪露诺
+  爱发电用户\_Ymhw
+  难喝的鸡汤
+  玄白 SAMA
+  luoroz
+  曲水流觞 ℡
+  SM_Chicov
+  Flashbang233
+  果汁
+  DreaM1ku
+  780712
+  苟 Cy
+  爱发电用户\_JV6j
+  大番茄一号
+  爱发电用户\_FtaS
+  不够温柔
+  爱发电用户\_x9FU
+  Deadwings
+  君莫笑
+  Neptune
+  老腊肉
+  爱发电用户\_mQps
 
-***你们的赞助是这个开源项目的重要动力, 多谢了.***
+      ***感谢这些赞助者, 开源项目有你们才有未来***
