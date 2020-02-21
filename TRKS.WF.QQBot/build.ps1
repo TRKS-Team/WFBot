@@ -1,10 +1,10 @@
-﻿Framework "4.6"
+﻿Framework "4.6x86"
 properties {
     $rootNow = Resolve-Path .
     $nugetexe = "$rootNow\buildTools\NuGet.exe"
     $configuration = "Debug"
     $releaseBase = "$rootNow\bin"
-    $pluginName = "trks.wf.qqbot"
+    $pluginName = (Get-ChildItem *.csproj).Name.Replace(".csproj", "")
     $mahuaDownloadTempDir = "$($env:TEMP)\Newbe\Newbe.Mahua"
     $assetDirName = "YUELUO"
 }
@@ -13,8 +13,7 @@ $pkgNames = @{
     "platform"  = @(
         "Newbe.Mahua.CQP",
         "Newbe.Mahua.MPQ",
-        "Newbe.Mahua.QQLight",
-        "Newbe.Mahua.CleverQQ"
+        "Newbe.Mahua.QQLight"
     )
     "framework" = @(
         "Newbe.Mahua",
@@ -108,25 +107,27 @@ Task DonwloadPackages -depends Init -Description "下载 nuget 包到临时目�
 
 Task Nuget -depends Init -Description "nuget restore" {
     Exec {
-        cmd /c """$nugetexe"" restore  -PackagesDirectory ""$rootNow\..\packages"""
         cmd /c """$nugetexe"" restore ..\AutoUpdater\packages.config -PackagesDirectory ""$rootNow\..\packages"""
+        cmd /c """$nugetexe"" restore  -PackagesDirectory ""$rootNow\..\packages"""
     }
 }
-
 
 Task Build -depends Nuget -Description "编译" {
     Exec {
-        & "MSBuild.exe" "/p:Configuration=$configuration"
+        msbuild /p:Configuration=$configuration
     }
 }
-
-
 
 # 生成CQP的JSON文件
 function WriteCqpJsonFile ($targetFilePath) {
     # 加载所有的DLL
     Get-ChildItem  "$releaseBase\$configuration\*" *.dll | ForEach-Object {
-        [void][reflection.assembly]::LoadFile($_)
+        try {
+            [void][reflection.assembly]::LoadFile($_)
+        }
+        catch {
+            
+        }
     }
 
     # 创建实例
@@ -153,23 +154,24 @@ function WriteCqpJsonFile ($targetFilePath) {
     $json.version_id = [int] $versionNos
 
     # 写入文件
-    $encoding = [System.Text.Encoding]::GetEncoding("gb2312")
-    [System.IO.File]::WriteAllText("$targetFilePath", ($json | ConvertTo-Json), $encoding)
+    $json | ConvertTo-Json | Out-File $targetFilePath -Encoding utf8
 }
 
 Task PackCQP -depends DonwloadPackages, Build -Description "CQP打包" {
     $InstalledPlatforms | Where-Object { $_.id -eq "Newbe.Mahua.CQP" } | ForEach-Object {
         Exec {
+            # CQP 要求 dll 名称和 appid 要相同，并且为小写
+            $cqpDevPluginDirName = $pluginName.ToLowerInvariant()
             $toolBase = Get-Download-Package-ToolsDir -package $_
             New-Item -ItemType Directory "$releaseBase\CQP"
             New-Item -ItemType Directory "$releaseBase\CQP\$pluginName"
-            New-Item -ItemType Directory "$releaseBase\CQP\app"
+            New-Item -ItemType Directory "$releaseBase\CQP\dev\$cqpDevPluginDirName"
             Copy-FrameworkItems -dest "$releaseBase\CQP\"
             Copy-Item -Path  "$toolBase\NewbeLibs\Platform\CLR\*" -Destination "$releaseBase\CQP" -Recurse
             Copy-FrameworkExtensionItems -dest "$releaseBase\CQP\$pluginName"
             Copy-Item -Path "$releaseBase\$configuration\*", "$toolBase\NewbeLibs\Platform\CLR\*"   -Destination "$releaseBase\CQP\$pluginName" -Recurse
-            Copy-Item -Path "$toolBase\NewbeLibs\Platform\Native\Newbe.Mahua.CQP.Native.dll" -Destination  "$releaseBase\CQP\app\$pluginName.dll"
-            WriteCqpJsonFile -targetFilePath "$releaseBase\CQP\app\$pluginName.json"
+            Copy-Item -Path "$toolBase\NewbeLibs\Platform\Native\Newbe.Mahua.CQP.Native.dll" -Destination  "$releaseBase\CQP\dev\$cqpDevPluginDirName\app.dll"
+            WriteCqpJsonFile -targetFilePath "$releaseBase\CQP\dev\$cqpDevPluginDirName\app.json"
 
             Copy-Item "$releaseBase\CQP\$pluginName" "$releaseBase\CQP\$assetDirName\$pluginName" -Recurse
             Get-ChildItem "$releaseBase\CQP\$assetDirName\$pluginName" | Get-FileHash | Out-File "$releaseBase\hash.txt"
@@ -191,7 +193,7 @@ Task PackQQLight -depends DonwloadPackages, Build -Description "QQLight打包" {
             Copy-Item -Path  "$toolBase\NewbeLibs\Platform\CLR\*" -Destination "$releaseBase\QQLight" -Recurse
             Copy-FrameworkExtensionItems -dest "$releaseBase\QQLight\$pluginName"
             Copy-Item -Path "$releaseBase\$configuration\*", "$toolBase\NewbeLibs\Platform\CLR\*"   -Destination "$releaseBase\QQLight\$pluginName" -Recurse
-            Copy-Item -Path "$toolBase\NewbeLibs\Platform\Native\Newbe.Mahua.QQLight.Native.dll" -Destination  "$releaseBase\QQLight\plugin\$pluginName.plugin.dll"
+            Copy-Item -Path "$toolBase\NewbeLibs\Platform\Native\Newbe.Mahua.QQLight.Native.dll" -Destination  "$releaseBase\QQLight\plugin\$pluginName.ql.dll"
 
             Copy-Item "$releaseBase\QQLight\$pluginName" "$releaseBase\QQLight\$assetDirName\$pluginName" -Recurse
             Get-ChildItem "$releaseBase\QQLight\$assetDirName\$pluginName" | Get-FileHash | Out-File "$releaseBase\hash.txt"
@@ -224,29 +226,7 @@ Task PackMPQ -depends DonwloadPackages, Build -Description "MPQ打包" {
     }
 }
 
-Task PackCleverQQ -depends DonwloadPackages, Build -Description "CleverQQ打包" {
-    $InstalledPlatforms | Where-Object { $_.id -eq "Newbe.Mahua.CleverQQ" } | ForEach-Object {
-        Exec {
-            $toolBase = Get-Download-Package-ToolsDir -package $_
-            New-Item -ItemType Directory "$releaseBase\CleverQQ"
-            New-Item -ItemType Directory "$releaseBase\CleverQQ\$pluginName"
-            New-Item -ItemType Directory "$releaseBase\CleverQQ\Plugin"
-            Copy-FrameworkItems -dest "$releaseBase\CleverQQ\"
-            Copy-Item -Path  "$toolBase\NewbeLibs\Platform\CLR\*" -Destination "$releaseBase\CleverQQ" -Recurse
-            Copy-FrameworkExtensionItems -dest "$releaseBase\CleverQQ\$pluginName"
-            Copy-Item -Path "$releaseBase\$configuration\*", "$toolBase\NewbeLibs\Platform\CLR\*"   -Destination "$releaseBase\CleverQQ\$pluginName" -Recurse
-            Copy-Item -Path "$toolBase\NewbeLibs\Platform\Native\Newbe.Mahua.CleverQQ.Native.dll" -Destination  "$releaseBase\CleverQQ\Plugin\$pluginName.IR.dll"
-
-            Copy-Item "$releaseBase\CleverQQ\$pluginName" "$releaseBase\CleverQQ\$assetDirName\$pluginName" -Recurse
-            Get-ChildItem "$releaseBase\CleverQQ\$assetDirName\$pluginName" | Get-FileHash | Out-File "$releaseBase\hash.txt"
-            Copy-Item "$releaseBase\hash.txt" "$releaseBase\CleverQQ\$assetDirName\$pluginName\hash.txt"
-            Remove-Item "$releaseBase\hash.txt"
-            Remove-Item "$releaseBase\CleverQQ\$pluginName" -Recurse
-        }
-    }
-}
-
-Task Pack -depends PackCQP, PackMPQ, PackCleverQQ, PackQQLight -Description "打包" {
+Task Pack -depends PackCQP, PackMPQ, PackQQLight -Description "打包" {
     Write-Output "构建完毕，当前时间为 $(Get-Date)"
 }
 
