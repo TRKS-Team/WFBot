@@ -99,8 +99,8 @@ Task DonwloadPackages -depends Init -Description "下载 nuget 包到临时目�
     $installedAll | ForEach-Object {
         $toolBase = Get-Download-Package-ToolsDir -package $_
         if (-not (Test-Path $toolBase)) {
-            Write-Output "cmd : nuget install $($_.id) -version $($_.version) -OutputDirectory $mahuaDownloadTempDir -Verbosity quiet"
-            cmd /c """$nugetexe"" install $($_.id) -version $($_.version) -OutputDirectory $mahuaDownloadTempDir -Verbosity quiet"
+            Write-Output "cmd : nuget install $($_.id) -version $($_.version) -OutputDirectory $mahuaDownloadTempDir"
+            cmd /c """$nugetexe"" install $($_.id) -version $($_.version) -OutputDirectory $mahuaDownloadTempDir"
         }
     }
 }
