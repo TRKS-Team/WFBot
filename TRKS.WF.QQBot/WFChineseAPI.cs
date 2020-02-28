@@ -247,9 +247,9 @@ namespace TRKS.WF.QQBot
             return enemies;
         }
 
-        public SentientOutposts GetSentientOutposts()
+        public SentientOutpost GetSentientOutposts()
         {
-            var outposts = WebHelper.DownloadJson<SentientOutposts>("https://api.warframestat.us/pc/sentientOutposts");
+            var outposts = WebHelper.DownloadJson<SentientOutpost>("https://api.warframestat.us/pc/sentientOutposts");
             return outposts;
         }
 
