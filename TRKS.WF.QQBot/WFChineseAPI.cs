@@ -118,7 +118,7 @@ namespace TRKS.WF.QQBot
 
         public List<WFInvasion> GetInvasions()
         {
-            var invasions = WebHelper.DownloadJson<List<WFInvasion>>($"https://api.warframestat.us/{platform}/invasio   ``ns");
+            var invasions = WebHelper.DownloadJson<List<WFInvasion>>($"https://api.warframestat.us/{platform}/invasions");
             foreach (var invasion in invasions)
             {
                 translator.TranslateInvasion(invasion);
@@ -260,6 +260,9 @@ namespace TRKS.WF.QQBot
 
     }
 
+    public class SentientOutposts
+    {
+    }
 
     public class WFTranslator
     {
