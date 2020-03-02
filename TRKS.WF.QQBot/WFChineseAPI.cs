@@ -247,10 +247,16 @@ namespace TRKS.WF.QQBot
             return enemies;
         }
 
-        public SentientOutpost GetSentientOutposts()
+        public SentientOutpost GetSentientOutpost()
         {
-            var outposts = WebHelper.DownloadJson<SentientOutpost>("https://api.warframestat.us/pc/sentientOutposts");
-            return outposts;
+            var outpost = WebHelper.DownloadJson<SentientOutpost>("https://api.warframestat.us/pc/sentientOutposts");
+            return outpost;
+        }
+
+        public SentientAnomaly GetSentientAnomaly()
+        {
+            var raw = WebHelper.DownloadJson<RawSentientAnomaly>("https://semlar.com/anomaly.json");
+            return translator.TranslateSentientAnomaly(raw);
         }
 
         private static DateTime GetRealTime(DateTime time)
@@ -438,7 +444,6 @@ namespace TRKS.WF.QQBot
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
         }
-
         public List<Relic> GetRelicInfo(string word)
         {
             return translateApi.Relic.Where(relic => relic.Name.Format().Contains(word)).ToList();
@@ -467,6 +472,23 @@ namespace TRKS.WF.QQBot
                 // 同↓
                 kuva.type = dictTranslators["Mission"].Translate(kuva.type);
             }
+        }
+
+        public DateTime ConvertUnixToDatetime(long unix)
+        {
+            var date = DateTimeOffset.FromUnixTimeSeconds(unix);
+            return date.UtcDateTime + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+        }
+        public void TranslateSentientOutpost(SentientOutpost se)
+        {
+            se.mission.node = TranslateNode(se.mission.node);
+            se.activation = GetRealTime(se.activation);
+            se.expiry = GetRealTime(se.expiry);
+        }
+
+        public SentientAnomaly TranslateSentientAnomaly(RawSentientAnomaly anomaly)
+        {
+            return new SentientAnomaly { end = ConvertUnixToDatetime(anomaly.end), name = anomaly.name, projection = ConvertUnixToDatetime(anomaly.projection), start = ConvertUnixToDatetime(anomaly.start) };
         }
         public void TranslateArbitrationMission(Arbitration ar)
         {

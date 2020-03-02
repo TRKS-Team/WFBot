@@ -202,6 +202,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
         {
             _WFStatus.SendKuvaMissions(Group);
         }
+
+        [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
+        void SentientOutpost()
+        {
+            _WFStatus.SendSentientOutpost(Group);
+        }
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender

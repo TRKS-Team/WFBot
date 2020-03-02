@@ -13,6 +13,24 @@ namespace TRKS.WF.QQBot
     public static class WFFormatter
     {
         private static WFTranslator translator => WFResource.WFTranslator;
+
+        public static string ToString(SentientOutpost outpost, SentientAnomaly anomaly)
+        {
+            var sb = new StringBuilder();
+            if (outpost.active)
+            {
+                var time = (outpost.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+                sb.AppendLine($"[{outpost.mission.node}] {time}后过期");
+            }
+            else
+            {
+                var time = (anomaly.projection - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+                sb.AppendLine("目前没有激活的Sentient异常");
+                sb.AppendLine($"下一个异常在{anomaly.projection}({time}后)");
+            }
+
+            return sb.ToString().Trim();
+        }
         [Pure]
         public static string ToString(Kuva kuva)
         {

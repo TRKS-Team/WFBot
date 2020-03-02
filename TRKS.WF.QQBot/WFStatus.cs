@@ -30,6 +30,19 @@ namespace TRKS.WF.QQBot
             Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
 
+        public void SendSentientOutpost(GroupNumber group)
+        {
+            var anomaly = api.GetSentientAnomaly();
+            var outpost = api.GetSentientOutpost();
+            var sb = new StringBuilder();
+            if (outpost.active)
+            {
+                sb.AppendLine("Sentient异常已发现:");
+            }
+
+            sb.AppendLine(WFFormatter.ToString(outpost, anomaly));
+            Messenger.SendGroup(group, sb.ToString().Trim());
+        }
         public void SendSortie(GroupNumber group)
         {
             var sortie = api.GetSortie();
