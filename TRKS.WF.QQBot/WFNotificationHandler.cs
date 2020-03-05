@@ -18,6 +18,7 @@ namespace TRKS.WF.QQBot
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
+        private readonly HashSet<DateTime> sendedSentientOutposts = new HashSet<DateTime>();
         private bool _inited;
         public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(3).TotalMilliseconds);
         private WFChineseAPI api => WFResource.WFChineseApi;
@@ -64,6 +65,26 @@ namespace TRKS.WF.QQBot
                 UpdateInvasionPool();
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
                 UpdatePersistentEnemiePool(); //TODO 在机器人启动时可能会导致无任何输出.
+                CheckSentientOutpost();
+            }
+        }
+
+        public void SendSentientOutpost()
+        {
+            var sb = new StringBuilder();
+            var outpost = api.GetSentientOutpost();
+            sb.AppendLine("侦测到在途的Sentient异常事件: ");
+            sb.AppendLine(WFFormatter.ToString(outpost));
+            Messenger.Broadcast(sb.ToString().Trim());
+        }
+        public void CheckSentientOutpost()
+        {
+            var outpost = api.GetSentientOutpost();
+            if (outpost.active && Config.Instance.LastSentientOutpost != outpost.activation)
+            {
+                SendSentientOutpost();
+                Config.Instance.LastSentientOutpost = outpost.activation;
+                Config.Save();
             }
         }
 

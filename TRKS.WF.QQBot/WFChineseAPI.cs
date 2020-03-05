@@ -250,6 +250,7 @@ namespace TRKS.WF.QQBot
         public SentientOutpost GetSentientOutpost()
         {
             var outpost = WebHelper.DownloadJson<SentientOutpost>("https://api.warframestat.us/pc/sentientOutposts");
+            translator.TranslateSentientOutpost(outpost);
             return outpost;
         }
 
@@ -266,9 +267,6 @@ namespace TRKS.WF.QQBot
 
     }
 
-    public class SentientOutposts
-    {
-    }
 
     public class WFTranslator
     {
@@ -481,9 +479,13 @@ namespace TRKS.WF.QQBot
         }
         public void TranslateSentientOutpost(SentientOutpost se)
         {
-            se.mission.node = TranslateNode(se.mission.node);
+            if (se.mission != null)
+            {
+                se.mission.node = TranslateNode(se.mission.node);
+            }
             se.activation = GetRealTime(se.activation);
             se.expiry = GetRealTime(se.expiry);
+
         }
 
         public SentientAnomaly TranslateSentientAnomaly(RawSentientAnomaly anomaly)
@@ -691,7 +693,8 @@ namespace TRKS.WF.QQBot
             {
                 inventory.item = dictTranslators["All"].Translate(inventory.item);
             }
-            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了 呜呜呜呜电男loki出库我没刷我穷死了
+            // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了 呜呜呜呜电男loki出库我没刷我穷死了 为啥带金首发DENMSL 爷爷退坑了D2真好玩
+
         }
 
         public void TranslateWMOrder(WMInfo info, string searchword)

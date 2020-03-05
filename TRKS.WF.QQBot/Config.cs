@@ -51,6 +51,8 @@ namespace TRKS.WF.QQBot
         public int WFASearchCount = 5;
 
         public bool IsPublicBot = false;// 大聪明用户, 别改这个参数.
+
+        public DateTime LastSentientOutpost = DateTime.Now;
     }
 
     [Configuration("CoquettishConfig")]
