@@ -32,25 +32,11 @@ namespace TRKS.WF.QQBot
 
         public void SendSentientOutpost(GroupNumber group)
         {
-            var anomaly = api.GetSentientAnomaly();
+  
             var outpost = api.GetSentientOutpost();
-            var sb = new StringBuilder();
-            if (outpost.active)
-            {
-                sb.AppendLine("Sentient异常已发现:");
-            }
+            var msg = WFFormatter.ToString(outpost);
 
-            if (outpost.active)
-            {
-                sb.AppendLine("Sentient异常事件已发现:");
-                sb.AppendLine(WFFormatter.ToString(outpost));
-            }
-            else
-            {
-                sb.AppendLine("目前没有激活的Sentient异常");
-                sb.AppendLine(WFFormatter.ToString(anomaly));
-            }
-            Messenger.SendGroup(group, sb.ToString().Trim());
+            Messenger.SendGroup(group, msg);
         }
         public void SendSortie(GroupNumber group)
         {

@@ -485,6 +485,8 @@ namespace TRKS.WF.QQBot
             }
             se.activation = GetRealTime(se.activation);
             se.expiry = GetRealTime(se.expiry);
+            se.previous.expiry = GetRealTime(se.previous.expiry);
+            se.previous.activation = GetRealTime(se.activation);
 
         }
 

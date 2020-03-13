@@ -17,12 +17,25 @@ namespace TRKS.WF.QQBot
         public static string ToString(SentientOutpost outpost)
         {
             var sb = new StringBuilder();
-            var time = (outpost.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
-            sb.AppendLine($"[{outpost.mission.node}]-{outpost.mission.faction} {time}后过期");
+            if (outpost.active)
+            {
+                var expiry =  outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
+                // 这行大概是因为api是wip 以后可以直接删掉换成outpost.expiry
+                // 但愿吧
+                var time = (expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+                sb.AppendLine($"    [{outpost.mission.node}]-{outpost.mission.faction} {time}后过期");
+            }
+            else
+            {
+                var time = (outpost.activation - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+                sb.AppendLine("目前没有Sentient异常");
+                sb.AppendLine($"下一个异常在{outpost.activation}({time}后)");
+            }
             return sb.ToString().Trim();
         }
-
-
+        // 他妈了个蛋 我琢磨了好久如何将两个api同步 结果第二个api就直接整合了第一个api的数据?
+        // 干你娘
+        /*
         public static string ToString(SentientAnomaly anomaly)
         {
             var sb = new StringBuilder();
@@ -30,7 +43,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"下一个异常在{anomaly.projection}({time}后)");
 
             return sb.ToString().Trim();
-        }
+        }*/
         [Pure]
         public static string ToString(Kuva kuva)
         {

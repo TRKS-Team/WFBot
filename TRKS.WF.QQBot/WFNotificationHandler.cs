@@ -18,9 +18,9 @@ namespace TRKS.WF.QQBot
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
-        private readonly HashSet<DateTime> sendedSentientOutposts = new HashSet<DateTime>();
         private bool _inited;
         public readonly Timer Timer = new Timer(TimeSpan.FromMinutes(3).TotalMilliseconds);
+        // 如果你把它改到5分钟以上 sentientoutpost会出错
         private WFChineseAPI api => WFResource.WFChineseApi;
         private string platform => Config.Instance.Platform.ToString();
         private List<WFAlert> AlertPool = new List<WFAlert>();
@@ -80,11 +80,13 @@ namespace TRKS.WF.QQBot
         public void CheckSentientOutpost()
         {
             var outpost = api.GetSentientOutpost();
-            if (outpost.active && Config.Instance.LastSentientOutpost != outpost.activation)
+            // 这api妥妥的是个wip你信不信
+            if (outpost.active && DateTime.Now - Config.Instance.SendSentientOutpostTime >= TimeSpan.FromMinutes(30))
             {
                 SendSentientOutpost();
-                Config.Instance.LastSentientOutpost = outpost.activation;
+                Config.Instance.SendSentientOutpostTime = DateTime.Now;
                 Config.Save();
+            
             }
         }
 

@@ -8,6 +8,11 @@ using Newtonsoft.Json;
 
 namespace TRKS.WF.QQBot
 {
+    public class Previous
+    {
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
+    }
 
     public class SentientOutpost
     {
@@ -16,6 +21,7 @@ namespace TRKS.WF.QQBot
         public DateTime expiry { get; set; }
         public bool active { get; set; }
         public string id { get; set; }
+        public Previous previous { get; set; }
     }
 
     public class Mission
