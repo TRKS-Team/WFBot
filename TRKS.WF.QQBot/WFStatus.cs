@@ -34,7 +34,7 @@ namespace TRKS.WF.QQBot
         {
   
             var outpost = api.GetSentientOutpost();
-            var msg = WFFormatter.ToString(outpost);
+            var msg = $"Sentient异常事件已发现:\r\n{WFFormatter.ToString(outpost)}";
 
             Messenger.SendGroup(group, msg);
         }

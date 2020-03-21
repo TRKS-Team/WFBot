@@ -8,6 +8,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
 using Humanizer.Localisation;
+using WarframeAlertingPrime.SDK.Models.User;
+
 namespace TRKS.WF.QQBot
 {
     public static class WFFormatter
@@ -174,9 +176,9 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(List<RivenInfo> infos, List<RivenData> datas)
+        public static string ToString(List<WarframeAlertingPrime.SDK.Models.User.Order> infos, List<RivenData> datas)
         {
-            var weapon = infos.First().item_Class;
+            var weapon = infos.First().weapon;
             var sb = new StringBuilder();
             var weaponinfo = WFResource.WFApi.Riven.First(d => d.Name == weapon);
             sb.AppendLine($"下面是 {weapon} 紫卡的基本信息(来自DE)");
@@ -195,22 +197,22 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
             foreach (var info in infos)
             {
-                sb.Append($"[{info.user_Name}]  ");
-                switch (info.user_Status)
+                sb.Append($"[{info.account.userId}]  ");
+                switch (info.account.status)
                 {
-                    case 0:
+                    case UserStatus.Offline:
                         sb.AppendLine("离线");
                         break;
-                    case 1:
+                    case UserStatus.Online:
                         sb.AppendLine("在线");
                         break;
-                    case 2:
+                    case UserStatus.InGame:
                         sb.AppendLine("游戏中");
                         break;
                 }
 
-                sb.AppendLine($"- 价格: {info.item_Price}白鸡 ({info.item_ResetNum}洗)");
-                sb.AppendLine($"  属性: {info.item_Property.Replace("|", "").Replace(" ", " | ")}");
+                sb.AppendLine($"- 价格: {info.platinum}白鸡 ({info.reset}洗)");
+                sb.AppendLine($"  属性: {info.properties.First().}");
             }
 
             return sb.ToString().Trim();

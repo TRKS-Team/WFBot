@@ -10,6 +10,7 @@ using GammaLibrary.Extensions;
 using Settings;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
+using WarframeAlertingPrime.SDK.Models.Others;
 
 namespace TRKS.WF.QQBot
 {
@@ -98,7 +99,7 @@ namespace TRKS.WF.QQBot
             }
         }
 
-        public List<RivenInfo> GetRivenInfos(string weapon)
+        /*public List<RivenInfo> GetRivenInfos(string weapon)
         {
             var header = new WebHeaderCollection();
             var count = Config.Instance.WFASearchCount;
@@ -111,6 +112,13 @@ namespace TRKS.WF.QQBot
             header.Add("Platform", platform);
             header.Add("Weapon", weapon.ToBase64());
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
+        }*/
+
+        public List<WarframeAlertingPrime.SDK.Models.User.Order> GetRivenInfos(string weapon)
+        {
+            var option = new SearchRivenOrderOption{Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = weapon};
+            var infos = wfaClient.QueryRivenOrdersAsync(option).Result;
+            return infos;
         }
 
         public List<RivenData> GetRivenDatas()
