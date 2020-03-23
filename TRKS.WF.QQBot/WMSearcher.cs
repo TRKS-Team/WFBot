@@ -11,6 +11,7 @@ namespace TRKS.WF.QQBot
     public class WMSearcher
     {
         private WFTranslator translator => WFResource.WFTranslator;
+        private WFApi api => WFResource.WFApi;
         private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
                              !string.IsNullOrEmpty(Config.Instance.ClientSecret);
 
@@ -25,6 +26,7 @@ namespace TRKS.WF.QQBot
             }
             header.Add("platform", platform);
             var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
+            info.sale = api.Sale.First(s => s.code == searchword);
             return info;
         }
 
@@ -38,6 +40,7 @@ namespace TRKS.WF.QQBot
                 platform = "ns";
             }
             var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);
+            info.sale = api.Sale.First(s => s.code == searchword);
             return info;
         }
 

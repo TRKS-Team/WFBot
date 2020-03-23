@@ -33,7 +33,7 @@ namespace WFBotTest
             Do("紫卡 合成燃气炮");*/
 
             //Do("金星赏金");
-            /*
+            
 
                         Do("地球赏金");
                         Do("查询 加速赋能");
@@ -49,7 +49,7 @@ namespace WFBotTest
                         Do("裂隙");
                         Do("小小黑");
                         Do("状态");
-                        Do("午夜电波");*/
+                        Do("午夜电波");
             /*
             Do("查询 valkyr p 头");
             Do("查询 valkyr prime 头");

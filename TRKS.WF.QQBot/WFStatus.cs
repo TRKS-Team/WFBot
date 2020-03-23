@@ -86,11 +86,12 @@ namespace TRKS.WF.QQBot
 
         public void SendRelicInfo(GroupNumber group, string word)
         {
-            var relics = translator.GetRelicInfo(word);
+            /*var relics = translator.GetRelicInfo(word);
             var msg = $"{WFFormatter.ToString(relics)}\n\n" +
                       $"你正在查看与 {word} 有关的所有遗物.";
 
-            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
+            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));*/
+            Messenger.SendGroup(group, "本功能由于数据源变动暂时不可用, 新数据源正在适配中, 请耐心等待.");
         }
 
         public void SendEvent(GroupNumber group)

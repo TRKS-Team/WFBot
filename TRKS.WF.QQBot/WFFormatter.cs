@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
 using Humanizer.Localisation;
+using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.User;
 
 namespace TRKS.WF.QQBot
@@ -180,9 +181,9 @@ namespace TRKS.WF.QQBot
         {
             var weapon = infos.First().weapon;
             var sb = new StringBuilder();
-            var weaponinfo = WFResource.WFApi.Riven.First(d => d.Name == weapon);
+            var weaponinfo = WFResource.WFApi.Riven.First(d => d.name == weapon);
             sb.AppendLine($"下面是 {weapon} 紫卡的基本信息(来自DE)");
-            sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.Type)} 倾向: {weaponinfo.Level}星 倍率: {weaponinfo.Ratio}");
+            sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
             var rerolled = datas.Where(d => !d.rerolled);
             if (rerolled.Any())
             {
@@ -212,7 +213,24 @@ namespace TRKS.WF.QQBot
                 }
 
                 sb.AppendLine($"- 价格: {info.platinum}白鸡 ({info.reset}洗)");
-                sb.AppendLine($"  属性: {info.properties.First().}");
+                sb.Append($"  属性: ");
+                foreach (var property in info.properties)
+                {
+                    var number = "";
+                    switch (property.displayType)
+                    {
+                        case DisplayType.Percentage:
+                            number = property.value.ToString("P");
+                            break;
+                        case DisplayType.Number:
+                            number = property.value.ToString(CultureInfo.InvariantCulture) + "%";
+                            break;
+                    }
+
+                    sb.Append($"{property.name}{(property.isDeduction ? "-" : "+")}{number}|");
+                }
+
+                sb.AppendLine();
             }
 
             return sb.ToString().Trim();
@@ -378,7 +396,7 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
             var item = itemItemsInSet.Where(i => i.zh.item_name != i.en.item_name).ToList().Last();
-            sb.AppendLine($"下面是物品: {item.zh.item_name} 按价格{(isbuyer ? "从大到小": "从小到大")}的{info.payload.orders.Length}条 {(isbuyer ? "买家" : "卖家")} 信息");
+            sb.AppendLine($"下面是物品: {info.sale.zh} 按价格{(isbuyer ? "从大到小": "从小到大")}的{info.payload.orders.Length}条 {(isbuyer ? "买家" : "卖家")} 信息");
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {
@@ -386,7 +404,7 @@ namespace TRKS.WF.QQBot
                 if (withQR)
                 {
                     sb.AppendLine(
-                        $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to {(isbuyer ? "sell" : "buy")}: {item.en.item_name} for {order.platinum} platinum. (warframe.market)");
+                        $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to {(isbuyer ? "sell" : "buy")}: {info.sale.en} for {order.platinum} platinum. (warframe.market)");
                 }
 
             }
@@ -398,7 +416,7 @@ namespace TRKS.WF.QQBot
         {
             var sb = new StringBuilder();
             var item = info.info;
-            sb.AppendLine($"下面是物品: {item.zhName} 按价格{(isbuyer ? "从大到小" : "从小到大")}的{info.orders.Length}条{(isbuyer ? "买家" : "卖家")}信息");
+            sb.AppendLine($"下面是物品: {info.sale.zh} 按价格{(isbuyer ? "从大到小" : "从小到大")}的{info.orders.Length}条{(isbuyer ? "买家" : "卖家")}信息");
             sb.AppendLine();
 
             foreach (var order in info.orders)
@@ -407,7 +425,7 @@ namespace TRKS.WF.QQBot
                 if (withQR)
                 {
                     sb.AppendLine(
-                        $"- 快捷回复: /w {order.userName} Hi! I want to {(isbuyer ? "sell" : "buy")}: {item.enName} for {order.platinum} platinum. (warframe.market)");
+                        $"- 快捷回复: /w {order.userName} Hi! I want to {(isbuyer ? "sell" : "buy")}: {info.sale.en} for {order.platinum} platinum. (warframe.market)");
                 }
             }
             // 这已经很难看了好吧

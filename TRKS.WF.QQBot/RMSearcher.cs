@@ -28,8 +28,9 @@ namespace TRKS.WF.QQBot
 
         public RMSearcher()
         {
-            UpdateAccessToken();
-            timer.Elapsed += (s, e) => UpdateAccessToken();
+            // UpdateAccessToken();
+            UpdateClient();
+            timer.Elapsed += (s, e) => /*UpdateAccessToken();*/ UpdateClient();
             timer.Start();
         }
 
@@ -114,11 +115,12 @@ namespace TRKS.WF.QQBot
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }*/
 
-        public List<WarframeAlertingPrime.SDK.Models.User.Order> GetRivenInfos(string weapon)
+        public List<WarframeAlertingPrime.SDK.Models.User.Order> GetRivenOrders(string weapon)
         {
-            var option = new SearchRivenOrderOption{Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = weapon};
-            var infos = wfaClient.QueryRivenOrdersAsync(option).Result;
-            return infos;
+            var option = new SearchRivenOrderOption{Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon)};
+            var orders = wfaClient.QueryRivenOrdersAsync(option).Result;
+            translator.TranslateRivenOrders(orders);
+            return orders;
         }
 
         public List<RivenData> GetRivenDatas()
@@ -135,12 +137,13 @@ namespace TRKS.WF.QQBot
             {
                 if (isWFA)
                 {
-                    if (translator.ContainsWeapon(weapon))
+                    var weaponEn = translator.TranslateWeapon(weapon);
+                    if (weaponEn != weapon)
                     {
                         Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
-                        var info = GetRivenInfos(weapon);
+                        var orders = GetRivenOrders(weaponEn);
                         var data = GetRivenDatas().Where(d => d.compatibility.Format() == weapon).ToList();
-                        var msg = info.Any() ? WFFormatter.ToString(info, data) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
+                        var msg = orders.Any() ? WFFormatter.ToString(orders, data) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else

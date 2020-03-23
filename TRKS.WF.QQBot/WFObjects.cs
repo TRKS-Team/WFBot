@@ -8,6 +8,57 @@ using Newtonsoft.Json;
 
 namespace TRKS.WF.QQBot
 {
+
+    public class Lib
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public string uniqueName { get; set; }
+        public string thumb { get; set; }
+    }
+
+
+    public class AllRiven
+    {
+        public int Id { get; set; }
+        public string name { get; set; }
+        public string thumb { get; set; }
+        public string type { get; set; }
+        public int rank { get; set; }
+        public float modulus { get; set; }
+    }
+
+
+    public class Dict
+    {
+        public int id { get; set; }
+        public string Zh { get; set; }
+        public string En { get; set; }
+    }
+
+    public class Riven
+    // of a thousand voices
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public string thumb { get; set; }
+        public string type { get; set; }
+        public int rank { get; set; }
+        public float modulus { get; set; }
+    }
+
+    public class Sale
+    {
+        public int id { get; set; }
+        public string code { get; set; }
+        public string main { get; set; }
+        public string component { get; set; }
+        public string zh { get; set; }
+        public string en { get; set; }
+        public string thumb { get; set; }
+    }
+
     public class Previous
     {
         public DateTime activation { get; set; }
@@ -303,6 +354,8 @@ namespace TRKS.WF.QQBot
     {
         public OrderEx[] orders { get; set; }
         public Info info { get; set; }
+        [JsonIgnore]
+        public Sale sale { get; set; }
     }
 
     public class Info
@@ -310,10 +363,6 @@ namespace TRKS.WF.QQBot
         public int ducats { get; set; }
         public int tradingTax { get; set; }
         public int advicePrice { get; set; }
-        [JsonIgnore]
-        public string enName { get; set; }
-        [JsonIgnore]
-        public string zhName { get; set; }
     }
 
     public class OrderEx
@@ -447,6 +496,8 @@ namespace TRKS.WF.QQBot
     {
         public Payload payload { get; set; }
         public Include include { get; set; }
+        [JsonIgnore]
+        public Sale sale { get; set; }
     }
 
     public class Payload
@@ -644,12 +695,12 @@ namespace TRKS.WF.QQBot
     {
         public Dict[] Dict { get; set; }
         public Sale[] Sale { get; set; }
-        public Alert[] Alert { get; set; }
         public Invasion[] Invasion { get; set; }
         public Riven[] Riven { get; set; }
-        public Relic[] Relic { get; set; }
-        public Modifier[] Modifier { get; set; }
         public NightWave[] NightWave { get; set; }
+        public AllRiven[] Allriven { get; set; }
+        public Lib[] Lib { get; set; }
+
     }
 
     public class Modifier
@@ -659,22 +710,7 @@ namespace TRKS.WF.QQBot
         public string en { get; set; }
     }
 
-    public class Dict
-    {
-        public int Id { get; set; }
-        public string Type { get; set; }
-        public string Zh { get; set; }
-        public string En { get; set; }
-    }
 
-    public class Sale
-    {
-        public int Id { get; set; }
-        public string Type { get; set; }
-        public string Search { get; set; }
-        public string Zh { get; set; }
-        public string En { get; set; }
-    }
 
     public class Alert
     {
@@ -689,16 +725,6 @@ namespace TRKS.WF.QQBot
         public string Zh { get; set; }
         public string En { get; set; }
     }
-
-    public class Riven
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public int Level { get; set; }
-        public float Ratio { get; set; }
-    }
-
 
     public class Relic
     {

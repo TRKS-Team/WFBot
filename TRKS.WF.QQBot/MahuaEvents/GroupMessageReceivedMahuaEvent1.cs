@@ -91,7 +91,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), Group, QR, B);
         } 
 
-        [Matchers("紫卡")]
+        [Matchers("紫卡", "阿罕卡拉"/*彩蛋*/, "千语魅痕"/*彩蛋*/)]
         [CombineParams]
         void Riven(string word)
         {

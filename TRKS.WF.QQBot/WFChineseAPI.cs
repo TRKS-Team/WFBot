@@ -67,22 +67,22 @@ namespace TRKS.WF.QQBot
         {
             var api = new WFApi();
             Messenger.SendDebugInfo("正在加载翻译 API.");
-            var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/master/";
+            var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
             var sw = Stopwatch.StartNew();
             Task.WaitAll(
-                Downloader.GetCacheOrDownload<Alert[]>($"{source}WF_Alert.json", alerts => api.Alert = alerts),
                 Downloader.GetCacheOrDownload<Dict[]>($"{source}WF_Dict.json", dicts => api.Dict = dicts),
                 Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs => api.Invasion = invs),
                 Downloader.GetCacheOrDownload<Sale[]>($"{source}WF_Sale.json", sales => api.Sale = sales),
                 Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
-                Downloader.GetCacheOrDownload<Relic[]>($"{source}WF_Relic.json", relics => api.Relic = relics),
-                Downloader.GetCacheOrDownload<Modifier[]>($"{source}WF_Modifier.json", modifiers => api.Modifier = modifiers),
+                Downloader.GetCacheOrDownload<AllRiven[]/* Riven和AllRiven的数据结构一致 */>($"{source}WF_AllRiven.json", allrivens => api.Allriven = allrivens),
+                Downloader.GetCacheOrDownload<Lib[]>($"{source}WF_Lib.json", libs => api.Lib = libs),
                 Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
             );
 
             Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
             // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
             // 呃, 还好我当时写了这局注释 不然我可能之后会拉不出屎憋死 来自2020年2月20日15:34:49的trks
+            // 天哪. 这api真是野蛮不堪 我当时为什么要这么写
             return api;
         }
         public static bool UpdateLexion()
@@ -270,14 +270,14 @@ namespace TRKS.WF.QQBot
 
     public class WFTranslator
     {
-        private ConcurrentDictionary<string /*type*/, Translator> dictTranslators = new ConcurrentDictionary<string, Translator>();
-        private ConcurrentDictionary<string, Translator> searchwordTranslator = new ConcurrentDictionary<string, Translator>();
-        private Translator wikiTranslator = new Translator();
-        private Translator nightwaveTranslator = new Translator();
-        private Translator invasionTranslator = new Translator();
-        private Translator alertTranslator = new Translator();
-        private List<string> weapons = new List<string>();
-        private List<string> wikiwords = new List<string>();
+        private Translator dictTranslator = new Translator(); // 翻译器之祖
+        private Translator searchwordTranslator = new Translator(); // 将中文物品转换成wm的搜索地址
+        private Translator wikiTranslator = new Translator(); // 我忘了是干嘛的 好像没用了
+        private Translator nightwaveTranslator = new Translator(); // 午夜电波任务翻译
+        private Translator invasionTranslator = new Translator(); // 入侵物品翻译
+        private Translator weaponTranslator = new Translator(); // 武器中译英 用来wfa搜索 
+        private List<string> weapons = new List<string>();// 所有武器的中文
+        private List<string> wikiwords = new List<string>(); // 我好像也忘了 好像没用了
         private WFApi translateApi => WFResource.WFApi;
 
 
@@ -288,69 +288,39 @@ namespace TRKS.WF.QQBot
 
         private void InitTranslators()
         {
-            dictTranslators.Clear();
-            dictTranslators.TryAdd("All", new Translator());
-            dictTranslators.TryAdd("WM", new Translator());
+            dictTranslator.Clear();
             foreach (var dict in translateApi.Dict)
             {
-                var type = dict.Type;
-                if (!dictTranslators.ContainsKey(type))
-                {
 
-                    dictTranslators.TryAdd(type, new Translator());
-                }
-                dictTranslators["All"].AddEntry(dict.En, dict.Zh);
-                switch (type)
-                {
-                    case "Weapon":
-                    case "Star":
-                        dictTranslators[type].AddEntry(dict.En.Format(), dict.Zh);
-                        break;
-                    default:
-                        dictTranslators[type].AddEntry(dict.En, dict.Zh);
-                        break;
-
-                }
-
+                dictTranslator.AddEntry(dict.En, dict.Zh);
+                dictTranslator.AddEntry(dict.En, dict.Zh);
+                searchwordTranslator.Clear();
             }
-            searchwordTranslator.Clear();
+
             foreach (var sale in translateApi.Sale)
             {
-                if (!searchwordTranslator.ContainsKey("Word"))
-                {
-                    searchwordTranslator.TryAdd("Word", new Translator());
-                }
-
-                if (!searchwordTranslator.ContainsKey("Item"))
-                {
-                    searchwordTranslator.TryAdd("Item", new Translator());
-                }
-                searchwordTranslator["Word"].AddEntry(sale.Zh.Format(), sale.Search);
-                searchwordTranslator["Item"].AddEntry(sale.Search, sale.Zh);
+                searchwordTranslator.AddEntry(sale.zh.Format(), sale.code);
             }
             invasionTranslator.Clear();
             foreach (var invasion in translateApi.Invasion)
             {
                 invasionTranslator.AddEntry(invasion.En, invasion.Zh);
             }
-            alertTranslator.Clear();
-            foreach (var alert in translateApi.Alert)
+
+            translateApi.Riven.Select(r => r = new Riven
             {
-                alertTranslator.AddEntry(alert.En, alert.Zh);
-            }
+                id = r.id, modulus = r.modulus, name = dictTranslator.Translate(r.name), rank = r
+                    .rank,
+                thumb = r.thumb, type = dictTranslator.Translate(r.type)
+            });
             weapons.Clear();
+            weaponTranslator.Clear();
             foreach (var riven in translateApi.Riven)
             {
-                weapons.Add(riven.Name.Format());
-            }
-
-            foreach (var modifier in translateApi.Modifier)
-            {
-                if (!dictTranslators.ContainsKey("Modifier"))
-                {
-                    dictTranslators.TryAdd("Modifier", new Translator());
-                }
-                dictTranslators["Modifier"].AddEntry(modifier.en, modifier.zh);
+                var zh = dictTranslator.Translate(riven.name);
+                var en = riven.name;
+                weapons.Add(zh);
+                weaponTranslator.AddEntry(zh, en);
             }
             nightwaveTranslator.Clear();
             foreach (var wave in translateApi.NightWave)
@@ -373,7 +343,7 @@ namespace TRKS.WF.QQBot
             var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
             if (!zhResults.Any() && !enResults.Any())
             {
-                return "并没有查询到任何翻译,请检查源名.";
+                return "并没有查询到任何翻译,请检查输入.";
             }
 
             var sb = new StringBuilder();
@@ -407,10 +377,10 @@ namespace TRKS.WF.QQBot
                 case "wm":
                     foreach (var sale in translateApi.Sale)
                     {
-                        if (sale.Zh.StartsWith(str))
+                        if (sale.zh.StartsWith(str))
                         {
-                            var distance = lev.DistanceFrom(sale.Zh.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.Zh });
+                            var distance = lev.DistanceFrom(sale.zh.Format());
+                            distancelist.Add(new StringInfo { LevDistance = distance, Name = sale.zh });
                         }
                     }
                     break;
@@ -442,10 +412,10 @@ namespace TRKS.WF.QQBot
 
             return distancelist.Where(dis => dis.LevDistance != 0).Take(5).Select(info => info.Name).ToList();
         }
-        public List<Relic> GetRelicInfo(string word)
+        /*public List<Relic> GetRelicInfo(string word)
         {
             return translateApi.Relic.Where(relic => relic.Name.Format().Contains(word)).ToList();
-        }
+        }*/
         private static DateTime GetRealTime(DateTime time)
         {
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
@@ -453,11 +423,11 @@ namespace TRKS.WF.QQBot
 
         public string TranslateWeapon(string weapon)
         {
-            return dictTranslators["Weapon"].Translate(weapon);
+            return weaponTranslator.Translate(weapon);
         }
         public string TranslateWeaponType(string type)
         {
-            return dictTranslators["Word"].Translate(type);
+            return dictTranslator.Translate(type);
         }
         public void TranslateKuvaMission(List<Kuva> kuvas)
         {
@@ -468,7 +438,7 @@ namespace TRKS.WF.QQBot
                 kuva.name = TranslateNode(kuva.name);
                 // // trick
                 // 同↓
-                kuva.type = dictTranslators["Mission"].Translate(kuva.type);
+                kuva.type = dictTranslator.Translate(kuva.type);
             }
         }
 
@@ -489,7 +459,17 @@ namespace TRKS.WF.QQBot
             se.previous.activation = GetRealTime(se.activation);
 
         }
-
+        // 打了最后一愿之后就再也没法直视Riven这个单词了
+        public void TranslateRivenOrders(List<WarframeAlertingPrime.SDK.Models.User.Order> orders)
+        {
+            foreach (var order in orders)
+            {
+                foreach (var property in order.properties)
+                {
+                    property.name = dictTranslator.Translate(property.name);
+                }
+            }
+        }
         public SentientAnomaly TranslateSentientAnomaly(RawSentientAnomaly anomaly)
         {
             return new SentientAnomaly { end = ConvertUnixToDatetime(anomaly.end), name = anomaly.name, projection = ConvertUnixToDatetime(anomaly.projection), start = ConvertUnixToDatetime(anomaly.start) };
@@ -502,7 +482,7 @@ namespace TRKS.WF.QQBot
                 ar.node = TranslateNode(ar.node);
                 // // trick
                 // 不需要trick了
-                ar.type = dictTranslators["Mission"].Translate(ar.type);
+                ar.type = dictTranslator.Translate(ar.type);
             
         }
         public void TranslateNightWave(WFNightWave nightwave)
@@ -518,7 +498,7 @@ namespace TRKS.WF.QQBot
         {
             foreach (var enemy in enemies)
             {
-                enemy.agentType = dictTranslators["Word"].Translate(enemy.agentType);
+                enemy.agentType = dictTranslator.Translate(enemy.agentType);
                 enemy.lastDiscoveredAt = TranslateNode(enemy.lastDiscoveredAt);
                 enemy.lastDiscoveredTime = GetRealTime(enemy.lastDiscoveredTime);
             }
@@ -527,13 +507,13 @@ namespace TRKS.WF.QQBot
         {
             foreach (var @event in events)
             {
-                @event.description = dictTranslators["All"].Translate(@event.description);
+                @event.description = dictTranslator.Translate(@event.description);
             }
         }
 
         public string TranslateSearchWord(string source)
         {
-            return searchwordTranslator["Word"].Translate(source);
+            return searchwordTranslator.Translate(source);
         }
 
         public void TranslateInvasion(WFInvasion invasion)
@@ -552,7 +532,7 @@ namespace TRKS.WF.QQBot
 
             foreach (var t in reward.countedItems)
             {
-                t.type = alertTranslator.Translate(t.type);
+                t.type = dictTranslator.Translate(t.type);
             }
         }
 
@@ -565,11 +545,11 @@ namespace TRKS.WF.QQBot
                 if (strings.Length >= 2)
                 {
                     var nodeRegion = strings[1].Split(')')[0];
-                    result = strings[0] + dictTranslators["Star"].Translate(nodeRegion.Format());
+                    result = strings[0] + dictTranslator.Translate(nodeRegion);
                 }
                 else
                 {
-                    return dictTranslators["Star"].Translate(node.Format());
+                    return dictTranslator.Translate(node);
                 }
 
             }
@@ -591,19 +571,19 @@ namespace TRKS.WF.QQBot
         {
             var mission = alert.Mission;
             mission.Node = TranslateNode(mission.Node);
-            mission.Type = dictTranslators["Mission"].Translate(mission.Type);
+            mission.Type = dictTranslator.Translate(mission.Type);
             TranslateReward(mission.Reward);
 
             void TranslateReward(Reward reward)
             {
                 foreach (var item in reward.CountedItems)
                 {
-                    item.Type = alertTranslator.Translate(item.Type);
+                    item.Type = dictTranslator.Translate(item.Type);
                 }
 
                 for (var i = 0; i < reward.Items.Length; i++)
                 {
-                    reward.Items[i] = alertTranslator.Translate(reward.Items[i]);
+                    reward.Items[i] = dictTranslator.Translate(reward.Items[i]);
                 }
             }
 
@@ -650,7 +630,7 @@ namespace TRKS.WF.QQBot
                                     sb.Append($"{count}X");
                                 }
 
-                                sb.Append(dictTranslators["All"].Translate(item));
+                                sb.Append(dictTranslator.Translate(item));
                                 job.rewardPool[i] = Regex.Replace(sb.ToString(), "(\\d+)(X)", "$1x");
                             }
                         }
@@ -664,10 +644,10 @@ namespace TRKS.WF.QQBot
             foreach (var variant in sortie.variants)
             {
                 variant.node = TranslateNode(variant.node).Replace("Plains of Eidolon", "夜灵平野"); // 这个不在翻译api里
-                variant.missionType = dictTranslators["Mission"].Translate(variant.missionType);
-                variant.modifier = dictTranslators["Modifier"].Translate(variant.modifier);
+                variant.missionType = dictTranslator.Translate(variant.missionType);
+                variant.modifier = dictTranslator.Translate(variant.modifier);
             }
-            sortie.boss = dictTranslators["Word"].Translate(sortie.boss);
+            sortie.boss = dictTranslator.Translate(sortie.boss);
         }
 
         public void TranslateFissures(List<Fissure> fissures)
@@ -676,8 +656,8 @@ namespace TRKS.WF.QQBot
             foreach (var fissure in fissures)
             {
                 fissure.node = TranslateNode(fissure.node);
-                fissure.tier = dictTranslators["Word"].Translate(fissure.tier);
-                fissure.missionType = dictTranslators["Mission"].Translate(fissure.missionType);
+                fissure.tier = dictTranslator.Translate(fissure.tier);
+                fissure.missionType = dictTranslator.Translate(fissure.missionType);
                 fissure.expiry = GetRealTime(fissure.expiry);
                 var delay = fissure.expiry - DateTime.Now;
                 if (delay.Ticks > 0)
@@ -693,7 +673,7 @@ namespace TRKS.WF.QQBot
             trader.location = TranslateNode(trader.location).Replace("Relay", "中继站");
             foreach (var inventory in trader.inventory)
             {
-                inventory.item = dictTranslators["All"].Translate(inventory.item);
+                inventory.item = dictTranslator.Translate(inventory.item);
             }
             // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了 呜呜呜呜电男loki出库我没刷我穷死了 为啥带金首发DENMSL 爷爷退坑了D2真好玩
 
@@ -701,10 +681,6 @@ namespace TRKS.WF.QQBot
 
         public void TranslateWMOrder(WMInfo info, string searchword)
         {
-            foreach (var iteminset in info.include.item.items_in_set.Where(word => word.url_name == searchword))
-            {
-                iteminset.zh.item_name = searchwordTranslator["Item"].Translate(searchword);
-            }
 
             foreach (var order in info.payload.orders)
             {
@@ -736,8 +712,6 @@ namespace TRKS.WF.QQBot
 
         public void TranslateWMOrderEx(WMInfoEx info, string searchword)
         {
-            info.info.enName = info.orders.First().itemName;
-            info.info.zhName = searchwordTranslator["Item"].Translate(searchword);
 
             foreach (var order in info.orders)
             {
