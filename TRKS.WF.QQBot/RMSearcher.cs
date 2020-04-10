@@ -16,68 +16,13 @@ namespace TRKS.WF.QQBot
 {
     public class RMSearcher
     {
-        private Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
+
+        private Client wfaClient => WFResource.WFAApi.wfaClient;
+        private bool isWFA => WFResource.WFAApi.isWFA;
         private WFTranslator translator => WFResource.WFTranslator;
 
-        private bool isWFA = !Config.Instance.ClientId.IsNullOrWhiteSpace() &&
-                             !Config.Instance.ClientSecret.IsNullOrWhiteSpace();
 
-        private string platform = Config.Instance.Platform.ToString();
-
-        private Client wfaClient;
-
-        public RMSearcher()
-        {
-            // UpdateAccessToken();
-            UpdateClient();
-            timer.Elapsed += (s, e) => /*UpdateAccessToken();*/ UpdateClient();
-            timer.Start();
-        }
-
-        public void UpdateClient()
-        {
-            PlatformType wfaPlatform;
-            switch (Config.Instance.Platform)
-            {
-                case Platform.PC:
-                    wfaPlatform = PlatformType.PC;
-                    break;
-                case Platform.NS:
-                    wfaPlatform = PlatformType.Switch;
-                    break;
-                case Platform.PS4:
-                    wfaPlatform = PlatformType.PS4;
-                    break;
-                case Platform.XBOX:
-                    wfaPlatform = PlatformType.Xbox;
-                    break;
-                default:
-                    wfaPlatform = PlatformType.PC;
-                    break;
-            }
-
-            if (isWFA) // 今后所有用到client的地方都要判断一次
-            {
-                if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7))
-                {
-                    wfaClient = new Client(Config.Instance.ClientId, Config.Instance.ClientSecret, new []
-                    {
-                        "wfa.basic", "wfa.riven.query", "wfa.user.read", "wfa.lib.query"
-
-                    }, wfaPlatform);
-                    wfaClient.InitAsync();
-                    Config.Instance.Last_update = DateTime.Now;
-                    Config.Instance.AcessToken = wfaClient.Token;
-                    Config.Save();
-                }
-                else
-                {
-                    wfaClient = new Client(Config.Instance.AcessToken, wfaPlatform);
-                }
-            }
-
-        }
-        public string GetAccessToken()
+        /*public string GetAccessToken()
         {
             var body = $"client_id={Config.Instance.ClientId}&client_secret={Config.Instance.ClientSecret}&grant_type=client_credentials";
             var header = new WebHeaderCollection
@@ -98,7 +43,7 @@ namespace TRKS.WF.QQBot
                 Config.Instance.AcessToken = GetAccessToken();
                 Config.Save();
             }
-        }
+        }*/
 
         /*public List<RivenInfo> GetRivenInfos(string weapon)
         {
@@ -118,7 +63,7 @@ namespace TRKS.WF.QQBot
         public List<WarframeAlertingPrime.SDK.Models.User.Order> GetRivenOrders(string weapon)
         {
             var option = new SearchRivenOrderOption{Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon)};
-            var orders = wfaClient.QueryRivenOrdersAsync(option).Result;
+            var orders = wfaClient.QueryRivenOrdersAsync(option).Result.Items;
             translator.TranslateRivenOrders(orders);
             return orders;
         }
@@ -143,7 +88,7 @@ namespace TRKS.WF.QQBot
                         Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         var orders = GetRivenOrders(weaponEn);
                         var data = GetRivenDatas().Where(d => d.compatibility.Format() == weapon).ToList();
-                        var msg = orders.Any() ? WFFormatter.ToString(orders, data) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
+                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else

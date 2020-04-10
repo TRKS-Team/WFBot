@@ -198,7 +198,7 @@ namespace TRKS.WF.QQBot
             sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
             foreach (var info in infos)
             {
-                sb.Append($"[{info.account.userId}]  ");
+                sb.Append($"[{info.account.gameName}]  ");
                 switch (info.account.status)
                 {
                     case UserStatus.Offline:
@@ -220,8 +220,8 @@ namespace TRKS.WF.QQBot
                     switch (property.displayType)
                     {
                         case DisplayType.Percentage:
-                            number = property.value.ToString("P");
-                            break;
+                            /*number = property.value.ToString("P");
+                            break;*/
                         case DisplayType.Number:
                             number = property.value.ToString(CultureInfo.InvariantCulture) + "%";
                             break;
@@ -395,7 +395,7 @@ namespace TRKS.WF.QQBot
         {
             var sb = new StringBuilder();
             var itemItemsInSet = info.include.item.items_in_set;
-            var item = itemItemsInSet.Where(i => i.zh.item_name != i.en.item_name).ToList().Last();
+            // var item = itemItemsInSet.Where(i => i.zh.item_name != i.en.item_name).ToList().Last();
             sb.AppendLine($"下面是物品: {info.sale.zh} 按价格{(isbuyer ? "从大到小": "从小到大")}的{info.payload.orders.Length}条 {(isbuyer ? "买家" : "卖家")} 信息");
             sb.AppendLine();
             foreach (var order in info.payload.orders)
@@ -415,17 +415,16 @@ namespace TRKS.WF.QQBot
         public static string ToString(WMInfoEx info, bool withQR, bool isbuyer)
         {
             var sb = new StringBuilder();
-            var item = info.info;
-            sb.AppendLine($"下面是物品: {info.sale.zh} 按价格{(isbuyer ? "从大到小" : "从小到大")}的{info.orders.Length}条{(isbuyer ? "买家" : "卖家")}信息");
+            sb.AppendLine($"下面是物品: {info.sale.zh} 按价格{(isbuyer ? "从大到小" : "从小到大")}的{info.orders.Items.Count}条{(isbuyer ? "买家" : "卖家")}信息");
             sb.AppendLine();
 
-            foreach (var order in info.orders)
+            foreach (var order in info.orders.Items)
             {
-                sb.AppendLine($"{order.order_Type} {order.platinum} 白鸡 [{order.userName}] {order.status}");
+                sb.AppendLine($"{order.order_type} {order.platinum} 白鸡 [{order.user.ingame_name}] {order.user.status}");
                 if (withQR)
                 {
                     sb.AppendLine(
-                        $"- 快捷回复: /w {order.userName} Hi! I want to {(isbuyer ? "sell" : "buy")}: {info.sale.en} for {order.platinum} platinum. (warframe.market)");
+                        $"- 快捷回复: /w {order.user.ingame_name} Hi! I want to {(isbuyer ? "sell" : "buy")}: {info.sale.en} for {order.platinum} platinum. (warframe.market)");
                 }
             }
             // 这已经很难看了好吧

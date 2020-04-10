@@ -350,7 +350,7 @@ namespace TRKS.WF.QQBot
         public string pid { get; set; }
     }
 
-    public class WMInfoEx
+    /*public class WMInfoEx
     {
         public OrderEx[] orders { get; set; }
         public Info info { get; set; }
@@ -374,8 +374,7 @@ namespace TRKS.WF.QQBot
         public string itemName { get; set; }
         public int mod_Level { get; set; }
         public string order_Type { get; set; }
-    }
-
+    }*/
     public class Event
     {
         public string id { get; set; }

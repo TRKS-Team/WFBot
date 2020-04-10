@@ -5,15 +5,23 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Settings;
+using WarframeAlertingPrime.SDK.Models.Core;
+using WarframeAlertingPrime.SDK.Models.Enums;
+using WarframeAlertingPrime.SDK.Models.Others;
 
 namespace TRKS.WF.QQBot
 {
+    public class WMInfoEx
+    {
+        public WarframeAlertingPrime.SDK.Models.WarframeMarket.OrderQueryResult orders { get; set; }
+        public Sale sale { get; set; }
+    }
     public class WMSearcher
     {
         private WFTranslator translator => WFResource.WFTranslator;
         private WFApi api => WFResource.WFApi;
-        private bool isWFA = !string.IsNullOrEmpty(Config.Instance.ClientId) &&
-                             !string.IsNullOrEmpty(Config.Instance.ClientSecret);
+        private Client wfaClient => WFResource.WFAApi.wfaClient;
+        private bool isWFA => WFResource.WFAApi.isWFA;
 
         private string platform => Config.Instance.Platform.ToString();
         public WMInfo GetWMInfo(string searchword)
@@ -29,19 +37,21 @@ namespace TRKS.WF.QQBot
             info.sale = api.Sale.First(s => s.code == searchword);
             return info;
         }
-
         public WMInfoEx GetWMINfoEx(string searchword)
         {
-            var header = new WebHeaderCollection();
+            /*var header = new WebHeaderCollection();
             header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
             var platform = Config.Instance.Platform.GetSymbols().First();
             if (Config.Instance.Platform == Platform.NS)
             {
                 platform = "ns";
             }
-            var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);
-            info.sale = api.Sale.First(s => s.code == searchword);
-            return info;
+            var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);*/
+            var option = new WarframeMarketOrderQueryOption
+                {Code = searchword, OrderStatus = new List<WMOrderStatus> {WMOrderStatus.InGame, WMOrderStatus.Online}};
+            var orders = wfaClient.GetWarframeMarketOrdersAsync(option).Result;
+            var result = new WMInfoEx{orders = orders, sale = api.Sale.First(s => s.code == searchword)};
+            return result;
         }
 
         public void OrderWMInfo(WMInfo info, bool isbuyer)
@@ -61,17 +71,14 @@ namespace TRKS.WF.QQBot
 
         public void OrderWMInfoEx(WMInfoEx info, bool isbuyer)
         {
-            info.orders = (isbuyer ? info.orders
-                .Where(order => order.order_Type == (isbuyer ? "buy" : "sell"))
-                .Where(order => order.status == "online" || order.status == "ingame") 
+            info.orders.Items = (isbuyer ? info.orders.Items
+                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
                 .OrderByDescending(order => order.platinum)
-                : info.orders
-                .Where(order => order.order_Type == (isbuyer ? "buy" : "sell"))
-                .Where(order => order.status == "online" || order.status == "ingame")
+                : info.orders.Items
+                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
                 .OrderBy(order => order.platinum))
                 .Take(Config.Instance.WMSearchCount)
-                .ToArray();
-
+                .ToList();
 
         }
 
@@ -138,12 +145,13 @@ namespace TRKS.WF.QQBot
             var failed = false;
             if (Config.Instance.IsThirdPartyWM)
             {
+                
                 try
                 {
                     if (isWFA)
                     {
-                        var infoEx = GetWMINfoEx(searchword);
-                        if (infoEx.orders.Any())
+                        var infoEx = GetWMINfoEx(searchword); 
+                        if (infoEx.orders.Items.Any())
                         {
                             OrderWMInfoEx(infoEx, isbuyer);
                             translator.TranslateWMOrderEx(infoEx, searchword);

@@ -62,7 +62,7 @@ namespace TRKS.WF.QQBot
         public static WFApi WFApi { get; private set; } = GetTranslateApi();
         public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
         public static WFTranslator WFTranslator { get; private set; } = new WFTranslator();
-
+        public static WFAApi WFAApi { get; } = new WFAApi();
         private static WFApi GetTranslateApi()
         {
             var api = new WFApi();
@@ -645,6 +645,12 @@ namespace TRKS.WF.QQBot
             {
                 variant.node = TranslateNode(variant.node).Replace("Plains of Eidolon", "夜灵平野"); // 这个不在翻译api里
                 variant.missionType = dictTranslator.Translate(variant.missionType);
+                if (variant.modifier.Contains(":"))
+                {
+                    var strs = variant.modifier.Split(":".ToCharArray());
+                    strs = strs.Select(s => dictTranslator.Translate(s.Trim())).ToArray();
+                    variant.modifier = strs.Connect(": ");
+                }
                 variant.modifier = dictTranslator.Translate(variant.modifier);
             }
             sortie.boss = dictTranslator.Translate(sortie.boss);
@@ -713,28 +719,28 @@ namespace TRKS.WF.QQBot
         public void TranslateWMOrderEx(WMInfoEx info, string searchword)
         {
 
-            foreach (var order in info.orders)
+            foreach (var order in info.orders.Items)
             {
-                switch (order.order_Type)
+                switch (order.order_type)
                 {
                     case "buy":
-                        order.order_Type = "收购";
+                        order.order_type = "收购";
                         break;
                     case "sell":
-                        order.order_Type = "出售";
+                        order.order_type = "出售";
                         break;
                 }
 
-                switch (order.status)
+                switch (order.user.status)
                 {
                     case "ingame":
-                        order.status = "游戏内在线";
+                        order.user.status = "游戏内在线";
                         break;
                     case "online":
-                        order.status = "WM在线";
+                        order.user.status = "WM在线";
                         break;
                     case "offline":
-                        order.status = "离线";
+                        order.user.status = "离线";
                         break;
                 }
             }

@@ -24,7 +24,7 @@ namespace WFBotTest
             MessengerHandlers.DebugAlternateHandler = s => { Console.WriteLine(s); };
             MessengerHandlers.MessageAlternateHandler = s => { Console.WriteLine(s); };
             GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
-            Do("紫卡 天顶之星");
+            Do("紫卡 瘟疫克里帕丝");
             Do("s船");
             /*Do("赤毒");
             Do("仲裁");

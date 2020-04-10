@@ -151,15 +151,15 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             var q1 = Task.Run(() => WebHelper.TryGet("https://warframestat.us"));
             var q2 = Task.Run(() => WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item"));
-            var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
+            // var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
             var q4 = Task.Run(() => WebHelper.TryGet("https://10o.io/kuvalog.json"));
-            Task.WaitAll(q1, q2, q3, q4);
+            Task.WaitAll(q1, q2, /*q3,*/ q4);
 
             var apistat = q1.Result;
             var wmstat = q2.Result;
-            var wfastat = q3.Result;
+            // var wfastat = q3.Result;
             var kuvastat = q4.Result;
-            if (apistat.IsOnline && wmstat.IsOnline && wfastat.IsOnline && kuvastat.IsOnline)
+            if (apistat.IsOnline && wmstat.IsOnline && /*wfastat.IsOnline &&*/ kuvastat.IsOnline)
             {
                 sb.AppendLine("机器人状态: 一切正常");
             }
@@ -178,7 +178,7 @@ namespace TRKS.WF.QQBot
             }
             sb.AppendLine($"    任务API: {apistat.Latency}ms [{(apistat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
-            sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
+            // sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
             sb.AppendLine($"    赤毒/仲裁API: {kuvastat.Latency}ms [{(kuvastat.IsOnline ? "在线" : "离线")}]");
             var commit = CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits")?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
             sb.AppendLine(commit);
