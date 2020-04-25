@@ -50,8 +50,8 @@
     <Reference Include="Fastenshtein, Version=1.0.0.5, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Fastenshtein.1.0.0.5\lib\net40-client\Fastenshtein.dll</HintPath>
     </Reference>
-    <Reference Include="GammaLibrary, Version=1.1.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GammaLibrary.1.1.11\lib\netstandard2.0\GammaLibrary.dll</HintPath>
+    <Reference Include="GammaLibrary, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GammaLibrary.1.2.0\lib\netstandard2.0\GammaLibrary.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.11.20.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.20\lib\Net45\HtmlAgilityPack.dll</HintPath>

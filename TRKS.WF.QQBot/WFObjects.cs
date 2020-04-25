@@ -42,6 +42,8 @@ namespace TRKS.WF.QQBot
     {
         public int id { get; set; }
         public string name { get; set; }
+        [JsonIgnore]
+        public string zhname { get; set; }
         public string thumb { get; set; }
         public string type { get; set; }
         public int rank { get; set; }

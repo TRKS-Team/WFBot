@@ -177,12 +177,12 @@ namespace TRKS.WF.QQBot
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(List<WarframeAlertingPrime.SDK.Models.User.Order> infos, List<RivenData> datas)
+        public static string ToString(List<WarframeAlertingPrime.SDK.Models.User.Order> infos, List<RivenData> datas, Riven riven)
         {
             var weapon = infos.First().weapon;
             var sb = new StringBuilder();
             var weaponinfo = WFResource.WFApi.Riven.First(d => d.name == weapon);
-            sb.AppendLine($"下面是 {weapon} 紫卡的基本信息(来自DE)");
+            sb.AppendLine($"下面是 {riven.zhname} 紫卡的基本信息(来自DE)");
             sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
             var rerolled = datas.Where(d => !d.rerolled);
             if (rerolled.Any())
@@ -195,7 +195,7 @@ namespace TRKS.WF.QQBot
             {
                 sb.AppendLine($"全部均价: {rerolled.First().avg}白金");
             }
-            sb.AppendLine($"下面是 {weapon} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
+            sb.AppendLine($"下面是 {riven.zhname} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
             foreach (var info in infos)
             {
                 sb.Append($"[{info.account.gameName}]  ");

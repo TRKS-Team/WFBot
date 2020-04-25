@@ -275,7 +275,8 @@ namespace TRKS.WF.QQBot
         private Translator wikiTranslator = new Translator(); // 我忘了是干嘛的 好像没用了
         private Translator nightwaveTranslator = new Translator(); // 午夜电波任务翻译
         private Translator invasionTranslator = new Translator(); // 入侵物品翻译
-        private Translator weaponTranslator = new Translator(); // 武器中译英 用来wfa搜索 
+        private List<Riven> weaponslist = new List<Riven>(); // 武器的list 用来wfa搜索
+        // She is known as riven, riven of a thousand voice, the last known ahamkara.
         private List<string> weapons = new List<string>();// 所有武器的中文
         private List<string> wikiwords = new List<string>(); // 我好像也忘了 好像没用了
         private WFApi translateApi => WFResource.WFApi;
@@ -314,13 +315,12 @@ namespace TRKS.WF.QQBot
                 thumb = r.thumb, type = dictTranslator.Translate(r.type)
             });
             weapons.Clear();
-            weaponTranslator.Clear();
+            weaponslist.Clear();
             foreach (var riven in translateApi.Riven)
             {
                 var zh = dictTranslator.Translate(riven.name);
-                var en = riven.name;
                 weapons.Add(zh);
-                weaponTranslator.AddEntry(zh, en);
+                weaponslist.Add(new Riven{id = riven.id, modulus = riven.modulus, name = riven.name, rank = riven.rank, thumb = riven.thumb, type = riven.type, zhname = zh});
             }
             nightwaveTranslator.Clear();
             foreach (var wave in translateApi.NightWave)
@@ -421,9 +421,9 @@ namespace TRKS.WF.QQBot
             return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
 
-        public string TranslateWeapon(string weapon)
+        public List<Riven> GetMatchedWeapon(string weapon)
         {
-            return weaponTranslator.Translate(weapon);
+            return weaponslist.Where(w => w.zhname.Format() == weapon).ToList();
         }
         public string TranslateWeaponType(string type)
         {

@@ -72,7 +72,7 @@ namespace TRKS.WF.QQBot
         {
             var info = WebHelper.DownloadJson<List<RivenData>>(
                 "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
-            info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : translator.TranslateWeapon(d.compatibility.Replace("<ARCHWING> ", "").Format()));
+            info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
             return info;
         }
         public void SendRivenInfos(GroupNumber group, string weapon)
@@ -82,13 +82,13 @@ namespace TRKS.WF.QQBot
             {
                 if (isWFA)
                 {
-                    var weaponEn = translator.TranslateWeapon(weapon);
-                    if (weaponEn != weapon)
+                    var weaponinfo = translator.GetMatchedWeapon(weapon.Format()); 
+                    if (weaponinfo.Any())
                     {
                         Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
-                        var orders = GetRivenOrders(weaponEn);
+                        var orders = GetRivenOrders(weaponinfo.First().name);
                         var data = GetRivenDatas().Where(d => d.compatibility.Format() == weapon).ToList();
-                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
+                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else
