@@ -18,7 +18,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         : IGroupMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
-        public static readonly WFNotificationHandler _WfNotificationHandler = new WFNotificationHandler();
+        public static WFNotificationHandler _WfNotificationHandler ;
 
         public GroupMessageReceivedMahuaEvent1(
             IMahuaApi mahuaApi)
@@ -29,6 +29,15 @@ namespace TRKS.WF.QQBot.MahuaEvents
         public void ProcessGroupMessage(GroupMessageReceivedContext context)
         {
             if (HotUpdateInfo.PreviousVersion) return;
+            if (!WFResource.Inited)
+            {
+                if (!WFResource.LaunchedInit)
+                {
+                    Task.Run(() => { WFResource.InitWFResource(); });
+                }
+                return;
+            }
+            
             if (GroupCallDic.ContainsKey(context.FromGroup))
             {
                 if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;

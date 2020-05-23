@@ -50,8 +50,8 @@ namespace TRKS.WF.QQBot
 
             Timer.Elapsed += (sender, eventArgs) =>
             {
-                if (HotUpdateInfo.PreviousVersion) return;
-
+                if (HotUpdateInfo.PreviousVersion || !WFResource.Inited) return;
+                
                 Update();
             };
             Timer.Start();

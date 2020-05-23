@@ -14,38 +14,45 @@ namespace TRKS.WF.QQBot
         private static volatile int expectedCount = 0;
         private static volatile int finishedCount = 0;
 
-        public static Task GetCacheOrDownload<T>(string url, Action<T> setter)
+        public static async Task GetCacheOrDownload<T>(string url, Action<T> setter)
         {
-            return Task.Run(() =>
+            Directory.CreateDirectory("WFCaches");
+            var fileName = url.Split('/').Last().Split('?').First();
+            var path = $"WFCaches\\{fileName}";
+            expectedCount++;
+
+            if (File.Exists(path))
             {
-                Directory.CreateDirectory("WFCaches");
-                var fileName = url.Split('/').Last().Split('?').First();
-                var path = $"WFCaches\\{fileName}";
-                expectedCount++;
-
-                if (File.Exists(path))
+                try
                 {
-                    try
-                    {
-                        setter(File.ReadAllText(path).JsonDeserialize<T>());
+                    setter(File.ReadAllText(path).JsonDeserialize<T>());
 
-                        // 这里下载并刷新缓存
-                        Task.Run(() => Download(url, setter, path));
-                        return;
-                    }
-                    catch (Exception)
-                    {
-                        Trace.WriteLine($"缓存喂狗了, 正在重新下载...", "Cache");
-                    }
+                    // 这里下载并刷新缓存
+                    Task.Factory.StartNew(async () => await Download(url, setter, path).ConfigureAwait(false), TaskCreationOptions.LongRunning);
+                    return;
                 }
+                catch (Exception)
+                {
+                    Trace.WriteLine($"缓存喂狗了, 正在重新下载...", "Cache");
+                }
+            }
 
-                Download(url, setter, path);
-            });
+            await Download(url, setter, path);
+
         }
 
-        private static void Download<T>(string url, Action<T> setter, string path)
+        private static async Task Download<T>(string url, Action<T> setter, string path)
         {
-            var content = WebHelper.DownloadJson<T>(url);
+            T content = default;
+            try
+            {
+                content = await WebHelper.DownloadJsonAsync<T>(url).ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine($"词典文件下载失败: {e}");
+            }
             try
             {
                 File.WriteAllText(path, content.ToJsonString());
@@ -59,7 +66,7 @@ namespace TRKS.WF.QQBot
 
             if (finishedCount == expectedCount && expectedCount >= 6)
             {
-                Messenger.SendDebugInfo("可缓存的玩意看起来全部下载完成.");
+                Trace.WriteLine("可缓存的玩意看起来全部下载完成.");
             }
         }
     }

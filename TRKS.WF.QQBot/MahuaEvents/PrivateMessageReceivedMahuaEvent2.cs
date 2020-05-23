@@ -50,7 +50,8 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (HotUpdateInfo.PreviousVersion) return;
 
             new PrivateMessageHandler(context.FromQq.ToHumanQQNumber(), context.Message).ProcessCommandInput();
-            //                SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 6 皮笑肉不笑
+            //                SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 7 没啥好笑的了
+            
         }
     }
 

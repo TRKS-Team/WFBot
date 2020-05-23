@@ -21,9 +21,11 @@ namespace WFBotTest
         static void Main(string[] args)
         {
             //var file = File.Open("logit.log", FileMode.Create, FileAccess.Write, FileShare.ReadWrite).CreateStreamWriter();
+            Trace.Listeners.Add(new ConsoleTraceListener());
             MessengerHandlers.DebugAlternateHandler = s => { Console.WriteLine(s); };
             MessengerHandlers.MessageAlternateHandler = s => { Console.WriteLine(s); };
-            GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
+            WFResource.InitWFResource();
+            //GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
             Do("紫卡 瘟疫克里帕丝");
             Do("s船");
             /*Do("赤毒");

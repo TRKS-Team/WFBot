@@ -37,8 +37,12 @@ namespace TRKS.WF.QQBot.MahuaEvents
             Plugins.Load();
         }
 
+        static bool Inited = false;
         public InitEvent1()
         {
+            if (Inited)return;
+            
+            Inited = true;
             onlineBuild = nameof(InitEvent1).Contains("_"); // trick
             if (onlineBuild)
             {
@@ -52,9 +56,18 @@ namespace TRKS.WF.QQBot.MahuaEvents
             }
             else
             {
-                var releaseData = ReleaseGetter.Get();
-                var ver = new Version(releaseData.tag_name).Build;
-                Messenger.SendDebugInfo($"→ WFBot插件最新官方{ver}版本, 不去看看你错过了什么新Feature(Bug)?");
+                try
+                {
+                    IsNotified = true;
+                    var releaseData = ReleaseGetter.Get();
+                    var ver = new Version(releaseData.tag_name).Build;
+                    Messenger.SendDebugInfo($"" +
+                                            $"→ WFBot插件最新官方{ver}版本, 不去看看你错过了什么新Feature(Bug)?");
+                }
+                catch (Exception)
+                {
+                    // 
+                }
             }
 
             if (Config.Instance.IsPublicBot)
@@ -95,18 +108,25 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
         */
 
+        readonly static object TimerMonitor;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (HotUpdateInfo.PreviousVersion) return;
-
+            if (Monitor.IsEntered(TimerMonitor))
+            {
+                Trace.WriteLine("警告: Timer 在一个周期内没有被执行完.");
+                return;
+            }
+            
+            Monitor.Enter(TimerMonitor);
             try
             {
                 if (Config.Instance.UpdateLexion)
                 {
                     WFResource.UpdateLexion();
                 }
+
                 var releaseData = ReleaseGetter.Get();
                 var ver = new Version(releaseData.tag_name).Build;
                 if (ver != localVersion)
@@ -130,7 +150,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         }
                     }
 
-                    
+
                 }
             }
             catch (WebException)
@@ -141,6 +161,10 @@ namespace TRKS.WF.QQBot.MahuaEvents
             {
                 Messenger.SendDebugInfo(exception.ToString());
 
+            }
+            finally
+            {
+                Monitor.Exit(TimerMonitor);
             }
 
         }
@@ -153,14 +177,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
             {
                 if (!onlineBuild)
                 {
-                    Messenger.SendDebugInfo("机器人已启动，你使用的是非官方构建，将不会启用自动更新功能。");
+                    Messenger.SendDebugInfo("机器人已启动，正在加载必要的玩意. 你使用的是非官方构建，将不会启用自动更新功能。");
                 }
                 else
                 {
                     Messenger.SendDebugInfo($"机器人已启动，你使用的是官方构建，自动更新功能{(Config.Instance.AutoUpdate ? "已经启用" : "已经被关闭")}。");
                 }
 
-                WFResource.WFTranslator.TranslateSearchWord("上辈子日了狗, 这辈子 OOP.");
+
             });
 
         }

@@ -84,7 +84,7 @@ namespace TRKS.WF.QQBot
 
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ.ToHumanQQNumber(), content);
-            Trace.WriteLine($"Debug message: {content}", "Message");
+            Trace.WriteLine($"{content}", "Message");
         }
 
         public static void SendPrivate(HumanQQNumber humanQQ, string content)

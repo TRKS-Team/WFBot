@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Remoting.Channels;
 using System.Security.Permissions;
@@ -13,8 +15,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using GammaLibrary.Extensions;
 using Settings;
+using TRKS.WF.QQBot.MahuaEvents;
 
 namespace TRKS.WF.QQBot
 {
@@ -59,32 +63,74 @@ namespace TRKS.WF.QQBot
     }
     public static class WFResource
     {
-        public static WFApi WFApi { get; private set; } = GetTranslateApi();
-        public static WFChineseAPI WFChineseApi { get; } = new WFChineseAPI();
-        public static WFTranslator WFTranslator { get; private set; } = new WFTranslator();
-        public static WFAApi WFAApi { get; } = new WFAApi();
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void InitWFResource()
+        {
+            if (LaunchedInit) return;
+            LaunchedInit = true;
+
+            try
+            {
+                var sw = Stopwatch.StartNew();
+                Trace.WriteLine("开始初始化");
+                WFApi = GetTranslateApi();
+                WFChineseApi = new WFChineseAPI();
+                WFAApi = new WFAApi();
+                WFTranslator = new WFTranslator();
+                GroupMessageReceivedMahuaEvent1._WfNotificationHandler=new WFNotificationHandler();
+                GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
+
+                Messenger.SendDebugInfo($"初始化完成: {sw.Elapsed.TotalSeconds:N1}s");
+                Inited = true;
+            }
+            catch (Exception e)
+            {
+                Messenger.SendDebugInfo($"初始化出现问题, WFBot 无法运行: {e}");
+                try
+                {
+                    Directory.Delete("WFCaches", true);
+                }
+                catch (Exception)
+                {
+                }
+                MessageBox.Show($"初始化出现问题, WFBot 无法运行, 已经删除文件缓存, 请再试一次, 还是不行请检查 WFBotLogs: {e}", "WFBot", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+        }
+
+        public static volatile bool LaunchedInit;
+        public static bool Inited;
+        public static WFApi WFApi { get; private set; }
+        public static WFChineseAPI WFChineseApi { get; private set; }
+        public static WFTranslator WFTranslator { get; private set; }
+        public static WFAApi WFAApi { get; private set; }
+        private static readonly object TranslateLocker = new object();
+
+
         private static WFApi GetTranslateApi()
         {
-            var api = new WFApi();
-            Messenger.SendDebugInfo("正在加载翻译 API.");
-            var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
-            var sw = Stopwatch.StartNew();
-            Task.WaitAll(
-                Downloader.GetCacheOrDownload<Dict[]>($"{source}WF_Dict.json", dicts => api.Dict = dicts),
-                Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs => api.Invasion = invs),
-                Downloader.GetCacheOrDownload<Sale[]>($"{source}WF_Sale.json", sales => api.Sale = sales),
-                Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
-                Downloader.GetCacheOrDownload<AllRiven[]/* Riven和AllRiven的数据结构一致 */>($"{source}WF_AllRiven.json", allrivens => api.Allriven = allrivens),
-                Downloader.GetCacheOrDownload<Lib[]>($"{source}WF_Lib.json", libs => api.Lib = libs),
-                Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
-            );
+            lock (TranslateLocker)
+            {
+                var api = new WFApi();
+                var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
+                Task.WaitAll(
+                    Downloader.GetCacheOrDownload<Dict[]>($"{source}WF_Dict.json", dicts => api.Dict = dicts),
+                    Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs => api.Invasion = invs),
+                    Downloader.GetCacheOrDownload<Sale[]>($"{source}WF_Sale.json", sales => api.Sale = sales),
+                    Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
+                    Downloader.GetCacheOrDownload<AllRiven[]/* Riven和AllRiven的数据结构一致 */>($"{source}WF_AllRiven.json", allrivens => api.Allriven = allrivens),
+                    Downloader.GetCacheOrDownload<Lib[]>($"{source}WF_Lib.json", libs => api.Lib = libs),
+                    Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
+                );
 
-            Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
-            // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
-            // 呃, 还好我当时写了这局注释 不然我可能之后会拉不出屎憋死 来自2020年2月20日15:34:49的trks
-            // 天哪. 这api真是野蛮不堪 我当时为什么要这么写
-            return api;
+                //Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
+                // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
+                // 呃, 还好我当时写了这局注释 不然我可能之后会拉不出屎憋死 来自2020年2月20日15:34:49的trks
+                // 天哪. 这api真是野蛮不堪 我当时为什么要这么写
+                return api;
+            }
         }
+
         public static bool UpdateLexion()
         {
             try
@@ -97,6 +143,7 @@ namespace TRKS.WF.QQBot
                 Config.Instance.localsha = sha;
                 Config.Save();
                 return true;
+
             }
             catch (Exception)
             {
@@ -310,9 +357,13 @@ namespace TRKS.WF.QQBot
 
             translateApi.Riven.Select(r => r = new Riven
             {
-                id = r.id, modulus = r.modulus, name = dictTranslator.Translate(r.name), rank = r
+                id = r.id,
+                modulus = r.modulus,
+                name = dictTranslator.Translate(r.name),
+                rank = r
                     .rank,
-                thumb = r.thumb, type = dictTranslator.Translate(r.type)
+                thumb = r.thumb,
+                type = dictTranslator.Translate(r.type)
             });
             weapons.Clear();
             weaponslist.Clear();
@@ -320,7 +371,7 @@ namespace TRKS.WF.QQBot
             {
                 var zh = dictTranslator.Translate(riven.name);
                 weapons.Add(zh);
-                weaponslist.Add(new Riven{id = riven.id, modulus = riven.modulus, name = riven.name, rank = riven.rank, thumb = riven.thumb, type = riven.type, zhname = zh});
+                weaponslist.Add(new Riven { id = riven.id, modulus = riven.modulus, name = riven.name, rank = riven.rank, thumb = riven.thumb, type = riven.type, zhname = zh });
             }
             nightwaveTranslator.Clear();
             foreach (var wave in translateApi.NightWave)
@@ -394,19 +445,19 @@ namespace TRKS.WF.QQBot
                         }
                     }
                     break;
-                /*                
-                case "wiki":
-                    foreach (var wiki in wikiwords)
-                    {
-                        if (wiki.StartsWith(str) || Regex.IsMatch(word, @"[a-z]"))
+                    /*                
+                    case "wiki":
+                        foreach (var wiki in wikiwords)
                         {
-                            var distance = lev.DistanceFrom(wiki.Format());
-                            distancelist.Add(new StringInfo { LevDistance = distance, Name = wiki });
-                        }
-                    }                  
-                    break;
-                    */
-                //木大
+                            if (wiki.StartsWith(str) || Regex.IsMatch(word, @"[a-z]"))
+                            {
+                                var distance = lev.DistanceFrom(wiki.Format());
+                                distancelist.Add(new StringInfo { LevDistance = distance, Name = wiki });
+                            }
+                        }                  
+                        break;
+                        */
+                    //木大
             }
 
 
@@ -447,6 +498,7 @@ namespace TRKS.WF.QQBot
             var date = DateTimeOffset.FromUnixTimeSeconds(unix);
             return date.UtcDateTime + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
+
         public void TranslateSentientOutpost(SentientOutpost se)
         {
             if (se.mission != null)
@@ -455,8 +507,8 @@ namespace TRKS.WF.QQBot
             }
             se.activation = GetRealTime(se.activation);
             se.expiry = GetRealTime(se.expiry);
-            se.previous.expiry = GetRealTime(se.previous.expiry);
-            se.previous.activation = GetRealTime(se.activation);
+            //se.previous.expiry = GetRealTime(se.previous.expiry);
+            //se.previous.activation = GetRealTime(se.activation);
 
         }
         // 打了最后一愿之后就再也没法直视Riven这个单词了
@@ -477,13 +529,13 @@ namespace TRKS.WF.QQBot
         public void TranslateArbitrationMission(Arbitration ar)
         {
 
-                ar.activation = GetRealTime(ar.activation);
-                ar.expiry = GetRealTime(ar.expiry);
-                ar.node = TranslateNode(ar.node);
-                // // trick
-                // 不需要trick了
-                ar.type = dictTranslator.Translate(ar.type);
-            
+            ar.activation = GetRealTime(ar.activation);
+            ar.expiry = GetRealTime(ar.expiry);
+            ar.node = TranslateNode(ar.node);
+            // // trick
+            // 不需要trick了
+            ar.type = dictTranslator.Translate(ar.type);
+
         }
         public void TranslateNightWave(WFNightWave nightwave)
         {

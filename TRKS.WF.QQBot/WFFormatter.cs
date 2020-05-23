@@ -22,11 +22,13 @@ namespace TRKS.WF.QQBot
             var sb = new StringBuilder();
             if (outpost.active)
             {
-                var expiry =  outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
+                // TODO 交给大哥维护
+                sb.Append("此功能维护中");
+                //var expiry =  outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
                 // 这行大概是因为api是wip 以后可以直接删掉换成outpost.expiry
                 // 但愿吧
-                var time = (expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
-                sb.AppendLine($"    [{outpost.mission.node}]-{outpost.mission.faction} {time}后过期");
+                //var time = (expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+                //sb.AppendLine($"    [{outpost.mission.node}]-{outpost.mission.faction} {time}后过期");
             }
             else
             {

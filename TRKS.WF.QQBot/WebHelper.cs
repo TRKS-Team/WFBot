@@ -119,12 +119,12 @@ namespace TRKS.WF.QQBot
             var sw = Stopwatch.StartNew();
             try
             {
-                var count = 3;
+                var count = 2;
                 while (count-- > 0)
                 {
                     try
                     {
-                        return (await webClient.Value.DownloadStringTaskAsync(url)).JsonDeserialize<T>();
+                        return (await new HttpClient().GetStringAsync(url)).JsonDeserialize<T>();
                     }
                     catch (Exception)
                     {

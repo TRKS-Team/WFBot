@@ -75,6 +75,7 @@ namespace TRKS.WF.QQBot
             info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
             return info;
         }
+
         public void SendRivenInfos(GroupNumber group, string weapon)
         {
             var sb = new StringBuilder();
