@@ -43,6 +43,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (Inited)return;
             
             Inited = true;
+            /*
             onlineBuild = nameof(InitEvent1).Contains("_"); // trick
             if (onlineBuild)
             {
@@ -69,7 +70,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     // 
                 }
             }
-
+            */
             if (Config.Instance.IsPublicBot)
             {
                 websocket = new WebSocketHandler();
@@ -126,7 +127,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     WFResource.UpdateLexion();
                 }
-
+                /*
                 var releaseData = ReleaseGetter.Get();
                 var ver = new Version(releaseData.tag_name).Build;
                 if (ver != localVersion)
@@ -152,6 +153,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
 
                 }
+                */
             }
             catch (WebException)
             {
@@ -175,14 +177,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
 
             Task.Delay(TimeSpan.FromSeconds(10)).ContinueWith(t =>
             {
-                if (!onlineBuild)
-                {
-                    Messenger.SendDebugInfo("机器人已启动，正在加载必要的玩意. 你使用的是非官方构建，将不会启用自动更新功能。");
-                }
-                else
-                {
-                    Messenger.SendDebugInfo($"机器人已启动，你使用的是官方构建，自动更新功能{(Config.Instance.AutoUpdate ? "已经启用" : "已经被关闭")}。");
-                }
+                //if (!onlineBuild)
+                //{
+                    Messenger.SendDebugInfo("机器人已启动，正在加载必要的玩意. 目前自动更新功能已经爆炸.");
+                //}
+                //else
+                //{
+                    //Messenger.SendDebugInfo($"机器人已启动，你使用的是官方构建，自动更新功能{(Config.Instance.AutoUpdate ? "已经启用" : "已经被关闭")}。");
+                //}
 
 
             });
