@@ -43,20 +43,20 @@ namespace TRKS.WF.QQBot.MahuaEvents
             if (Inited)return;
             
             Inited = true;
-            /*
-            onlineBuild = nameof(InitEvent1).Contains("_"); // trick
+            
+            // onlineBuild = nameof(InitEvent1).Contains("_"); // trick
             if (onlineBuild)
             {
-                localVersion = int.Parse(nameof(InitEvent1).Split(new[] { "_" }, StringSplitOptions.None)[1]);
+                // localVersion = int.Parse(nameof(InitEvent1).Split(new[] { "_" }, StringSplitOptions.None)[1]);
                 var delay = string.IsNullOrWhiteSpace(Config.Instance.GitHubOAuthKey) ? 60 : 600;
                 var timer = new Timer(TimeSpan.FromSeconds(delay).TotalMilliseconds);
                 timer1 = timer;
                 timer.Elapsed += Timer_Elapsed;
                 timer.Start();
-                
+                // 别问为啥自动更新和自动更新词典要用同一个timer 因为他们用的都是githubapi
             }
             else
-            {
+            {/*
                 try
                 {
                     IsNotified = true;
@@ -69,8 +69,9 @@ namespace TRKS.WF.QQBot.MahuaEvents
                 {
                     // 
                 }
+                */
             }
-            */
+            
             if (Config.Instance.IsPublicBot)
             {
                 websocket = new WebSocketHandler();
