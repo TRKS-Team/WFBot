@@ -112,7 +112,8 @@ namespace TRKS.WF.QQBot
             lock (TranslateLocker)
             {
                 var api = new WFApi();
-                var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
+                // var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
+                var source = "https://cdn.jsdelivr.net/gh/Richasy/WFA_Lexicon@WFA5/";
                 Task.WaitAll(
                     Downloader.GetCacheOrDownload<Dict[]>($"{source}WF_Dict.json", dicts => api.Dict = dicts),
                     Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs => api.Invasion = invs),
@@ -127,6 +128,7 @@ namespace TRKS.WF.QQBot
                 // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
                 // 呃, 还好我当时写了这局注释 不然我可能之后会拉不出屎憋死 来自2020年2月20日15:34:49的trks
                 // 天哪. 这api真是野蛮不堪 我当时为什么要这么写
+                // 我的上帝, 我居然需要再次修改这个野蛮的api 简直不敢相信
                 return api;
             }
         }
