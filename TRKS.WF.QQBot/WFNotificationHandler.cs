@@ -65,7 +65,9 @@ namespace TRKS.WF.QQBot
                 UpdateInvasionPool();
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
                 UpdatePersistentEnemiePool(); //TODO 在机器人启动时可能会导致无任何输出.
-                CheckSentientOutpost();
+                // CheckSentientOutpost();
+                // 很不幸 S船已经被DE改的我不知道怎么写了
+                // 无法与你继续互动
             }
         }
 
