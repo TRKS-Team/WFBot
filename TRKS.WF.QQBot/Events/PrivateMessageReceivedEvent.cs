@@ -3,53 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GammaLibrary.Extensions;
-using Newbe.Mahua;
-using Newbe.Mahua.Internals;
-using Newbe.Mahua.MahuaEvents;
 using TextCommandCore;
+using WFBot.Features.Utils;
 using Number = System.Numerics.BigInteger;
-using static TRKS.WF.QQBot.Messenger;
-using MahuaPlatform = Newbe.Mahua.Internals.MahuaPlatform;
+using static WFBot.Features.Utils.Messenger;
 
-namespace TRKS.WF.QQBot.Events
+namespace WFBot.Events
 {
-    /// <summary>
-    /// 私聊消息接收事件
-    /// </summary>
     public class PrivateMessageReceivedEvent
-        : IPrivateMessageReceivedMahuaEvent
     {
-        private readonly IMahuaApi _mahuaApi;
-        
-        public PrivateMessageReceivedEvent(
-            IMahuaApi mahuaApi)
-        {
-            _mahuaApi = mahuaApi;
-        }
 
-        private void DownloadImage(string filename, string path, string name)
-        {
-            if (MahuaPlatformValueProvider.CurrentPlatform.Value == MahuaPlatform.Cqp)
-            {
-                var file = File.ReadAllLines(Path.Combine(@"data\image", filename));
-                foreach (var line in file)
-                {
-                    if (line.StartsWith("url"))
-                    {
-                        var url = line.Substring(4);
-                        WebHelper.DownloadFile(url, path, name);
-                    }
-                }
-            }
-        }
 
-        public void ProcessPrivateMessage(PrivateMessageReceivedContext context)
+        public void ProcessPrivateMessage(UserID senderId, string message)
         {
-            if (HotUpdateInfo.PreviousVersion) return;
 
-            new PrivateMessageHandler(context.FromQq.ToHumanQQNumber(), context.Message).ProcessCommandInput();
-            //                SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 7 没啥好笑的了
-            
+            new PrivateMessageHandler(senderId, message).ProcessCommandInput();
+            // SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 8 时代变了
+
         }
     }
 
@@ -58,12 +28,7 @@ namespace TRKS.WF.QQBot.Events
     {
         private List<GroupInfo> GetGroups()
         {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-            {
-                var mahuaApi = robotSession.MahuaApi;
-                var groups = mahuaApi.GetGroupsWithModel().Model.ToList();
-                return groups;
-            }
+            return null; // TODO
         }
 
         [Matchers("加载配置", "UpdateConfig")]
@@ -88,7 +53,7 @@ namespace TRKS.WF.QQBot.Events
             SendPrivate(Sender, "正在dump所有群...请稍候...结果将存储于机器人根目录...");
 
             Directory.CreateDirectory("所有群");
-            File.WriteAllLines(@"所有群\所有群.txt", GetGroups().Select(info => $"{info.Group} {info.Name}"));
+            File.WriteAllLines(@"所有群\所有群.txt", GetGroups().Select(info => $"{info.ID} {info.Name}"));
 
             return "搞完了, 去机器人根目录看结果.";
         }
@@ -96,21 +61,17 @@ namespace TRKS.WF.QQBot.Events
         [RequireAdmin, RequireCode]
         void RunAutoUpdate()
         {
-            AutoUpdateRR.Execute();
+            //AutoUpdateRR.Execute();
         }
 
         [Matchers("没有开启通知的群")]
         [RequireAdmin, RequireCode]
         string DisabledGroups()
         {
-            using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-            {
-                var api = robotSession.MahuaApi;
-                var groups = api.GetGroupsWithModel().Model.ToList();
-                var gs = groups.Where(g => !groups.Contains(g)).Select(g => $"{g.Group}-{g.Name}");
+            var groups = GetGroups();
+            var gs = groups.Where(g => !groups.Contains(g)).Select(g => $"{g.Name}-{g.Name}");
 
-                return gs.Connect("\r\n");
-            }
+            return gs.Connect("\r\n");
         }
 
         [RequireContainsCode]
@@ -154,7 +115,7 @@ namespace TRKS.WF.QQBot.Events
         [Matchers("超级广播")]
         void Broadcast(string content)
         {
-            Messenger.SuperBroadcast(content);
+            //Messenger.SuperBroadcast(content);
         }
     }
 
@@ -162,12 +123,12 @@ namespace TRKS.WF.QQBot.Events
     {
         public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendPrivate(id.ID.ToHumanQQNumber(), msg);
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
-        public HumanQQNumber Sender { get; }
+        public UserID Sender { get; }
         public string Message { get; }
 
-        string ICommandHandler<PrivateMessageHandler>.Sender => Sender.QQ;
+        string ICommandHandler<PrivateMessageHandler>.Sender => Sender.ID;
 
-        public PrivateMessageHandler(HumanQQNumber sender, string message)
+        public PrivateMessageHandler(UserID sender, string message)
         {
             Sender = sender;
             Message = message;

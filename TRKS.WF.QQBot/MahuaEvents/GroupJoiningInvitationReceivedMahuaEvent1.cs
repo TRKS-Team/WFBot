@@ -1,50 +1,31 @@
-﻿using Newbe.Mahua.MahuaEvents;
-using System;
-using System.Net.WebSockets;
-using System.Security.Cryptography.X509Certificates;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using Newbe.Mahua;
+using WFBot.Features.Utils;
 using WebSocket = WebSocketSharp.WebSocket;
 
-namespace TRKS.WF.QQBot.MahuaEvents
+namespace WFBot.MahuaEvents
 {
     /// <summary>
     /// 入群邀请接收事件
     /// </summary>
     public class GroupJoiningInvitationReceivedMahuaEvent1
-        : IGroupJoiningInvitationReceivedMahuaEvent
     {
-        private readonly IMahuaApi _mahuaApi;
-
-        public GroupJoiningInvitationReceivedMahuaEvent1(
-            IMahuaApi mahuaApi)
-        {
-            _mahuaApi = mahuaApi;
-        }
-
-        public void ProcessJoinGroupRequest(GroupJoiningRequestReceivedContext context)
+        /*
+        public void ProcessJoinGroupRequest()
         {
             void Accept()
             {
-                using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-                {
-                    var api = robotSession.MahuaApi;
-                    api.AcceptGroupJoiningInvitation(context.GroupJoiningRequestId, context.ToGroup, context.FromQq);
-                }
+                
             }
 
             void Reject()
             {
-                using (var robotSession = MahuaRobotManager.Instance.CreateSession())
-                {
-                    var api = robotSession.MahuaApi;
-                    api.RejectGroupJoiningInvitation(context.GroupJoiningRequestId, context.ToGroup, context.FromQq, "WFBot拒绝了你的申请.");
-                }
+               
 
             }
-            if (HotUpdateInfo.PreviousVersion) return;
+            //if (HotUpdateInfo.PreviousVersion) return;
 
             if (Config.Instance.IsPublicBot)
             {
@@ -65,7 +46,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
                         return Task.CompletedTask;
                     });
                 ws.Connect().Wait();
-                ws.Send(context.ToGroup).Wait();
+                //ws.Send(context.ToGroup).Wait();
             }
 
 
@@ -88,5 +69,6 @@ namespace TRKS.WF.QQBot.MahuaEvents
             });
 
         }
+        */
     }
 }

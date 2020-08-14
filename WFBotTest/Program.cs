@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using GammaLibrary.Extensions;
-using Newbe.Mahua.MahuaEvents;
-using Newbe.Mahua.Messages.CancelMessage;
 using TextCommandCore;
-using TRKS.WF.QQBot;
-using TRKS.WF.QQBot.Events;
-using TRKS.WF.QQBot.MahuaEvents;
+using WFBot.Events;
+using WFBot.Features.Utils;
+
 // ReSharper disable LocalizableElement
 
 namespace WFBotTest
@@ -83,10 +74,10 @@ namespace WFBotTest
                 var sw = Stopwatch.StartNew();
                 Console.WriteLine($"Command: {msg}");
                 Console.WriteLine("---------");
-                new MessageReceivedEvent().ProcessGroupMessage(new GroupMessageReceivedContext{FromAnonymous = "", FromGroup = "", FromQq = "", Message = ""});
+                //new MessageReceivedEvent().ProcessGroupMessage(new GroupMessageReceivedContext{FromAnonymous = "", FromGroup = "", FromQq = "", Message = ""});
                 // 如果你在测试Callperminute的话 返回的数据可能会少一 这正常 因为命令因为↑这行代码多执行了一次
                 // 并且Calldic里的数据不会因为Do而减少
-                new GroupMessageHandler(new HumanQQNumber(""), new GroupNumber(""), msg).ProcessCommandInput();
+                new GroupMessageHandler(new UserID(""), new GroupID(""), msg).ProcessCommandInput();
                 Console.WriteLine($"--------- Elapsed time: {sw.Elapsed.Milliseconds:F1}ms");
                 Console.WriteLine();
             }

@@ -2,56 +2,45 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Web;
-using Newbe.Mahua.MahuaEvents;
-using Settings;
 using TextCommandCore;
-using TRKS.WF.QQBot.MahuaEvents;
-using static TRKS.WF.QQBot.Messenger;
+using WFBot.Features.Common;
+using WFBot.Features.Other;
+using WFBot.Features.Utils;
+using static WFBot.Features.Utils.Messenger;
 
-namespace TRKS.WF.QQBot.Events
+namespace WFBot.Events
 {
     /// <summary>
     /// 群消息接收事件
     /// </summary>
     public class MessageReceivedEvent
     {
-        public static WFNotificationHandler _WfNotificationHandler ;
-        public string ProcessGroupMessage(GroupMessageReceivedContext context)
+        public static WFNotificationHandler _WfNotificationHandler;
+        public void ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
         {
-            if (HotUpdateInfo.PreviousVersion) return null;
-            if (!WFResource.Inited)
+            if (CheckCallPerMin(groupId)) return;
+            if (Config.Instance.IsSlashRequired)
             {
-                if (!WFResource.LaunchedInit)
-                {
-                    Task.Run(() => { WFResource.InitWFResource(); });
-                }
-                return null;
+                if (!message.StartsWith("/")) return;
+                if (message.StartsWith("/")) message = message.Substring(1);
             }
             
-            if (GroupCallDic.ContainsKey(context.FromGroup))
+            var handler = new GroupMessageHandler(senderId, groupId, message);
+            var (matched, result) = handler.ProcessCommandInput();
+        }
+
+        private static bool CheckCallPerMin(GroupID groupId)
+        {
+            if (GroupCallDic.ContainsKey(groupId.ID))
             {
-                if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return null;
+                if (GroupCallDic[groupId.ID] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
             }
             else
             {
-                GroupCallDic[context.FromGroup] = 0;
+                GroupCallDic[groupId.ID] = 0;
             }
 
-            Task.Factory.StartNew(() =>
-            {
-                var message = HttpUtility.HtmlDecode(context.Message)?.ToLower();
-                if (!message.StartsWith("/") && Config.Instance.IsSlashRequired) return;
-
-                message = message.StartsWith("/") ? message.Substring(1) : message;
-
-                var handler = new GroupMessageHandler(context.FromQq.ToHumanQQNumber(), context.FromGroup.ToGroupNumber(), message);
-                var (matched, result) = handler.ProcessCommandInput();
-                if (matched)
-                {
-                    IncreaseCallCounts(context.FromGroup);
-                }
-
-            }, TaskCreationOptions.LongRunning);
+            return false;
         }
     }
 
@@ -60,13 +49,13 @@ namespace TRKS.WF.QQBot.Events
         [Matchers("金星赏金", "金星平原赏金", "福尔图娜赏金", "奥布山谷赏金")]
         void FortunaMissions(int index = 0)
         {
-            _WFStatus.SendFortunaMissions(Group, index);
+            _wfStatus.SendFortunaMissions(Group, index);
         }
 
         [Matchers("地球赏金", "地球平原赏金", "希图斯赏金")]
         void CetusMissions(int index = 0)
         {
-            _WFStatus.SendCetusMissions(Group, index);
+            _wfStatus.SendCetusMissions(Group, index);
         }
 
         [Matchers("查询")]
@@ -88,7 +77,7 @@ namespace TRKS.WF.QQBot.Events
             }
             // 小屎山
             _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), Group, QR, B);
-        } 
+        }
 
         [Matchers("紫卡", "阿罕卡拉"/*彩蛋*/, "千语魅痕"/*彩蛋*/)]
         [CombineParams]
@@ -103,7 +92,7 @@ namespace TRKS.WF.QQBot.Events
         void Translate(string word)
         {
             word = word.Format();
-            _WFStatus.SendTranslateResult(Group, word);
+            _wfStatus.SendTranslateResult(Group, word);
         }
 
         [Matchers("遗物")]
@@ -111,7 +100,7 @@ namespace TRKS.WF.QQBot.Events
         void RelicInfo(string word)
         {
             word = word.Format();
-            _WFStatus.SendRelicInfo(Group, word);
+            _wfStatus.SendRelicInfo(Group, word);
         }
 
         [Matchers("警报")]
@@ -123,7 +112,7 @@ namespace TRKS.WF.QQBot.Events
         [Matchers("平野", "夜灵平野", "平原", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "平原温度", "平原时间")]
         void Cycles()
         {
-            _WFStatus.SendCycles(Group);
+            _wfStatus.SendCycles(Group);
         }
 
         [Matchers("入侵")]
@@ -135,26 +124,26 @@ namespace TRKS.WF.QQBot.Events
         [Matchers("突击")]
         void Sortie()
         {
-            _WFStatus.SendSortie(Group);
+            _wfStatus.SendSortie(Group);
         }
 
         [Matchers("奸商", "虚空商人", "商人")]
         void VoidTrader()
         {
-            _WFStatus.SendVoidTrader(Group);
+            _wfStatus.SendVoidTrader(Group);
         }
 
         [Matchers("活动", "事件")]
         void Events()
         {
-            _WFStatus.SendEvent(Group);
+            _wfStatus.SendEvent(Group);
         }
 
 
         [Matchers("裂隙", "裂缝")]
         void Fissures()
         {
-            _WFStatus.SendFissures(Group);
+            _wfStatus.SendFissures(Group);
         }
 
         [Matchers("小小黑", "追随者")]
@@ -179,7 +168,7 @@ namespace TRKS.WF.QQBot.Events
         [Matchers("午夜电波", "电波", "每日任务", "每周任务", "每日任务", "每周挑战")]
         void NightWave()
         {
-            _WFStatus.SendNightWave(Group);
+            _wfStatus.SendNightWave(Group);
         }
 
         [Matchers("wiki")]
@@ -193,19 +182,19 @@ namespace TRKS.WF.QQBot.Events
         [Matchers("仲裁", "仲裁警报", "精英警报")]
         void Arbitration()
         {
-            _WFStatus.SendArbitrationMission(Group);
+            _wfStatus.SendArbitrationMission(Group);
         }
 
         [Matchers("赤毒", "赤毒虹吸器", "赤毒洪潮", "赤毒任务")]
         void Kuva()
         {
-            _WFStatus.SendKuvaMissions(Group);
+            _wfStatus.SendKuvaMissions(Group);
         }
 
         [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
         void SentientOutpost()
         {
-            _WFStatus.SendSentientOutpost(Group);
+            _wfStatus.SendSentientOutpost(Group);
         }
     }
 
@@ -214,23 +203,22 @@ namespace TRKS.WF.QQBot.Events
         public Action<TargetID, Message> MessageSender { get; }
         public Action<Message> ErrorMessageSender { get; }
 
-        public HumanQQNumber Sender { get; }
+        public UserID Sender { get; }
         public string Message { get; }
-        public GroupNumber Group { get; }
+        public GroupID Group { get; }
 
         internal static WFNotificationHandler WfNotificationHandler =>
             MessageReceivedEvent._WfNotificationHandler;
 
-        string ICommandHandler<GroupMessageHandler>.Sender => Group.QQ;
+        string ICommandHandler<GroupMessageHandler>.Sender => Group.ID;
 
-        private static readonly WFStatus _WFStatus = new WFStatus();
+        private static readonly WFStatus _wfStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
         private static readonly WikiSearcher _wikiSearcher = new WikiSearcher();
 
-        public GroupMessageHandler(HumanQQNumber sender, GroupNumber group, string message)
+        public GroupMessageHandler(UserID sender, GroupID group, string message)
         {
-            _ = InitEvent1.localVersion;
             Sender = sender;
             MessageSender = (id, msg) =>
             {

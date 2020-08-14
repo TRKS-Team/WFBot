@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using Newbe.Mahua;
 using WebSocketSharp;
 using WebSocketSharp.Server;
+using WFBot.Features.Utils;
 
-namespace TRKS.WF.QQBot
+namespace WFBot
 {
     public class WebSocketHandler
     {
-        private WebSocketServer webserver = new WebSocketServer(IPAddress.Parse("127.0.0.1"), 15789);
+        private WebSocketServer webserver = new WebSocketServer(IPAddress.Loopback, 15789);
         public WebSocketHandler()
         {
             Task.Factory.StartNew(() => {
-                webserver.AddWebSocketService<GetGroup>("/GetGroup");
+                //webserver.AddWebSocketService<GetGroup>("/GetGroup");
                 webserver.AddWebSocketService<AddGroup>("/AddGroup");
                 webserver.Start();
             }, TaskCreationOptions.LongRunning);
         }
     }
-
+    // tOdO 我觉得你得重写这一块
+    /*
     public class GetGroup : WebSocketBehavior
     {
         protected override async Task OnMessage(MessageEventArgs e)
@@ -40,6 +37,7 @@ namespace TRKS.WF.QQBot
             await Send(result);
         }
     }
+    */
     public class AddGroup : WebSocketBehavior
     {
         protected override async Task OnMessage(MessageEventArgs e)

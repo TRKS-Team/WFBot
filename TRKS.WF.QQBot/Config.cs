@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using WFBot.Utils;
 
-namespace TRKS.WF.QQBot
+namespace WFBot
 {
     [Configuration("WFConfig")]
     internal class Config : Configuration<Config>
@@ -34,7 +35,7 @@ namespace TRKS.WF.QQBot
 
         public int CallperMinute = 0;
 
-        public Settings.Platform Platform = Settings.Platform.PC;
+        public Platform Platform = Platform.PC;
 
         public bool IsThirdPartyWM = false;
 

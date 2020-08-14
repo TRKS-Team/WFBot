@@ -1,7 +1,9 @@
-﻿namespace TRKS.WF.QQBot.Events
+﻿using WFBot.Features.Utils;
+
+namespace WFBot.Events
 {
     public interface ISender
     {
-        HumanQQNumber Sender { get; }
+        UserID Sender { get; }
     }
 }

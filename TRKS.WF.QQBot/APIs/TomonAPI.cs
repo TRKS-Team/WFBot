@@ -1,4 +1,4 @@
-﻿namespace TRKS.WF.QQBot.APIs
+﻿namespace WFBot.APIs
 {
     class TomonAPI
     {
