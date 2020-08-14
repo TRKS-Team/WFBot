@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
+using TRKS.WF.QQBot.Events;
 using TRKS.WF.QQBot.MahuaEvents;
 
 namespace TRKS.WF.QQBot
@@ -51,7 +52,7 @@ namespace TRKS.WF.QQBot
                     As<IGroupMessageReceivedMahuaEvent>();
                 builder.RegisterType<MahuaMenuClickedMahuaEvent1>()
                     .As<IMahuaMenuClickedMahuaEvent>();
-                builder.RegisterType<PrivateMessageReceivedMahuaEvent2>()
+                builder.RegisterType<PrivateMessageReceivedEvent>()
                     .As<IPrivateMessageReceivedMahuaEvent>();
                 builder.RegisterType<GroupJoiningInvitationReceivedMahuaEvent1>()
                     .As<IGroupJoiningInvitationReceivedMahuaEvent>();

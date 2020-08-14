@@ -1,46 +1,36 @@
-﻿using System.Threading.Tasks;
-using System;
+﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Web;
-using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
 using Settings;
 using TextCommandCore;
-using Number = System.Numerics.BigInteger;
+using TRKS.WF.QQBot.MahuaEvents;
 using static TRKS.WF.QQBot.Messenger;
 
-namespace TRKS.WF.QQBot.MahuaEvents
+namespace TRKS.WF.QQBot.Events
 {
     /// <summary>
     /// 群消息接收事件
     /// </summary>
-    public class GroupMessageReceivedMahuaEvent1
-        : IGroupMessageReceivedMahuaEvent
+    public class MessageReceivedEvent
     {
-        private readonly IMahuaApi _mahuaApi;
         public static WFNotificationHandler _WfNotificationHandler ;
-
-        public GroupMessageReceivedMahuaEvent1(
-            IMahuaApi mahuaApi)
+        public string ProcessGroupMessage(GroupMessageReceivedContext context)
         {
-            _mahuaApi = mahuaApi;
-        }
-
-        public void ProcessGroupMessage(GroupMessageReceivedContext context)
-        {
-            if (HotUpdateInfo.PreviousVersion) return;
+            if (HotUpdateInfo.PreviousVersion) return null;
             if (!WFResource.Inited)
             {
                 if (!WFResource.LaunchedInit)
                 {
                     Task.Run(() => { WFResource.InitWFResource(); });
                 }
-                return;
+                return null;
             }
             
             if (GroupCallDic.ContainsKey(context.FromGroup))
             {
-                if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return;
+                if (GroupCallDic[context.FromGroup] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return null;
             }
             else
             {
@@ -229,7 +219,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         public GroupNumber Group { get; }
 
         internal static WFNotificationHandler WfNotificationHandler =>
-            GroupMessageReceivedMahuaEvent1._WfNotificationHandler;
+            MessageReceivedEvent._WfNotificationHandler;
 
         string ICommandHandler<GroupMessageHandler>.Sender => Group.QQ;
 

@@ -11,6 +11,7 @@ using Newbe.Mahua.MahuaEvents;
 using Newbe.Mahua.Messages.CancelMessage;
 using TextCommandCore;
 using TRKS.WF.QQBot;
+using TRKS.WF.QQBot.Events;
 using TRKS.WF.QQBot.MahuaEvents;
 // ReSharper disable LocalizableElement
 
@@ -82,7 +83,7 @@ namespace WFBotTest
                 var sw = Stopwatch.StartNew();
                 Console.WriteLine($"Command: {msg}");
                 Console.WriteLine("---------");
-                new GroupMessageReceivedMahuaEvent1(null).ProcessGroupMessage(new GroupMessageReceivedContext{FromAnonymous = "", FromGroup = "", FromQq = "", Message = ""});
+                new MessageReceivedEvent().ProcessGroupMessage(new GroupMessageReceivedContext{FromAnonymous = "", FromGroup = "", FromQq = "", Message = ""});
                 // 如果你在测试Callperminute的话 返回的数据可能会少一 这正常 因为命令因为↑这行代码多执行了一次
                 // 并且Calldic里的数据不会因为Do而减少
                 new GroupMessageHandler(new HumanQQNumber(""), new GroupNumber(""), msg).ProcessCommandInput();

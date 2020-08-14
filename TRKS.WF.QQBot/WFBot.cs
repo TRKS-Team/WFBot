@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using Harmony;
-using Newbe.Mahua;
 using Newbe.Mahua.MahuaEvents;
-using WTF;
 using Timer = System.Timers.Timer;
 
-namespace TRKS.WF.QQBot.MahuaEvents
+namespace TRKS.WF.QQBot
 {
-    public class InitEvent1 : IInitializationMahuaEvent
+    class WFBot
     {
         internal static bool onlineBuild;
         internal static int localVersion;
@@ -26,8 +21,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
         private static volatile bool updating;
         internal static Timer timer1;
         public static WebSocketHandler websocket;
-
-        static InitEvent1()
+        static WFBot()
         {
             Directory.CreateDirectory("WFBotLogs");
             var listener = new TextWriterTraceListener(File.Open($"WFBotLogs\\WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log", FileMode.Append, FileAccess.Write, FileShare.ReadWrite)) { TraceOutputOptions = TraceOptions.Timestamp };
@@ -36,10 +30,14 @@ namespace TRKS.WF.QQBot.MahuaEvents
             Trace.WriteLine($"WFBot started.", "WFBot Core");
             Plugins.Load();
         }
-
         static bool Inited = false;
-        public InitEvent1()
+        static void Main()
         {
+
+
+
+
+  
             if (Inited) return;
 
             Inited = true;
@@ -76,6 +74,7 @@ namespace TRKS.WF.QQBot.MahuaEvents
             {
                 websocket = new WebSocketHandler();
             }
+
         }
         /*
                 static void StartServer()
@@ -109,10 +108,9 @@ namespace TRKS.WF.QQBot.MahuaEvents
                     }
                 }
                 */
-
         readonly static object TimerMonitor;
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (HotUpdateInfo.PreviousVersion) return;
             if (Monitor.IsEntered(TimerMonitor))
@@ -193,3 +191,4 @@ namespace TRKS.WF.QQBot.MahuaEvents
         }
     }
 }
+

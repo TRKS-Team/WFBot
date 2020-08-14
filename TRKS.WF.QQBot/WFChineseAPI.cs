@@ -18,6 +18,7 @@ using System.Timers;
 using System.Windows;
 using GammaLibrary.Extensions;
 using Settings;
+using TRKS.WF.QQBot.Events;
 using TRKS.WF.QQBot.MahuaEvents;
 
 namespace TRKS.WF.QQBot
@@ -77,8 +78,8 @@ namespace TRKS.WF.QQBot
                 WFChineseApi = new WFChineseAPI();
                 WFAApi = new WFAApi();
                 WFTranslator = new WFTranslator();
-                GroupMessageReceivedMahuaEvent1._WfNotificationHandler=new WFNotificationHandler();
-                GroupMessageReceivedMahuaEvent1._WfNotificationHandler.Update();
+                MessageReceivedEvent._WfNotificationHandler = new WFNotificationHandler();
+                MessageReceivedEvent._WfNotificationHandler.Update();
 
                 Messenger.SendDebugInfo($"初始化完成: {sw.Elapsed.TotalSeconds:N1}s");
                 Inited = true;

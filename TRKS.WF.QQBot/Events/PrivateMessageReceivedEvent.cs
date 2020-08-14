@@ -2,28 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using GammaLibrary.Extensions;
 using Newbe.Mahua;
 using Newbe.Mahua.Internals;
 using Newbe.Mahua.MahuaEvents;
-using Settings;
 using TextCommandCore;
 using Number = System.Numerics.BigInteger;
 using static TRKS.WF.QQBot.Messenger;
 using MahuaPlatform = Newbe.Mahua.Internals.MahuaPlatform;
 
-namespace TRKS.WF.QQBot.MahuaEvents
+namespace TRKS.WF.QQBot.Events
 {
     /// <summary>
     /// 私聊消息接收事件
     /// </summary>
-    public class PrivateMessageReceivedMahuaEvent2
+    public class PrivateMessageReceivedEvent
         : IPrivateMessageReceivedMahuaEvent
     {
         private readonly IMahuaApi _mahuaApi;
         
-        public PrivateMessageReceivedMahuaEvent2(
+        public PrivateMessageReceivedEvent(
             IMahuaApi mahuaApi)
         {
             _mahuaApi = mahuaApi;

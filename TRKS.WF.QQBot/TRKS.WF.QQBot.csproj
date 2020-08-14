@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{795FA006-A765-48D7-A488-EFD37D7CA474}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TRKS.WF.QQBot</RootNamespace>
     <AssemblyName>trks.wf.qqbot</AssemblyName>
@@ -36,6 +36,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -261,17 +264,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="APIs\DiscordAPI.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="CommitsGetter.cs" />
+    <Compile Include="APIs\TomonAPI.cs" />
+    <Compile Include="WFBot.cs" />
+    <Compile Include="WFBotWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WFBotWindow.Designer.cs">
+      <DependentUpon>WFBotWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="MahuaEvents\AutoUpdateRR.cs" />
     <Compile Include="Cylib.cs" />
     <Compile Include="MahuaEvents\HotUpdateInfo.cs" />
     <Compile Include="MahuaEvents\GroupJoiningInvitationReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\GroupJoiningRequestReceivedMahuaEvent1.cs" />
     <Compile Include="MahuaEvents\InitEvent1.cs" />
-    <Compile Include="MahuaEvents\ISender.cs" />
+    <Compile Include="Events\ISender.cs" />
     <Compile Include="MahuaEvents\MahuaMenuClickedMahuaEvent1.cs" />
-    <Compile Include="MahuaEvents\PrivateMessageReceivedMahuaEvent2.cs" />
+    <Compile Include="Events\PrivateMessageReceivedEvent.cs" />
     <Compile Include="MahuaEvents\UpdatedEvent1.cs" />
     <Compile Include="MahuaEvents\UpdatingEvent1.cs" />
     <Compile Include="MessageProcessors.cs" />
@@ -293,7 +305,7 @@
     <Compile Include="WFChineseAPI.cs" />
     <Compile Include="WFFormatter.cs" />
     <Compile Include="WFNotificationHandler.cs" />
-    <Compile Include="MahuaEvents\GroupMessageReceivedMahuaEvent1.cs" />
+    <Compile Include="Events\MessageReceivedEvent.cs" />
     <Compile Include="MahuaModule.cs" />
     <Compile Include="MyMenuProvider.cs" />
     <Compile Include="PluginInfo.cs" />
@@ -385,6 +397,7 @@
     <Content Include="buildScripts\VSSetup\2.2.5\tools\LICENSE.txt" />
     <Content Include="buildTools\nuget.exe" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

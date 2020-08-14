@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Settings;
 using TextCommandCore;
+using TRKS.WF.QQBot.Events;
 using TRKS.WF.QQBot.MahuaEvents;
 
 namespace TRKS.WF.QQBot
