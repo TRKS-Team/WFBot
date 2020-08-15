@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WFBot", "TRKS.WF.QQBot\WFBot.csproj", "{795FA006-A765-48D7-A488-EFD37D7CA474}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WFBot", "WFBot\WFBot.csproj", "{795FA006-A765-48D7-A488-EFD37D7CA474}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Connectors", "Connectors", "{E2D933A5-0F60-4A2A-ACAB-27681D6538FA}"
 EndProject

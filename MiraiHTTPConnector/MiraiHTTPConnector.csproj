@@ -8,12 +8,9 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mirai-CSharp" Version="1.0.1.7"/>
+    <PackageReference Include="Mirai-CSharp" Version="1.0.1.7" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TRKS.WF.QQBot\WFBot.csproj">
-      <Private>false</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-    </ProjectReference>
+    <ProjectReference Include="..\WFBot\WFBot.csproj" />
   </ItemGroup>
 </Project>
