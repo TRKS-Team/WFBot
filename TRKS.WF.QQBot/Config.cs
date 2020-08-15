@@ -6,7 +6,7 @@ using WFBot.Utils;
 namespace WFBot
 {
     [Configuration("WFConfig")]
-    internal class Config : Configuration<Config>
+    public class Config : Configuration<Config>
     {
         public List<string> WFGroupList = new List<string>();
 

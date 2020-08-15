@@ -28,7 +28,12 @@ namespace MiraiHTTPConnector
             };
 
             var qq = MiraiConfig.Instance.BotQQ;
-            if (qq == 0) throw new Exception("请在 MiraiConfig.json 内填写机器人的 qq 号");
+
+            if (qq == 0)
+            {
+                MiraiConfig.Save();
+                throw new Exception("请在 MiraiConfig.json 内填写机器人的 qq 号");
+            }
             
             session.ConnectAsync(options, qq).Wait();
         }
@@ -40,7 +45,7 @@ namespace MiraiHTTPConnector
 
         public override void SendPrivateMessage(string id, string message)
         {
-            session.SendGroupMessageAsync(long.Parse(id), new IMessageBase[]{ new PlainMessage(message) }).Wait();
+            session.SendFriendMessageAsync(long.Parse(id), new IMessageBase[]{ new PlainMessage(message) }).Wait();
         }
     }
 }

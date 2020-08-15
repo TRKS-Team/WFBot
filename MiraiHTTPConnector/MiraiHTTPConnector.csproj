@@ -1,15 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>8</LangVersion>
+    <Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TRKS.WF.QQBot\WFBot.csproj" />
+    <PackageReference Include="Mirai-CSharp" Version="1.0.1.7"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mirai-CSharp" Version="1.0.1.7" />
+    <ProjectReference Include="..\TRKS.WF.QQBot\WFBot.csproj">
+      <Private>false</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
   </ItemGroup>
 </Project>

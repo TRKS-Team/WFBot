@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
+using GammaLibrary.Extensions;
 using WFBot.Connector;
 using WFBot.Events;
 using WFBot.Features.Other;
@@ -19,6 +22,8 @@ namespace WFBot
         {
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
+
+            var sw = Stopwatch.StartNew();
             try
             {
                 wfbot.Init();
@@ -34,8 +39,43 @@ namespace WFBot
             }
 
             Console.WriteLine("WFBot fully loaded.");
-            Thread.CurrentThread.Join();
+            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s");
+
+            while (true)
+            {
+                var text = Console.ReadLine();
+                switch (text.ToLower())
+                {
+                    case "ui":
+                        OpenWFBotSettingsWindow();
+                        break;
+                    case "exit":
+                        return;
+                    default:
+                        ConnectorManager.Connector.OnCommandLineInput(text);
+                        break;
+                }
+            }
         }
+
+        private static void OpenWFBotSettingsWindow()
+        {
+#if WINDOWS_RELEASE
+            var thread = new Thread(() =>
+            {
+                var assembly = Assembly.LoadFile(Path.GetFullPath("WFBotConfigurator.dll"));
+                var type = assembly.ExportedTypes.Single(t => t.Name == "Settings");
+                dynamic instance = Activator.CreateInstance(type);
+                instance.ShowDialog();
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+#else
+            Console.WriteLine("此编译版本不包含UI. 请使用 Windows 编译版本.");
+#endif
+
+        }
+
     }
 
     public class WFBotCore

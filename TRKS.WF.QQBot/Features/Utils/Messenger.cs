@@ -48,12 +48,6 @@ namespace WFBot.Features.Utils
 
         public static void SendDebugInfo(string content)
         {
-            if (MessengerHandlers.DebugAlternateHandler != null)
-            {
-                MessengerHandlers.DebugAlternateHandler(content);
-                return;
-            }
-
             if (Config.Instance.QQ.IsNumber())
                 SendPrivate(Config.Instance.QQ.ToHumanQQNumber(), content);
             Trace.WriteLine($"{content}", "Message");

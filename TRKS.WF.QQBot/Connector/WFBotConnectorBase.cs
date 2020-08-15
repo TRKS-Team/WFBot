@@ -11,6 +11,6 @@ namespace WFBot.Connector
         public abstract void Init();
         public abstract void SendGroupMessage(string id, string message);
         public abstract void SendPrivateMessage(string id, string message);
-
+        public virtual void OnCommandLineInput(string content) { }
     }
 }
