@@ -1,5 +1,7 @@
-﻿namespace WFBotConfigurator
+﻿namespace WFBot.Windows
 {
+#if WINDOWS_RELEASE
+
     partial class Settings
     {
         /// <summary>
@@ -856,5 +858,6 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Label label17;
     }
+#endif
 }
 

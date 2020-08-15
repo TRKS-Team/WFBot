@@ -13,6 +13,7 @@ using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using WFBot.Windows;
 
 namespace WFBot
 {
@@ -63,10 +64,7 @@ namespace WFBot
 #if WINDOWS_RELEASE
             var thread = new Thread(() =>
             {
-                var assembly = Assembly.LoadFile(Path.GetFullPath("WFBotConfigurator.dll"));
-                var type = assembly.ExportedTypes.Single(t => t.Name == "Settings");
-                dynamic instance = Activator.CreateInstance(type);
-                instance.ShowDialog();
+                new Settings().ShowDialog();
             });
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();

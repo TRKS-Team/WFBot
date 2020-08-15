@@ -33,4 +33,7 @@
     <PackageReference Include="TextCommandCore" Version="1.6.1" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Windows\Settings.cs" />
+  </ItemGroup>
 </Project>

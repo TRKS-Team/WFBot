@@ -1,14 +1,15 @@
-﻿using System;
+﻿#if WINDOWS_RELEASE
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GammaLibrary.Extensions;
-using WFBot;
 using WFBot.Features.Utils;
 
-namespace WFBotConfigurator
+namespace WFBot.Windows
 {
+    
     public partial class Settings : Form
     {
         public Settings()
@@ -361,3 +362,4 @@ namespace WFBotConfigurator
 
 
 }
+#endif
