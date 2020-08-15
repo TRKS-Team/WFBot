@@ -36,4 +36,7 @@
   <ItemGroup>
     <Compile Update="Windows\Settings.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="APIs\" />
+  </ItemGroup>
 </Project>
