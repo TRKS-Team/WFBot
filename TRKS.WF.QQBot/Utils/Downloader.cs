@@ -17,7 +17,7 @@ namespace WFBot.Utils
         {
             Directory.CreateDirectory("WFCaches");
             var fileName = url.Split('/').Last().Split('?').First();
-            var path = $"WFCaches\\{fileName}";
+            var path = Path.Combine("WFCaches", fileName);
             expectedCount++;
 
             if (File.Exists(path))

@@ -40,9 +40,9 @@ namespace WFBot
     */
     public class AddGroup : WebSocketBehavior
     {
-        protected override async Task OnMessage(MessageEventArgs e)
+        protected override void OnMessage(MessageEventArgs e)
         {
-            var group = e.Data.ReadToEnd();
+            var group = e.Data;
             if (!Config.Instance.WFGroupList.Contains(group))
             {
                 Config.Instance.WFGroupList.Add(group);

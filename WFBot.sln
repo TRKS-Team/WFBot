@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFBot", "TRKS.WF.QQBot\WFBot.csproj", "{795FA006-A765-48D7-A488-EFD37D7CA474}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFBotTest", "WFBotTest\WFBotTest.csproj", "{0D59DA72-F68D-42A9-838C-6341356C89DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WFBot", "TRKS.WF.QQBot\WFBot.csproj", "{795FA006-A765-48D7-A488-EFD37D7CA474}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Connectors", "Connectors", "{E2D933A5-0F60-4A2A-ACAB-27681D6538FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConnector", "TestConnector\TestConnector.csproj", "{06DDB8C1-62F3-40FC-9B68-54039F56D2F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConnector", "TestConnector\TestConnector.csproj", "{06DDB8C1-62F3-40FC-9B68-54039F56D2F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiraiHTTPConnector", "MiraiHTTPConnector\MiraiHTTPConnector.csproj", "{FAB287A7-9A3A-4CA5-BC5B-5D06CA94B192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiraiHTTPConnector", "MiraiHTTPConnector\MiraiHTTPConnector.csproj", "{FAB287A7-9A3A-4CA5-BC5B-5D06CA94B192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{795FA006-A765-48D7-A488-EFD37D7CA474}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795FA006-A765-48D7-A488-EFD37D7CA474}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795FA006-A765-48D7-A488-EFD37D7CA474}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D59DA72-F68D-42A9-838C-6341356C89DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06DDB8C1-62F3-40FC-9B68-54039F56D2F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06DDB8C1-62F3-40FC-9B68-54039F56D2F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06DDB8C1-62F3-40FC-9B68-54039F56D2F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
