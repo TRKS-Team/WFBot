@@ -13,13 +13,26 @@ using WFBot.Utils;
 
 namespace WFBot
 {
-    class Program
+    static class Program
     {
         public static void Main()
         {
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
-            wfbot.Init();
+            try
+            {
+                wfbot.Init();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("WFBot 在初始化中遇到了问题.");
+                Console.WriteLine($"{e.GetType().FullName}: {e.Message}");
+                Trace.WriteLine(e);
+                Console.WriteLine("按任意键继续.");
+                Console.ReadKey();
+                return;
+            }
+
             Console.WriteLine("WFBot fully loaded.");
             Thread.CurrentThread.Join();
         }

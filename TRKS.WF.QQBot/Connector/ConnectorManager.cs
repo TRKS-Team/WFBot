@@ -13,6 +13,7 @@ namespace WFBot.Connector
         public static WFBotConnectorBase Connector { get; private set; }
         public static void LoadConnector()
         {
+#pragma warning disable CS0618 
             AppDomain.CurrentDomain.AppendPrivatePath("WFBotConnector");
 
             Directory.CreateDirectory("WFBotConnector");

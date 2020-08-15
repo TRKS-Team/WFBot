@@ -26,8 +26,11 @@ namespace MiraiHTTPConnector
                 WFBotCore.Instance.OnMessage(args.Sender.Group.Id.ToString(), args.Sender.Id.ToString(), msg);
                 return Task.FromResult(true);
             };
-            // todo 这里写成从config获取
-            session.ConnectAsync(options, 3320645904).Wait();
+
+            var qq = MiraiConfig.Instance.BotQQ;
+            if (qq == 0) throw new Exception("请在 MiraiConfig.json 内填写机器人的 qq 号");
+            
+            session.ConnectAsync(options, qq).Wait();
         }
 
         public override void SendGroupMessage(string id, string message)
