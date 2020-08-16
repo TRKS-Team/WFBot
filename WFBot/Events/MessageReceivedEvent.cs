@@ -15,7 +15,6 @@ namespace WFBot.Events
     /// </summary>
     public class MessageReceivedEvent
     {
-        public static WFNotificationHandler _WfNotificationHandler;
         public void ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
         {
             if (CheckCallPerMin(groupId)) return;
@@ -31,13 +30,13 @@ namespace WFBot.Events
 
         private static bool CheckCallPerMin(GroupID groupId)
         {
-            if (GroupCallDic.ContainsKey(groupId.ID))
+            if (GroupCallDic.ContainsKey(groupId))
             {
-                if (GroupCallDic[groupId.ID] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
+                if (GroupCallDic[groupId] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
             }
             else
             {
-                GroupCallDic[groupId.ID] = 0;
+                GroupCallDic[groupId] = 0;
             }
 
             return false;
@@ -106,7 +105,7 @@ namespace WFBot.Events
         [Matchers("警报")]
         void Alerts()
         {
-            WfNotificationHandler.SendAllAlerts(Group);
+            WFBotCore.Instance.NotificationHandler.SendAllAlerts(Group);
         }
 
         [Matchers("平野", "夜灵平野", "平原", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "平原温度", "平原时间")]
@@ -118,7 +117,7 @@ namespace WFBot.Events
         [Matchers("入侵")]
         void Invasions()
         {
-            WfNotificationHandler.SendAllInvasions(Group);
+            WFBotCore.Instance.NotificationHandler.SendAllInvasions(Group);
         }
 
         [Matchers("突击")]
@@ -149,7 +148,7 @@ namespace WFBot.Events
         [Matchers("小小黑", "追随者")]
         void AllPersistentEnemies()
         {
-            WfNotificationHandler.SendAllPersistentEnemies(Group);
+            WFBotCore.Instance.NotificationHandler.SendAllPersistentEnemies(Group);
         }
 
         [Matchers("help", "帮助", "功能", "救命")]
@@ -207,10 +206,8 @@ namespace WFBot.Events
         public string Message { get; }
         public GroupID Group { get; }
 
-        internal static WFNotificationHandler WfNotificationHandler =>
-            MessageReceivedEvent._WfNotificationHandler;
 
-        string ICommandHandler<GroupMessageHandler>.Sender => Group.ID;
+        string ICommandHandler<GroupMessageHandler>.Sender => Group;
 
         private static readonly WFStatus _wfStatus = new WFStatus();
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
@@ -222,7 +219,7 @@ namespace WFBot.Events
             Sender = sender;
             MessageSender = (id, msg) =>
             {
-                SendGroup(id.ID.ToGroupNumber(), msg);
+                SendGroup(id.ID, msg);
                 Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg.Content}].", "Message");
 
             };

@@ -10,6 +10,6 @@ namespace MiraiHTTPConnector
     [Configuration("MiraiConfig")]
     public class MiraiConfig : Configuration<MiraiConfig>
     {
-        public long BotQQ = 0;
+        public long BotQQ = default;
     }
 }

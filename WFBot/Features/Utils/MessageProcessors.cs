@@ -11,7 +11,7 @@ namespace WFBot.Features.Utils
     {
         public string Process<T>(MethodInfo method, string msg, ICommandHandler<T> handlers) where T : ICommandHandler<T>
         {
-            if (handlers is ISender s && s.Sender.ID != Config.Instance.QQ) throw new CommandException("你不是管理. (嫌弃脸)");
+            if (handlers is ISender s && s.Sender.ToString() != Config.Instance.QQ) throw new CommandException("你不是管理. (嫌弃脸)");
 
             return msg;
         }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using WFBot.Connector;
 using WFBot.MahuaEvents;
 using WFBot.Utils;
@@ -49,17 +50,17 @@ namespace WFBot.Features.Utils
         public static void SendDebugInfo(string content)
         {
             if (Config.Instance.QQ.IsNumber())
-                SendPrivate(Config.Instance.QQ.ToHumanQQNumber(), content);
+                SendPrivate(Config.Instance.QQ, content);
             Trace.WriteLine($"{content}", "Message");
         }
 
         public static void SendPrivate(UserID humanQQ, string content)
         {
-            ConnectorManager.Connector.SendPrivateMessage(humanQQ.ID, content);
+            ConnectorManager.Connector.SendPrivateMessage(humanQQ, content);
             // todo
         }
 
-        private static readonly Dictionary<string, string> previousMessageDic = new Dictionary<string, string>();
+        private static readonly Dictionary<GroupID, string> previousMessageDic = new Dictionary<GroupID, string>();
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(GroupID g, string content)
         {
@@ -74,7 +75,7 @@ namespace WFBot.Features.Utils
 
             previousMessageDic[qq] = content;
 
-            ConnectorManager.Connector.SendGroupMessage(g.ID, content);
+            ConnectorManager.Connector.SendGroupMessage(g, content);
 
             //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
@@ -92,7 +93,7 @@ namespace WFBot.Features.Utils
                     sb.AppendLine(content);
                     if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
-                    SendGroup(group.ToGroupNumber(), sb.ToString().Trim());
+                    SendGroup(group, sb.ToString().Trim());
                     count++;
                     Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
@@ -187,15 +188,6 @@ namespace WFBot.Features.Utils
             SendPrivate(qq, content);
         }
 
-        public static GroupID ToGroupNumber(this string id)
-        {
-            return new GroupID(id);
-        }
-
-        public static UserID ToHumanQQNumber(this string id)
-        {
-            return new UserID(id);
-        }
 
         /*
         public static void SuperBroadcast(string content)
@@ -215,33 +207,93 @@ namespace WFBot.Features.Utils
         */
     }
 
-    public class GroupID
+    public struct GroupID
     {
-        public string ID { get; }
+        public uint ID { get; }
 
-        public GroupID(string id)
+        public GroupID(uint id)
         {
             ID = id;
         }
 
+        public static implicit operator long(GroupID id)
+        {
+            return id.ID;
+        }
+
+        public static implicit operator uint(GroupID id)
+        {
+            return id.ID;
+        }
+
+        public static implicit operator string(GroupID id)
+        {
+            return id.ToString();
+        }
+
+        public static implicit operator GroupID(long id)
+        {
+            return new GroupID((uint) id);
+        }
+
+        public static implicit operator GroupID(uint id)
+        {
+            return new GroupID(id);
+        }
+
+        public static implicit operator GroupID(string id)
+        {
+            return new GroupID(id.ToUInt());
+        }
+
         public override string ToString()
         {
-            return ID;
+            return ID.ToString();
         }
     }
 
-    public class UserID
+    public struct UserID
     {
-        public string ID { get; }
+        public uint ID { get; }
 
-        public UserID(string id)
+        public UserID(uint id)
         {
             ID = id;
         }
 
+        public static implicit operator long(UserID id)
+        {
+            return id.ID;
+        }
+
+        public static implicit operator uint(UserID id)
+        {
+            return id.ID;
+        }
+
+        public static implicit operator string(UserID id)
+        {
+            return id.ToString();
+        }
+
+        public static implicit operator UserID(long id)
+        {
+            return new UserID((uint)id);
+        }
+
+        public static implicit operator UserID(uint id)
+        {
+            return new UserID(id);
+        }
+
+        public static implicit operator UserID(string id)
+        {
+            return new UserID(id.ToUInt());
+        }
+
         public override string ToString()
         {
-            return ID;
+            return ID.ToString();
         }
     }
 }

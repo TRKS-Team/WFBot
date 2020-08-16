@@ -9,6 +9,7 @@ using Mirai_CSharp.Models;
 using Mirai_CSharp.Plugin;
 using WFBot;
 using WFBot.Connector;
+using WFBot.Features.Utils;
 
 namespace MiraiHTTPConnector
 {
@@ -23,29 +24,29 @@ namespace MiraiHTTPConnector
             session.GroupMessageEvt += (sender, args) =>
             {
                 var msg = args.Chain.GetPlain();
-                WFBotCore.Instance.OnMessage(args.Sender.Group.Id.ToString(), args.Sender.Id.ToString(), msg);
+                ReportGroupMessage(args.Sender.Group.Id.ToString(), args.Sender.Id.ToString(), msg);
                 return Task.FromResult(true);
             };
 
             var qq = MiraiConfig.Instance.BotQQ;
 
-            if (qq == 0)
+            if (qq == default)
             {
                 MiraiConfig.Save();
-                throw new Exception("请在 MiraiConfig.json 内填写机器人的 qq 号");
+                throw new Exception("请在 MiraiConfig.json 内填写机器人的 QQ 号");
             }
             
             session.ConnectAsync(options, qq).Wait();
         }
 
-        public override void SendGroupMessage(string id, string message)
+        public override void SendGroupMessage(GroupID groupID, string message)
         {
-            session.SendGroupMessageAsync(long.Parse(id), new IMessageBase[]{ new PlainMessage(message) }).Wait();
+            session.SendGroupMessageAsync(groupID, new IMessageBase[]{ new PlainMessage(message) }).Wait();
         }
 
-        public override void SendPrivateMessage(string id, string message)
+        public override void SendPrivateMessage(UserID userID, string message)
         {
-            session.SendFriendMessageAsync(long.Parse(id), new IMessageBase[]{ new PlainMessage(message) }).Wait();
+            session.SendFriendMessageAsync(userID, new IMessageBase[]{ new PlainMessage(message) }).Wait();
         }
     }
 }

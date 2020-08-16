@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WFBot;
 using WFBot.Connector;
+using WFBot.Features.Utils;
 
 namespace TestConnector
 {
@@ -14,19 +15,19 @@ namespace TestConnector
         {
         }
 
-        public override void SendGroupMessage(string id, string message)
+        public override void SendGroupMessage(GroupID groupID, string message)
         {
-            Console.WriteLine($"ID {id} message {message}");
+            Console.WriteLine($"ID {groupID} message {message}");
         }
 
-        public override void SendPrivateMessage(string id, string message)
+        public override void SendPrivateMessage(UserID userID, string message)
         {
-            Console.WriteLine($"ID {id} message {message}");
+            Console.WriteLine($"ID {userID} message {message}");
         }
 
         public override void OnCommandLineInput(string content)
         {
-            WFBotCore.Instance.OnMessage("fork", "fork", content);
+            ReportGroupMessage("fork", "fork", content);
         }
     }
 }

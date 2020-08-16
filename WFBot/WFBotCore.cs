@@ -82,10 +82,10 @@ namespace WFBot
         public static WFBotCore Instance { get; internal set; }
         private MessageReceivedEvent messageReceivedEvent;
 
-        public void OnMessage(string groupID, string userID, string message)
+        public void OnGroupMessage(GroupID groupID, UserID userID, string message)
         {
             if (!Inited) return;
-            messageReceivedEvent.ProcessGroupMessage(groupID.ToGroupNumber(), userID.ToHumanQQNumber(), message);
+            messageReceivedEvent.ProcessGroupMessage(groupID, userID, message);
         }
 
         internal void Init()
