@@ -11,6 +11,9 @@
     <PackageReference Include="Mirai-CSharp" Version="1.0.1.7" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WFBot\WFBot.csproj" />
+    <ProjectReference Include="..\WFBot\WFBot.csproj">
+      <Private>false</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -6,6 +6,9 @@
     <Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WFBot\WFBot.csproj" />
+    <ProjectReference Include="..\WFBot\WFBot.csproj">
+      <Private>false</Private>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+    </ProjectReference>
   </ItemGroup>
 </Project>
