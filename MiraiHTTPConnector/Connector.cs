@@ -19,7 +19,19 @@ namespace MiraiHTTPConnector
 
         public override void Init()
         {
-            var options = new MiraiHttpSessionOptions("127.0.0.1", 8080, "********"); // 至少八位数
+            var config = MiraiConfig.Instance;
+            var qq = config.BotQQ;
+            var host = config.Host;
+            var port = config.Port;
+            var authKey = config.AuthKey;
+
+            if (qq == default || host == default || port == default || authKey == default)
+            {
+                MiraiConfig.Save();
+                throw new Exception("请在 MiraiConfig.json 内补全信息, 详情请查看文档.");
+            }
+
+            var options = new MiraiHttpSessionOptions(host, port, authKey); // 至少八位数
             session = new MiraiHttpSession();
             session.GroupMessageEvt += (sender, args) =>
             {
@@ -28,14 +40,6 @@ namespace MiraiHTTPConnector
                 return Task.FromResult(true);
             };
 
-            var qq = MiraiConfig.Instance.BotQQ;
-
-            if (qq == default)
-            {
-                MiraiConfig.Save();
-                throw new Exception("请在 MiraiConfig.json 内填写机器人的 QQ 号");
-            }
-            
             session.ConnectAsync(options, qq).Wait();
         }
 

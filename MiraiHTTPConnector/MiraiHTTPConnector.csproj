@@ -8,7 +8,7 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mirai-CSharp" Version="1.0.1.7" />
+    <PackageReference Include="Mirai-CSharp" Version="1.0.1.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WFBot\WFBot.csproj">

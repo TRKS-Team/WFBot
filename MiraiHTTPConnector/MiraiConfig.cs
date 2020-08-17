@@ -10,6 +10,10 @@ namespace MiraiHTTPConnector
     [Configuration("MiraiConfig")]
     public class MiraiConfig : Configuration<MiraiConfig>
     {
+        public string Host;
+        public short Port;
+        public string AuthKey;
+
         public long BotQQ = default;
     }
 }
