@@ -45,12 +45,12 @@ namespace MiraiHTTPConnector
 
         public override void SendGroupMessage(GroupID groupID, string message)
         {
-            session.SendGroupMessageAsync(groupID, new IMessageBase[]{ new PlainMessage(message) }).Wait();
+            session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Wait();
         }
 
         public override void SendPrivateMessage(UserID userID, string message)
         {
-            session.SendFriendMessageAsync(userID, new IMessageBase[]{ new PlainMessage(message) }).Wait();
+            session.SendFriendMessageAsync(userID, new PlainMessage(message)).Wait();
         }
     }
 }
