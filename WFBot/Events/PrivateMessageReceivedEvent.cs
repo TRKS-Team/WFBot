@@ -26,6 +26,7 @@ namespace WFBot.Events
 
     public partial class PrivateMessageHandler
     {
+        
         private List<GroupInfo> GetGroups()
         {
             return null; // TODO
@@ -115,7 +116,7 @@ namespace WFBot.Events
         [Matchers("超级广播")]
         void Broadcast(string content)
         {
-            //Messenger.SuperBroadcast(content);
+            // Messenger.SuperBroadcast(content);
         }
     }
 

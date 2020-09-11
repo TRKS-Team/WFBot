@@ -36,6 +36,7 @@ namespace WFBot.Features.Utils
             if (outpost.active)
             {
                 // TODO 交给大哥维护
+                // 回↑ 这个功能好像可以删了
                 sb.Append("此功能维护中");
                 //var expiry =  outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
                 // 这行大概是因为api是wip 以后可以直接删掉换成outpost.expiry

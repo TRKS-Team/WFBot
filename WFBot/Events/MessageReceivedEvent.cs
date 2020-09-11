@@ -189,12 +189,12 @@ namespace WFBot.Events
         {
             _wfStatus.SendKuvaMissions(Group);
         }
-
+        /*
         [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
         void SentientOutpost()
         {
             _wfStatus.SendSentientOutpost(Group);
-        }
+        }*/
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender

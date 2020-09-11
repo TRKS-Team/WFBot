@@ -35,7 +35,7 @@ namespace WFBot.Features.Utils
         }
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
     }
 

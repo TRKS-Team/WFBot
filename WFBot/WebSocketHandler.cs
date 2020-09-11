@@ -20,6 +20,7 @@ namespace WFBot
         }
     }
     // tOdO 我觉得你得重写这一块
+    // mAybE 以后可能用不到这一块
     /*
     public class GetGroup : WebSocketBehavior
     {

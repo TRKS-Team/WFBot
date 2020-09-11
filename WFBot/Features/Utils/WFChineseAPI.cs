@@ -294,7 +294,7 @@ namespace WFBot.Features.Utils
 
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
     }
@@ -454,7 +454,7 @@ namespace WFBot.Features.Utils
         }*/
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
         public List<Riven> GetMatchedWeapon(string weapon)
@@ -481,7 +481,7 @@ namespace WFBot.Features.Utils
         public DateTime ConvertUnixToDatetime(long unix)
         {
             var date = DateTimeOffset.FromUnixTimeSeconds(unix);
-            return date.UtcDateTime + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return date.UtcDateTime + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
         public void TranslateSentientOutpost(SentientOutpost se)
