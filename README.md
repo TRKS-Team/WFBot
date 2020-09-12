@@ -1,5 +1,8 @@
 # WFBot
 
+**这是原分支, 代表支持 Mahua(已经停止维护) 的 WFBot.**  
+**已经停止维护, 请查看 universal 分支.**  
+
 ![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
