@@ -105,10 +105,11 @@ namespace WFBot
         private void InitLogger()
         {
             Directory.CreateDirectory("WFBotLogs");
-            var listener = new TextWriterTraceListener(File.Open(Path.Combine($"WFBotLogs", $"WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log"),
+            var fileListener = new TextWriterTraceListener(File.Open(Path.Combine($"WFBotLogs", $"WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log"),
                     FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
             { TraceOutputOptions = TraceOptions.Timestamp };
-            Trace.Listeners.Add(listener);
+            Trace.Listeners.Add(fileListener);
+            Trace.Listeners.Add(new ConsoleTraceListener());
             Trace.AutoFlush = true;
             Trace.WriteLine($"WFBot start.", "WFBot Core");
         }

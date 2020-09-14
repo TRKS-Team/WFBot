@@ -132,17 +132,18 @@ Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 
 ---
 
-## 用到的开源库
+## 版权及开源库
 
 |                            名字                             | 开源协议 |         用来干嘛         |
 | :---------------------------------------------------------: | :------: | :----------------------: |
-|            [Newbe.Mahua](http://www.newbe.pro/)             |   MIT    |      QQ 机器人框架       |
 |     [Humanizer](https://github.com/Humanizr/Humanizer)      |   MIT    | 将时间转为中国人可读文字 |
 |     [Newtonsoft.Json](https://www.newtonsoft.com/json)      |   MIT    |    比较可靠的 Json 库    |
 |         [Costura](https://github.com/Fody/Costura)          |   MIT    |       集成引用文件       |
 |            [Fody](https://github.com/Fody/Fody)             |   MIT    |       Costura 依赖       |
 | [Fastenshtein](https://github.com/DanHarltey/Fastenshtein)  |   MIT    |     字符串相似度比较     |
 | [TextMessageCore](https://github.com/Cyl18/TextCommandCore) |  WTFPL   |   我写的我写的!命令库    |
+
+Warframe 是 Digital Extremes Ltd. 的商标.
 
 ---
 
