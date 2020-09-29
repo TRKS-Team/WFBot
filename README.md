@@ -1,11 +1,10 @@
 # WFBot
 
-![](https://ci.appveyor.com/api/projects/status/xdrcdmge2pub0ga6)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 机器人.  
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
-我们**不允许**任何商业用途, 如果你发现有人违反, 请向我反馈.
+我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
 
-> 基于 傻屌[Newbe](https://github.com/newbe36524) 的 [Newbe.Mahua.Framework](https://github.com/newbe36524/Newbe.Mahua.Framework) 开发.  
+> 基于 漂亮的 [Mirai](https://github.com/mamoe/mirai) 开发.  
 > 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
 > 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
@@ -18,81 +17,25 @@
 
 ![Processon](docs/images/processon.png)
 
-> 本插件附带自动更新.  
-> 最新的插件会部署到 启用自动更新的机器人 上.
-> 如果我手滑引爆了所有机器人, 请不要慌张.  
-> 如果全爆了, **没关系** 因为我的机器人也爆了.  
-> 很快 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) 上将会上传正确的版本 **手动更新**即可.  
-> 此处记录引爆次数: \*4
-
-> ~~目前有一个由我维护, 暂时稳定的机器人, 现在可以直接邀请入群 QQ: `2504645673`~~  
-> ~~↑ 此公用机器人已经被永久封号,近期可能不会恢复了...有需求的请自行部署.~~  
-> **用户请务必添加 QQ 群: [878527767](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)**  
-> ~~目前**不建议**使用我部署的机器人! 负荷过大导致**经常失效**! 处在后面位置的群收到通知的速度会很慢!~~  
-> **自己按照下面的说明部署可以享受完全体**
-
-## ~~如何使用公用机器人~~
-> **可惜的是 第二套公用机器人方案也因为封号被迫终止**  
-> **没有条件但是想用机器人的 未来将会提供新方案**  
-> **尽请期待**  
-
-> 如果你使用过我的公用机器人 你就知道在 2019.4.1 公用机器人停止了服务  
-> 从现在开始所提供的的公用机器人不一定稳定 但是我会尽量保证  
-> 这要建立在你们的支持上
-
-> 除了下面表单邮件内所认证的机器人  
-> 其他机器人的服务**不会**代表 WFBot  
-> 如果你遇到其他机器人出现了问题 请先找对应负责人反映
-
-**第一步: Checkin**
-
-我们的公用机器人需要一个小审核:
-
-1. 信息的真实度
-2. 申请人必须在[官方群](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)里
-
-不难理解吧  
-这两个条件只是为了能够联系到我的用户而已.
-
-**第二步: 填写 Google 表单**
-
-**[GoogleForm](https://docs.google.com/forms/d/e/1FAIpQLSfwOeuOgbbnaSnMsRtL5QMSkao3k2u26FWwF5F4mV0mMtAQMg/viewform?usp=sf_link)**  
-这个链接应该不需要科学上网就可以使用  
-但你如果遇到困难 你可以求助[群](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)里的群友
-
-**第三步: 收到邮件**
-
-你将会收到一封邮件  
-_(如果没有, 看看垃圾箱)_
-
-如果拒绝申请: 请回到**第一步**  
-如果通过申请：请按照**邮件**操作
-
 ## 如何部署(目前使用机器人的唯一方案)
 
 > 如果你在部署过程中遇到了问题, 请先查看下面的 FAQ. 如果还是无法解决, 可以添加上面的个人 QQ 群或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
 
 [**部署 FAQ (常见问题解答)**](docs/faq.md)
 
-### 第一步: 选择以下几种 QQ 机器人平台
+### 第一步: 选择以下一种 QQ 机器人平台
 
-|                     官网                      |    收费性质     |           插件压缩包名           |
-| :-------------------------------------------: | :-------------: | :------------------------------: |
-|       [酷 Q Pro / Air](https://cqp.cc/)       | 免费阉割版/收费 | CQP.zip **(需要启用开发者模式)** |
-| [QQLight](https://www.52chat.cc/download.php) | 免费阉割版/收费 |           QQLight.zip            |
-| [Cleverqq(原 IRQQ)](https://www.cleverqq.cn/) | 免费阉割版/收费 |           CleverQQ.zip           |
-|         [MyPCQQ](https://mypcqq.cc/)          | 免费阉割版/收费 |             MPQ.zip              |
+Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 
-> **酷 Q 平台 需要启用*开发者模式*才能看到本插件 (感谢来自一位用户的提醒), 具体启用方法参见 [FAQ](docs/faq.md).**  
+> 你可以自己手写 Connector 来适配新的 QQ 机器人.  
 > **我们建议你将你选择的机器人放在一台 24 小时运行的电脑/服务器上.**
 
 ### 第二步: 安装插件文件
 
-#### 从 GitHub Release / AppVeyor (推荐)
+#### 直接下载
 
-1. 下载 [~~.NET Framework 4.6.2~~](https://dotnet.microsoft.com/download/thank-you/net462) 并安装. **经过用户反馈, 目前插件版本仅 [.NET Framework 4.7.1](https://dotnet.microsoft.com/download/thank-you/net471) 及以上版本可用, 对你的不便请谅解, 我们将很(gu)快(gu)修复这个问题**. (Windows 10 最新版自带 4.7.1)
-2. 从 [GitHub Release](https://github.com/TRKS-Team/WFBot/releases/latest) / [AppVeyor](https://ci.appveyor.com/project/TRKS-Team/wfbot/build/artifacts) 选择对应的平台并下载, 解压到机器人根目录.
-3. 享受这个插件的的快感吧!
+1. 下载 [~~.NET Core 3.1~~](https://dotnet.microsoft.com/download/dotnet-core/3.1) 并安装. **Windows 请下载 Desktop Runtime, 如果不懂什么意思请加群**.
+2. 先偷个懒, 加群来下, 有空再改
 
 #### 或者: 自己编译
 
@@ -100,20 +43,10 @@ _(如果没有, 看看垃圾箱)_
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 如果你修改了代码并应用到机器人上, 请在 GitHub 上开源其最新版本.  
-> 我们强烈建议在 Windows 平台下编译这个项目.  
 > **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
 
-1. 安装 `Visual Studio 2019` (由于某个人的偷懒 不支持 VS2017.), 以及 `.NET Framework 4.6.2 SDK.`
-2. 下载这个仓库, 使用 `TRKS.WF.QQBot\build.bat` 来生成一份插件.
-
-   ```bash
-    git clone https://github.com/TRKS-Team/WFBot.git
-    ./WFBot/TRKS.WF.QQBot/build.bat
-   ```
-
-3. 将生成的所有 `TRKS.WF.QQBot\bin\[对应 QQ 平台]` 文件夹内的所有文件拖入机器人根目录.
-
-4. 删除 `YUELUO\TRKS.WF.QQBot`下的 `trks.wf.qqbot.dll.config` 否则机器人将不会启动
+1. 安装 `Visual Studio 2019` , 以及 `.NET Core 3.1 SDK.`
+2. 下载这个仓库, 右键 WFBot 点部署, 有 Linux Deploy 和 Windows Deploy 两个版本.
 
 ### 第三步: 自定义
 
@@ -161,8 +94,8 @@ _(如果没有, 看看垃圾箱)_
   > _新警报也会自动发送到**启用了通知功能的群**._
 - **_入侵_**: **/入侵** 当前的所有入侵.
   > _新入侵也会自动发送到**启用了通知功能的群**._
-- **_S船_**: **/s船** 来查询s船的信息
-  > _新S船也会自动发送到**启用了通知功能的群**._
+- **_S 船_**: **/s 船** 来查询 s 船的信息
+  > _新 S 船也会自动发送到**启用了通知功能的群**._
 - **_突击_**: **/突击** 当前的所有突击.
 - **_平原时间_**: **/平原** **地球平原** 现在的时间 和 **奥布山谷 (金星平原)** 现在的温度.
 - **_活动_**: **/活动** 目前的所有活动
@@ -199,21 +132,18 @@ _(如果没有, 看看垃圾箱)_
 
 ---
 
-## 用到的开源库
+## 版权及开源库
 
-|                             名字                             |  开源协议  |         用来干嘛         |
-| :----------------------------------------------------------: | :--------: | :----------------------: |
-|        [Autofac](https://github.com/autofac/Autofac)         |    MIT     |        Mahua 依赖        |
-|        [MediatR](https://github.com/jbogard/MediatR)         | Apache-2.0 |        Mahua 依赖        |
-| [MessagePack](https://github.com/neuecc/MessagePack-CSharp/) |    MIT     |        Mahua 依赖        |
-|         [Refit](https://github.com/reactiveui/refit)         |    MIT     |        Mahua 依赖        |
-|             [Newbe.Mahua](http://www.newbe.pro/)             |    MIT     |      QQ 机器人框架       |
-|      [Humanizer](https://github.com/Humanizr/Humanizer)      |    MIT     | 将时间转为中国人可读文字 |
-|      [Newtonsoft.Json](https://www.newtonsoft.com/json)      |    MIT     |    比较可靠的 Json 库    |
-|          [Costura](https://github.com/Fody/Costura)          |    MIT     |       集成引用文件       |
-|             [Fody](https://github.com/Fody/Fody)             |    MIT     |       Costura 依赖       |
-|  [Fastenshtein](https://github.com/DanHarltey/Fastenshtein)  |    MIT     |     字符串相似度比较     |
-| [TextMessageCore](https://github.com/Cyl18/TextCommandCore)  |   WTFPL    |   我写的我写的!命令库    |
+|                            名字                             | 开源协议 |         用来干嘛         |
+| :---------------------------------------------------------: | :------: | :----------------------: |
+|     [Humanizer](https://github.com/Humanizr/Humanizer)      |   MIT    | 将时间转为中国人可读文字 |
+|     [Newtonsoft.Json](https://www.newtonsoft.com/json)      |   MIT    |    比较可靠的 Json 库    |
+|         [Costura](https://github.com/Fody/Costura)          |   MIT    |       集成引用文件       |
+|            [Fody](https://github.com/Fody/Fody)             |   MIT    |       Costura 依赖       |
+| [Fastenshtein](https://github.com/DanHarltey/Fastenshtein)  |   MIT    |     字符串相似度比较     |
+| [TextMessageCore](https://github.com/Cyl18/TextCommandCore) |  WTFPL   |   我写的我写的!命令库    |
+
+Warframe 是 Digital Extremes Ltd. 的商标.
 
 ---
 
@@ -275,4 +205,4 @@ _(如果没有, 看看垃圾箱)_
   老腊肉
   爱发电用户\_mQps
 
-***感谢这些赞助者, 开源项目有你们才有未来***
+**_感谢这些赞助者, 开源项目有你们才有未来_**
