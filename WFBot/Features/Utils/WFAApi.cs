@@ -3,6 +3,7 @@ using System.Timers;
 using GammaLibrary.Extensions;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
+using WFBot.Windows;
 
 namespace WFBot.Features.Utils
 {

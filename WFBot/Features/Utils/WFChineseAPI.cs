@@ -15,6 +15,7 @@ using WFBot.Events;
 using WFBot.Features.Common;
 using WFBot.Features.Other;
 using WFBot.Utils;
+using WFBot.Windows;
 
 namespace WFBot.Features.Utils
 {
@@ -146,11 +147,12 @@ namespace WFBot.Features.Utils
     public class WFChineseAPI
     {
         private WFTranslator translator => WFResource.WFTranslator;
-        private string platform => Config.Instance.Platform.GetSymbols().First();
+        private static string platform => Config.Instance.Platform.GetSymbols().First();
+        private static readonly string WFstat = $"https://api.warframestat.us/{platform}";
 
         public List<WFInvasion> GetInvasions()
         {
-            var invasions = WebHelper.DownloadJson<List<WFInvasion>>($"https://api.warframestat.us/{platform}/invasions");
+            var invasions = WebHelper.DownloadJson<List<WFInvasion>>(WFstat + "/invasions");
             foreach (var invasion in invasions)
             {
                 translator.TranslateInvasion(invasion);
@@ -164,7 +166,7 @@ namespace WFBot.Features.Utils
         {
             try
             {
-                var alerts = WebHelper.DownloadJson<List<WFAlert>>($"https://api.warframestat.us/{platform}/alerts");
+                var alerts = WebHelper.DownloadJson<List<WFAlert>>(WFstat + "/alerts");
                 foreach (var alert in alerts)
                 {
                     translator.TranslateAlert(alert);
@@ -190,63 +192,68 @@ namespace WFBot.Features.Utils
             }
             return new List<WFAlert>();
         }
-
         public List<Kuva> GetKuvaMissions()
         {
-            var kuvas = WebHelper.DownloadJson<List<Kuva>>("https://api.warframestat.us/pc/kuva");
+            var kuvas = WebHelper.DownloadJson<List<Kuva>>(WFstat + "/kuva");
             translator.TranslateKuvaMission(kuvas);
             return kuvas;
         }
         public Arbitration GetArbitrationMission()
         {
-            var ar = WebHelper.DownloadJson<Arbitration>("https://api.warframestat.us/pc/arbitration");
+            var ar = WebHelper.DownloadJson<Arbitration>(WFstat + "/arbitration");
             translator.TranslateArbitrationMission(ar);
             return ar;
         }
         public WFNightWave GetNightWave()
         {
-            var wave = WebHelper.DownloadJson<WFNightWave>($"https://api.warframestat.us/{platform}/nightwave");
+            var wave = WebHelper.DownloadJson<WFNightWave>(WFstat + "/nightwave");
             translator.TranslateNightWave(wave);
             return wave;
         }
         public CetusCycle GetCetusCycle()
         {
-            var cycle = WebHelper.DownloadJson<CetusCycle>($"https://api.warframestat.us/{platform}/cetusCycle");
+            var cycle = WebHelper.DownloadJson<CetusCycle>(WFstat + "/cetusCycle");
             cycle.Expiry = GetRealTime(cycle.Expiry);
             return cycle;
         }
 
         public VallisCycle GetVallisCycle()
         {
-            var cycle = WebHelper.DownloadJson<VallisCycle>($"https://api.warframestat.us/{platform}/vallisCycle");
+            var cycle = WebHelper.DownloadJson<VallisCycle>(WFstat + "/vallisCycle");
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
         public EarthCycle GetEarthCycle()
         {
-            var cycle = WebHelper.DownloadJson<EarthCycle>($"https://api.warframestat.us/{platform}/earthCycle");
+            var cycle = WebHelper.DownloadJson<EarthCycle>(WFstat + "/earthCycle");
+            cycle.expiry = GetRealTime(cycle.expiry);
+            return cycle;
+        }
+
+        public CambionCycle GetCambionCycle()
+        {
+            var cycle = WebHelper.DownloadJson<CambionCycle>(WFstat + "/cambionCycle");
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
 
 
-
         public Sortie GetSortie()
         {
-            var sortie = WebHelper.DownloadJson<Sortie>($"https://api.warframestat.us/{platform}/sortie");
+            var sortie = WebHelper.DownloadJson<Sortie>(WFstat + "/sortie");
             translator.TranslateSortie(sortie);
             return sortie;
         }
 
         public List<SyndicateMission> GetSyndicateMissions()
         {
-            var missions = WebHelper.DownloadJson<List<SyndicateMission>>($"https://api.warframestat.us/{platform}/syndicateMissions");
+            var missions = WebHelper.DownloadJson<List<SyndicateMission>>(WFstat + "/syndicateMissions");
             translator.TranslateSyndicateMission(missions);
             return missions;
         }
         public VoidTrader GetVoidTrader()
         {
-            var trader = WebHelper.DownloadJson<VoidTrader>($"https://api.warframestat.us/{platform}/voidTrader");
+            var trader = WebHelper.DownloadJson<VoidTrader>(WFstat + "/voidTrader");
             trader.activation = GetRealTime(trader.activation);
             trader.expiry = GetRealTime(trader.expiry);
             translator.TranslateVoidTrader(trader);
@@ -255,14 +262,14 @@ namespace WFBot.Features.Utils
 
         public List<Fissure> GetFissures()
         {
-            var fissures = WebHelper.DownloadJson<List<Fissure>>($"https://api.warframestat.us/{platform}/fissures");
+            var fissures = WebHelper.DownloadJson<List<Fissure>>(WFstat + "/fissures");
             translator.TranslateFissures(fissures);
             return fissures;
         }
 
         public List<Event> GetEvents()
         {
-            var events = WebHelper.DownloadJson<List<Event>>($"https://api.warframestat.us/{platform}/events");
+            var events = WebHelper.DownloadJson<List<Event>>(WFstat + "/events");
             translator.TranslateEvents(events);
             foreach (var @event in events)
             {
@@ -274,14 +281,14 @@ namespace WFBot.Features.Utils
 
         public List<PersistentEnemie> GetPersistentEnemies()
         {
-            var enemies = WebHelper.DownloadJson<List<PersistentEnemie>>("https://api.warframestat.us/pc/persistentEnemies");
+            var enemies = WebHelper.DownloadJson<List<PersistentEnemie>>(WFstat + "/persistentEnemies");
             translator.TranslatePersistentEnemies(enemies);
             return enemies;
         }
 
         public SentientOutpost GetSentientOutpost()
         {
-            var outpost = WebHelper.DownloadJson<SentientOutpost>("https://api.warframestat.us/pc/sentientOutposts");
+            var outpost = WebHelper.DownloadJson<SentientOutpost>(WFstat + "/sentientOutposts");
             translator.TranslateSentientOutpost(outpost);
             return outpost;
         }

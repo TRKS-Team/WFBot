@@ -4,6 +4,14 @@ using Newtonsoft.Json;
 namespace WFBot.Features.Utils
 {
 
+    public class CambionCycle
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public DateTime expiry { get; set; }
+        public string active { get; set; }
+    }
+
     public class Lib
     {
         public int id { get; set; }

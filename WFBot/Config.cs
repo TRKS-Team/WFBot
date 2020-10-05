@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using WFBot.Utils;
+using WFBot.Windows;
 
 namespace WFBot
 {

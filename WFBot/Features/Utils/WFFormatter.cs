@@ -10,6 +10,7 @@ using Humanizer.Localisation;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.User;
 using WFBot.Features.Common;
+using WFBot.Windows;
 
 namespace WFBot.Features.Utils
 {
@@ -359,6 +360,29 @@ namespace WFBot.Features.Utils
             sb.AppendLine($"现在金星平原的温度是: {temp}");
             //sb.AppendLine($"将在{cycle.expiry} 变为 {nextTemp}");
             sb.Append($"距离 {nextTemp} 还有 {time}");
+
+            return sb.ToString();
+        }
+
+        [Pure]
+        public static string ToString(CambionCycle cycle)
+        {
+            var time = (cycle.expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"),
+                TimeUnit.Hour, TimeUnit.Second, " ");
+            var status = cycle.active.FirstCharToUpper();
+            var nextstatus = "";
+            switch (status)
+            {
+                case "Fass":
+                    nextstatus = "Vome";
+                    break;
+                case "Vome":
+                    nextstatus = "Fass";
+                    break;
+            }
+            var sb = new StringBuilder();
+            sb.AppendLine($"现在火卫二平原的状态是: {status}");
+            sb.Append($"距离 {nextstatus} 还有 {time}");
 
             return sb.ToString();
         }

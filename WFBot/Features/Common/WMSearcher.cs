@@ -8,6 +8,7 @@ using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using WFBot.Windows;
 
 namespace WFBot.Features.Common
 {

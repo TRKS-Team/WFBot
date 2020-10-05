@@ -18,9 +18,11 @@ namespace WFBot.Features.Common
             var cetuscycle = api.GetCetusCycle();
             var valliscycle = api.GetVallisCycle();
             var earthcycle = api.GetEarthCycle();
+            var cambioncycle = api.GetCambionCycle();
             var msg = $"{WFFormatter.ToString(cetuscycle)}\r\n" +
-                      $"{WFFormatter.ToString(valliscycle)}\r\n" +
-                      $"{WFFormatter.ToString(earthcycle)}";
+                    $"{WFFormatter.ToString(valliscycle)}\r\n" +
+                    $"{WFFormatter.ToString(earthcycle)}\r\n" +
+                    $"{WFFormatter.ToString(cambioncycle)}";
 
             Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
         }
