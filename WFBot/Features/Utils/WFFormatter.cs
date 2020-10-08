@@ -258,7 +258,7 @@ namespace WFBot.Features.Utils
             var sb = new StringBuilder();
             if (tier >= 1 && tier <= 5)
             {
-                fissures = fissures.Where(f => f.tierNum == 5).ToList();
+                fissures = fissures.Where(f => f.tierNum == tier).ToList();
                 sb.AppendLine($"以下是所有当前 {tier} 阶裂隙:");
             }
             foreach (var fissure in fissures.OrderBy(f => f.tierNum))
