@@ -141,7 +141,10 @@ namespace WFBot.Features.Common
             }
 
             var msg = string.Empty;
-            Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+            if (Config.Instance.NotifyBeforeResult)
+            {
+                Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+            }
 
             var failed = false;
             if (Config.Instance.IsThirdPartyWM)

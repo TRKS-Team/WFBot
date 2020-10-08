@@ -94,13 +94,14 @@ namespace WFBot.Events
             _wfStatus.SendTranslateResult(Group, word);
         }
 
-        [Matchers("遗物")]
+        /*[Matchers("遗物")]
         [CombineParams]
         void RelicInfo(string word)
         {
             word = word.Format();
             _wfStatus.SendRelicInfo(Group, word);
-        }
+        }*/
+        // 吃屎去 我改天改成掉落查询
 
         [Matchers("警报")]
         void Alerts()
@@ -140,9 +141,9 @@ namespace WFBot.Events
 
 
         [Matchers("裂隙", "裂缝")]
-        void Fissures()
+        void Fissures(int tier = 0)
         {
-            _wfStatus.SendFissures(Group);
+            _wfStatus.SendFissures(Group, tier);
         }
 
         [Matchers("小小黑", "追随者")]

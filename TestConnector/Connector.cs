@@ -27,7 +27,8 @@ namespace TestConnector
 
         public override void OnCommandLineInput(string content)
         {
-            ReportGroupMessage("fork", "fork", content);
+            ReportGroupMessage("0", "0", content);
+            // 宝贝 这里填fork会报错的
         }
     }
 }

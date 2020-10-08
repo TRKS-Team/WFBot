@@ -253,10 +253,15 @@ namespace WFBot.Features.Utils
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(List<Fissure> fissures)
+        public static string ToString(List<Fissure> fissures, int tier)
         {
             var sb = new StringBuilder();
-            foreach (var fissure in fissures.OrderBy(f => f.tier))
+            if (tier >= 1 && tier <= 5)
+            {
+                fissures = fissures.Where(f => f.tierNum == 5).ToList();
+                sb.AppendLine($"以下是所有当前 {tier} 阶裂隙:");
+            }
+            foreach (var fissure in fissures.OrderBy(f => f.tierNum))
             {
                 sb.AppendLine($"[{fissure.node}]");
                 sb.AppendLine($"类型:    {fissure.missionType}-{fissure.enemy}");

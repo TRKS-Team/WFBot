@@ -72,11 +72,11 @@ namespace WFBot.Features.Common
         }
 
         //public void SendFissures(string group, List<string> words)
-        public void SendFissures(GroupID group)
+        public void SendFissures(GroupID group, int tier)
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var fissures = api.GetFissures().Where(fissure => fissure.active).ToList();
-            var msg = WFFormatter.ToString(fissures);
+            var msg = WFFormatter.ToString(fissures, tier);
             Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
             // _fissures = api.GetFissures();
         }
