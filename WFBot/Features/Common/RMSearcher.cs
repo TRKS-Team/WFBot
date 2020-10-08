@@ -83,7 +83,10 @@ namespace WFBot.Features.Common
                     var weaponinfo = translator.GetMatchedWeapon(weapon.Format()); 
                     if (weaponinfo.Any())
                     {
-                        Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                        if (Config.Instance.NotifyBeforeResult)
+                        {
+                            Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                        }
                         var orders = GetRivenOrders(weaponinfo.First().name);
                         var data = GetRivenDatas().Where(d => d.compatibility.Format() == weapon).ToList();
                         var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);

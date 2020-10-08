@@ -9,57 +9,79 @@
 > 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
 
-![MONEY](docs/images/MONEY.png) --by @Lasm_Gratel  
+> 本分支是WFBot通用版的分支, 原基于Mahua框架(已停更)的可在[这里](https://github.com/TRKS-Team/WFBot/tree/old-sbmahua)找到  
+> 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台
+
+![MONEY](docs/images/MONEY.png) --by [@Lasm_Gratel](https://github.com/LasmGratel)  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
-**您的赞助当然~~你妈~~会用来维持公用机器人, 也能推动我继续维护本插件.**
-
-→[思维导图](https://www.processon.com/view/link/5d1e2622e4b0fdb331d33d23#map)←
-
-![Processon](docs/images/processon.png)
+**您的赞助会成为我们维护此项目的动力**
 
 ## 如何部署(目前使用机器人的唯一方案)
 
-> 如果你在部署过程中遇到了问题, 请先查看下面的 FAQ. 如果还是无法解决, 可以添加上面的个人 QQ 群或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
+> 如果你在部署过程中遇到了问题, 请先查看下面的 FAQ. 如果还是无法解决, 可以添加 [QQ 群](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues).
 
 [**部署 FAQ (常见问题解答)**](docs/faq.md)
 
-### 第一步: 选择以下一种 QQ 机器人平台
+### 第一步: 下载Mirai机器人平台
 
 Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 
-> 你可以自己手写 Connector 来适配新的 QQ 机器人.  
-> **我们建议你将你选择的机器人放在一台 24 小时运行的电脑/服务器上.**
+> 你可以自己手写 Connector 来适配其他机器人平台(如Discord).  
+> 对其他平台的官方支持以后*会写的*  
+> **我们建议将机器人运行在 24 小时运行的电脑/服务器 上.**  
+> **摆脱了~~SB~~Mahua框架, Mirai和WFBot都支持了Linux/Windows/Mac OS**
 
-### 第二步: 安装插件文件
+### 第二步: 获取WFBot插件本体
 
 #### 直接下载
 
 1. 下载 [~~.NET Core 3.1~~](https://dotnet.microsoft.com/download/dotnet-core/3.1) 并安装. **Windows 请下载 Desktop Runtime, 如果不懂什么意思请加群**.
 2. 先偷个懒, 加群来下, 有空再改
 
-#### 或者: 自己编译
+#### 自己编译(可选)
 
-- 新! 针对改代码(如文字提示)又想~~享受~~自动更新的客户 你可以写一个 WFBot 的[插件](docs/plugin.md)
+- 新! 针对改代码(如文字提示)又想享受自动更新的客户 你可以写一个 WFBot 的[插件](docs/plugin.md)  
+↑ 自动更新亡了 以后写
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 如果你修改了代码并应用到机器人上, 请在 GitHub 上开源其最新版本.  
-> **如果你使用非官方版 我们将不会解答除了代码结构和原理之外的其他问题.**
+> **如果你使用非官方版 我们将不保证运行安全与稳定.**
 
 1. 安装 `Visual Studio 2019` , 以及 `.NET Core 3.1 SDK.`
-2. 下载这个仓库, 右键 WFBot 点部署, 有 Linux Deploy 和 Windows Deploy 两个版本.
+2. 下载这个仓库, 使用`Visual Studio 2019`打开`TRKS.WF.QQBot\WFBot.sln`
+3. 找到工具栏下的解决方案配置 选择`Linux Release`或`Windows Release`  
+4. 在上方工具栏选择`生成-生成解决方案` 左下角应该出现`生成成功`
+5. 将`TRKS.WF.QQBot\MiraiHTTPConnector\bin\Windows Release\netcoreapp3.1`所有文件拖入`TRKS.WF.QQBot\WFBot\bin\Windows Release\netcoreapp3.1\WFBotConnector`
+6. 将`WFBot\bin\Windows Release\netcoreapp3.1`打包放到合适的位置
 
-### 第三步: 自定义
+*这堆东西应该以后会有一个脚本完成*
 
-可以在插件设置内干一些奇怪的事情.  
+### 第三步: 安装Mirai插件和修改配置文件
+
+本插件使用了MiraiHttp插件 你可以在[GithubRelease](https://github.com/project-mirai/mirai-api-http/releases/latest)找到最新版  
+运行一遍Mirai, 并将下载的jar文件拖入`plugins`文件夹内  
+再次运行Mirai, 修改`config\MiraiApiHttp\setting.yml`  
+我们建议仅修改`authKey`字段后双引号内的内容, 设置一个八位数以上的密码  
+运行一次WFBot, 找到目录下的`MiraiConfig.json`  
+在`AuthKey`后引号内填入刚才设置的密码, 将`BotQQ`后数字改为机器人的QQ号  
+运行Mirai, 再运行WFBot, 你应该能在WFBot控制台看到`WFBot fully loaded.`
+
+### 第四步: 自定义
+
+> WFBot控制台内输入ui可以打开设置窗口(仅Windows)(以后会适配全平台)   
+
 可自定义的内容如下:
 
 - 修改群通知功能所用的口令 **(默认为 7 个 \*)**
 - 是否需要前导`/`来使用命令 **(默认需要)**
 - 包含 哪些奖励的入侵任务 需要通知到群内 **(默认参见设置)**
-- 用于接收报错的 QQ 号 **(调试使用, 建议留空)**
+- 用于管理机器人的 QQ号 **(填你自己的, 用来修改敏感信息和接收报错)**
 - 是否自动同意 别人邀请机器人入群 **(无需群内管理)** 和 自主申请入群 **(需群内管理)**
 - WFA 授权的 `ClientId` 和 `ClientSecret` (非必须, 见下)
-- 是否使用第三方词库 和 中转后的 WarframeMarket 接口 (需 WFA 授权)
+- WM商品和紫卡查询单次发送的条数
+- 每分钟机器人调用次数限制
+- 是否使用中转后的 WarframeMarket 接口 (需 WFA 授权)
+- [GithubToken](docs/token.md) **(非必须)**
 
 可以使用的功能如下:
 
@@ -84,51 +106,49 @@ Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 ### 群内命令
 
 **设置内可以更改命令前无需斜杠.**
+> 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 
-- **_赤毒_**: **/赤毒** 当前的所有赤毒任务
-- **_仲裁_**: **/仲裁** 当前的仲裁警报
+- **_赤毒_**: **/赤毒** 所有赤毒任务
+- **_仲裁_**: **/仲裁** 仲裁警报
 - **_Wiki_**: **/wiki [关键词]** 搜索[Wiki](https://warframe.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5)上的页面
-- **_午夜电波_**: **/午夜电波** 每周/每日/即将过期 的挑战.
+- **_午夜电波_**: **/午夜电波** 每周/每日/即将过期的挑战.
 - **_机器人状态_**: **/status** 机器人的运行状态.
-- **_警报_**: **/警报** 当前的所有警报.
+- **_警报_**: **/警报** 所有警报.
   > _新警报也会自动发送到**启用了通知功能的群**._
-- **_入侵_**: **/入侵** 当前的所有入侵.
+- **_入侵_**: **/入侵** 所有入侵.
   > _新入侵也会自动发送到**启用了通知功能的群**._
-- **_S 船_**: **/s 船** 来查询 s 船的信息
-  > _新 S 船也会自动发送到**启用了通知功能的群**._
-- **_突击_**: **/突击** 当前的所有突击.
-- **_平原时间_**: **/平原** **地球平原** 现在的时间 和 **奥布山谷 (金星平原)** 现在的温度.
-- **_活动_**: **/活动** 目前的所有活动
-- **_虚空商人_**: **/虚空商人 (或奸商)** 奸商的状态.
+- **_突击_**: **/突击** 本日突击
+- **_平原时间_**: **/平原** 地球&金星&火卫二的时间循环
+- **_活动_**: **/活动** 所有活动
+- **_虚空商人_**: **/虚空商人 (或奸商)** 
   > _如果虚空商人已经抵达将会输出**所有的商品和价格**, 长度较长._
-- **_WarframeMarket_**: **/查询 \[物品名称]**
+- **_WarframeMarket_**: **/查询 <物品名称> {-qr}(快捷回复) {-b}(查询买家)**
   > - _目前模糊匹配功能十分强大,无需强制按照格式_
   > - _查询未开紫卡请输入: 手枪未开紫卡_
-- **_紫卡市场_**: **/紫卡 \[武器名称]**
+- **_紫卡市场_**: **/紫卡 <武器名称>**
   > _数据来自 [**WFA 紫卡市场**](https://riven.richasy.cn/#/)_
-- **_地球赏金_**: **/地球赏金 \[第几个(可选)]** 地球平原的 全部/单一 赏金任务.
-- **_金星赏金_**: **/金星赏金 \[第几个(可选)]** 金星平原的 全部/单一 赏金任务.
+- **_地球赏金_**: **/地球赏金 [赏金等级(如5)]** 地球平原的 全部/单一 赏金任务.
+- **_金星赏金_**: **/金星赏金 [赏金等级(如5)]** 金星平原的 全部/单一 赏金任务.
 - **_裂隙_**: **/裂隙** 全部裂隙.
-- **_遗物_**: **/遗物 \[关键词] (eg. 后纪 s3, 前纪 B3)** 所有与关键词有关的遗物.
-- **_翻译_**: **/遗物 \[关键词] (eg. 犀牛 prime, 致残突击)** 中 => 英 或 英 => 中
+- **_翻译_**: **/翻译 <关键词> (eg. 犀牛 prime, 致残突击)** 中 => 英 或 英 => 中
 - **_小小黑_**: **/小小黑** 来查询目前追随者的信息.
   > _仅限此活动激活时可以使用_
 
-另外还有一些不影响大局的调试命令和命令别名, 可以自己在代码中 ([私聊](https://github.com/TRKS-Team/WFBot/blob/master/TRKS.WF.QQBot/MahuaEvents/PrivateMessageReceivedMahuaEvent2.cs#L68)/[群聊](https://github.com/TRKS-Team/WFBot/blob/master/TRKS.WF.QQBot/MahuaEvents/GroupMessageReceivedMahuaEvent1.cs#L53)) 查阅.
+另外还有一些不影响大局的调试命令和命令别名, 可以自己在代码中 ([私聊](https://github.com/TRKS-Team/WFBot/blob/universal/WFBot/Events/PrivateMessageReceivedEvent.cs)/[群聊](https://github.com/TRKS-Team/WFBot/blob/universal/WFBot/Events/MessageReceivedEvent.cs)) 查阅.
 
 ### **私聊**命令
 
 请不要把七个星号(默认口令)替换为群号.
 
-- **用于启用群通知:** `添加群 [口令] [群号]`  
+- **用于启用群通知:** `添加群 <口令> <群号>`  
   默认为: `添加群 ******* 群号`
-- **用于禁用群通知:** `删除群 [口令] [群号]`  
+- **用于禁用群通知:** `删除群 <口令> <群号>`  
   默认为: `删除群 ******* 群号`
 
 ### 其他东西
 
-直接邀请机器人机器人就会同意. (可修改配置)  
-默认口令: `*******` (对没错就是七个星号, 有人猜得出我玩了什么梗吗)
+直接邀请机器人机器人就会同意 (可修改配置)  
+默认口令: `*******` (某梗)
 
 ---
 
@@ -171,38 +191,44 @@ Warframe 是 Digital Extremes Ltd. 的商标.
   > **TheRealKamisama** 项目发起人 主要开发者 文档撰写 问题回答 ~~骗钱~~  
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)  
-  > **[@wu452148993](https://github.com/wu452148993)** 解决了一个令我很头疼的问题
+  > **@wu452148993** 解决了一个令我很头疼的问题
 - 问题贡献: wosiwq Aujin JJins mengpf
-- 捐助者 **(真惨)**:
-  KONYCN
-  Trinitatem
-  Pharsaria
-  爱发电用户\_pPYQ
-  L·A·Y
-  aecine
-  Zatermelon
-  wosiwq
-  琪露诺
-  爱发电用户\_Ymhw
-  难喝的鸡汤
-  玄白 SAMA
-  luoroz
-  曲水流觞 ℡
-  SM_Chicov
-  Flashbang233
-  果汁
-  DreaM1ku
-  780712
-  苟 Cy
-  爱发电用户\_JV6j
-  大番茄一号
-  爱发电用户\_FtaS
-  不够温柔
-  爱发电用户\_x9FU
-  Deadwings
-  君莫笑
-  Neptune
-  老腊肉
-  爱发电用户\_mQps
+- 捐助者 **(不惨)**:
+ KONYCN
+Trinitatem
+爱发电用户_pPYQ
+Pharsaria
+LouisJane
+L·A·Y
+dc姐姐好棒哒
+爱发电用户_Ymhw
+琪露诺
+wosiwq
+Zatermelon
+aecine
+DreaM1ku
+果汁
+Flashbang233
+SM_Chicov
+曲水流觞℡
+luoroz
+玄白SAMA
+难喝的鸡汤
+爱发电用户_edf3
+苟Cy
+780712
+vian
+爱发电用户_Ayhf
+爱发电用户_mQps
+老腊肉
+Neptune
+君莫笑
+Deadwings
+爱发电用户_x9FU
+不够温柔
+爱发电用户_FtaS
+大番茄一号
+爱发电用户_JV6j
 
-**_感谢这些赞助者, 开源项目有你们才有未来_**
+
+**_感谢这些贡献者, 开源项目有你们才有未来_**

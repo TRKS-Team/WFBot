@@ -55,25 +55,8 @@ namespace WFBot
         public bool IsPublicBot = false;// 大聪明用户, 别改这个参数.
 
         public DateTime SendSentientOutpostTime = DateTime.Now;
+
+        public bool NotifyBeforeResult = true;
     }
-
-    [Configuration("CoquettishConfig")]
-    internal class CoquettishConfig : Configuration<CoquettishConfig>
-    {
-        public List<CoquettishWord> CoquettishWords = new List<CoquettishWord>();
-    }
-
-    public class CoquettishWord
-    {
-        public CoquettishWord(string word, string result)
-        {
-            this.word = word;
-            this.result = result;
-        }
-
-        public string word { get;}
-        public string result { get;}
-    }
-
 
 }
