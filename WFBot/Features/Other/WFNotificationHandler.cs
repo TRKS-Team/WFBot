@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.XPath;
+using GammaLibrary.Extensions;
+using HtmlAgilityPack;
 using WFBot.Events;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
@@ -17,6 +21,7 @@ namespace WFBot.Features.Other
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
+        private readonly HashSet<WarframeUpdate> sendedUpdateSet = new HashSet<WarframeUpdate>();
         // 如果你把它改到5分钟以上 sentientoutpost会出错
         private WFChineseAPI api => WFResource.WFChineseApi;
         private string platform => Config.Instance.Platform.ToString();
@@ -34,6 +39,7 @@ namespace WFBot.Features.Other
             var alerts = api.GetAlerts();
             var invs = api.GetInvasions();
             var enemies = api.GetPersistentEnemies();
+            var updates = GetWarframeUpdates();
 
             foreach (var alert in alerts)
                 sendedAlertsSet.Add(alert.Id);
@@ -41,6 +47,9 @@ namespace WFBot.Features.Other
                 sendedInvSet.Add(inv.id);
             foreach (var enemy in enemies)
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+            foreach (var update in updates)
+                sendedUpdateSet.Add(update);
+
         }
 
         [CalledByTimer]
@@ -52,12 +61,40 @@ namespace WFBot.Features.Other
                 UpdateInvasionPool();
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
                 UpdatePersistentEnemiePool(); 
+                CheckWarframeUpdates();
                 // CheckSentientOutpost();
                 // 很不幸 S船已经被DE改的我不知道怎么写了
                 // 无法与你继续互动
             }
         }
 
+        public class WarframeUpdate
+        {
+            public string title { get; set; }
+            public string url { get; set; }
+        }
+        public List<WarframeUpdate> GetWarframeUpdates()
+        {
+            var result = new List<WarframeUpdate>();
+            var web = new HtmlWeb();
+            var doc = web.Load("https://forums.warframe.com/forum/3-pc-update-notes/");
+            foreach (var node in doc.DocumentNode.SelectNodes("/html/body/main/div/div/div/div[3]/div/ol/li/div/h4/span/a"))
+            {
+                result.Add(new WarframeUpdate {title = node.InnerText.Trim(), url = node.GetAttributeValue("href", "")});
+            }
+
+            return result;
+        }
+        public void CheckWarframeUpdates()
+        {
+            var updates = GetWarframeUpdates();
+            if (!sendedUpdateSet.Contains(updates.First()))
+            {
+                var msg = WFFormatter.ToString(updates.First());
+                Messenger.Broadcast(msg);
+                sendedUpdateSet.Add(updates.First());
+            }
+        }   
         public void SendSentientOutpost()
         {
             var sb = new StringBuilder();

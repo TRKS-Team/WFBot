@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using WFBot.Features.Other;
 using WFBot.Utils;
 using WFBot.Windows;
 
@@ -57,6 +58,7 @@ namespace WFBot
         public DateTime SendSentientOutpostTime = DateTime.Now;
 
         public bool NotifyBeforeResult = true;
+
     }
 
 }

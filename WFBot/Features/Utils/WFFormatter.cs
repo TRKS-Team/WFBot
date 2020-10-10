@@ -10,6 +10,8 @@ using Humanizer.Localisation;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.User;
 using WFBot.Features.Common;
+using WFBot.Features.Other;
+using WFBot.Utils;
 using WFBot.Windows;
 
 namespace WFBot.Features.Utils
@@ -64,6 +66,14 @@ namespace WFBot.Features.Utils
 
             return sb.ToString().Trim();
         }*/
+        [Pure]
+        public static string ToString(WFNotificationHandler.WarframeUpdate update)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DE发布了一次更新: {update.title}");
+            sb.AppendLine(update.url);
+            return sb.ToString().Trim();
+        }
         [Pure]
         public static string ToString(Kuva kuva)
         {

@@ -172,7 +172,7 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 代码注释极少... 并且大部分都是一些瞎记的.  
 我不写注释是因为: **这代码这么难写 那他应该也难读**  
 如果发现 Bug 或者你有好的想法可以在[GitHub Issue](https://github.com/TRKS-Team/WFBot/issues)里直接提出, 我会尽量去修改和实现.  
-特别鸣谢 [@Cyl18](https://github.com/Cyl18)
+特别鸣谢 [@Cyl18](https://github.com/Cyl18)  
 
 > Cyl18 是我雇佣的一个劳工  
 > 他每天坐在电脑前 看到我 Commit 的时候 他就戳一下 build.bat  
@@ -230,5 +230,6 @@ Deadwings
 大番茄一号
 爱发电用户_JV6j
 
-
+感谢JetBrain公司为我们提供的All-Product-License  
+[![jetbrains](docs/images/jetbrains-variant-3-201x231.png)](https://www.jetbrains.com/?from=WFBot)  
 **_感谢这些贡献者, 开源项目有你们才有未来_**
