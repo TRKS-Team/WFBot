@@ -21,6 +21,8 @@ namespace WFBot
     {
         public static void Main()
         {
+            https://github.com/TRKS-Team/WFBot
+
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
 
