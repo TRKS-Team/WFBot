@@ -70,6 +70,24 @@ namespace WFBot.Features.Other
 
         public class WarframeUpdate
         {
+            protected bool Equals(WarframeUpdate other)
+            {
+                return title == other.title && url == other.url;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((WarframeUpdate) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(title, url);
+            }
+
             public string title { get; set; }
             public string url { get; set; }
         }
