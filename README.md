@@ -4,13 +4,13 @@
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
 
-> 基于 漂亮的 [Mirai](https://github.com/mamoe/mirai) 开发.  
+> 基于 莎比的 [mirai](https://github.com/mamoe/mirai) 及 [mirai-http-api](https://github.com/project-mirai/mirai-api-http) 和 [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) 开发.  
 > 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
 > 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
 
 > 本分支是WFBot通用版的分支, 原基于Mahua框架(已停更)的可在[这里](https://github.com/TRKS-Team/WFBot/tree/old-sbmahua)找到  
-> 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台
+> 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配
 
 ![MONEY](docs/images/MONEY.png) --by [@Lasm_Gratel](https://github.com/LasmGratel)  
 **~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)**  
@@ -35,7 +35,7 @@ Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 
 #### 直接下载
 
-1. 下载 [~~.NET Core 3.1~~](https://dotnet.microsoft.com/download/dotnet-core/3.1) 并安装. **Windows 请下载 Desktop Runtime, 如果不懂什么意思请加群**.
+1. 下载 [~~.NET Core 3.1~~](https://dotnet.microsoft.com/download/dotnet-core/3.1) 并安装. **Windows 请下载 .NET Core 3.1 Desktop Runtime, 如果不懂什么意思请加群**.
 2. 先偷个懒, 加群来下, 有空再改
 
 #### 自己编译(可选)
@@ -58,14 +58,14 @@ Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 
 ### 第三步: 安装Mirai插件和修改配置文件
 
-本插件使用了MiraiHttp插件 你可以在[GithubRelease](https://github.com/project-mirai/mirai-api-http/releases/latest)找到最新版  
-运行一遍Mirai, 并将下载的jar文件拖入`plugins`文件夹内  
-再次运行Mirai, 修改`config\MiraiApiHttp\setting.yml`  
+本插件使用了 Mirai Http 插件 你可以在[GithubRelease](https://github.com/project-mirai/mirai-api-http/releases/latest)找到最新版  
+运行一遍 Mirai, 并将下载的 .jar 文件拖入`plugins`文件夹内  
+再次运行 Mirai, 修改`config\MiraiApiHttp\setting.yml`  
 我们建议仅修改`authKey`字段后双引号内的内容, 设置一个八位数以上的密码  
 运行一次WFBot, 找到目录下的`MiraiConfig.json`  
 在`AuthKey`后引号内填入刚才设置的密码, 将`BotQQ`后数字改为机器人的QQ号  
-运行Mirai, 再运行WFBot, 你应该能在WFBot控制台看到`WFBot fully loaded.`
-
+运行 Mirai, 再运行 WFBot, 你应该能 在 WFBot 控制台看到`WFBot fully loaded.`  
+这个时候你可以输入 `ui` 并按下 Enter 键来启动配置界面
 ### 第四步: 自定义
 
 > WFBot控制台内输入ui可以打开设置窗口(仅Windows)(以后会适配全平台)   
@@ -230,6 +230,6 @@ Deadwings
 大番茄一号
 爱发电用户_JV6j
 
-感谢JetBrain公司为我们提供的All-Product-License  
+感谢 JetBrain 公司为我们提供的 All-Product-License  
 [![jetbrains](docs/images/jetbrains-variant-3-201x231.png)](https://www.jetbrains.com/?from=WFBot)  
 **_感谢这些贡献者, 开源项目有你们才有未来_**

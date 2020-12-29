@@ -221,7 +221,6 @@ namespace WFBot.Events
             {
                 SendGroup(id.ID, msg);
                 Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg.Content}].", "Message");
-
             };
             Group = group;
             Message = message;

@@ -28,7 +28,7 @@ namespace MiraiHTTPConnector
             if (qq == default || host == default || port == default || authKey == default)
             {
                 MiraiConfig.Save();
-                throw new Exception("请在 MiraiConfig.json 内补全信息, 详情请查看文档.");
+                throw new InvalidOperationException("请在 MiraiConfig.json 内补全信息, 详情请查看文档.");
             }
 
             var options = new MiraiHttpSessionOptions(host, port, authKey); // 至少八位数
@@ -36,10 +36,33 @@ namespace MiraiHTTPConnector
             session.GroupMessageEvt += (sender, args) =>
             {
                 var msg = args.Chain.GetPlain();
-                ReportGroupMessage(args.Sender.Group.Id.ToString(), args.Sender.Id.ToString(), msg);
+                ReportGroupMessage(args.Sender.Group.Id, args.Sender.Id, msg);
                 return Task.FromResult(true);
             };
 
+            session.FriendMessageEvt += (sender, args) =>
+            {
+                var msg = args.Chain.GetPlain();
+                ReportFriendMessage(args.Sender.Id, msg);
+                return Task.FromResult(true);
+            };
+
+            session.DisconnectedEvt += async (sender, exception) =>  
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Console.WriteLine("Mirai 连接断开, 正在重连...");
+                        await session.ConnectAsync(options, qq);
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        await Task.Delay(1000);
+                    }
+                }
+            };
             session.ConnectAsync(options, qq).Wait();
         }
 

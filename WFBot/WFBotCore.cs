@@ -21,6 +21,8 @@ namespace WFBot
     {
         public static void Main()
         {
+            https://github.com/TRKS-Team/WFBot
+
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
 
@@ -81,20 +83,32 @@ namespace WFBot
         public WFNotificationHandler NotificationHandler { get; private set; }
         public static WFBotCore Instance { get; internal set; }
         private MessageReceivedEvent messageReceivedEvent;
+        private PrivateMessageReceivedEvent privateMessageReceivedEvent;
 
         public void OnGroupMessage(GroupID groupID, UserID userID, string message)
         {
-            if (!Inited) return;
+            if (!Inited)
+            {
+                Trace.WriteLine($"Message ignored due to uninitialized: {groupID} {userID} {message}");
+                return;
+            }
             messageReceivedEvent.ProcessGroupMessage(groupID, userID, message);
+        }
+
+        public void OnFriendMessage(UserID userID, string message)
+        {
+            if (!Inited) return;
+            privateMessageReceivedEvent.ProcessPrivateMessage(userID, message);
         }
 
         internal void Init()
         {
             InitLogger();
-            ConnectorManager.LoadConnector();
             Plugins.Load();
+            ConnectorManager.LoadConnector();
             WFResource.InitWFResource();
             messageReceivedEvent = new MessageReceivedEvent();
+            privateMessageReceivedEvent = new PrivateMessageReceivedEvent();
             NotificationHandler = new WFNotificationHandler();
             InitTimer();
             Inited = true;

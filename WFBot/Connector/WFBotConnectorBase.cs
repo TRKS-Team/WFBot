@@ -18,5 +18,9 @@ namespace WFBot.Connector
         {
             WFBotCore.Instance.OnGroupMessage(groupID, userID, message);
         }
+        protected void ReportFriendMessage(UserID userID, string message)
+        {
+            WFBotCore.Instance.OnFriendMessage(userID, message);
+        }
     }
 }
