@@ -118,8 +118,7 @@ namespace WFBot
         private List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
         {
-            // TODO 这里需要测试这个lexion能不能正常工作
-            //AddTimer<LexionTimer>();
+            AddTimer<LexionTimer>();
             AddTimer<NotificationTimer>();
 
             void AddTimer<T>() where T : WFBotTimer

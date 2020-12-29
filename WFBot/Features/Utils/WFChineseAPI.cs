@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -67,6 +69,9 @@ namespace WFBot.Features.Utils
             WFChineseApi = new WFChineseAPI();
             WFAApi = new WFAApi();
             WFTranslator = new WFTranslator();
+            WFCDAll = GetWFCDResources();
+            WFContent = GetWFContentApi();
+
 
             /*
             catch (Exception e)
@@ -88,9 +93,41 @@ namespace WFBot.Features.Utils
         public static WFChineseAPI WFChineseApi { get; private set; }
         public static WFTranslator WFTranslator { get; private set; }
         public static WFAApi WFAApi { get; private set; }
+        public static List<WFCD_All> WFCDAll { get; private set; }
+        public static WFContentApi WFContent { get; private set; }
+
         private static readonly object TranslateLocker = new object();
 
-
+        private static List<string> GetWFOriginUrl()
+        {
+            const string source = "origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            var name = source.Split('/').Last();
+            var wc = new WebClient();
+            var path = Path.Combine("WFCaches", name);
+            wc.DownloadFile(source, path);
+            ZipFile.ExtractToDirectory(path, Path.Combine("WFCaches", "Origin"));
+            return new List<string>();
+        }
+        private static WFContentApi GetWFContentApi()
+        {
+            var result = new WFContentApi();
+            const string source = "http://content.warframe.com/PublicExport/Manifest/";
+            Task.WaitAll(
+                Downloader.GetCacheOrDownload<ExportRelicArcaneZh>($"{source}ExportRelicArcane_zh.json!00_2VJL5zblQ6uSE8wf7vnLTw", ra => result.ExportRelicArcanes = ra.ExportRelicArcane)
+            );
+            return result;
+        }
+        private static List<WFCD_All> GetWFCDResources()
+        {
+            var result = new List<WFCD_All>();
+            var header = new WebHeaderCollection();
+            header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+            // header.Add("Connection", "keep-alive");
+            Task.WaitAll(
+            Downloader.GetCacheOrDownload<List<WFCD_All>>("https://orange-hill-1312.therealkamisama.workers.dev/https://raw.githubusercontent.com/WFCD/warframe-items/development/data/json/All.json", all => result = all, header)
+            );
+            return result;
+        }
         private static WFApi GetTranslateApi()
         {
             lock (TranslateLocker)
@@ -147,6 +184,9 @@ namespace WFBot.Features.Utils
     public class WFChineseAPI
     {
         private WFTranslator translator => WFResource.WFTranslator;
+        private List<WFCD_All> all => WFResource.WFCDAll;
+        private WFContentApi content => WFResource.WFContent;
+
         private static string platform => Config.Instance.Platform.GetSymbols().First();
         private static readonly string WFstat = $"https://api.warframestat.us/{platform}";
 
@@ -299,9 +339,18 @@ namespace WFBot.Features.Utils
             return translator.TranslateSentientAnomaly(raw);
         }
 
+        public List<ExportRelicArcane> GetRelics(string word)
+        {
+            var result = content.ExportRelicArcanes.Where(ra =>
+                ra.Name.Replace("遗物", "").Format().Contains(word.Format())).ToList();
+            return result;
+
+        }
+
+
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
+            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
 
     }
@@ -313,11 +362,11 @@ namespace WFBot.Features.Utils
         private Translator searchwordTranslator = new Translator(); // 将中文物品转换成wm的搜索地址
         private Translator wikiTranslator = new Translator(); // 我忘了是干嘛的 好像没用了
         private Translator nightwaveTranslator = new Translator(); // 午夜电波任务翻译
+        private Translator relicrewardTranslator = new Translator();
         private Translator invasionTranslator = new Translator(); // 入侵物品翻译
         private List<Riven> weaponslist = new List<Riven>(); // 武器的list 用来wfa搜索
         // She is known as riven, riven of a thousand voice, the last known ahamkara.
         private List<string> weapons = new List<string>();// 所有武器的中文
-        private List<string> wikiwords = new List<string>(); // 我好像也忘了 好像没用了
         private WFApi translateApi => WFResource.WFTranslateData;
 
 
@@ -340,7 +389,10 @@ namespace WFBot.Features.Utils
             foreach (var sale in translateApi.Sale)
             {
                 searchwordTranslator.AddEntry(sale.zh.Format(), sale.code);
+                relicrewardTranslator.AddEntry(sale.en.Format(), sale.zh);
             }
+            relicrewardTranslator.AddEntry("Forma Blueprint".Format(), "福马 蓝图");
+            // TODO 找一个更加全面的翻译对照表
             invasionTranslator.Clear();
             foreach (var invasion in translateApi.Invasion)
             {
@@ -461,7 +513,7 @@ namespace WFBot.Features.Utils
         }*/
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
+            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
 
         public List<Riven> GetMatchedWeapon(string weapon)
@@ -471,6 +523,10 @@ namespace WFBot.Features.Utils
         public string TranslateWeaponType(string type)
         {
             return dictTranslator.Translate(type);
+        }
+        public string TranslateRelicReward(string reward)
+        {
+            return relicrewardTranslator.Translate(reward);
         }
         public void TranslateKuvaMission(List<Kuva> kuvas)
         {
@@ -488,7 +544,7 @@ namespace WFBot.Features.Utils
         public DateTime ConvertUnixToDatetime(long unix)
         {
             var date = DateTimeOffset.FromUnixTimeSeconds(unix);
-            return date.UtcDateTime + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
+            return date.UtcDateTime + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
         }
 
         public void TranslateSentientOutpost(SentientOutpost se)
@@ -606,10 +662,6 @@ namespace WFBot.Features.Utils
             return weapons.Contains(weapon);
         }
 
-        public bool ContainsWikiword(string word)
-        {
-            return wikiwords.Contains(word);
-        }
 
         public void TranslateAlert(WFAlert alert)
         {

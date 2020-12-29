@@ -1,8 +1,438 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace WFBot.Features.Utils
 {
+
+   public class WFContentApi
+   {
+        public ExportRelicArcane[] ExportRelicArcanes { get; set; }
+   }
+
+   public partial class ExportRelicArcaneZh
+   {
+       public ExportRelicArcane[] ExportRelicArcane { get; set; }
+   }
+
+   public partial class ExportRelicArcane
+   {
+       public string UniqueName { get; set; }
+       public string Name { get; set; }
+       public bool CodexSecret { get; set; }
+       public string Description { get; set; }
+       public RelicReward[] RelicRewards { get; set; }
+       public bool? ExcludeFromCodex { get; set; }
+       public string Rarity { get; set; }
+       public LevelStat[] LevelStats { get; set; }
+   }
+
+   public partial class LevelStat
+   {
+       public string[] Stats { get; set; }
+   }
+
+   public partial class RelicReward
+   {
+       public string RewardName { get; set; }
+       public string Rarity { get; set; }
+       public long Tier { get; set; }
+       public long ItemCount { get; set; }
+   }
+
+
+    public class WFCD_All
+    {
+        public string uniqueName { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string type { get; set; }
+        public string imageName { get; set; }
+        public string category { get; set; }
+        public bool tradable { get; set; }
+        public bool excludeFromCodex { get; set; }
+        public string rarity { get; set; }
+        public WFCD_Levelstat[] levelStats { get; set; }
+        public bool showInInventory { get; set; }
+        public int systemIndex { get; set; }
+        public string systemName { get; set; }
+        public int nodeType { get; set; }
+        public int masteryReq { get; set; }
+        public int missionIndex { get; set; }
+        public int factionIndex { get; set; }
+        public int minEnemyLevel { get; set; }
+        public int maxEnemyLevel { get; set; }
+        public string polarity { get; set; }
+        public int baseDrain { get; set; }
+        public int fusionLimit { get; set; }
+        public string compatName { get; set; }
+        public bool isAugment { get; set; }
+        public string wikiaThumbnail { get; set; }
+        public string wikiaUrl { get; set; }
+        public bool transmutable { get; set; }
+        public Patchlog[] patchlogs { get; set; }
+        public WFCD_Drop[] drops { get; set; }
+        public float[] damagePerShot { get; set; }
+        public float totalDamage { get; set; }
+        public float criticalChance { get; set; }
+        public float criticalMultiplier { get; set; }
+        public float procChance { get; set; }
+        public float fireRate { get; set; }
+        public string productCategory { get; set; }
+        public int slot { get; set; }
+        public float accuracy { get; set; }
+        public float omegaAttenuation { get; set; }
+        public string noise { get; set; }
+        public string trigger { get; set; }
+        public int magazineSize { get; set; }
+        public float reloadTime { get; set; }
+        public int multishot { get; set; }
+        public int buildPrice { get; set; }
+        public int buildTime { get; set; }
+        public int skipBuildTimePrice { get; set; }
+        public int buildQuantity { get; set; }
+        public bool consumeOnBuild { get; set; }
+        public List<Component> components { get; set; } = new List<Component>();
+        public int ammo { get; set; }
+        public Areaattack areaAttack { get; set; }
+        public object damage { get; set; }
+        public Damagetypes damageTypes { get; set; }
+        public object flight { get; set; }
+        public object marketCost { get; set; }
+        public string[] polarities { get; set; }
+        public string projectile { get; set; }
+        public string[] tags { get; set; }
+        public int disposition { get; set; }
+        public int blockingAngle { get; set; }
+        public int comboDuration { get; set; }
+        public float followThrough { get; set; }
+        public float range { get; set; }
+        public int slamAttack { get; set; }
+        public int slamRadialDamage { get; set; }
+        public int slamRadius { get; set; }
+        public int slideAttack { get; set; }
+        public int heavyAttackDamage { get; set; }
+        public int heavySlamAttack { get; set; }
+        public int heavySlamRadialDamage { get; set; }
+        public int heavySlamRadius { get; set; }
+        public float windUp { get; set; }
+        public float channeling { get; set; }
+        public string stancePolarity { get; set; }
+        public int health { get; set; }
+        public int shield { get; set; }
+        public int armor { get; set; }
+        public int stamina { get; set; }
+        public int power { get; set; }
+        public bool isUtility { get; set; }
+        public int itemCount { get; set; }
+        public string[] parents { get; set; }
+        public string modSet { get; set; }
+        public string rewardName { get; set; }
+        public int tier { get; set; }
+        public float probability { get; set; }
+        public bool isExilus { get; set; }
+        public Hexcolour[] hexColours { get; set; }
+        public string releaseDate { get; set; }
+        public string vaultDate { get; set; }
+        public string estimatedVaultDate { get; set; }
+        public bool vaulted { get; set; }
+        public int fusionPoints { get; set; }
+        public float sprintSpeed { get; set; }
+        public Ability[] abilities { get; set; }
+        public float chargeTime { get; set; }
+        public Secondary secondary { get; set; }
+        public Secondaryarea secondaryArea { get; set; }
+        public float statusChance { get; set; }
+        public Upgradeentry[] upgradeEntries { get; set; }
+        public Availablechallenge[] availableChallenges { get; set; }
+        public bool sentinel { get; set; }
+        public string passiveDescription { get; set; }
+        public string aura { get; set; }
+        public bool conclave { get; set; }
+        public int color { get; set; }
+        public string introduced { get; set; }
+        public string sex { get; set; }
+        public float sprint { get; set; }
+        public string[] exalted { get; set; }
+        public float primeOmegaAttenuation { get; set; }
+        public int binCount { get; set; }
+        public int binCapacity { get; set; }
+        public int fillRate { get; set; }
+        public int durability { get; set; }
+        public int repairRate { get; set; }
+        public int[] capacityMultiplier { get; set; }
+        public object[] specialities { get; set; }
+        public int primeSellingPrice { get; set; }
+        public int maxLevelCap { get; set; }
+        public float[] modSetValues { get; set; }
+    }
+
+    public class Areaattack
+    {
+        public string name { get; set; }
+        public Falloff falloff { get; set; }
+        public float slash { get; set; }
+        public float puncture { get; set; }
+        public int crit_chance { get; set; }
+        public int blast { get; set; }
+        public string damage { get; set; }
+        public float heat { get; set; }
+        public float crit_mult { get; set; }
+        public float status_chance { get; set; }
+        public int toxin { get; set; }
+        public string shot_type { get; set; }
+        public int? shot_speed { get; set; }
+        public float impact { get; set; }
+        public float speed { get; set; }
+        public Pellet pellet { get; set; }
+        public int gas { get; set; }
+        public int electricity { get; set; }
+        public int viral { get; set; }
+        public int corrosive { get; set; }
+        public int radiation { get; set; }
+        public int cold { get; set; }
+        public int magnetic { get; set; }
+        public int charge_time { get; set; }
+    }
+
+    public class Falloff
+    {
+        public int start { get; set; }
+        public float end { get; set; }
+        public float reduction { get; set; }
+    }
+
+    public class Pellet
+    {
+        public string name { get; set; }
+        public int count { get; set; }
+    }
+
+    public class Damagetypes
+    {
+        public float impact { get; set; }
+        public float slash { get; set; }
+        public float puncture { get; set; }
+        public int toxin { get; set; }
+        public int electricity { get; set; }
+        public int blast { get; set; }
+        public int radiation { get; set; }
+        public int cold { get; set; }
+        public int heat { get; set; }
+        public int magnetic { get; set; }
+        public int corrosive { get; set; }
+        public int viral { get; set; }
+    }
+
+    public class Secondary
+    {
+        public string name { get; set; }
+        public Pellet1 pellet { get; set; }
+        public Falloff1 falloff { get; set; }
+        public int blast { get; set; }
+        public string damage { get; set; }
+        public float speed { get; set; }
+        public float crit_chance { get; set; }
+        public float crit_mult { get; set; }
+        public float status_chance { get; set; }
+        public string shot_type { get; set; }
+        public float impact { get; set; }
+        public float slash { get; set; }
+        public float puncture { get; set; }
+        public int heat { get; set; }
+        public int? shot_speed { get; set; }
+        public int electricity { get; set; }
+        public float charge_time { get; set; }
+        public int radiation { get; set; }
+        public int toxin { get; set; }
+        public int cold { get; set; }
+        public int corrosive { get; set; }
+    }
+
+    public class Pellet1
+    {
+        public int count { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Falloff1
+    {
+        public int start { get; set; }
+        public float end { get; set; }
+        public float reduction { get; set; }
+    }
+
+    public class Secondaryarea
+    {
+        public string name { get; set; }
+        public float status_chance { get; set; }
+        public Pellet2 pellet { get; set; }
+        public int blast { get; set; }
+        public string damage { get; set; }
+        public int radius { get; set; }
+        public int radiation { get; set; }
+        public int toxin { get; set; }
+        public int electricity { get; set; }
+        public int impact { get; set; }
+        public float slash { get; set; }
+        public float puncture { get; set; }
+        public int heat { get; set; }
+        public int magnetic { get; set; }
+        public int cold { get; set; }
+        public int viral { get; set; }
+        public int duration { get; set; }
+        public float speed { get; set; }
+    }
+
+    public class Pellet2
+    {
+        public string name { get; set; }
+        public int count { get; set; }
+    }
+
+    public class WFCD_Levelstat
+    {
+        public string[] stats { get; set; }
+    }
+
+    public class Patchlog
+    {
+        public string name { get; set; }
+        public DateTime date { get; set; }
+        public string url { get; set; }
+        public string additions { get; set; }
+        public string changes { get; set; }
+        public string fixes { get; set; }
+        public string imgUrl { get; set; }
+    }
+
+    public class WFCD_Drop
+    {
+        public string location { get; set; }
+        public string type { get; set; }
+        public float chance { get; set; }
+        public string rarity { get; set; }
+    }
+
+    public class Component
+    {
+        public string uniqueName { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public int itemCount { get; set; }
+        public string imageName { get; set; }
+        public bool tradable { get; set; }
+        public WFCD_Drop1[] drops { get; set; }
+        public bool excludeFromCodex { get; set; }
+        public float[] damagePerShot { get; set; }
+        public float totalDamage { get; set; }
+        public float criticalChance { get; set; }
+        public float criticalMultiplier { get; set; }
+        public float procChance { get; set; }
+        public float fireRate { get; set; }
+        public int masteryReq { get; set; }
+        public string productCategory { get; set; }
+        public int slot { get; set; }
+        public float accuracy { get; set; }
+        public float omegaAttenuation { get; set; }
+        public string noise { get; set; }
+        public string trigger { get; set; }
+        public int magazineSize { get; set; }
+        public float reloadTime { get; set; }
+        public int multishot { get; set; }
+        public int ammo { get; set; }
+        public string damage { get; set; }
+        public Damagetypes1 damageTypes { get; set; }
+        public int marketCost { get; set; }
+        public string[] polarities { get; set; }
+        public string projectile { get; set; }
+        public string[] tags { get; set; }
+        public string type { get; set; }
+        public string wikiaThumbnail { get; set; }
+        public string wikiaUrl { get; set; }
+        public int disposition { get; set; }
+        public int flight { get; set; }
+        public int primeSellingPrice { get; set; }
+        public int ducats { get; set; }
+        public string releaseDate { get; set; }
+        public string vaultDate { get; set; }
+        public string estimatedVaultDate { get; set; }
+        public int blockingAngle { get; set; }
+        public int comboDuration { get; set; }
+        public float followThrough { get; set; }
+        public float range { get; set; }
+        public int slamAttack { get; set; }
+        public int slamRadialDamage { get; set; }
+        public int slamRadius { get; set; }
+        public int slideAttack { get; set; }
+        public int heavyAttackDamage { get; set; }
+        public int heavySlamAttack { get; set; }
+        public int heavySlamRadialDamage { get; set; }
+        public int heavySlamRadius { get; set; }
+        public float windUp { get; set; }
+        public float channeling { get; set; }
+        public string stancePolarity { get; set; }
+        public bool vaulted { get; set; }
+        public float statusChance { get; set; }
+    }
+
+    public class Damagetypes1
+    {
+        public float impact { get; set; }
+        public float slash { get; set; }
+        public float puncture { get; set; }
+        public int magnetic { get; set; }
+        public int electricity { get; set; }
+        public int heat { get; set; }
+    }
+
+    public class WFCD_Drop1
+    {
+        public string location { get; set; }
+        public string type { get; set; }
+        public float? chance { get; set; }
+        public string rarity { get; set; }
+    }
+
+    public class Hexcolour
+    {
+        public string value { get; set; }
+    }
+
+    public class Ability
+    {
+        public string name { get; set; }
+        public string description { get; set; }
+    }
+
+    public class Upgradeentry
+    {
+        public string tag { get; set; }
+        public string prefixTag { get; set; }
+        public string suffixTag { get; set; }
+        public Upgradevalue[] upgradeValues { get; set; }
+    }
+
+    public class Upgradevalue
+    {
+        public float value { get; set; }
+        public string locTag { get; set; }
+        public bool reverseValueSymbol { get; set; }
+    }
+
+    public class Availablechallenge
+    {
+        public string fullName { get; set; }
+        public string description { get; set; }
+        public Complication[] complications { get; set; }
+    }
+
+    public class Complication
+    {
+        public string fullName { get; set; }
+        public string description { get; set; }
+        public string overrideTag { get; set; }
+    }
 
     public class CambionCycle
     {

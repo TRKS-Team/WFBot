@@ -19,6 +19,7 @@ namespace WFBot.Features.Utils
     public static class WFFormatter
     {
         private static WFTranslator translator => WFResource.WFTranslator;
+        private static List<WFCD_All> all => WFResource.WFCDAll;
 
         public static string Format(this CommitData[] commits)
         {
@@ -33,6 +34,44 @@ namespace WFBot.Features.Utils
             return sb.ToString().Trim();
         }
 
+        public static string ToString(List<ExportRelicArcane> relics)
+        {
+            var sb = new StringBuilder();
+            var ismore = false;
+            if (relics.Count > 3)
+            {
+                relics = relics.Take(3).ToList();
+                ismore = true;
+
+            }
+
+            foreach (var relic in relics)
+            {
+                sb.AppendLine($"<{relic.Name}>");
+                foreach (var reward in relic.RelicRewards)
+                {
+                    var name = GetRelicRewardName(reward.RewardName);
+                    sb.Append($"[{name}]");
+                }
+            }
+
+            if (ismore)
+            {
+                sb.AppendLine("以上仅显示了3条近似结果, 请细化你的搜索词.");
+            }
+            return sb.ToString().Trim();
+        }
+        public static string GetRelicRewardName(string unique)
+        {
+            var item = all.Where(a => a.components.Any(c => c.uniqueName == unique.Replace("StoreItems/", "")));
+            if (!item.Any())
+            {
+                return String.Empty;
+            }
+
+            return translator.TranslateRelicReward(item.First().drops.First().type);
+        }
+        [Pure]
         public static string ToString(SentientOutpost outpost)
         {
             var sb = new StringBuilder();

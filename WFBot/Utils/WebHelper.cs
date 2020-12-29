@@ -7,6 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GammaLibrary.Enhancements;
+using GammaLibrary.Extensions;
+using Newtonsoft.Json;
 
 namespace WFBot.Utils
 {
@@ -55,7 +58,7 @@ namespace WFBot.Utils
                 }
                 catch (Exception)
                 {
-                    //
+                    
                 }
             }
             return new WebStatus(false, 666);
@@ -108,7 +111,6 @@ namespace WFBot.Utils
 
             throw new WebException($"在下载[{urls.FirstOrDefault()}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
         }
-
         public static async Task<T> DownloadJsonAsync<T>(string url)
         {
             var sw = Stopwatch.StartNew();
@@ -119,10 +121,40 @@ namespace WFBot.Utils
                 {
                     try
                     {
-                        return JsonExtensions.JsonDeserialize<T>((await new HttpClient().GetStringAsync(url)));
+                        return JsonExtensions.JsonDeserialize<T>(await new HttpClient().GetStringAsync(url));
                     }
                     catch (Exception)
                     {
+                    }
+                }
+                throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
+            }
+            finally
+            {
+                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+            }
+        }
+        public static async Task<T> DownloadJsonAsync<T>(string url, WebHeaderCollection header)
+        {
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                var count = 2;
+                while (count-- > 0)
+                {
+                    try
+                    {
+                        var wc = new WebClientEx1 {Headers = header};
+                        var settings = new JsonSerializerSettings
+                        {
+                            DefaultValueHandling = DefaultValueHandling.Populate,
+                            NullValueHandling = NullValueHandling.Ignore
+                        };
+                        return JsonExtensions.JsonDeserialize<T>(await wc.DownloadStringTaskAsync(url), settings );
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
                     }
                 }
                 throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
@@ -204,6 +236,15 @@ namespace WFBot.Utils
                 rq.KeepAlive = false;
             }
             return rq;
+        }
+    }
+    public class WebClientEx1 : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            var w = (HttpWebRequest)base.GetWebRequest(uri);
+            w.KeepAlive = true;
+            return w;
         }
     }
 }

@@ -94,14 +94,13 @@ namespace WFBot.Events
             _wfStatus.SendTranslateResult(Group, word);
         }
 
-        /*[Matchers("遗物")]
+        [Matchers("遗物")]
         [CombineParams]
         void RelicInfo(string word)
         {
             word = word.Format();
             _wfStatus.SendRelicInfo(Group, word);
-        }*/
-        // 吃屎去 我改天改成掉落查询
+        }
 
         [Matchers("警报")]
         void Alerts()
