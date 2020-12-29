@@ -15,5 +15,6 @@ namespace MiraiHTTPConnector
         public string AuthKey = "";
 
         public long BotQQ = default;
+        public bool RenderTextInImage = false;
     }
 }
