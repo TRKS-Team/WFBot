@@ -53,6 +53,7 @@ namespace WFBot.Features.Utils
                     var name = GetRelicRewardName(reward.RewardName);
                     sb.Append($"[{name}]");
                 }
+                sb.AppendLine();
             }
 
             if (ismore)
@@ -61,15 +62,27 @@ namespace WFBot.Features.Utils
             }
             return sb.ToString().Trim();
         }
+
+        public static string RemoveEnds(this string str)
+        {
+            return str.Replace("Component", "").Replace("Blueprint", "");
+        }
         public static string GetRelicRewardName(string unique)
         {
-            var item = all.Where(a => a.components.Any(c => c.uniqueName == unique.Replace("StoreItems/", "")));
-            if (!item.Any())
+            var itemuniquename = unique.Replace("StoreItems/", "");
+            var items = all.Where(a => true == a.components?.Any(c => c.uniqueName.RemoveEnds() == itemuniquename.RemoveEnds()));
+            if (!items.Any())
             {
                 return String.Empty;
             }
 
-            return translator.TranslateRelicReward(item.First().drops.First().type);
+            var item = items.First();
+            var part = "";
+            if (item.components.Any())
+            {
+                part = item.components.First(c => c.uniqueName.RemoveEnds() == itemuniquename.RemoveEnds()).name;
+            }
+            return translator.TranslateRelicReward((item.name + part));
         }
         [Pure]
         public static string ToString(SentientOutpost outpost)

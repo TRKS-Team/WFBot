@@ -341,8 +341,16 @@ namespace WFBot.Features.Utils
 
         public List<ExportRelicArcane> GetRelics(string word)
         {
-            var result = content.ExportRelicArcanes.Where(ra =>
-                ra.Name.Replace("遗物", "").Format().Contains(word.Format())).ToList();
+            var items = content.ExportRelicArcanes.Where(ra =>
+                ra.Name.Replace("遗物", "").Format().Contains(word.Format()));
+            var result = new List<ExportRelicArcane>();
+            foreach (var item in items)
+            {
+                if (result.All(r => r.Name != item.Name))
+                {
+                    result.Add(item);
+                }
+            }
             return result;
 
         }
@@ -526,7 +534,7 @@ namespace WFBot.Features.Utils
         }
         public string TranslateRelicReward(string reward)
         {
-            return relicrewardTranslator.Translate(reward);
+            return relicrewardTranslator.Translate(reward.Format());
         }
         public void TranslateKuvaMission(List<Kuva> kuvas)
         {
