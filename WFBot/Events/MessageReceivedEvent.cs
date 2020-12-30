@@ -25,7 +25,7 @@ namespace WFBot.Events
             }
             
             var handler = new GroupMessageHandler(senderId, groupId, message);
-            var (matched, result) = handler.ProcessCommandInput();
+            Task.Factory.StartNew(() => handler.ProcessCommandInput());
         }
 
         private static bool CheckCallPerMin(GroupID groupId)
