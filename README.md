@@ -22,21 +22,21 @@
 
 [**部署 FAQ (常见问题解答)**](docs/faq.md)
 
-### 第一步: 下载Mirai机器人平台
+### 第一步: 下载 mirai 机器人平台
 
-Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
+Mirai 可以使用 ~~[MiraiOK](https://github.com/LXY1226/MiraiOK)~~ (目前 MiraiOK 不是很行 可以用 mcl) 来方便部署
 
-> 你可以自己手写 Connector 来适配其他机器人平台(如Discord).  
+> 你可以自己手写 Connector 来适配其他机器人平台(如 Discord).  
 > 对其他平台的官方支持以后*会写的*  
 > **我们建议将机器人运行在 24 小时运行的电脑/服务器 上.**  
-> **摆脱了~~SB~~Mahua框架, Mirai和WFBot都支持了Linux/Windows/Mac OS**
+> **摆脱了 ~~SB~~Mahua 框架, mirai 和 WFBot 都支持了 Linux/Windows/macOS**
 
-### 第二步: 获取WFBot插件本体
+### 第二步: 获取 WFBot 插件本体
 
 #### 直接下载
 
-1. 下载 [~~.NET Core 3.1~~](https://dotnet.microsoft.com/download/dotnet-core/3.1) 并安装. **Windows 请下载 .NET Core 3.1 Desktop Runtime, 如果不懂什么意思请加群**.
-2. 先偷个懒, 加群来下, 有空再改
+1. 下载 [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1) 并安装. **Windows 请下载 .NET Core 3.1 Desktop Runtime, 如果不懂什么意思请加群**.
+2. 先偷个懒, 加群来下, 有空再改 (目前 GitHub Release 提供的 WFBot 可用)
 
 #### 自己编译(可选)
 
@@ -56,19 +56,19 @@ Mirai 可以使用 [MiraiOK](https://github.com/LXY1226/MiraiOK) 来方便部署
 
 *这堆东西应该以后会有一个脚本完成*
 
-### 第三步: 安装Mirai插件和修改配置文件
+### 第三步: 安装 mirai 插件和修改配置文件
 
-本插件使用了 Mirai Http 插件 你可以在[GithubRelease](https://github.com/project-mirai/mirai-api-http/releases/latest)找到最新版  
-运行一遍 Mirai, 并将下载的 .jar 文件拖入`plugins`文件夹内  
-再次运行 Mirai, 修改`config\MiraiApiHttp\setting.yml`  
+本插件使用了 mirai-api-http 插件 你可以在[Github Release](https://github.com/project-mirai/mirai-api-http/releases/latest)找到最新版  
+运行一遍 mirai, 并将下载的 .jar 文件拖入`plugins`文件夹内  
+再次运行 mirai, 修改`config\MiraiApiHttp\setting.yml`  
 我们建议仅修改`authKey`字段后双引号内的内容, 设置一个八位数以上的密码  
-运行一次WFBot, 找到目录下的`MiraiConfig.json`  
-在`AuthKey`后引号内填入刚才设置的密码, 将`BotQQ`后数字改为机器人的QQ号  
-运行 Mirai, 再运行 WFBot, 你应该能 在 WFBot 控制台看到`WFBot fully loaded.`  
+运行一次 WFBot, 找到目录下的`MiraiConfig.json`  
+在`AuthKey`后引号内填入刚才设置的密码, 将`BotQQ`后数字改为机器人的 QQ 号  
+运行 mirai, 再运行 WFBot, 你应该能 在 WFBot 控制台看到`WFBot fully loaded.`  
 这个时候你可以输入 `ui` 并按下 Enter 键来启动配置界面
 ### 第四步: 自定义
 
-> WFBot控制台内输入ui可以打开设置窗口(仅Windows)(以后会适配全平台)   
+> WFBot 控制台内输入 ui 可以打开设置窗口(仅Windows)(以后会适配全平台)   
 
 可自定义的内容如下:
 
