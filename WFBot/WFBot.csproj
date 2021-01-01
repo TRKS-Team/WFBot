@@ -18,6 +18,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <None Include="7zip\Compress\LzmaAlone\LzmaAlone.csproj" />
+    <None Include="7zip\Compress\LzmaAlone\LzmaAlone.sln" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="7-Zip.CommandLine" Version="18.1.0" />
+    <PackageReference Include="7ZipCLI" Version="9.20.0" />
     <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" />
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Fody" Version="6.1.0" />
@@ -27,6 +33,7 @@
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.7.9" />
     <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Lib.Harmony" Version="2.0.2" />
+    <PackageReference Include="ManagedLzma" Version="0.2.0-alpha-7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Richasy.WFA.Sdk" Version="1.0.6" />
     <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />

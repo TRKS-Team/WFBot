@@ -13,6 +13,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using GammaLibrary.Extensions;
+using ManagedLzma;
+using ManagedLzma.SevenZip;
+using ManagedLzma.SevenZip.FileModel;
 using WFBot.Events;
 using WFBot.Features.Common;
 using WFBot.Features.Other;
@@ -72,7 +75,6 @@ namespace WFBot.Features.Utils
             WFCDAll = GetWFCDResources();
             WFContent = GetWFContentApi();
 
-
             /*
             catch (Exception e)
             {
@@ -97,23 +99,45 @@ namespace WFBot.Features.Utils
         public static WFContentApi WFContent { get; private set; }
 
         private static readonly object TranslateLocker = new object();
+        private static void DecompressFileLZMA(string inFile, string outFile)
+        {
+            SevenZip.Compression.LZMA.Decoder coder = new SevenZip.Compression.LZMA.Decoder();
+            FileStream input = new FileStream(inFile, FileMode.Open);
+            FileStream output = new FileStream(outFile, FileMode.Create);
 
+            // Read the decoder properties
+            byte[] properties = new byte[5];
+            input.Read(properties, 0, 5);
+
+            // Read in the decompress file size.
+            byte[] fileLengthBytes = new byte[8];
+            input.Read(fileLengthBytes, 0, 8);
+            long fileLength = BitConverter.ToInt64(fileLengthBytes, 0);
+
+            coder.SetDecoderProperties(properties);
+            coder.Code(input, output, input.Length, fileLength, null);
+            output.Flush();
+            output.Close();
+        }
         private static List<string> GetWFOriginUrl()
         {
-            const string source = "origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             var name = source.Split('/').Last();
             var wc = new WebClient();
             var path = Path.Combine("WFCaches", name);
+            var resultpath = Path.Combine("WFCaches", "index_zh.txt");
             wc.DownloadFile(source, path);
-            ZipFile.ExtractToDirectory(path, Path.Combine("WFCaches", "Origin"));
-            return new List<string>();
+            DecompressFileLZMA(path, resultpath);
+            var result = File.ReadAllLines(resultpath).ToList();
+            return result;
         }
         private static WFContentApi GetWFContentApi()
         {
             var result = new WFContentApi();
+            var urls = GetWFOriginUrl();
             const string source = "http://content.warframe.com/PublicExport/Manifest/";
             Task.WaitAll(
-                Downloader.GetCacheOrDownload<ExportRelicArcaneZh>($"{source}ExportRelicArcane_zh.json!00_2VJL5zblQ6uSE8wf7vnLTw", ra => result.ExportRelicArcanes = ra.ExportRelicArcane)
+                Downloader.GetCacheOrDownload<ExportRelicArcaneZh>(source + urls.First(u => u.Contains("ExportRelicArcane_zh.json")), ra => result.ExportRelicArcanes = ra.ExportRelicArcane)
             );
             return result;
         }
