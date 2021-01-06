@@ -18,10 +18,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="7zip\Compress\LzmaAlone\LzmaAlone.csproj" />
-    <None Include="7zip\Compress\LzmaAlone\LzmaAlone.sln" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="7-Zip.CommandLine" Version="18.1.0" />
     <PackageReference Include="7ZipCLI" Version="9.20.0" />
     <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" />
