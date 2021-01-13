@@ -72,8 +72,8 @@ namespace WFBot.Features.Utils
             WFChineseApi = new WFChineseAPI();
             WFAApi = new WFAApi();
             WFTranslator = new WFTranslator();
-            WFCDAll = GetWFCDResources();
             WFContent = GetWFContentApi();
+            WFCDAll = GetWFCDResources();
 
             /*
             catch (Exception e)
@@ -146,9 +146,11 @@ namespace WFBot.Features.Utils
             var result = new List<WFCD_All>();
             var header = new WebHeaderCollection();
             header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+            // header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            // header.Add("Content-Type", "application/json; charset=utf-8");
             // header.Add("Connection", "keep-alive");
             Task.WaitAll(
-            Downloader.GetCacheOrDownload<List<WFCD_All>>("https://orange-hill-1312.therealkamisama.workers.dev/https://raw.githubusercontent.com/WFCD/warframe-items/development/data/json/All.json", all => result = all, header)
+            Downloader.GetCacheOrDownload<List<WFCD_All>>("https://api.warframestat.us/items", all => result = all, header, "All.json")
             );
             return result;
         }

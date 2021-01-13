@@ -66,6 +66,31 @@ namespace WFBot.Utils
             await Download(url, setter, path, header);
 
         }
+        public static async Task GetCacheOrDownload<T>(string url, Action<T> setter, WebHeaderCollection header, string fileName)
+        {
+            Directory.CreateDirectory("WFCaches");
+            var path = Path.Combine("WFCaches", fileName);
+            expectedCount++;
+
+            if (File.Exists(path))
+            {
+                try
+                {
+                    setter(File.ReadAllText(path).JsonDeserialize<T>());
+
+                    // 这里下载并刷新缓存
+                    Task.Factory.StartNew(async () => await Download(url, setter, path, header).ConfigureAwait(false), TaskCreationOptions.LongRunning);
+                    return;
+                }
+                catch (Exception)
+                {
+                    Trace.WriteLine($"缓存喂狗了, 正在重新下载...", "Cache");
+                }
+            }
+
+            await Download(url, setter, path, header);
+
+        }
 
 
         private static async Task Download<T>(string url, Action<T> setter, string path)
