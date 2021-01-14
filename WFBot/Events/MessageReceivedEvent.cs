@@ -20,10 +20,16 @@ namespace WFBot.Events
             if (CheckCallPerMin(groupId)) return;
             if (Config.Instance.IsSlashRequired)
             {
-                if (!message.StartsWith("/")) return;
-                if (message.StartsWith("/")) message = message.Substring(1);
+                if (!message.StartsWith("/"))
+                {
+                    return;
+                }
             }
-            
+
+            if (message.StartsWith("/"))
+            {
+                message = message.Substring(1);
+            }
             var handler = new GroupMessageHandler(senderId, groupId, message);
             Task.Factory.StartNew(() => handler.ProcessCommandInput());
         }

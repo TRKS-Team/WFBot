@@ -121,9 +121,15 @@ namespace WFBot.Features.Utils
         }
         private static List<string> GetWFOriginUrl()
         {
-            const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            // const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            const string source =
+                "https://weathered-lake-14e8.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
             var name = source.Split('/').Last();
             var wc = new WebClient();
+            var header = new WebHeaderCollection();
+            header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+            wc.Headers = header;
             var path = Path.Combine("WFCaches", name);
             var resultpath = Path.Combine("WFCaches", "index_zh.txt");
             wc.DownloadFile(source, path);
@@ -384,7 +390,7 @@ namespace WFBot.Features.Utils
 
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
     }
@@ -547,7 +553,7 @@ namespace WFBot.Features.Utils
         }*/
         private static DateTime GetRealTime(DateTime time)
         {
-            return time + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
         public List<Riven> GetMatchedWeapon(string weapon)
@@ -578,7 +584,7 @@ namespace WFBot.Features.Utils
         public DateTime ConvertUnixToDatetime(long unix)
         {
             var date = DateTimeOffset.FromUnixTimeSeconds(unix);
-            return date.UtcDateTime + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+            return date.UtcDateTime + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
         public void TranslateSentientOutpost(SentientOutpost se)

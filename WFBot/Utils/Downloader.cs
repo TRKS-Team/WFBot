@@ -118,7 +118,7 @@ namespace WFBot.Utils
 
             if (finishedCount == expectedCount && expectedCount >= 6)
             {
-                Trace.WriteLine("可缓存的玩意看起来全部下载完成.");
+                Trace.WriteLine("可缓存的玩意儿看起来全部下载完成.");
             }
         }
         private static async Task Download<T>(string url, Action<T> setter, string path, WebHeaderCollection header)
