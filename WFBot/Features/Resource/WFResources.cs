@@ -198,6 +198,7 @@ namespace WFBot.Features.Resource
             }
         }
 
+        // todo 这里需要改
         private static void UpdateTranslateApi()
         {
             WFTranslateData = GetTranslateApi();
