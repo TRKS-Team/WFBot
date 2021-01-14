@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using Humanizer;
+using WFBot.Features.Resource;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 
@@ -24,7 +25,7 @@ namespace WFBot.Features.Timers
             {
                 if (Config.Instance.UpdateLexion)
                 {
-                    WFResource.UpdateLexion();
+                    WFResources.UpdateLexion();
                 }
             }
             catch (Exception)

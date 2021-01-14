@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using WFBot.Features.Resource;
 
 namespace WFBot.Features.Utils
 {
 
    public class WFContentApi
    {
-        public ExportRelicArcane[] ExportRelicArcanes { get; set; }
+       public ExportRelicArcane[] ExportRelicArcanes => RExportRelicArcanes.Value;
+       public WFResource<ExportRelicArcane[]> RExportRelicArcanes;
    }
 
    public partial class ExportRelicArcaneZh
@@ -1127,13 +1129,26 @@ namespace WFBot.Features.Utils
 
     public class WFApi
     {
-        public Dict[] Dict { get; set; }
-        public Sale[] Sale { get; set; }
-        public Invasion[] Invasion { get; set; }
-        public Riven[] Riven { get; set; }
-        public NightWave[] NightWave { get; set; }
-        public AllRiven[] Allriven { get; set; }
-        public Lib[] Lib { get; set; }
+        public Dict[] Dict => RDict.Value;
+        public WFResource<Dict[]> RDict;
+
+        public Sale[] Sale => RSale.Value;
+        public WFResource<Sale[]> RSale;
+
+        public Invasion[] Invasion => RInvasion.Value;
+        public WFResource<Invasion[]> RInvasion;
+
+        public Riven[] Riven => RRiven.Value;
+        public WFResource<Riven[]> RRiven;
+
+        public NightWave[] NightWave => RNightWave.Value;
+        public WFResource<NightWave[]> RNightWave;
+
+        public AllRiven[] Allriven => RAllriven.Value;
+        public WFResource<AllRiven[]> RAllriven;
+
+        public Lib[] Lib => RLib.Value;
+        public WFResource<Lib[]> RLib;
 
     }
 

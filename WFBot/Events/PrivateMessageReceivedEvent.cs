@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using GammaLibrary.Extensions;
 using TextCommandCore;
+using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using Number = System.Numerics.BigInteger;
 using static WFBot.Features.Utils.Messenger;
@@ -26,7 +27,6 @@ namespace WFBot.Events
 
     public partial class PrivateMessageHandler
     {
-        
         private List<GroupInfo> GetGroups()
         {
             return null; // TODO
@@ -58,6 +58,7 @@ namespace WFBot.Events
 
             return "搞完了, 去机器人根目录看结果.";
         }
+
         [Matchers("自动更新")]
         [RequireAdmin, RequireCode]
         void RunAutoUpdate()
@@ -103,11 +104,12 @@ namespace WFBot.Events
 
             return "完事.";
         }
+
         [RequireAdmin]
         [Matchers("更新翻译API")]
         string UpdateTranslateApi()
         {
-            if (!WFResource.UpdateLexion())
+            if (!WFResources.UpdateLexion())
                 return "翻译API更新失败, 可能是请求次数过多, 请查看 FAQ 来了解如何解决这个问题.";
             return null;
         }

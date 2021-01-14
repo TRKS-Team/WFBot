@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 
@@ -8,8 +9,8 @@ namespace WFBot.Features.Common
 
     public class WFStatus
     {
-        private static WFChineseAPI api => WFResource.WFChineseApi;
-        private static WFTranslator translator => WFResource.WFTranslator;
+        private static WFChineseAPI api => WFResources.WFChineseApi;
+        private static WFTranslator translator => WFResources.WFTranslator;
         private string platform => Config.Instance.Platform.ToString();
         // private List<Fissure> _fissures = api.GetFissures();
 

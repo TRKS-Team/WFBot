@@ -11,6 +11,7 @@ using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.User;
 using WFBot.Features.Common;
 using WFBot.Features.Other;
+using WFBot.Features.Resource;
 using WFBot.Utils;
 using WFBot.Windows;
 
@@ -18,8 +19,8 @@ namespace WFBot.Features.Utils
 {
     public static class WFFormatter
     {
-        private static WFTranslator translator => WFResource.WFTranslator;
-        private static List<WFCD_All> all => WFResource.WFCDAll;
+        private static WFTranslator translator => WFResources.WFTranslator;
+        private static WFCD_All[] all => WFResources.WFCDAll;
 
         public static string Format(this CommitData[] commits)
         {
@@ -260,7 +261,7 @@ namespace WFBot.Features.Utils
         {
             var weapon = infos.First().weapon;
             var sb = new StringBuilder();
-            var weaponinfo = WFResource.WFTranslateData.Riven.First(d => d.name == weapon);
+            var weaponinfo = WFResources.WFTranslateData.Riven.First(d => d.name == weapon);
             sb.AppendLine($"下面是 {riven.zhname} 紫卡的基本信息(来自DE)");
             sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
             var rerolled = datas.Where(d => !d.rerolled);

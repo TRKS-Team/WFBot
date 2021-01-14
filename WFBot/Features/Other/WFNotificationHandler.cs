@@ -7,6 +7,7 @@ using System.Xml.XPath;
 using GammaLibrary.Extensions;
 using HtmlAgilityPack;
 using WFBot.Events;
+using WFBot.Features.Resource;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Utils;
@@ -23,7 +24,7 @@ namespace WFBot.Features.Other
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
         private readonly HashSet<WarframeUpdate> sendedUpdateSet = new HashSet<WarframeUpdate>();
         // 如果你把它改到5分钟以上 sentientoutpost会出错
-        private WFChineseAPI api => WFResource.WFChineseApi;
+        private WFChineseAPI api => WFResources.WFChineseApi;
         private string platform => Config.Instance.Platform.ToString();
         private List<WFAlert> AlertPool = new List<WFAlert>();
         private List<WFInvasion> InvasionPool = new List<WFInvasion>();

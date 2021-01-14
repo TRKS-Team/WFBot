@@ -127,7 +127,6 @@ namespace WFBot.Utils
             try
             {
                 content = await WebHelper.DownloadJsonAsync<T>(url, header).ConfigureAwait(false);
-
             }
             catch (Exception e)
             {

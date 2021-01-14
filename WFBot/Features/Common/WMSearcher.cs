@@ -6,6 +6,7 @@ using System.Text;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.Others;
+using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 using WFBot.Windows;
@@ -19,10 +20,10 @@ namespace WFBot.Features.Common
     }
     public class WMSearcher
     {
-        private WFTranslator translator => WFResource.WFTranslator;
-        private WFApi api => WFResource.WFTranslateData;
-        private Client wfaClient => WFResource.WFAApi.wfaClient;
-        private bool isWFA => WFResource.WFAApi.isWFA;
+        private WFTranslator translator => WFResources.WFTranslator;
+        private WFApi api => WFResources.WFTranslateData;
+        private Client wfaClient => WFResources.WFAApi.WfaClient;
+        private bool isWFA => WFResources.WFAApi.isWFA;
 
         private string platform => Config.Instance.Platform.ToString();
         public WMInfo GetWMInfo(string searchword)

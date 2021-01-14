@@ -17,19 +17,13 @@ namespace WFBot.Events
     {
         public void ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
         {
+            // 检查每分钟最大调用
             if (CheckCallPerMin(groupId)) return;
-            if (Config.Instance.IsSlashRequired)
-            {
-                if (!message.StartsWith("/"))
-                {
-                    return;
-                }
-            }
 
-            if (message.StartsWith("/"))
-            {
-                message = message.Substring(1);
-            }
+            // 处理以 '/' 开头的消息
+            if (Config.Instance.IsSlashRequired && !message.StartsWith("/")) return;
+            message = message.TrimStart('/');
+
             var handler = new GroupMessageHandler(senderId, groupId, message);
             Task.Factory.StartNew(() => handler.ProcessCommandInput());
         }

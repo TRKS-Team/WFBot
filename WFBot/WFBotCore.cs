@@ -9,6 +9,7 @@ using GammaLibrary.Extensions;
 using WFBot.Connector;
 using WFBot.Events;
 using WFBot.Features.Other;
+using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
@@ -43,7 +44,7 @@ namespace WFBot
 
             Console.WriteLine("WFBot fully loaded.");
             Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s");
-
+            
             while (true)
             {
                 var text = Console.ReadLine();
@@ -106,7 +107,7 @@ namespace WFBot
             InitLogger();
             Plugins.Load();
             ConnectorManager.LoadConnector();
-            WFResource.InitWFResource();
+            WFResources.InitWFResource();
             messageReceivedEvent = new MessageReceivedEvent();
             privateMessageReceivedEvent = new PrivateMessageReceivedEvent();
             NotificationHandler = new WFNotificationHandler();

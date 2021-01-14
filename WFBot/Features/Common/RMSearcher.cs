@@ -6,6 +6,7 @@ using System.Text;
 using GammaLibrary.Extensions;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Others;
+using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 
@@ -13,10 +14,9 @@ namespace WFBot.Features.Common
 {
     public class RMSearcher
     {
-
-        private Client wfaClient => WFResource.WFAApi.wfaClient;
-        private bool isWFA => WFResource.WFAApi.isWFA;
-        private WFTranslator translator => WFResource.WFTranslator;
+        private Client wfaClient => WFResources.WFAApi.WfaClient;
+        private bool isWFA => WFResources.WFAApi.isWFA;
+        private WFTranslator translator => WFResources.WFTranslator;
 
 
         /*public string GetAccessToken()

@@ -16,6 +16,7 @@ namespace WFBot.Utils
 
         public static T Instance
         {
+            [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
                 if (_instance == null) Update();

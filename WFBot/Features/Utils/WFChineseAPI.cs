@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,6 +17,7 @@ using ManagedLzma.SevenZip.FileModel;
 using WFBot.Events;
 using WFBot.Features.Common;
 using WFBot.Features.Other;
+using WFBot.Features.Resource;
 using WFBot.Utils;
 using WFBot.Windows;
 
@@ -63,161 +62,12 @@ namespace WFBot.Features.Utils
             return Comparer<StringInfo>.Default.Compare(left, right) >= 0;
         }
     }
-    public static class WFResource
-    {
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void InitWFResource()
-        {
-            WFTranslateData = GetTranslateApi();
-            WFChineseApi = new WFChineseAPI();
-            WFAApi = new WFAApi();
-            WFTranslator = new WFTranslator();
-            WFContent = GetWFContentApi();
-            WFCDAll = GetWFCDResources();
-
-            /*
-            catch (Exception e)
-            {
-                Messenger.SendDebugInfo($"初始化出现问题, WFBot 无法运行: {e}");
-                try
-                {
-                    Directory.Delete("WFCaches", true);
-                }
-                catch (Exception)
-                {
-                }
-                MessageBox.Show($"初始化出现问题, WFBot 无法运行, 已经删除文件缓存, 请再试一次, 还是不行请检查 WFBotLogs: {e}", "WFBot", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            */
-        }
-
-        public static WFApi WFTranslateData { get; private set; }
-        public static WFChineseAPI WFChineseApi { get; private set; }
-        public static WFTranslator WFTranslator { get; private set; }
-        public static WFAApi WFAApi { get; private set; }
-        public static List<WFCD_All> WFCDAll { get; private set; }
-        public static WFContentApi WFContent { get; private set; }
-
-        private static readonly object TranslateLocker = new object();
-        private static void DecompressFileLZMA(string inFile, string outFile)
-        {
-            SevenZip.Compression.LZMA.Decoder coder = new SevenZip.Compression.LZMA.Decoder();
-            FileStream input = new FileStream(inFile, FileMode.Open);
-            FileStream output = new FileStream(outFile, FileMode.Create);
-
-            // Read the decoder properties
-            byte[] properties = new byte[5];
-            input.Read(properties, 0, 5);
-
-            // Read in the decompress file size.
-            byte[] fileLengthBytes = new byte[8];
-            input.Read(fileLengthBytes, 0, 8);
-            long fileLength = BitConverter.ToInt64(fileLengthBytes, 0);
-
-            coder.SetDecoderProperties(properties);
-            coder.Code(input, output, input.Length, fileLength, null);
-            output.Flush();
-            output.Close();
-        }
-        private static List<string> GetWFOriginUrl()
-        {
-            // const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
-            const string source =
-                "https://weathered-lake-14e8.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
-            // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
-            var name = source.Split('/').Last();
-            var wc = new WebClient();
-            var header = new WebHeaderCollection();
-            header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-            wc.Headers = header;
-            var path = Path.Combine("WFCaches", name);
-            var resultpath = Path.Combine("WFCaches", "index_zh.txt");
-            wc.DownloadFile(source, path);
-            DecompressFileLZMA(path, resultpath);
-            var result = File.ReadAllLines(resultpath).ToList();
-            return result;
-        }
-        private static WFContentApi GetWFContentApi()
-        {
-            var result = new WFContentApi();
-            var urls = GetWFOriginUrl();
-            const string source = "http://content.warframe.com/PublicExport/Manifest/";
-            Task.WaitAll(
-                Downloader.GetCacheOrDownload<ExportRelicArcaneZh>(source + urls.First(u => u.Contains("ExportRelicArcane_zh.json")), ra => result.ExportRelicArcanes = ra.ExportRelicArcane)
-            );
-            return result;
-        }
-        private static List<WFCD_All> GetWFCDResources()
-        {
-            var result = new List<WFCD_All>();
-            var header = new WebHeaderCollection();
-            header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-            // header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            // header.Add("Content-Type", "application/json; charset=utf-8");
-            // header.Add("Connection", "keep-alive");
-            Task.WaitAll(
-            Downloader.GetCacheOrDownload<List<WFCD_All>>("https://api.warframestat.us/items", all => result = all, header, "All.json")
-            );
-            return result;
-        }
-        private static WFApi GetTranslateApi()
-        {
-            lock (TranslateLocker)
-            {
-                var api = new WFApi();
-                // var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
-                var source = "https://cdn.jsdelivr.net/gh/Richasy/WFA_Lexicon@WFA5/";
-                Task.WaitAll(
-                    Downloader.GetCacheOrDownload<Dict[]>($"{source}WF_Dict.json", dicts => api.Dict = dicts),
-                    Downloader.GetCacheOrDownload<Invasion[]>($"{source}WF_Invasion.json", invs => api.Invasion = invs),
-                    Downloader.GetCacheOrDownload<Sale[]>($"{source}WF_Sale.json", sales => api.Sale = sales),
-                    Downloader.GetCacheOrDownload<Riven[]>($"{source}WF_Riven.json", rivens => api.Riven = rivens),
-                    Downloader.GetCacheOrDownload<AllRiven[]/* Riven和AllRiven的数据结构一致 */>($"{source}WF_AllRiven.json", allrivens => api.Allriven = allrivens),
-                    Downloader.GetCacheOrDownload<Lib[]>($"{source}WF_Lib.json", libs => api.Lib = libs),
-                    Downloader.GetCacheOrDownload<NightWave[]>($"{source}WF_NightWave.json", nightwave => api.NightWave = nightwave)
-                );
-
-                //Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
-                // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
-                // 呃, 还好我当时写了这局注释 不然我可能之后会拉不出屎憋死 来自2020年2月20日15:34:49的trks
-                // 天哪. 这api真是野蛮不堪 我当时为什么要这么写
-                // 我的上帝, 我居然需要再次修改这个野蛮的api 简直不敢相信
-                return api;
-            }
-        }
-
-        public static bool UpdateLexion()
-        {
-            try
-            {
-                var commit = CommitsGetter.Get("https://api.github.com/repos/Richasy/WFA_Lexicon/commits");
-                var sha = commit.First().sha;
-                if (sha == Config.Instance.localsha) return true;
-                Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
-                UpdateTranslateApi();
-                Config.Instance.localsha = sha;
-                Config.Save();
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private static void UpdateTranslateApi()
-        {
-            WFTranslateData = GetTranslateApi();
-            WFTranslator = new WFTranslator();
-        }
-    }
 
     public class WFChineseAPI
     {
-        private WFTranslator translator => WFResource.WFTranslator;
-        private List<WFCD_All> all => WFResource.WFCDAll;
-        private WFContentApi content => WFResource.WFContent;
+        private WFTranslator translator => WFResources.WFTranslator;
+        private WFCD_All[] all => WFResources.WFCDAll;
+        private WFContentApi content => WFResources.WFContent;
 
         private static string platform => Config.Instance.Platform.GetSymbols().First();
         private static readonly string WFstat = $"https://api.warframestat.us/{platform}";
@@ -407,7 +257,7 @@ namespace WFBot.Features.Utils
         private List<Riven> weaponslist = new List<Riven>(); // 武器的list 用来wfa搜索
         // She is known as riven, riven of a thousand voice, the last known ahamkara.
         private List<string> weapons = new List<string>();// 所有武器的中文
-        private WFApi translateApi => WFResource.WFTranslateData;
+        private WFApi translateApi => WFResources.WFTranslateData;
 
 
         public WFTranslator()
@@ -568,6 +418,7 @@ namespace WFBot.Features.Utils
         {
             return relicrewardTranslator.Translate(reward.Format());
         }
+
         public void TranslateKuvaMission(List<Kuva> kuvas)
         {
             foreach (var kuva in kuvas)
