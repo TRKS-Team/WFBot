@@ -32,7 +32,7 @@ namespace WFBot.Utils
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
-        private static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() =>
+        static ThreadLocal<WebClient> webClient = new ThreadLocal<WebClient>(() =>
         {
             var client = new WebClientEx2();
             client.DownloadStringCompleted += (sender, args) =>
