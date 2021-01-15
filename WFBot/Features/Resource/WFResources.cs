@@ -31,6 +31,9 @@ namespace WFBot.Features.Resource
             await Task.WhenAll(
                 Task.Run(() => { WFTranslator = new WFTranslator(); }));
             await Task.WhenAll(tasks);
+
+            if (ResourceLoadFailed)
+                throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
             catch (Exception e)
             {
