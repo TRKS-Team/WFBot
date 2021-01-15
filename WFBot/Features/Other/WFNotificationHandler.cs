@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.XPath;
 using GammaLibrary.Extensions;
 using HtmlAgilityPack;
@@ -29,33 +31,36 @@ namespace WFBot.Features.Other
         private List<WFAlert> AlertPool = new List<WFAlert>();
         private List<WFInvasion> InvasionPool = new List<WFInvasion>();
         private List<PersistentEnemie> StalkerPool = new List<PersistentEnemie>();
+        volatile bool WFNotificationLoaded = false;
 
         public WFNotificationHandler()
         {
-            InitWFNotification();
+            InitWFNotificationAsync();
         }
 
-        private void InitWFNotification()
+        private async Task InitWFNotificationAsync()
         {
             var alerts = api.GetAlerts();
             var invs = api.GetInvasions();
             var enemies = api.GetPersistentEnemies();
             var updates = GetWarframeUpdates();
 
-            foreach (var alert in alerts)
+            foreach (var alert in await alerts)
                 sendedAlertsSet.Add(alert.Id);
-            foreach (var inv in invs)
+            foreach (var inv in await invs)
                 sendedInvSet.Add(inv.id);
-            foreach (var enemy in enemies)
+            foreach (var enemy in await enemies)
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-            foreach (var update in updates)
+            foreach (var update in await updates)
                 sendedUpdateSet.Add(update);
-
+            WFNotificationLoaded = true;
         }
 
         [CalledByTimer]
         public void Update()
         {
+            if (!WFNotificationLoaded) return;
+            
             lock (Locker)
             {
                 UpdateAlertPool();
@@ -92,11 +97,11 @@ namespace WFBot.Features.Other
             public string title { get; set; }
             public string url { get; set; }
         }
-        public List<WarframeUpdate> GetWarframeUpdates()
+        public async Task<List<WarframeUpdate>> GetWarframeUpdates()
         {
             var result = new List<WarframeUpdate>();
             var web = new HtmlWeb();
-            var doc = web.Load("https://forums.warframe.com/forum/3-pc-update-notes/");
+            var doc = await web.LoadFromWebAsync("https://forums.warframe.com/forum/3-pc-update-notes/");
             foreach (var node in doc.DocumentNode.SelectNodes("/html/body/main/div/div/div/div[3]/div/ol/li/div/h4/span/a"))
             {
                 result.Add(new WarframeUpdate {title = node.InnerText.Trim(), url = node.GetAttributeValue("href", "")});
@@ -106,7 +111,7 @@ namespace WFBot.Features.Other
         }
         public void CheckWarframeUpdates()
         {
-            var updates = GetWarframeUpdates();
+            var updates = GetWarframeUpdates().Result;
             if (!sendedUpdateSet.Contains(updates.First()))
             {
                 var msg = WFFormatter.ToString(updates.First());
@@ -117,14 +122,14 @@ namespace WFBot.Features.Other
         public void SendSentientOutpost()
         {
             var sb = new StringBuilder();
-            var outpost = api.GetSentientOutpost();
+            var outpost = api.GetSentientOutpost().Result;
             sb.AppendLine("侦测到在途的Sentient异常事件: ");
             sb.AppendLine(WFFormatter.ToString(outpost));
             Messenger.Broadcast(sb.ToString().Trim());
         }
         public void CheckSentientOutpost()
         {
-            var outpost = api.GetSentientOutpost();
+            var outpost = api.GetSentientOutpost().Result;
             // 这api妥妥的是个wip你信不信
             if (outpost.active && DateTime.Now - Config.Instance.SendSentientOutpostTime >= TimeSpan.FromMinutes(30))
             {
@@ -168,18 +173,18 @@ namespace WFBot.Features.Other
 
         private void UpdatePersistentEnemiePool()
         {
-            StalkerPool = api.GetPersistentEnemies();
+            StalkerPool = api.GetPersistentEnemies().Result;
             CheckPersistentEnemies();
         }
         private void UpdateAlertPool()
         {
-            AlertPool = api.GetAlerts();
+            AlertPool = api.GetAlerts().Result;
             CheckAlerts();
         }
 
         private void UpdateInvasionPool()
         {
-            InvasionPool = api.GetInvasions();
+            InvasionPool = api.GetInvasions().Result;
             CheckInvasions();
         }
 

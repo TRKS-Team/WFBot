@@ -57,8 +57,9 @@ namespace WFBot.Events
             _wfStatus.SendCetusMissions(Group, index);
         }
 
-        [Matchers("查询")]
+        [Matchers("查询", "wm")]
         [CombineParams]
+        [DoNotMeasureTime]
         void WM(string word)
         {
             const string quickReply = " -QR";

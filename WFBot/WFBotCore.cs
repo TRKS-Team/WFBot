@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using WFBot.Connector;
 using WFBot.Events;
@@ -20,7 +21,7 @@ namespace WFBot
 {
     static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             https://github.com/TRKS-Team/WFBot
 
@@ -30,7 +31,7 @@ namespace WFBot
             var sw = Stopwatch.StartNew();
             try
             {
-                wfbot.Init();
+                await wfbot.Init();
             }
             catch (Exception e)
             {
@@ -44,7 +45,7 @@ namespace WFBot
 
             Console.WriteLine("WFBot fully loaded.");
             Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s");
-            
+
             while (true)
             {
                 var text = Console.ReadLine();
@@ -102,12 +103,12 @@ namespace WFBot
             privateMessageReceivedEvent.ProcessPrivateMessage(userID, message);
         }
 
-        internal void Init()
+        internal async Task Init()
         {
             InitLogger();
             Plugins.Load();
             ConnectorManager.LoadConnector();
-            WFResources.InitWFResource();
+            await WFResources.InitWFResource();
             messageReceivedEvent = new MessageReceivedEvent();
             privateMessageReceivedEvent = new PrivateMessageReceivedEvent();
             NotificationHandler = new WFNotificationHandler();

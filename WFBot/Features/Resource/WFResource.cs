@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
@@ -37,7 +38,7 @@ namespace WFBot.Features.Resource
         readonly WebHeaderCollection header;
         const string OfflineDir = "WFOfflineResource";
         const string CacheDir = "WFCaches";
-        
+
 
         static WFResource()
         {
@@ -45,7 +46,7 @@ namespace WFBot.Features.Resource
             Directory.CreateDirectory(CacheDir);
         }
 
-        public WFResource(string url, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null)
+        protected WFResource(string url, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null)
         {
             resourceLoader = resourceLoader ?? ResourceLoaders<T>.JsonLoader;
             // 这写的太屎了
@@ -61,6 +62,19 @@ namespace WFBot.Features.Resource
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;
             }
             Version = 0;
+        }
+
+        public static WFResource<T> Create(string url, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null)
+        {
+            var result = new WFResource<T>(url, category, fileName, header, resourceLoader);
+            result.initTask = result.Reload(true);
+            return result;
+        }
+
+        Task initTask;
+        public Task WaitForInited()
+        {
+            return initTask ?? Task.CompletedTask;
         }
 
         public T Value
@@ -81,10 +95,7 @@ namespace WFBot.Features.Resource
                     Version++;
                     if (Category != null && WFResourceStatic.CategoryVersionDictionary.ContainsKey(Category))
                     {
-                        lock (WFResourceStatic.CategoryVersionDictionary)
-                        {
-                            WFResourceStatic.CategoryVersionDictionary[Category]++;
-                        }
+                        WFResourceStatic.CategoryVersionDictionary[Category]++;
                     }
                 }
             }
@@ -94,36 +105,48 @@ namespace WFBot.Features.Resource
         public string FileName { get; }
         public int Version { get; private set; }
 
-        public void Reload(bool isFirstTime = false)
+        public readonly SemaphoreSlim _locker = new SemaphoreSlim(1);
+        public async Task Reload(bool isFirstTime = false)
         {
-            lock (locker)
+            try
             {
-                if (LoadFromLocal())
+                await _locker.WaitAsync();
+                if (await LoadFromLocal())
                 {
                     if (isFirstTime) Trace.WriteLine($"资源 {FileName} 从本地载入.", "WFResource");
                     return;
                 }
 
-                if (isFirstTime && LoadCache())
+                if (isFirstTime && await LoadCache())
                 {
                     Trace.WriteLine($"资源 {FileName} 从缓存载入.", "WFResource");
                     LoadFromTheWideWorldOfWebNonBlocking();
                     return;
                 }
 
-                LoadFromTheWideWorldOfWeb();
+                await LoadFromTheWideWorldOfWeb();
+            }
+            catch (Exception) when (isFirstTime)
+            {
+                WFResources.ResourceLoadFailed = true;
+                throw;
+            }
+            finally
+            {
+                _locker.Release();
+                initTask = null;
             }
         }
 
-        void LoadFromTheWideWorldOfWeb()
+        async Task LoadFromTheWideWorldOfWeb()
         {
             try
             {
-                var dataString = RequestResourceFromTheWideWorldOfWeb();
+                var dataString = await RequestResourceFromTheWideWorldOfWeb();
                 Value = resourceLoader(dataString);
                 try
                 {
-                    File.WriteAllText(CachePath, dataString);
+                    await File.WriteAllTextAsync(CachePath, dataString);
                 }
                 catch (Exception e)
                 {
@@ -138,7 +161,7 @@ namespace WFBot.Features.Resource
             }
         }
 
-        public string RequestResourceFromTheWideWorldOfWeb()
+        public async Task<string> RequestResourceFromTheWideWorldOfWeb()
         {
             var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler()));
             if (header != null)
@@ -149,23 +172,22 @@ namespace WFBot.Features.Resource
                 }
             }
 
-            var dataString = httpClient.GetStringAsync(url).Result;
+            var dataString = await httpClient.GetStringAsync(url);
             Trace.WriteLine($"资源 {FileName} 下载完成.", "WFResource");
             return dataString;
         }
 
         void LoadFromTheWideWorldOfWebNonBlocking()
         {
-            Task.Run(() => LoadFromTheWideWorldOfWeb());
+            LoadFromTheWideWorldOfWeb();
         }
 
-        bool LoadCache()
+        async Task<bool> LoadCache()
         {
             try
             {
                 if (!File.Exists(CachePath)) return false;
-
-                Value = resourceLoader(File.ReadAllText(CachePath));
+                Value = resourceLoader(await File.ReadAllTextAsync(CachePath));
                 return true;
             }
             catch (Exception e)
@@ -180,12 +202,12 @@ namespace WFBot.Features.Resource
             }
         }
 
-        bool LoadFromLocal()
+        async Task<bool> LoadFromLocal()
         {
             try
             {
                 if (!File.Exists(LocalPath)) return false;
-                Value = resourceLoader(File.ReadAllText(LocalPath));
+                Value = resourceLoader(await File.ReadAllTextAsync(LocalPath));
 
                 return true;
             }

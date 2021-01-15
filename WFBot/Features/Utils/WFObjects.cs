@@ -237,7 +237,10 @@ namespace WFBot.Features.Utils
         public float crit_chance { get; set; }
         public float crit_mult { get; set; }
         public float status_chance { get; set; }
-        public string shot_type { get; set; }
+        public object shot_type { get; set; }
+        // holy sh*t
+        // 混用类型真 nt
+        // 这里 shot_type 可以为 int 和 string
         public float impact { get; set; }
         public float slash { get; set; }
         public float puncture { get; set; }

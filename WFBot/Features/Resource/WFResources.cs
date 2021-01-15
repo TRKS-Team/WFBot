@@ -9,23 +9,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+// ReSharper disable LocalizableElement
 
 namespace WFBot.Features.Resource
 {
     public static class WFResources
     {
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void InitWFResource()
+        internal static bool ResourceLoadFailed = false;
+        // 这里其实应该加锁
+        internal static async Task InitWFResource()
         {
-            WFTranslateData = GetTranslateApi();
             WFChineseApi = new WFChineseAPI();
-            WFAApi = new WFAApi();
-            WFTranslator = new WFTranslator();
-            Task.WhenAll(
-                SetWFContentApi(),
-                SetWFCDResources());
+            ThreadPool.SetMinThreads(64, 64);
+            var tasks = new List<Task>();
+            
+            tasks.Add(Task.Run(async () => await SetWFCDResources()));
+            tasks.Add(Task.Run(async () => await SetWFContentApi()));
+            tasks.Add(Task.Run(() => { WFAApi = new WFAApi(); }));
+            WFTranslateData = await GetTranslateApi();
 
+            await Task.WhenAll(
+                Task.Run(() => { WFTranslator = new WFTranslator(); }));
+            await Task.WhenAll(tasks);
             /*
             catch (Exception e)
             {
@@ -81,7 +86,7 @@ namespace WFBot.Features.Resource
 
         public static WFContentApi WFContent { get; private set; }
 
-        private static List<string> GetWFOriginUrls()
+        private static async Task<List<string>> GetWFOriginUrls()
         {
             // const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             const string source =
@@ -98,29 +103,25 @@ namespace WFBot.Features.Resource
             var path = Path.Combine("WFCaches", name);
             var resultpath = Path.Combine("WFCaches", "index_zh.txt");
 
-            wc.DownloadFile(source, path);
+            await wc.DownloadFileTaskAsync(source, path);
             LZMADecompress.DecompressFileLZMA(path, resultpath);
 
-            var result = File.ReadAllLines(resultpath).ToList();
+            var result = (await File.ReadAllLinesAsync(resultpath)).ToList();
             return result;
         }
 
-        private static Task SetWFContentApi()
+        private static async Task SetWFContentApi()
         {
             var result = new WFContentApi();
-            var urls = GetWFOriginUrls();
+            var urls = await GetWFOriginUrls();
             const string source = "http://content.warframe.com/PublicExport/Manifest/";
 
-            var resource = new WFResource<ExportRelicArcane[]>(source + urls.First(u => u.Contains("ExportRelicArcane_zh.json")),resourceLoader: s => s.JsonDeserialize<ExportRelicArcaneZh>().ExportRelicArcane);
-            var task = Task.Run(() =>
-            {
-                resource.Reload(true);
-            });
+            var resource = WFResource<ExportRelicArcane[]>.Create(source + urls.First(u => u.Contains("ExportRelicArcane_zh.json")), resourceLoader: s => s.JsonDeserialize<ExportRelicArcaneZh>().ExportRelicArcane);
 
             result.RExportRelicArcanes = resource;
 
             WFContent = result;
-            return task;
+            await resource.WaitForInited();
         }
 
         private static Task SetWFCDResources()
@@ -130,17 +131,13 @@ namespace WFBot.Features.Resource
                 {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}
             };
 
-            var resource = new WFResource<WFCD_All[]>("https://api.warframestat.us/items", header: header);
-            var task = Task.Run(() =>
-            {
-                resource.Reload(true);
-            });
+            var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items", header: header);
 
             RWFCDAll = resource;
-            return task;
+            return resource.WaitForInited();
         }
 
-        private static WFApi GetTranslateApi()
+        private static async Task<WFApi> GetTranslateApi()
         {
             var api = new WFApi();
             // var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
@@ -155,20 +152,14 @@ namespace WFBot.Features.Resource
             AddTask(ref api.RLib, "WF_Lib.json");
             AddTask(ref api.RNightWave, "WF_NightWave.json");
 
-            Task.WaitAll(tasks.ToArray());
+            await Task.WhenAll(tasks.ToArray());
 
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class
             {
                 var path = $"{source}{name}";
-
-                var resource = new WFResource<T>(path, category: nameof(WFTranslator));
-                var task = Task.Factory.StartNew(() =>
-                {
-                    resource.Reload(true);
-                }, TaskCreationOptions.LongRunning);
-
+                var resource = WFResource<T>.Create(path, category: nameof(WFTranslator));
                 obj = resource;
-                tasks.Add(task);
+                tasks.Add(resource.WaitForInited());
             }
             //Messenger.SendDebugInfo($"翻译 API 加载完成. 用时 {sw.Elapsed.TotalSeconds:N1}s.");
             // 嘿,如果你在看这个方法怎么用,让2019年3月14日23:59:23的trks来告诉你吧,这个api是本地缓存的api(在本地有的情况下),但是不久后将会被第三方线程操成最新的,我在这里浪费了好久,希望你不会.
@@ -201,7 +192,7 @@ namespace WFBot.Features.Resource
         // todo 这里需要改
         private static void UpdateTranslateApi()
         {
-            WFTranslateData = GetTranslateApi();
+            WFTranslateData = GetTranslateApi().Result;
             WFTranslator = new WFTranslator();
         }
     }

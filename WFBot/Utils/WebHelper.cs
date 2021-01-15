@@ -95,7 +95,7 @@ namespace WFBot.Utils
                 Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
             }
         }
-
+        
         public static T DownloadJsonParallel<T>(params string[] urls)
         {
             var tasks = urls.Select(url => Task.Run(() => DownloadJson<T>(url, false))).ToList();
@@ -111,6 +111,7 @@ namespace WFBot.Utils
 
             throw new WebException($"在下载[{urls.FirstOrDefault()}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
         }
+
         public static async Task<T> DownloadJsonAsync<T>(string url)
         {
             var sw = Stopwatch.StartNew();
@@ -121,7 +122,7 @@ namespace WFBot.Utils
                 {
                     try
                     {
-                        return JsonExtensions.JsonDeserialize<T>(await new HttpClient().GetStringAsync(url));
+                        return (await new HttpClient().GetStringAsync(url)).JsonDeserialize<T>();
                     }
                     catch (Exception)
                     {
@@ -131,37 +132,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
-            }
-        }
-        public static async Task<T> DownloadJsonAsync<T>(string url, WebHeaderCollection header)
-        {
-            var sw = Stopwatch.StartNew();
-            try
-            {
-                var count = 2;
-                while (count-- > 0)
-                {
-                    try
-                    {
-                        var wc = new WebClientEx1 {Headers = header};
-                        var settings = new JsonSerializerSettings
-                        {
-                            DefaultValueHandling = DefaultValueHandling.Populate,
-                            NullValueHandling = NullValueHandling.Ignore
-                        };
-                        return JsonExtensions.JsonDeserialize<T>(await wc.DownloadStringTaskAsync(url), settings );
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-                }
-                throw new WebException($"在下载[{url}]时多次遇到问题. 请检查你的网络是否正常或联系项目负责人.");
-            }
-            finally
-            {
-                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+                Trace.WriteLine($"数据下载完成: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
             }
         }
 
@@ -170,34 +141,20 @@ namespace WFBot.Utils
             var sw = Stopwatch.StartNew();
             try
             {
-                var wc = new WebClientEx2();
-                wc.Headers = header;
-                return JsonExtensions.JsonDeserialize<T>(wc.DownloadString(url));
+                var wc = new HttpClient();
+                foreach (string key in header)
+                {
+                    wc.DefaultRequestHeaders.Add(key, header[key]);
+                }
+                wc.Timeout = TimeSpan.FromSeconds(20);
+                return wc.GetStringAsync(url).Result.JsonDeserialize<T>();
             }
             finally
             {
-                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+                Trace.WriteLine($"数据下载完成: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
             }
         }
-
-        public static T UploadJson<T>(string url, string body)
-        {
-            return JsonExtensions.JsonDeserialize<T>(webClient.Value.UploadString(url, body));
-        }
-
-        public static T UploadJson<T>(string url, string body, WebHeaderCollection header)
-        {
-            var sw = Stopwatch.StartNew();
-            try
-            {
-                var wc = new WebClientEx2 { Headers = header };
-                return JsonExtensions.JsonDeserialize<T>(wc.UploadString(url, body));
-            }
-            finally
-            {
-                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
-            }
-        }
+        
 
         public static void DownloadFile(string url, string path, string name)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.Others;
@@ -34,11 +35,21 @@ namespace WFBot.Features.Common
             {
                 platform = "switch";
             }
-            header.Add("platform", platform);
-            var info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
+            header.Add("platform", platform); 
+            WMInfo info;
+            try
+            {
+                info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
+            }
+            catch (Exception e)
+            {
+                throw new CommandException($"请求数据出错: {e.Message}");
+            }
+
             info.sale = api.Sale.First(s => s.code == searchword);
             return info;
         }
+
         public WMInfoEx GetWMINfoEx(string searchword)
         {
             /*var header = new WebHeaderCollection();
