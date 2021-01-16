@@ -19,14 +19,19 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+    
+    - name: Clean
+      run: dotnet clean ./Bumbo-Web/Bumbo-Web.sln --configuration Release && dotnet nuget locals all --clear
     - name: Restore dependencies
       run: dotnet restore
+    
     - name: Windows Build
       run: dotnet publish WFBot -c "Windows Release" -o WindowsPublish --self-contained false --no-restore
     - name: Linux Build
       run: dotnet publish WFBot -c "Linux Release" -o LinuxPublish --self-contained false --no-restore
     - name: Mirai Connector Build
       run: dotnet publish MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false --no-restore
+    
     - name: Zip Windows Release
       uses: DuckSoft/create-7z-action@v1.0
       with:
