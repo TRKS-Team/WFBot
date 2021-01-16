@@ -92,7 +92,6 @@ jobs:
           body: ${{ steps.tag_version.outputs.changelog }}
 
       - name: Upload WFBot Windows Release
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -103,7 +102,6 @@ jobs:
           asset_content_type: application/x-7z-compressed
 
       - name: Upload WFBot Linux Release
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -113,8 +111,7 @@ jobs:
           asset_name: WFBot-Linux.7z
           asset_content_type: application/x-7z-compressed
 
-      - name: Upload WFBot MiraiConnector
-        id: upload-release-asset
+      - name: Upload WFBot MiraiConnecto
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
