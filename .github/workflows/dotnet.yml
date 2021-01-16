@@ -22,9 +22,9 @@ jobs:
         uses: mathieudutour/github-tag-action@v5.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Reset Tags:
+      - name: Reset Tags
         run: git fetch --tags
-        
+
       - name: Clean 1
         run: dotnet clean WFBot.sln --configuration "Windows Release" && dotnet nuget locals all --clear
       - name: Clean 2
