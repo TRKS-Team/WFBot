@@ -29,7 +29,7 @@ jobs:
       - name: Linux Build
         run: dotnet publish WFBot -c "Linux Release" -o LinuxPublish --self-contained false --no-restore
       - name: Mirai Connector Build
-        run: dotnet publish MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false --no-restore
+        run: dotnet publish Connectors/MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false --no-restore
 
       - name: Zip Windows Release
         uses: DuckSoft/create-7z-action@v1.0
