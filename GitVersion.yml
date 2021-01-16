@@ -7,7 +7,7 @@ branches:
     mode: ContinuousDelivery
     tag: ""
   master:
-    regex: (^master$|^origin\/universal$|^universal$|^origin\/universal$)
+    regex: (^master$|^origin\/master$|^universal$|^origin\/universal$)
     mode: ContinuousDeployment
     tag: "main"
     is-mainline: true

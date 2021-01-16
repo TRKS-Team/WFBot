@@ -15,25 +15,23 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="7-Zip.CommandLine" Version="18.1.0" />
-    <PackageReference Include="7ZipCLI" Version="9.20.0" />
     <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" />
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Fody" Version="6.1.0" />
     <PackageReference Include="GammaLibrary" Version="1.2.0" />
-    <PackageReference Include="GitVersionTask" Version="5.5.1">
+    <PackageReference Include="GitVersion.MsBuild" Version="5.6.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
-    <PackageReference Include="Humanizer.Core" Version="2.7.9" />
-    <PackageReference Include="Humanizer.Core.zh-CN" Version="2.7.9" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
+    <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
     <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Lib.Harmony" Version="2.0.2" />
     <PackageReference Include="ManagedLzma" Version="0.2.0-alpha-7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Richasy.WFA.Sdk" Version="1.0.6" />
-    <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
     <PackageReference Include="TextCommandCore" Version="1.6.1" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
   </ItemGroup>
