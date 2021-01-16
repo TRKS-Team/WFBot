@@ -25,12 +25,8 @@ namespace WFBot
         public static async Task Main(string[] args)
         {
             https://github.com/TRKS-Team/WFBot
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
-            var wfbot = new WFBotCore();
-            WFBotCore.Instance = wfbot;
-
             var skipPressKey = false;
+            var setCurrentFolder = false;
             foreach (var s in args)
             {
                 switch (s)
@@ -38,8 +34,22 @@ namespace WFBot
                     case "--skip-press-any-key":
                         skipPressKey = true;
                         break;
+                    case "--set-current-folder-to-executable":
+                        setCurrentFolder = true;
+                        break;
                 }
             }
+
+            if (setCurrentFolder)
+            {
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            }
+
+
+            var wfbot = new WFBotCore();
+            WFBotCore.Instance = wfbot;
+
+            
 
             var sw = Stopwatch.StartNew();
             try
