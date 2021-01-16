@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
@@ -19,14 +20,26 @@ using WFBot.Windows;
 
 namespace WFBot
 {
-    static class Program
+    public static class Program
     {
-        public static async Task Main()
+        public static async Task Main(string[] args)
         {
             https://github.com/TRKS-Team/WFBot
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
+
+            var skipPressKey = false;
+            foreach (var s in args)
+            {
+                switch (s)
+                {
+                    case "--skip-press-any-key":
+                        skipPressKey = true;
+                        break;
+                }
+            }
 
             var sw = Stopwatch.StartNew();
             try
@@ -37,8 +50,11 @@ namespace WFBot
             {
                 Console.WriteLine("WFBot 在初始化中遇到了问题.");
                 Trace.WriteLine(e);
-                Console.WriteLine("按任意键继续.");
-                Console.ReadKey();
+                if (!skipPressKey)
+                {
+                    Console.WriteLine("按任意键继续.");
+                    Console.ReadKey();
+                }
                 return;
             }
             
