@@ -21,6 +21,7 @@ namespace WFBot.Features.Resource
     }
 
     public delegate T WFResourceLoader<T>(string data);
+    public delegate Task<string> WFResourceRequester(string url);
 
     public static class WFResourceStatic
     {
@@ -46,17 +47,20 @@ namespace WFBot.Features.Resource
             Directory.CreateDirectory(CacheDir);
         }
 
-        protected WFResource(string url, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null)
+        protected WFResource(string url = null, string category = null, string fileName = null,
+            WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
+            WFResourceRequester wfResourceRequester = null)
         {
             resourceLoader = resourceLoader ?? ResourceLoaders<T>.JsonLoader;
             // 这写的太屎了
-            fileName = fileName ?? url.Split('/').Last().Split('?').First().Split("!").First();
+            fileName = fileName ?? (url ?? string.Empty).Split('/').Last().Split('?').First().Split("!").First();
 
             this.resourceLoader = resourceLoader;
             this.url = url;
             FileName = fileName;
             this.header = header;
             Category = category;
+            requester = wfResourceRequester ?? RequestResourceFromTheWideWorldOfWeb;
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;
@@ -64,9 +68,9 @@ namespace WFBot.Features.Resource
             Version = 0;
         }
 
-        public static WFResource<T> Create(string url, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null)
+        public static WFResource<T> Create(string url = null, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null, WFResourceRequester requester = null)
         {
-            var result = new WFResource<T>(url, category, fileName, header, resourceLoader);
+            var result = new WFResource<T>(url, category, fileName, header, resourceLoader, requester);
             result.initTask = result.Reload(true);
             return result;
         }
@@ -106,6 +110,8 @@ namespace WFBot.Features.Resource
         public int Version { get; private set; }
 
         public readonly SemaphoreSlim _locker = new SemaphoreSlim(1);
+        WFResourceRequester requester;
+
         public async Task Reload(bool isFirstTime = false)
         {
             try
@@ -113,13 +119,13 @@ namespace WFBot.Features.Resource
                 await _locker.WaitAsync();
                 if (await LoadFromLocal())
                 {
-                    if (isFirstTime) Trace.WriteLine($"资源 {FileName} 从本地载入.", "WFResource");
+                    if (isFirstTime) Trace.WriteLine($"WFResource: 资源 {FileName} 从本地载入.");
                     return;
                 }
 
                 if (isFirstTime && await LoadCache())
                 {
-                    Trace.WriteLine($"资源 {FileName} 从缓存载入.", "WFResource");
+                    Trace.WriteLine($"WFResource: 资源 {FileName} 从缓存载入.");
                     LoadFromTheWideWorldOfWebNonBlocking();
                     return;
                 }
@@ -142,7 +148,7 @@ namespace WFBot.Features.Resource
         {
             try
             {
-                var dataString = await RequestResourceFromTheWideWorldOfWeb();
+                var dataString = await requester(url);
                 Value = resourceLoader(dataString);
                 try
                 {
@@ -161,7 +167,7 @@ namespace WFBot.Features.Resource
             }
         }
 
-        public async Task<string> RequestResourceFromTheWideWorldOfWeb()
+        public async Task<string> RequestResourceFromTheWideWorldOfWeb(string urlp)
         {
             var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler()));
             if (header != null)
@@ -172,7 +178,7 @@ namespace WFBot.Features.Resource
                 }
             }
 
-            var dataString = await httpClient.GetStringAsync(url);
+            var dataString = await httpClient.GetStringAsync(urlp);
             Trace.WriteLine($"资源 {FileName} 下载完成.", "WFResource");
             return dataString;
         }

@@ -42,10 +42,8 @@ namespace WFBot
                 Console.ReadKey();
                 return;
             }
-
-            Console.WriteLine("WFBot fully loaded.");
+            
             Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s");
-
             while (true)
             {
                 var text = Console.ReadLine();
@@ -55,6 +53,7 @@ namespace WFBot
                         OpenWFBotSettingsWindow();
                         break;
                     case "exit":
+                    case "stop":
                         return;
                     default:
                         ConnectorManager.Connector.OnCommandLineInput(text);
@@ -106,6 +105,11 @@ namespace WFBot
         internal async Task Init()
         {
             InitLogger();
+            TaskScheduler.UnobservedTaskException += (sender, args) =>
+            {
+                Trace.WriteLine($"Task 发生异常: {args.Exception}.");
+                args.SetObserved();
+            };
             Plugins.Load();
             ConnectorManager.LoadConnector();
             await WFResources.InitWFResource();

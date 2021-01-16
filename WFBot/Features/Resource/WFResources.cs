@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using WFBot.Features.Utils;
@@ -31,7 +33,6 @@ namespace WFBot.Features.Resource
             await Task.WhenAll(
                 Task.Run(() => { WFTranslator = new WFTranslator(); }));
             await Task.WhenAll(tasks);
-
             if (ResourceLoadFailed)
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
@@ -116,10 +117,17 @@ namespace WFBot.Features.Resource
         private static async Task SetWFContentApi()
         {
             var result = new WFContentApi();
-            var urls = await GetWFOriginUrls();
             const string source = "http://content.warframe.com/PublicExport/Manifest/";
 
-            var resource = WFResource<ExportRelicArcane[]>.Create(source + urls.First(u => u.Contains("ExportRelicArcane_zh.json")), resourceLoader: s => s.JsonDeserialize<ExportRelicArcaneZh>().ExportRelicArcane);
+            var resource = WFResource<ExportRelicArcane[]>.Create(
+                resourceLoader: s => s.JsonDeserialize<ExportRelicArcaneZh>().ExportRelicArcane,
+                fileName: "ExportRelicArcane_zh.json",
+                requester: async _ =>  
+                {
+                    var urls = await GetWFOriginUrls();
+                    var link = source + urls.First(u => u.Contains("ExportRelicArcane_zh.json"));
+                    return await new HttpClient(new RetryHandler(new HttpClientHandler())).GetStringAsync(link);
+                });
 
             result.RExportRelicArcanes = resource;
 
@@ -134,7 +142,9 @@ namespace WFBot.Features.Resource
                 {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}
             };
 
-            var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items", header: header);
+            var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items",
+                header: header,
+                resourceLoader: s => JsonSerializer.Deserialize<WFCD_All[]>(s));
 
             RWFCDAll = resource;
             return resource.WaitForInited();
