@@ -45,8 +45,8 @@ jobs:
     - name: Zip Mirai Connector
       uses: DuckSoft/create-7z-action@v1.0
       with:
-        pathSource: WFBot-MiraiConnector.7z
-        pathTarget: ./MiraiConnector/
+        pathTarget: WFBot-MiraiConnector.7z
+        pathSource: ./MiraiConnector/
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
