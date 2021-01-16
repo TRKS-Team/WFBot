@@ -36,11 +36,15 @@ jobs:
         run: dotnet publish Connectors/MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false
         env:
           OFFICIAL_BUILD: official
+      - name: Test Connector Build
+        run: dotnet publish Connectors/TestConnector -c "Linux Release" -o TestConnector --self-contained false
+        env:
+          OFFICIAL_BUILD: official
 
       - name: Pre Run Windows
-        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key
+        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable
       - name: Pre Run Linux
-        run: dotnet LinuxPublish/WFBot.dll --skip-press-any-key
+        run: dotnet LinuxPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable
 
       - name: Zip Windows Release
         uses: DuckSoft/create-7z-action@v1.0
@@ -55,8 +59,14 @@ jobs:
       - name: Zip Mirai Connector
         uses: DuckSoft/create-7z-action@v1.0
         with:
-          pathTarget: WFBot-MiraiConnector.7z
+          pathTarget: WFBot-Connector-MiraiConnector.7z
           pathSource: ./MiraiConnector/
+      - name: Zip Test Connector
+        uses: DuckSoft/create-7z-action@v1.0
+        with:
+          pathTarget: WFBot-Connector-TestConnector.7z
+          pathSource: ./TestConnector/
+
       - name: Upload Windows
         uses: actions/upload-artifact@v2
         with:
@@ -69,11 +79,17 @@ jobs:
           name: WFBot Linux
           path: ./WFBot-Linux.7z
           retention-days: 30
-      - name: Upload MiraiHTTPConnector
+      - name: Upload Mirai Connector
         uses: actions/upload-artifact@v2
         with:
           name: WFBot Mirai Connector
-          path: ./WFBot-MiraiConnector.7z
+          path: ./WFBot-Connector-MiraiConnector.7z
+          retention-days: 30
+      - name: Upload Test Connector
+        uses: actions/upload-artifact@v2
+        with:
+          name: WFBot Test Connector
+          path: ./WFBot-Connector-TestConnector.7z
           retention-days: 30
 
       - name: Bump version and push tag
@@ -81,8 +97,6 @@ jobs:
         uses: mathieudutour/github-tag-action@v5.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          append_to_pre_release_tag: ""
-          tag_prefix: ""
       - name: Create a GitHub release
         id: create_release
         uses: actions/create-release@v1
@@ -113,12 +127,22 @@ jobs:
           asset_name: WFBot-Linux.7z
           asset_content_type: application/x-7z-compressed
 
-      - name: Upload WFBot MiraiConnector
+      - name: Upload WFBot Mirai Connector
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WFBot-MiraiConnector.7z
-          asset_name: WFBot-MiraiConnector.7z
+          asset_path: ./WFBot-Connector-MiraiConnector.7z
+          asset_name: WFBot-Connector-MiraiConnector.7z
+          asset_content_type: application/x-7z-compressed
+
+      - name: Upload WFBot Test Connector
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./WFBot-Connector-TestConnector.7z
+          asset_name: WFBot-Connector-TestConnector.7z
           asset_content_type: application/x-7z-compressed
