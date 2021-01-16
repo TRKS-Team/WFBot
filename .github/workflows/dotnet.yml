@@ -98,9 +98,13 @@ jobs:
           path: ./WFBot-Connector-TestConnector.7z
           retention-days: 30
 
-      - name: GitVersion
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "5.x"
+      - name: Run GitVersion
         id: gitversion
-        uses: roryprimrose/rungitversion@v1.0.0
+        uses: gittools/actions/gitversion/execute@v0.9.7
 
       - name: Create a GitHub release
         id: create_release
@@ -109,7 +113,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          release_name: ${{ steps.gitversion.outputs.InformationalVersion }}
+          release_name: ${{ steps.gitversion.outputs.informationalVersion }}
           body: ${{ steps.tag_version.outputs.changelog }}
 
       - name: Upload WFBot Windows Release
