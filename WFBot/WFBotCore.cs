@@ -27,8 +27,6 @@ namespace WFBot
 
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
-            Console.Title = "WFBot";
-            Console.WriteLine($"{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)}");
 
             var sw = Stopwatch.StartNew();
             try
@@ -38,7 +36,6 @@ namespace WFBot
             catch (Exception e)
             {
                 Console.WriteLine("WFBot 在初始化中遇到了问题.");
-                Console.WriteLine($"{e.GetType().FullName}: {e.Message}");
                 Trace.WriteLine(e);
                 Console.WriteLine("按任意键继续.");
                 Console.ReadKey();
@@ -63,6 +60,8 @@ namespace WFBot
                 }
             }
         }
+
+        
 
         private static void OpenWFBotSettingsWindow()
         {
@@ -107,6 +106,10 @@ namespace WFBot
         internal async Task Init()
         {
             InitLogger();
+            var version = GetVersion();
+            Trace.WriteLine($"WFBot: 开始初始化. 版本号 {version}");
+            Console.Title = $"WFBot {version}";
+
             TaskScheduler.UnobservedTaskException += (sender, args) =>
             {
                 Trace.WriteLine($"Task 发生异常: {args.Exception}.");
@@ -133,9 +136,16 @@ namespace WFBot
             Trace.Listeners.Add(fileListener);
             Trace.Listeners.Add(new ConsoleTraceListener());
             Trace.AutoFlush = true;
-            Trace.WriteLine($"WFBot: 开始初始化.");
         }
 
+        static string GetVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyName = assembly.GetName().Name;
+            var gitVersionInformationType = assembly.GetType("GitVersionInformation");
+            var versionField = gitVersionInformationType.GetField("InformationalVersion");
+            return versionField.GetValue(null) as string;
+        }
 
         private List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
