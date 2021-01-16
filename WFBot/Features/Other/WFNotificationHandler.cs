@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -54,6 +55,7 @@ namespace WFBot.Features.Other
             foreach (var update in await updates)
                 sendedUpdateSet.Add(update);
             WFNotificationLoaded = true;
+            Trace.WriteLine("WF 通知初始化完成.");
         }
 
         [CalledByTimer]

@@ -9,8 +9,11 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+
 // ReSharper disable LocalizableElement
 
 namespace WFBot.Features.Resource
@@ -120,13 +123,17 @@ namespace WFBot.Features.Resource
             const string source = "http://content.warframe.com/PublicExport/Manifest/";
 
             var resource = WFResource<ExportRelicArcane[]>.Create(
-                resourceLoader: s => s.JsonDeserialize<ExportRelicArcaneZh>().ExportRelicArcane,
+                resourceLoader: async s =>
+                {
+                    var r = await ResourceLoaders<ExportRelicArcaneZh>.JsonDotNetLoader(s);
+                    return r.ExportRelicArcane;
+                },
                 fileName: "ExportRelicArcane_zh.json",
                 requester: async _ =>  
                 {
                     var urls = await GetWFOriginUrls();
                     var link = source + urls.First(u => u.Contains("ExportRelicArcane_zh.json"));
-                    return await new HttpClient(new RetryHandler(new HttpClientHandler())).GetStringAsync(link);
+                    return await new HttpClient(new RetryHandler(new HttpClientHandler())).GetStreamAsync(link);
                 });
 
             result.RExportRelicArcanes = resource;
@@ -144,7 +151,7 @@ namespace WFBot.Features.Resource
 
             var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items",
                 header: header,
-                resourceLoader: s => JsonSerializer.Deserialize<WFCD_All[]>(s));
+                resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader);
 
             RWFCDAll = resource;
             return resource.WaitForInited();

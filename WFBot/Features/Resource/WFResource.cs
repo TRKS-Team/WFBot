@@ -7,21 +7,34 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
+using Newtonsoft.Json;
 using WFBot.Utils;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WFBot.Features.Resource
 {
     public static class ResourceLoaders<T>
     {
-        public static WFResourceLoader<T> JsonLoader = str => str.JsonDeserialize<T>();
+        public static WFResourceLoader<T> JsonDotNetLoader = stream =>
+        {
+            return Task.Run(() =>
+            {
+                using (var sr = new StreamReader(stream))
+                using (var reader = new JsonTextReader(sr))
+                {
+                    return new Newtonsoft.Json.JsonSerializer().Deserialize<T>(reader);
+                }
+            });
+        };
+
+        public static WFResourceLoader<T> SystemTextJsonLoader = stream => JsonSerializer.DeserializeAsync<T>(stream).AsTask();
     }
 
-    public delegate T WFResourceLoader<T>(string data);
-    public delegate Task<string> WFResourceRequester(string url);
+    public delegate Task<T> WFResourceLoader<T>(Stream data);
+    public delegate Task<Stream> WFResourceRequester(string url);
 
     public static class WFResourceStatic
     {
@@ -51,7 +64,7 @@ namespace WFBot.Features.Resource
             WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
             WFResourceRequester wfResourceRequester = null)
         {
-            resourceLoader = resourceLoader ?? ResourceLoaders<T>.JsonLoader;
+            resourceLoader = resourceLoader ?? ResourceLoaders<T>.JsonDotNetLoader;
             // 这写的太屎了
             fileName = fileName ?? (url ?? string.Empty).Split('/').Last().Split('?').First().Split("!").First();
 
@@ -109,7 +122,7 @@ namespace WFBot.Features.Resource
         public string FileName { get; }
         public int Version { get; private set; }
 
-        public readonly SemaphoreSlim _locker = new SemaphoreSlim(1);
+        readonly SemaphoreSlim _locker = new SemaphoreSlim(1);
         WFResourceRequester requester;
 
         public async Task Reload(bool isFirstTime = false)
@@ -148,17 +161,26 @@ namespace WFBot.Features.Resource
         {
             try
             {
-                var dataString = await requester(url);
-                Value = resourceLoader(dataString);
+                var stream = await requester(url);
+
                 try
                 {
-                    await File.WriteAllTextAsync(CachePath, dataString);
+                    await using var fileStream = File.OpenWrite(CachePath);
+                    await stream.CopyToAsync(fileStream);
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine($"资源 {FileName} 缓存保存失败.", "WFResource");
+                    Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败.", "WFResource");
                     Trace.WriteLine(e);
+
+                    var stream2 = await requester(url);
+                    Value = await resourceLoader(stream2);
+                    return;
                 }
+
+                await using var file = File.OpenRead(CachePath);
+                Value = await resourceLoader(file);
+                Trace.WriteLine($"资源 {FileName} 获取完成.", "WFResource");
             }
             catch (Exception)
             {
@@ -167,7 +189,7 @@ namespace WFBot.Features.Resource
             }
         }
 
-        public async Task<string> RequestResourceFromTheWideWorldOfWeb(string urlp)
+        public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string urlp)
         {
             var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler()));
             if (header != null)
@@ -178,8 +200,7 @@ namespace WFBot.Features.Resource
                 }
             }
 
-            var dataString = await httpClient.GetStringAsync(urlp);
-            Trace.WriteLine($"资源 {FileName} 下载完成.", "WFResource");
+            var dataString = await httpClient.GetStreamAsync(urlp);
             return dataString;
         }
 
@@ -193,7 +214,8 @@ namespace WFBot.Features.Resource
             try
             {
                 if (!File.Exists(CachePath)) return false;
-                Value = resourceLoader(await File.ReadAllTextAsync(CachePath));
+                await using var file = File.OpenRead(CachePath);
+                Value = await resourceLoader(file);
                 return true;
             }
             catch (Exception e)
@@ -213,7 +235,7 @@ namespace WFBot.Features.Resource
             try
             {
                 if (!File.Exists(LocalPath)) return false;
-                Value = resourceLoader(await File.ReadAllTextAsync(LocalPath));
+                Value = await resourceLoader(File.OpenRead(LocalPath));
 
                 return true;
             }

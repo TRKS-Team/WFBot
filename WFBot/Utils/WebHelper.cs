@@ -92,7 +92,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"Download data completed: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.", "Downloader");
             }
         }
         
@@ -132,7 +132,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"数据下载完成: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.", "Downloader");
             }
         }
 
@@ -151,7 +151,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"数据下载完成: URL [{url}], Time [{sw.ElapsedMilliseconds}ms].", "Downloader");
+                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.", "Downloader");
             }
         }
         

@@ -8,9 +8,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>7.2</LangVersion>
-  </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -24,6 +21,10 @@
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Fody" Version="6.1.0" />
     <PackageReference Include="GammaLibrary" Version="1.2.0" />
+    <PackageReference Include="GitVersionTask" Version="5.5.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
     <PackageReference Include="Humanizer.Core" Version="2.7.9" />
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.7.9" />

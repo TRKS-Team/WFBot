@@ -1,0 +1,24 @@
+assembly-versioning-scheme: MajorMinorPatchTag
+assembly-file-versioning-scheme: MajorMinorPatchTag
+assembly-informational-format: "{MajorMinorPatch}+{BranchName}+{ShortSha}"
+mode: Mainline
+branches:
+  release:
+    mode: ContinuousDelivery
+    tag: ""
+  master:
+    regex: (^master$|^origin\/universal$|^universal$|^origin\/universal$)
+    mode: ContinuousDeployment
+    tag: "main"
+    is-mainline: true
+  pull-request:
+    mode: ContinuousDeployment
+    tag: pr
+  hotfix:
+    mode: ContinuousDeployment
+    tag: fix
+  feature:
+    mode: ContinuousDeployment
+    tag: wip
+ignore:
+  sha: []

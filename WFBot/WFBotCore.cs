@@ -27,6 +27,8 @@ namespace WFBot
 
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
+            Console.Title = "WFBot";
+            Console.WriteLine($"{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)}");
 
             var sw = Stopwatch.StartNew();
             try
@@ -43,7 +45,7 @@ namespace WFBot
                 return;
             }
             
-            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s");
+            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
             while (true)
             {
                 var text = Console.ReadLine();
@@ -131,7 +133,7 @@ namespace WFBot
             Trace.Listeners.Add(fileListener);
             Trace.Listeners.Add(new ConsoleTraceListener());
             Trace.AutoFlush = true;
-            Trace.WriteLine($"WFBot start.", "WFBot Core");
+            Trace.WriteLine($"WFBot: 开始初始化.");
         }
 
 
