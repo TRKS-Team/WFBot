@@ -21,7 +21,7 @@ jobs:
         dotnet-version: 3.1.x
     
     - name: Clean
-      run: dotnet clean ./Bumbo-Web/Bumbo-Web.sln --configuration Release && dotnet nuget locals all --clear
+      run: dotnet clean WFBot.sln --configuration "Windows Release" && dotnet nuget locals all --clear
     - name: Restore dependencies
       run: dotnet restore
     
