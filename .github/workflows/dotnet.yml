@@ -28,17 +28,17 @@ jobs:
     - name: Mirai Connector Build
       run: dotnet publish MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false --no-restore
     - name: Zip Windows Release
-      uses: DuckSoft/extract-7z-action@v1.0
+      uses: DuckSoft/create-7z-action@v1.0
       with:
         pathSource: ./WindowsPublish/
         pathTarget: WFBot-Windows.7z
     - name: Zip Linux Release
-      uses: DuckSoft/extract-7z-action@v1.0
+      uses: DuckSoft/create-7z-action@v1.0
       with:
         pathSource: ./LinuxPublish/
         pathTarget: WFBot-Linux.7z
     - name: Zip Mirai Connector
-      uses: DuckSoft/extract-7z-action@v1.0
+      uses: DuckSoft/create-7z-action@v1.0
       with:
         pathSource: WFBot-MiraiConnector.7z
         pathTarget: ./MiraiConnector/
