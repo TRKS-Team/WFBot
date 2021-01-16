@@ -50,30 +50,30 @@ jobs:
           OFFICIAL_BUILD: official
 
       - name: Pre Run Windows
-        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable
+        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
       - name: Pre Run Linux
-        run: dotnet LinuxPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable
+        run: dotnet LinuxPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
 
       - name: Zip Windows Release
         uses: DuckSoft/create-7z-action@v1.0
         with:
-          pathSource: ./WindowsPublish/
+          pathSource: ./WindowsPublish/*
           pathTarget: WFBot-Windows.7z
       - name: Zip Linux Release
         uses: DuckSoft/create-7z-action@v1.0
         with:
-          pathSource: ./LinuxPublish/
+          pathSource: ./LinuxPublish/*
           pathTarget: WFBot-Linux.7z
       - name: Zip Mirai Connector
         uses: DuckSoft/create-7z-action@v1.0
         with:
           pathTarget: WFBot-Connector-MiraiConnector.7z
-          pathSource: ./MiraiConnector/
+          pathSource: ./MiraiConnector/*
       - name: Zip Test Connector
         uses: DuckSoft/create-7z-action@v1.0
         with:
           pathTarget: WFBot-Connector-TestConnector.7z
-          pathSource: ./TestConnector/
+          pathSource: ./TestConnector/*
 
       - name: Upload Windows
         uses: actions/upload-artifact@v2

@@ -22,11 +22,14 @@ namespace WFBot
 {
     public static class Program
     {
+        internal static bool NoLog { get; private set; }
+
         public static async Task Main(string[] args)
         {
             https://github.com/TRKS-Team/WFBot
             var skipPressKey = false;
             var setCurrentFolder = false;
+
             foreach (var s in args)
             {
                 switch (s)
@@ -36,6 +39,9 @@ namespace WFBot
                         break;
                     case "--set-current-folder-to-executable":
                         setCurrentFolder = true;
+                        break;
+                    case "--no-logs":
+                        NoLog = true;
                         break;
                 }
             }
@@ -172,11 +178,14 @@ namespace WFBot
 
         private void InitLogger()
         {
-            Directory.CreateDirectory("WFBotLogs");
-            var fileListener = new TextWriterTraceListener(File.Open(Path.Combine($"WFBotLogs", $"WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log"),
-                    FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-            { TraceOutputOptions = TraceOptions.Timestamp };
-            Trace.Listeners.Add(fileListener);
+            if (Program.NoLog)
+            {
+                Directory.CreateDirectory("WFBotLogs");
+                var fileListener = new TextWriterTraceListener(File.Open(Path.Combine($"WFBotLogs", $"WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log"),
+                        FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    { TraceOutputOptions = TraceOptions.Timestamp };
+                Trace.Listeners.Add(fileListener);
+            }
             Trace.Listeners.Add(new ConsoleTraceListener());
             Trace.AutoFlush = true;
         }
