@@ -9,9 +9,6 @@ using TRKS.WF.QQBot.MahuaEvents;
 
 namespace WFBotExamplePlugin
 {
-    // 请注意! 由于技术原因, MahuaEvents 文件夹里面的以文件名命名的类无法被修改.
-    // 如 GroupMessageHandler 可以被修改
-    // 而 GroupMessageReceivedMahuaEvent1 无法被修改
 
     // 关于改方法的更多信息请查看 Harmony 库的 [这里](https://github.com/pardeike/Harmony/wiki/Patching)
 

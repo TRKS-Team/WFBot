@@ -39,17 +39,14 @@ namespace WFBot
                         break;
                 }
             }
-
+            
             if (setCurrentFolder)
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             }
-
-
+            
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
-
-            
 
             var sw = Stopwatch.StartNew();
             try
@@ -86,6 +83,7 @@ namespace WFBot
                 }
             }
         }
+        
 
         
 
@@ -112,7 +110,22 @@ namespace WFBot
         public static WFBotCore Instance { get; internal set; }
         private MessageReceivedEvent messageReceivedEvent;
         private PrivateMessageReceivedEvent privateMessageReceivedEvent;
+        public static string Version { get; }
+        public static bool IsOfficial { get; }
 
+        static WFBotCore()
+        {
+            Version = GetVersion();
+            IsOfficial = Version.Split('+').Last() == "official";
+
+            static string GetVersion()
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var gitVersionInformationType = assembly.GetType("GitVersionInformation");
+                var versionField = gitVersionInformationType.GetField("InformationalVersion");
+                return versionField.GetValue(null) as string;
+            }
+        }
         public void OnGroupMessage(GroupID groupID, UserID userID, string message)
         {
             if (!Inited)
@@ -132,8 +145,12 @@ namespace WFBot
         internal async Task Init()
         {
             InitLogger();
-            var version = GetVersion();
+            var version = Version;
             Trace.WriteLine($"WFBot: 开始初始化. 版本号 {version}");
+            if (IsOfficial)
+            {
+                Trace.WriteLine("你正在使用官方编译版本. 自动更新"); // 
+            }
             Console.Title = $"WFBot {version}";
 
             TaskScheduler.UnobservedTaskException += (sender, args) =>
@@ -163,16 +180,7 @@ namespace WFBot
             Trace.Listeners.Add(new ConsoleTraceListener());
             Trace.AutoFlush = true;
         }
-
-        static string GetVersion()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var assemblyName = assembly.GetName().Name;
-            var gitVersionInformationType = assembly.GetType("GitVersionInformation");
-            var versionField = gitVersionInformationType.GetField("InformationalVersion");
-            return versionField.GetValue(null) as string;
-        }
-
+        
         private List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
         {
