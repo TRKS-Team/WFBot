@@ -28,17 +28,20 @@ jobs:
     - name: Mirai Connector Build
       run: dotnet publish MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false --no-restore
     - name: Zip Windows Release
-      uses: edgarrc/action-7z@v1.0.4
+      uses: DuckSoft/extract-7z-action@v1.0
       with:
-        args: 7z a -t7z -mx=9 WFBot-Windows.7z ./WindowsPublish/
+        pathSource: ./WindowsPublish/
+        pathTarget: WFBot-Windows.7z
     - name: Zip Linux Release
-      uses: edgarrc/action-7z@v1.0.4
+      uses: DuckSoft/extract-7z-action@v1.0
       with:
-        args: 7z a -t7z -mx=9 WFBot-Linux.7z ./LinuxPublish/
+        pathSource: ./LinuxPublish/
+        pathTarget: WFBot-Linux.7z
     - name: Zip Mirai Connector
-      uses: edgarrc/action-7z@v1.0.4
+      uses: DuckSoft/extract-7z-action@v1.0
       with:
-        args: 7z a -t7z -mx=9 WFBot-MiraiConnector.7z ./MiraiConnector/
+        pathSource: WFBot-MiraiConnector.7z
+        pathTarget: ./MiraiConnector/
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
