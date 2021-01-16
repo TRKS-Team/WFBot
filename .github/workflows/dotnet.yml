@@ -100,9 +100,8 @@ jobs:
 
       - name: GitVersion
         id: gitversion
-        uses: nmcc/actions-gitversion@v1
-        with:
-          path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
+        uses: roryprimrose/rungitversion@v1.0.0
+
       - name: Create a GitHub release
         id: create_release
         uses: actions/create-release@v1

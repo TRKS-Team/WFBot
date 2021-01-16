@@ -17,10 +17,6 @@
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Fody" Version="6.1.0" />
     <PackageReference Include="GammaLibrary" Version="1.2.0" />
-    <PackageReference Include="GitVersion.CommandLine" Version="5.6.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="GitVersion.MsBuild" Version="5.6.3" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
