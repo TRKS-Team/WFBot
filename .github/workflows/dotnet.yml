@@ -61,6 +61,6 @@ jobs:
       - name: Upload MiraiHTTPConnector
         uses: actions/upload-artifact@v2
         with:
-          name: WFBot MiraiHTTPConnector
-          path: ./WFBot-MiraiHTTPConnector.7z
+          name: WFBot MiraiConnector
+          path: ./WFBot-MiraiConnector.7z
           retention-days: 30
