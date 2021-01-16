@@ -40,9 +40,9 @@ jobs:
       with:
         args: 7z a -t7z -mx=9 WFBot-MiraiConnector.7z ./MiraiConnector/
     - name: Upload
-      uses: actions/upload-artifact
+      uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
+        name: WFBot
         path: |
           ./WFBot-Windows.7z
           ./WFBot-Linux.7z
