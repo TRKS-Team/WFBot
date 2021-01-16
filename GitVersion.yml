@@ -1,5 +1,5 @@
-assembly-versioning-scheme: MajorMinorPatchTag
-assembly-file-versioning-scheme: MajorMinorPatchTag
+assembly-versioning-scheme: None
+assembly-file-versioning-scheme: None
 assembly-informational-format: "{MajorMinorPatch}+{BranchName}+{ShortSha}+{env:OFFICIAL_BUILD ?? unofficial}"
 mode: Mainline
 branches:

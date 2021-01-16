@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\WFBot\WFBot.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
+      <SpecificVersion>false</SpecificVersion>
     </ProjectReference>
   </ItemGroup>
 </Project>
