@@ -4,6 +4,8 @@ using System.Timers;
 using GammaLibrary.Extensions;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
+using WFBot.Features.Timers;
+using WFBot.Features.Timers.Base;
 using WFBot.Windows;
 
 namespace WFBot.Features.Utils
@@ -27,18 +29,16 @@ namespace WFBot.Features.Utils
             // I know what i'm doing
             private set => wfaClient = value;
         }
-
-        private Timer timer = new Timer(TimeSpan.FromHours(2).TotalMilliseconds);
+        
         Client wfaClient;
 
         public WFAApi()
         {
             // UpdateAccessToken();
             UpdateClient();
-            timer.Elapsed += (s, e) => /*UpdateAccessToken();*/ UpdateClient();
-            timer.Start();
         }
 
+        [CalledByTimer(typeof(WFATimer))]
         public void UpdateClient()
         {
             lock (wfaClientLock)

@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using GammaLibrary.Extensions;
 using WFBot.Connector;
 using WFBot.Events;
@@ -17,6 +19,7 @@ using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 using WFBot.Windows;
+using Timer = System.Timers.Timer;
 
 namespace WFBot
 {
@@ -53,7 +56,6 @@ namespace WFBot
             
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
-
             var sw = Stopwatch.StartNew();
             try
             {
@@ -89,9 +91,16 @@ namespace WFBot
                 }
             }
         }
-        
 
-        
+        static void Finish()
+        {
+            foreach (var timer in WFBotCore.Instance.timers)
+            {
+                timer.timer.Stop();
+                timer.timer.Dispose();
+            }
+        }
+
 
         private static void OpenWFBotSettingsWindow()
         {
@@ -123,7 +132,7 @@ namespace WFBot
         {
             Version = GetVersion();
             IsOfficial = Version.Split('+').Last() == "official";
-
+            
             static string GetVersion()
             {
                 var assembly = Assembly.GetExecutingAssembly();
@@ -190,7 +199,7 @@ namespace WFBot
             Trace.AutoFlush = true;
         }
         
-        private List<WFBotTimer> timers = new List<WFBotTimer>();
+        internal List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
         {
             AddTimer<LexionTimer>();

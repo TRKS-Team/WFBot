@@ -20,7 +20,10 @@ namespace WFBot.Connector
 
             Directory.CreateDirectory("WFBotConnector");
             var connectors = Directory.GetFiles("WFBotConnector", "*.dll")
-                .Select(file => new PluginLoadContext(Path.GetFullPath(file)).LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(file))).ExportedTypes)
+                .Select(file => //Program.Context == null 
+                    /*?*/ new PluginLoadContext(Path.GetFullPath(file)).LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(file))).ExportedTypes
+                    //: ((Assembly)Program.Context.Load(file)).ExportedTypes
+                    )
                 .SelectMany(types=>types)
                 .Where(type => type.IsSubclassOf(typeof(WFBotConnectorBase)))
                 .ToArray();

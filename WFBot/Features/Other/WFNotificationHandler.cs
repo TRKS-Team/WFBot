@@ -11,6 +11,7 @@ using GammaLibrary.Extensions;
 using HtmlAgilityPack;
 using WFBot.Events;
 using WFBot.Features.Resource;
+using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Utils;
@@ -58,7 +59,7 @@ namespace WFBot.Features.Other
             Trace.WriteLine("WF 通知初始化完成.");
         }
 
-        [CalledByTimer]
+        [CalledByTimer(typeof(NotificationTimer))]
         public void Update()
         {
             if (!WFNotificationLoaded) return;

@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
@@ -12,7 +13,6 @@
     <ProjectReference Include="..\..\WFBot\WFBot.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
-      <SpecificVersion>false</SpecificVersion>
     </ProjectReference>
   </ItemGroup>
 </Project>

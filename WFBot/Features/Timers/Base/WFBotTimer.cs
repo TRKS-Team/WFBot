@@ -9,7 +9,7 @@ namespace WFBot.Features.Timers.Base
 {
     abstract class WFBotTimer
     {
-        private readonly Timer timer;
+        internal readonly Timer timer;
         public WFBotTimer(TimeSpan delay)
         {
             timer = new Timer(delay.TotalMilliseconds);
@@ -23,5 +23,8 @@ namespace WFBot.Features.Timers.Base
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     sealed class CalledByTimerAttribute : Attribute
     {
+        public CalledByTimerAttribute(Type type)
+        {
+        }
     }
 }
