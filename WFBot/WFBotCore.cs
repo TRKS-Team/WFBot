@@ -20,6 +20,7 @@ using WFBot.Features.Utils;
 using WFBot.Utils;
 using WFBot.Windows;
 using Timer = System.Timers.Timer;
+#pragma warning disable 164
 
 namespace WFBot
 {
@@ -74,34 +75,38 @@ namespace WFBot
             }
             
             Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
-            while (true)
-            {
-                var text = Console.ReadLine();
-                switch (text.ToLower())
-                {
-                    case "ui":
-                        OpenWFBotSettingsWindow();
-                        break;
-                    case "exit":
-                    case "stop":
-                        return;
-                    default:
-                        ConnectorManager.Connector.OnCommandLineInput(text);
-                        break;
-                }
-            }
-        }
 
-        static void Finish()
+            await wfbot.Run();
+
+        }
+        
+
+
+    }
+
+    public class WFBotCore
+    {
+        public WFNotificationHandler NotificationHandler { get; private set; }
+        public static WFBotCore Instance { get; internal set; }
+        private MessageReceivedEvent messageReceivedEvent;
+        private PrivateMessageReceivedEvent privateMessageReceivedEvent;
+        public static string Version { get; }
+        public static bool IsOfficial { get; }
+        public static bool IsShuttingDown { get; private set; }
+
+        static WFBotCore()
         {
-            foreach (var timer in WFBotCore.Instance.timers)
+            Version = GetVersion();
+            IsOfficial = Version.Split('+').Last() == "official";
+            
+            static string GetVersion()
             {
-                timer.timer.Stop();
-                timer.timer.Dispose();
+                var assembly = Assembly.GetExecutingAssembly();
+                var gitVersionInformationType = assembly.GetType("GitVersionInformation");
+                var versionField = gitVersionInformationType.GetField("InformationalVersion");
+                return versionField.GetValue(null) as string;
             }
         }
-
-
         private static void OpenWFBotSettingsWindow()
         {
 #if WINDOWS_RELEASE
@@ -117,30 +122,50 @@ namespace WFBot
 
         }
 
-    }
-
-    public class WFBotCore
-    {
-        public WFNotificationHandler NotificationHandler { get; private set; }
-        public static WFBotCore Instance { get; internal set; }
-        private MessageReceivedEvent messageReceivedEvent;
-        private PrivateMessageReceivedEvent privateMessageReceivedEvent;
-        public static string Version { get; }
-        public static bool IsOfficial { get; }
-
-        static WFBotCore()
+        public async Task Run()
         {
-            Version = GetVersion();
-            IsOfficial = Version.Split('+').Last() == "official";
-            
-            static string GetVersion()
+            while (true)
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var gitVersionInformationType = assembly.GetType("GitVersionInformation");
-                var versionField = gitVersionInformationType.GetField("InformationalVersion");
-                return versionField.GetValue(null) as string;
+                var text = await Console.In.ReadLineAsync();
+                switch (text.ToLower())
+                {
+                    case "ui":
+                        OpenWFBotSettingsWindow();
+                        break;
+                    case "exit":
+                    case "stop":
+                        return;
+                    default:
+                        ConnectorManager.Connector.OnCommandLineInput(text);
+                        break;
+                }
             }
         }
+
+        public void Shutdown()
+        {
+            IsShuttingDown = true;
+            var locks = WFBotResourceLock.AllLocks;
+            if (!locks.IsEmpty)
+            {
+                Console.WriteLine($"当前有资源锁正在被占用: {WFBotResourceLock.AllLocks.Select(l => l.Name).Connect(", ", "[", "]")}. \n");
+                if (locks.Any(l => l.LockType == ResourceLockTypes.Essential))
+                {
+                    Console.WriteLine($"强行退出可能造成一些大问题.");
+                }
+                else
+                {
+                    Console.WriteLine("如果等待时间太长, 可以尝试直接退出.");
+                }
+            }
+
+            while (!WFBotResourceLock.AnyLockAcquired)
+            {
+                Thread.Sleep(500);
+            }
+            throw new NotImplementedException();
+        }
+
         public void OnGroupMessage(GroupID groupID, UserID userID, string message)
         {
             if (!Inited)
@@ -164,7 +189,7 @@ namespace WFBot
             Trace.WriteLine($"WFBot: 开始初始化. 版本号 {version}");
             if (IsOfficial)
             {
-                Trace.WriteLine("你正在使用官方编译版本. 自动更新"); // 
+                Trace.WriteLine("你正在使用官方编译版本. "); // 
             }
             Console.Title = $"WFBot {version}";
 

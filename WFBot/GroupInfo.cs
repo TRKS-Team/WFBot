@@ -1,8 +1,14 @@
 ﻿namespace WFBot.Events
 {
-    internal class GroupInfo
+    public class GroupInfo
     {
-        public string Name;
-        public string ID;
+        public string Name { get;  }
+        public string ID { get;  }
+
+        public GroupInfo(string name, string id)
+        {
+            Name = name;
+            ID = id;
+        }
     }
 }

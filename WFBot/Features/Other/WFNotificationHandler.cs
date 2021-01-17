@@ -37,7 +37,9 @@ namespace WFBot.Features.Other
 
         public WFNotificationHandler()
         {
+#pragma warning disable 4014
             InitWFNotificationAsync();
+#pragma warning restore 4014
         }
 
         private async Task InitWFNotificationAsync()

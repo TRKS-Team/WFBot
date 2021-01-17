@@ -127,6 +127,7 @@ namespace WFBot.Features.Resource
 
         public async Task Reload(bool isFirstTime = false)
         {
+            using var resourceLock = WFBotResourceLock.Create($"资源刷新 {FileName}");
             try
             {
                 await _locker.WaitAsync();
@@ -153,7 +154,10 @@ namespace WFBot.Features.Resource
             finally
             {
                 _locker.Release();
-                initTask = null;
+                if (isFirstTime)
+                {
+                    initTask = null;
+                }
             }
         }
 
@@ -206,7 +210,9 @@ namespace WFBot.Features.Resource
 
         void LoadFromTheWideWorldOfWebNonBlocking()
         {
+#pragma warning disable 4014
             LoadFromTheWideWorldOfWeb();
+#pragma warning restore 4014
         }
 
         async Task<bool> LoadCache()
@@ -263,7 +269,7 @@ namespace WFBot.Features.Resource
             CancellationToken cancellationToken)
         {
             HttpResponseMessage response = null;
-            for (int i = 0; i < MaxRetries; i++)
+            for (var i = 0; i < MaxRetries; i++)
             {
                 response = await base.SendAsync(request, cancellationToken);
                 if (response.IsSuccessStatusCode)

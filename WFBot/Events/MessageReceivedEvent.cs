@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using TextCommandCore;
 using WFBot.Features.Common;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;
+using WFBot.Utils;
 using static WFBot.Features.Utils.Messenger;
 
 namespace WFBot.Events
@@ -15,6 +17,7 @@ namespace WFBot.Events
     /// </summary>
     public class MessageReceivedEvent
     {
+        int commandCount;
         public void ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
         {
             // 检查每分钟最大调用
@@ -25,7 +28,18 @@ namespace WFBot.Events
             message = message.TrimStart('/');
 
             var handler = new GroupMessageHandler(senderId, groupId, message);
-            Task.Factory.StartNew(() => handler.ProcessCommandInput());
+            var commandProcessTask
+                = Task.Factory.StartNew(() => handler.ProcessCommandInput(), TaskCreationOptions.LongRunning);
+            Task.Run(async () =>
+            {
+                using var locker = WFBotResourceLock.Create(
+                    $"命令处理 #{Interlocked.Increment(ref commandCount)} 群'{groupId}' 用户'{senderId}' 内容'{message}'");
+                await Task.WhenAny(commandProcessTask, Task.Delay(TimeSpan.FromSeconds(60)));
+                if (!commandProcessTask.IsCompleted)
+                {
+                    SendGroup(groupId, $"命令 {message} 处理超时.");
+                }
+            });
         }
 
         private static bool CheckCallPerMin(GroupID groupId)
