@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define NoGitVersion
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,7 +27,8 @@ namespace WFBot
 {
     public static class Program
     {
-        internal static bool NoLog { get; private set; }
+        internal static bool NoLog { get; private set; } = false;
+        internal static bool ThrowIfResourceUnableToLoad { get; private set; } = false;
 
         public static async Task Main(string[] args)
         {
@@ -46,6 +48,9 @@ namespace WFBot
                         break;
                     case "--no-logs":
                         NoLog = true;
+                        break;
+                    case "--throw-if-resource-unable-to-load":
+                        ThrowIfResourceUnableToLoad = true;
                         break;
                 }
             }
@@ -83,7 +88,6 @@ namespace WFBot
 
 
     }
-
     public class WFBotCore
     {
         public WFNotificationHandler NotificationHandler { get; private set; }
@@ -101,10 +105,18 @@ namespace WFBot
             
             static string GetVersion()
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var gitVersionInformationType = assembly.GetType("GitVersionInformation");
-                var versionField = gitVersionInformationType.GetField("InformationalVersion");
-                return versionField.GetValue(null) as string;
+                try
+                {
+                    var assembly = Assembly.GetExecutingAssembly();
+                    var gitVersionInformationType = assembly.GetType("GitVersionInformation");
+                    var versionField = gitVersionInformationType.GetField("InformationalVersion");
+                    return versionField.GetValue(null) as string;
+                }
+                catch (Exception)
+                {
+                    return "unofficial";
+                }
+                
             }
         }
         private static void OpenWFBotSettingsWindow()

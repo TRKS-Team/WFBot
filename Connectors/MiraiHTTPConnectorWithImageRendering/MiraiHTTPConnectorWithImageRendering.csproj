@@ -10,10 +10,10 @@
   <ItemGroup>
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.22.2.2" />
-    <PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.2" />
+    <PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WFBot\WFBot.csproj" >
+    <ProjectReference Include="..\..\WFBot\WFBot.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>

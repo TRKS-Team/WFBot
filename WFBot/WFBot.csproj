@@ -15,14 +15,29 @@
   <PropertyGroup>
     <NoWarn>1701;1702;MSB3042</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+    <Choose>
+      <When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
+        <!-- When DEFINED_CONSTANT is defined. -->
+      </When>
+      <Otherwise>
+        <ItemGroup>
+          <PackageReference Include="GitVersion.MsBuild" Version="5.6.3" />
+        </ItemGroup>
+      </Otherwise>
+      <!-- other conditions -->
+    </Choose>
+
   <ItemGroup>
+    <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Fody" Version="6.1.0" />
     <PackageReference Include="GammaLibrary" Version="1.2.0" />
-    <PackageReference Include="GitVersion.MsBuild" Version="5.6.3" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />

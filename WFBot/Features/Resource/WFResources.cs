@@ -151,7 +151,7 @@ namespace WFBot.Features.Resource
 
             var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items",
                 header: header,
-                resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader);
+                resourceLoader: ResourceLoaders<WFCD_All[]>.JsonDotNetLoader);
 
             RWFCDAll = resource;
             return resource.WaitForInited();

@@ -189,7 +189,14 @@ namespace WFBot.Features.Resource
             catch (Exception)
             {
                 Trace.WriteLine($"必要资源 {FileName} 从广域网载入失败.", "WFResource");
-                throw;
+                if (Program.ThrowIfResourceUnableToLoad)
+                {
+                    throw;
+                }
+                else
+                {
+                    Trace.WriteLine("WFBot 不会停止运行, 但是功能可能无法正常运行.");
+                }
             }
         }
 
