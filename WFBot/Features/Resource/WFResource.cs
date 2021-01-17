@@ -189,7 +189,7 @@ namespace WFBot.Features.Resource
             catch (Exception)
             {
                 Trace.WriteLine($"必要资源 {FileName} 从广域网载入失败.", "WFResource");
-                if (Program.ThrowIfResourceUnableToLoad)
+                if (!Program.DontThrowIfResourceUnableToLoad)
                 {
                     throw;
                 }

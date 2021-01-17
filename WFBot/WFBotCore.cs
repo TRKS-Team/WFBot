@@ -28,7 +28,7 @@ namespace WFBot
     public static class Program
     {
         internal static bool NoLog { get; private set; } = false;
-        internal static bool ThrowIfResourceUnableToLoad { get; private set; } = false;
+        internal static bool DontThrowIfResourceUnableToLoad { get; private set; } = false;
 
         public static async Task Main(string[] args)
         {
@@ -49,8 +49,8 @@ namespace WFBot
                     case "--no-logs":
                         NoLog = true;
                         break;
-                    case "--throw-if-resource-unable-to-load":
-                        ThrowIfResourceUnableToLoad = true;
+                    case "--dont-throw-if-resource-unable-to-load":
+                        DontThrowIfResourceUnableToLoad = true;
                         break;
                 }
             }
