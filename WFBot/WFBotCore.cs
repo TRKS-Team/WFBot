@@ -187,7 +187,7 @@ namespace WFBot
 
         private void InitLogger()
         {
-            if (Program.NoLog)
+            if (!Program.NoLog)
             {
                 Directory.CreateDirectory("WFBotLogs");
                 var fileListener = new TextWriterTraceListener(File.Open(Path.Combine($"WFBotLogs", $"WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log"),
