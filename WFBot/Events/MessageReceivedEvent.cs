@@ -37,20 +37,25 @@ namespace WFBot.Events
                 await Task.WhenAny(commandProcessTask, Task.Delay(TimeSpan.FromSeconds(60)));
                 if (!commandProcessTask.IsCompleted)
                 {
-                    SendGroup(groupId, $"命令 {message} 处理超时.");
+                    SendGroup(groupId, $"命令 [{message}] 处理超时.");
                 }
+                
             });
         }
 
         private static bool CheckCallPerMin(GroupID groupId)
         {
-            if (GroupCallDic.ContainsKey(groupId))
+            lock (GroupCallDic)
             {
-                if (GroupCallDic[groupId] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
-            }
-            else
-            {
-                GroupCallDic[groupId] = 0;
+                if (GroupCallDic.ContainsKey(groupId))
+                {
+                    if (GroupCallDic[groupId] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
+                }
+                else
+                {
+                    GroupCallDic[groupId] = 0;
+                }
+
             }
 
             return false;

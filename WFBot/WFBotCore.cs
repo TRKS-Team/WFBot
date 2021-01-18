@@ -62,7 +62,6 @@ namespace WFBot
             
             var wfbot = new WFBotCore();
             WFBotCore.Instance = wfbot;
-            var sw = Stopwatch.StartNew();
             try
             {
                 await wfbot.Init();
@@ -79,16 +78,10 @@ namespace WFBot
                 return;
             }
             
-            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
-
             await wfbot.Run();
-
         }
-        
-
-
     }
-    public class WFBotCore
+    public sealed class WFBotCore
     {
         public WFNotificationHandler NotificationHandler { get; private set; }
         public static WFBotCore Instance { get; internal set; }
@@ -119,6 +112,7 @@ namespace WFBot
                 
             }
         }
+
         private static void OpenWFBotSettingsWindow()
         {
 #if WINDOWS_RELEASE
@@ -146,6 +140,7 @@ namespace WFBot
                         break;
                     case "exit":
                     case "stop":
+                        Shutdown();
                         return;
                     default:
                         ConnectorManager.Connector.OnCommandLineInput(text);
@@ -154,28 +149,48 @@ namespace WFBot
             }
         }
 
+        public void RequestUpdate()
+        {
+            ShutdownInternal();
+            const int UpdateCode = 0xDEAD;
+            Environment.Exit(0xDEAD);
+        }
+
         public void Shutdown()
         {
+            ShutdownInternal();
+            Environment.Exit(0);
+        }
+
+        static void ShutdownInternal()
+        {
+            if (IsShuttingDown) return;
+            Trace.WriteLine("WFBot 正在停止..");
             IsShuttingDown = true;
+            CheckResourceLock();
+
+            while (!WFBotResourceLock.AnyLockAcquired)
+            {
+                Thread.Sleep(500);
+            }
+        }
+
+        static void CheckResourceLock()
+        {
             var locks = WFBotResourceLock.AllLocks;
             if (!locks.IsEmpty)
             {
-                Console.WriteLine($"当前有资源锁正在被占用: {WFBotResourceLock.AllLocks.Select(l => l.Name).Connect(", ", "[", "]")}. \n");
+                Console.WriteLine(
+                    $"当前有资源锁正在被占用: {WFBotResourceLock.AllLocks.Select(l => l.ToString()).Connect(", ", "[", "]")}. \n");
                 if (locks.Any(l => l.LockType == ResourceLockTypes.Essential))
                 {
-                    Console.WriteLine($"强行退出可能造成一些大问题.");
+                    Console.WriteLine($"强行退出可能会造成一些大问题.");
                 }
                 else
                 {
                     Console.WriteLine("如果等待时间太长, 可以尝试直接退出.");
                 }
             }
-
-            while (!WFBotResourceLock.AnyLockAcquired)
-            {
-                Thread.Sleep(500);
-            }
-            throw new NotImplementedException();
         }
 
         public void OnGroupMessage(GroupID groupID, UserID userID, string message)
@@ -194,9 +209,16 @@ namespace WFBot
             privateMessageReceivedEvent.ProcessPrivateMessage(userID, message);
         }
 
+        bool _requestedCtrlCShutdown;
+
         internal async Task Init()
         {
+            var sw = Stopwatch.StartNew();
+            // ------------------------------------------------------------------
+            // 配置 Logger
             InitLogger();
+
+            // 设置版本号
             var version = Version;
             Trace.WriteLine($"WFBot: 开始初始化. 版本号 {version}");
             if (IsOfficial)
@@ -205,19 +227,51 @@ namespace WFBot
             }
             Console.Title = $"WFBot {version}";
 
+            // 设置 Ctrl C 处理
+            Console.CancelKeyPress += (sender, args) =>
+            {
+                if (_requestedCtrlCShutdown) return;
+                if (!Inited)
+                {
+                    Console.WriteLine("WFBot 还在初始化. 再按一次 Ctrl+C 可以强行停止, 但可能会造成一些问题.");
+                    args.Cancel = true;
+                    _requestedCtrlCShutdown = true;
+                    return;
+                }
+                args.Cancel = true;
+                _requestedCtrlCShutdown = true;
+
+                Console.WriteLine("正在停止, 强行停止请再按一次 Ctrl+C.");
+                Shutdown();
+            };
+
+            // Task 异常处理
             TaskScheduler.UnobservedTaskException += (sender, args) =>
             {
                 Trace.WriteLine($"Task 发生异常: {args.Exception}.");
                 args.SetObserved();
             };
+
+            // 加载插件
             Plugins.Load();
+
+            // 加载 Connector
             ConnectorManager.LoadConnector();
+
+            // 加载资源
             await WFResources.InitWFResource();
             messageReceivedEvent = new MessageReceivedEvent();
             privateMessageReceivedEvent = new PrivateMessageReceivedEvent();
             NotificationHandler = new WFNotificationHandler();
+
+            // 初始化定时器
             InitTimer();
+
+            // ------------------------------------------------------------------
+            // 完成
             Inited = true;
+            _requestedCtrlCShutdown = false;
+            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
         }
 
         public bool Inited { get; private set; }

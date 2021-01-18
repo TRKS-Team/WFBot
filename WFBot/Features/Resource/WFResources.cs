@@ -148,10 +148,10 @@ namespace WFBot.Features.Resource
             {
                 {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}
             };
-
+            
             var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items",
                 header: header,
-                resourceLoader: ResourceLoaders<WFCD_All[]>.JsonDotNetLoader);
+                resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader);
 
             RWFCDAll = resource;
             return resource.WaitForInited();

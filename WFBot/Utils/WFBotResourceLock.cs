@@ -54,6 +54,11 @@ namespace WFBot.Utils
             }
 
         }
+
+        public override string ToString()
+        {
+            return LockType == ResourceLockTypes.Essential ? $"*{Name}" : Name;
+        }
     }
 
     public enum ResourceLockTypes

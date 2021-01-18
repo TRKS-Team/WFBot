@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -16,16 +17,10 @@ using Timer = System.Timers.Timer;
 
 namespace WFBot.Features.Utils
 {
-    public static class MessengerHandlers
-    {
-        public static Action<string> DebugAlternateHandler;
-        public static Action<string> MessageAlternateHandler;
-    }
 
     public static class Messenger
     {
-        public static Dictionary<string, int> GroupCallDic = new Dictionary<string, int>();
-        public static Dictionary<string, string> PrivateMessageDictionary = new Dictionary<string, string>();
+        public static ConcurrentDictionary<string, int> GroupCallDic = new ConcurrentDictionary<string, int>();
 
         static Messenger()
         {
@@ -35,16 +30,25 @@ namespace WFBot.Features.Utils
 
         public static void IncreaseCallCounts(string group)
         {
-            if (GroupCallDic.ContainsKey(group))
+            lock (GroupCallDic)
             {
-                GroupCallDic[group]++;
+                if (GroupCallDic.ContainsKey(group))
+                {
+                    GroupCallDic[group]++;
+                }
+                else
+                {
+                    GroupCallDic[group] = 1;
+                }
             }
-            else
-            {
-                GroupCallDic[group] = 1;
-            }
-            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task => GroupCallDic[group]--);
 
+            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task =>
+            {
+                lock (GroupCallDic)
+                {
+                    GroupCallDic[group]--;
+                }
+            });
         }
 
         public static void SendDebugInfo(string content)
@@ -60,16 +64,10 @@ namespace WFBot.Features.Utils
             // todo
         }
 
-        private static readonly Dictionary<GroupID, string> previousMessageDic = new Dictionary<GroupID, string>();
+        static readonly Dictionary<GroupID, string> previousMessageDic = new Dictionary<GroupID, string>();
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendGroup(GroupID g, string content)
         {
-            if (MessengerHandlers.MessageAlternateHandler != null)
-            {
-                MessengerHandlers.MessageAlternateHandler(content);
-                return;
-            }
-
             var qq = g.ID;
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
 
