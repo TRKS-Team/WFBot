@@ -45,8 +45,10 @@ namespace WFBot.Features.Utils
 
     public class WFCD_All
     {
-        public string uniqueName { get; set; }
         public string name { get; set; }
+        public List<Component> components { get; set; } = new List<Component>();
+#if DEBUG
+        public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }
         public string imageName { get; set; }
@@ -94,7 +96,6 @@ namespace WFBot.Features.Utils
         public int skipBuildTimePrice { get; set; }
         public int buildQuantity { get; set; }
         public bool consumeOnBuild { get; set; }
-        public List<Component> components { get; set; } = new List<Component>();
         public int ammo { get; set; }
         public Areaattack areaAttack { get; set; }
         public object damage { get; set; }
@@ -167,6 +168,7 @@ namespace WFBot.Features.Utils
         public int primeSellingPrice { get; set; }
         public int maxLevelCap { get; set; }
         public float[] modSetValues { get; set; }
+#endif
     }
 
     public class Areaattack
@@ -327,7 +329,9 @@ namespace WFBot.Features.Utils
         public int itemCount { get; set; }
         public string imageName { get; set; }
         public bool tradable { get; set; }
+#if DEBUG
         public WFCD_Drop1[] drops { get; set; }
+#endif
         public bool excludeFromCodex { get; set; }
         public float[] damagePerShot { get; set; }
         public float totalDamage { get; set; }

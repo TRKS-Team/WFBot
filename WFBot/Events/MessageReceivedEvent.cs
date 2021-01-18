@@ -30,6 +30,8 @@ namespace WFBot.Events
             var handler = new GroupMessageHandler(senderId, groupId, message);
             var commandProcessTask
                 = Task.Factory.StartNew(() => handler.ProcessCommandInput(), TaskCreationOptions.LongRunning);
+            // TODO 优化task数量
+            // TODO cancellation token
             Task.Run(async () =>
             {
                 using var locker = WFBotResourceLock.Create(

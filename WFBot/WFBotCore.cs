@@ -133,6 +133,8 @@ namespace WFBot
             while (true)
             {
                 var text = await Console.In.ReadLineAsync();
+                if (text == null) continue;
+                
                 switch (text.ToLower())
                 {
                     case "ui":
@@ -153,7 +155,7 @@ namespace WFBot
         {
             ShutdownInternal();
             const int UpdateCode = 0xDEAD;
-            Environment.Exit(0xDEAD);
+            Environment.Exit(UpdateCode);
         }
 
         public void Shutdown()
@@ -242,7 +244,8 @@ namespace WFBot
                 _requestedCtrlCShutdown = true;
 
                 Console.WriteLine("正在停止, 强行停止请再按一次 Ctrl+C.");
-                Shutdown();
+                Task.Run(() => Shutdown());
+                //Shutdown();
             };
 
             // Task 异常处理

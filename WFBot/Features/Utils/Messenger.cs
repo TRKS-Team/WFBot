@@ -210,9 +210,9 @@ namespace WFBot.Features.Utils
 
     public struct GroupID
     {
-        public uint ID { get; }
+        public long ID { get; }
 
-        public GroupID(uint id)
+        public GroupID(long id)
         {
             ID = id;
         }
@@ -221,11 +221,7 @@ namespace WFBot.Features.Utils
         {
             return id.ID;
         }
-
-        public static implicit operator uint(GroupID id)
-        {
-            return id.ID;
-        }
+        
 
         public static implicit operator string(GroupID id)
         {
@@ -255,9 +251,9 @@ namespace WFBot.Features.Utils
 
     public struct UserID
     {
-        public uint ID { get; }
+        public long ID { get; }
 
-        public UserID(uint id)
+        public UserID(long id)
         {
             ID = id;
         }
@@ -266,12 +262,7 @@ namespace WFBot.Features.Utils
         {
             return id.ID;
         }
-
-        public static implicit operator uint(UserID id)
-        {
-            return id.ID;
-        }
-
+        
         public static implicit operator string(UserID id)
         {
             return id.ToString();

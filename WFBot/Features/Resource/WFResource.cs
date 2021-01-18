@@ -22,11 +22,9 @@ namespace WFBot.Features.Resource
         {
             return Task.Run(() =>
             {
-                using (var sr = new StreamReader(stream))
-                using (var reader = new JsonTextReader(sr))
-                {
-                    return new Newtonsoft.Json.JsonSerializer().Deserialize<T>(reader);
-                }
+                using var sr = new StreamReader(stream);
+                using var reader = new JsonTextReader(sr);
+                return new Newtonsoft.Json.JsonSerializer().Deserialize<T>(reader);
             });
         };
 
@@ -165,7 +163,7 @@ namespace WFBot.Features.Resource
         {
             try
             {
-                var stream = await requester(url);
+                await using var stream = await requester(url);
 
                 try
                 {
@@ -177,7 +175,7 @@ namespace WFBot.Features.Resource
                     Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败.", "WFResource");
                     Trace.WriteLine(e);
 
-                    var stream2 = await requester(url);
+                    await using var stream2 = await requester(url);
                     Value = await resourceLoader(stream2);
                     return;
                 }
