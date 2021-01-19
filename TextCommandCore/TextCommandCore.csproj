@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1" />
+    <PackageReference Include="Fody" Version="6.1.0"/>
     <PackageReference Include="GammaLibrary" Version="1.2.0" />
   </ItemGroup>
 
