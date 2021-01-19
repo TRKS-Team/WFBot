@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Humanizer;
 using TextCommandCore;
 using WFBot.Features.Common;
 using WFBot.Features.Other;
@@ -28,18 +29,27 @@ namespace WFBot.Events
             message = message.TrimStart('/');
 
             var handler = new GroupMessageHandler(senderId, groupId, message);
-            var commandProcessTask
-                = Task.Factory.StartNew(() => handler.ProcessCommandInput(), TaskCreationOptions.LongRunning);
+            
             // TODO 优化task数量
             // TODO cancellation token
             Task.Run(async () =>
             {
+                var cancelSource = new CancellationTokenSource();
+                AsyncContext.SetCancellationToken(cancelSource.Token);
+                var commandProcessTask = handler.ProcessCommandInput();
+
                 using var locker = WFBotResourceLock.Create(
                     $"命令处理 #{Interlocked.Increment(ref commandCount)} 群'{groupId}' 用户'{senderId}' 内容'{message}'");
                 await Task.WhenAny(commandProcessTask, Task.Delay(TimeSpan.FromSeconds(60)));
+                
                 if (!commandProcessTask.IsCompleted)
                 {
-                    SendGroup(groupId, $"命令 [{message}] 处理超时.");
+                    cancelSource.Cancel();
+                    await Task.Delay(10.Seconds());
+                    if (!commandProcessTask.IsCompleted)
+                    {
+                        SendGroup(groupId, $"命令 [{message}] 处理超时.");
+                    }
                 }
                 
             });

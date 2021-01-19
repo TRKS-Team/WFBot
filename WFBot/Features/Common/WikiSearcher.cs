@@ -50,8 +50,8 @@ namespace WFBot.Features.Common
 
         public Wiki GetWiki(string word)
         {
-            return WebHelper.DownloadJson<Wiki>(
-                $"https://warframe.huijiwiki.com/api.php?action=query&format=json&formatversion=2&list=search&srsearch={word}");
+            return WebHelper.DownloadJsonAsync<Wiki>(
+                $"https://warframe.huijiwiki.com/api.php?action=query&format=json&formatversion=2&list=search&srsearch={word}").Result;
         }
     }
 

@@ -171,7 +171,7 @@ namespace WFBot
             IsShuttingDown = true;
             CheckResourceLock();
 
-            while (!WFBotResourceLock.AnyLockAcquired)
+            while (WFBotResourceLock.AnyLockAcquired)
             {
                 Thread.Sleep(500);
             }

@@ -47,8 +47,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Richasy.WFA.Sdk" Version="1.0.6" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
-    <PackageReference Include="TextCommandCore" Version="1.6.1" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TextCommandCore\TextCommandCore.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Windows\Settings.cs" />

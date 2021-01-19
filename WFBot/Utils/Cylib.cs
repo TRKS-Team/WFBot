@@ -162,7 +162,8 @@ namespace WFBot.Utils
 
         public static string AddRemainCallCount(this string str, GroupID group)
         {
-            return Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[group.ToString()] < 0 ? str : $"{str}\n本群每分钟还能调用{Config.Instance.CallperMinute - Messenger.GroupCallDic[group.ToString()]}次.";
+            return Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[group.ToString()] < 0
+                ? str : $"{str}\n本群每分钟还能调用{Config.Instance.CallperMinute - Messenger.GroupCallDic[group.ToString()]}次.";
         }
     }
 

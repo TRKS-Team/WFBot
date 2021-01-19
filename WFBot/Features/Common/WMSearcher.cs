@@ -36,15 +36,8 @@ namespace WFBot.Features.Common
                 platform = "switch";
             }
             header.Add("platform", platform); 
-            WMInfo info;
-            try
-            {
-                info = WebHelper.DownloadJson<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
-            }
-            catch (Exception e)
-            {
-                throw new CommandException($"请求数据出错: {e.Message}");
-            }
+            var info = WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header).Result;
+           
 
             info.sale = api.Sale.First(s => s.code == searchword);
             return info;

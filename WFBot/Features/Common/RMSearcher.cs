@@ -67,8 +67,8 @@ namespace WFBot.Features.Common
 
         public List<RivenData> GetRivenDatas()
         {
-            var info = WebHelper.DownloadJson<List<RivenData>>(
-                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
+            var info = WebHelper.DownloadJsonAsync<List<RivenData>>(
+                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json").Result;
             info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
             return info;
         }

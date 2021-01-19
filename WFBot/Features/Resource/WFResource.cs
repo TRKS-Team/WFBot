@@ -20,6 +20,7 @@ namespace WFBot.Features.Resource
     {
         public static WFResourceLoader<T> JsonDotNetLoader = stream =>
         {
+            // 是不是同步执行然后直接 Task.FromResult好一些?
             return Task.Run(() =>
             {
                 using var sr = new StreamReader(stream);
@@ -28,7 +29,7 @@ namespace WFBot.Features.Resource
             });
         };
 
-        public static WFResourceLoader<T> SystemTextJsonLoader = stream => JsonSerializer.DeserializeAsync<T>(stream).AsTask();
+        public static WFResourceLoader<T> SystemTextJsonLoader = stream => JsonSerializer.DeserializeAsync<T>(stream, cancellationToken: AsyncContext.GetCancellationToken()).AsTask();
     }
 
     public delegate Task<T> WFResourceLoader<T>(Stream data);
