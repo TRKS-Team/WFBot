@@ -4,19 +4,25 @@
 
 [**部署 FAQ (常见问题解答)**](faq.md)
 
+目录:
+
+1. [配置 mirai](#第一步:-配置-mirai)
+2. [配置 WFBot](#第二步:-配置-WFBot)
+3. [自定义](#自定义)
+
 首先新建两个文件夹, 分别叫 WFBot 和 mirai _并不一定非得是这个名字, 仅以方便演示为主_
 
 ## 第一步: 配置 mirai
 
 1. 进入 mirai 文件夹.
-2. 下载 Java: 前往 [清华大学开源软件镜像站(推荐)](https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/15/jre/x64/), [adoptopenjdk](https://adoptopenjdk.net/releases.html?variant=openjdk15&jvmVariant=hotspot) 或者 [openjdk](https://openjdk.java.net/projects/jdk/15/) 下载对应系统版本的 zip 版本的 Java, 解压到 jre 文件夹中(新建). 解压后应该像下面这样:
+2. 下载 Java: 从 [清华大学开源软件镜像站(推荐)](https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/15/jre/x64/), [adoptopenjdk](https://adoptopenjdk.net/releases.html?variant=openjdk15&jvmVariant=hotspot) 或者 [openjdk](https://openjdk.java.net/projects/jdk/15/) 下载对应系统版本的 zip 版本的 Java, 解压到 jre 文件夹中(新建). 解压后应该像下面这样:
    ![1](images/2021-01-20-22-31-26.png)  
    (确保 jre 下面就有 bin 文件夹)
 
-3. 下载 mcl: 前往 [MCL GitHub Release](https://github.com/iTXTech/mirai-console-loader/releases/latest) (中国大概很难下) 或者 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/iTXTech/mirai-console-loader/releases/download/v1.0.3/mcl-1.0.3.zip) (目前为 1.0.3 版本) 下载 mcl 并解压. 解压完后大概像这样:
+3. 下载 mcl: 从 [MCL GitHub Release](https://github.com/iTXTech/mirai-console-loader/releases/latest) (中国大概很难下) 或者 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/iTXTech/mirai-console-loader/releases/download/v1.0.3/mcl-1.0.3.zip) (目前为 1.0.3 版本) 下载 mcl 并解压. 解压完后大概像这样:
    ![1](images/2021-01-20-22-36-23.png)
 
-4. 修改 mcl.cmd: 用记事本打开 mcl.cmd, 然后把 `set JAVA_BINARY` 的那一行改为 `set JAVA_BINARY="jre/bin/java.exe"`:
+4. 修改 mcl.cmd: 用记事本打开 mcl.cmd, 把 `set JAVA_BINARY` 的那一行改为 `set JAVA_BINARY="jre/bin/java.exe"`:
 
    ```diff
    @echo off
@@ -36,7 +42,7 @@
 8. 打开 config\net.mamoe.mirai-api-http\setting.yml 文件. 将 `port` (端口号, 不能大于 65536) 和 `authKey` (连接用密码, 至少 8 位) 修改为一个独特的内容. (后面配置 WFBot 会用到)
    ![](images/2021-01-20-22-47-24.png)
 
-9. 在有 mirai.cmd 文件夹下, Shift + 右键资源管理器的文件夹空白部分, 点击 '在此处打开命令窗口'.
+9. 在有 mirai.cmd 文件夹下, `Shift + 右键`资源管理器的文件夹空白部分, 点击 '在此处打开命令窗口'.
    ![](images/2021-01-20-22-53-07.png)
 
 10. 执行 `./mcl --update-package net.mamoe:mirai-login-solver-selenium --channel nightly --type plugin`
@@ -46,7 +52,7 @@
 
 ---
 
-## 配置 WFBot
+## 第二步: 配置 WFBot
 
 1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)
    ![](images/2021-01-20-23-07-05.png)
@@ -88,7 +94,8 @@ clone 这个库, 运行 `build-wfbot.bat` 和 `build-connector.bat`, 编译的�
 
 ## 自定义
 
-> WFBot 控制台内输入 ui 可以打开设置窗口(仅 Windows)(以后会适配全平台)
+> WFBot 控制台内输入 ui 可以打开设置窗口 (仅 Windows) (以后可能会适配全平台)
+> ![](images/2021-01-20-23-36-00.png)
 
 可自定义的内容如下:
 
