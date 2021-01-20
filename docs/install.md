@@ -11,7 +11,7 @@
 1. 进入 mirai 文件夹.
 2. 下载 Java: 前往 [清华大学开源软件镜像站(推荐)](https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/15/jre/x64/), [adoptopenjdk](https://adoptopenjdk.net/releases.html?variant=openjdk15&jvmVariant=hotspot) 或者 [openjdk](https://openjdk.java.net/projects/jdk/15/) 下载对应系统版本的 zip 版本的 Java, 解压到 jre 文件夹中(新建). 解压后应该像下面这样:
    ![1](images/2021-01-20-22-31-26.png)  
-   (请确保 jre 下面就有 bin 文件夹)
+   (确保 jre 下面就有 bin 文件夹)
 
 3. 下载 mcl: 前往 [MCL GitHub Release](https://github.com/iTXTech/mirai-console-loader/releases/latest) (中国大概很难下) 或者 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/iTXTech/mirai-console-loader/releases/download/v1.0.3/mcl-1.0.3.zip) (目前为 1.0.3 版本) 下载 mcl 并解压. 解压完后大概像这样:
    ![1](images/2021-01-20-22-36-23.png)
@@ -26,9 +26,9 @@
    ```
 
 5. 运行一下 mirai: 双击 mcl.cmd, 等待 mirai 输出
-   ![](images/2021-01-20-22-41-51.png) (如果这一步窗口闪一下就没了, 请检查上面的 Java 配置是否正确, 特别是文件放的位置), 然后关闭 mirai (直接关闭窗口或者输入 `exit`).
+   ![](images/2021-01-20-22-41-51.png) (如果这一步窗口闪一下就没了, 检查上面的 Java 配置是否正确, 特别是文件放的位置), 然后关闭 mirai (直接关闭窗口或者输入 `exit`).
 
-6. 下载 mirai-api-http 插件: 从 [mirai-api-http GitHub Release](https://github.com/project-mirai/mirai-api-http/releases/latest) 下载 (中国下载可能较慢), 或 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/project-mirai/mirai-api-http/releases/download/v1.9.6/mirai-api-http-v1.9.6.mirai.jar) (版本为 1.9.6, 不一定最新), 放入 plugins 文件夹.
+6. 下载 mirai-api-http 插件: 从 [mirai-api-http GitHub Release](https://github.com/project-mirai/mirai-api-http/releases/latest) 下载 (中国下载可能较慢), 或 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/project-mirai/mirai-api-http/releases/download/v1.9.6/mirai-api-http-v1.9.6.mirai.jar) (版本为 1.9.6, 不一定最新), 下载 mirai-api-http-vx.x.x.mirai.jar, 放入 plugins 文件夹.
 
 7. 再次启动 mirai 并等待输出
    ![](images/2021-01-20-22-41-51.png)
@@ -50,11 +50,11 @@
 
 1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)
    ![](images/2021-01-20-23-07-05.png)
-   (Linux 用户 .NET Core Runtime 或者自己寻找答案, 或者加群来问)
+   (Linux 用户 下载 .NET Core Runtime, 自己寻找答案, 或者加群来问)
 
 2. 进入 WFBot 文件夹
 
-3. 下载 WFBot: [链接](https://github.com/TRKS-Team/WFBot/releases/latest). 你需要下载这两个东西.
+3. 下载 WFBot: [链接](https://github.com/TRKS-Team/WFBot/releases/latest). 你需要下载这两个东西:
    ![](images/2021-01-20-23-11-14.png)
 
 4. 解压: 把 WFBot-Windows.7z 直接解压, 接着把 WFBot-Connector-MiraiConnector.7z 解压到 WFBotConnector 文件夹内. 解压完成后像这样:
@@ -76,9 +76,9 @@
 ### 如果你想自己编译...
 
 clone 这个库, 运行 `build-wfbot.bat` 和 `build-connector.bat`, 编译的结果在 out 文件夹内.
-如果你是直接下载的这个库, 在 vs 内右键 WFBot, 转到 Build -> Conditional conpliation symbols, 填入 `NoGitVersion`, 编译时使用 build-wfbot-nogitversion.bat 来正常编译.
+如果你是直接下载的这个库, 在 vs 内右键 WFBot, 转到 Build -> Conditional conpliation symbols, 填入 `NoGitVersion`, 编译时使用 `build-wfbot-nogitversion.bat` 来正常编译.
 
-- 针对改代码(如文字提示)又想享受官方编译最新或者自动更新的客户 你可以写一个 WFBot 的[插件](plugin.md)
+- 针对改代码(如文字提示)又想享受官方编译最新或者自动更新的客户 你可以写一个 WFBot 的 [插件](plugin.md)
 
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 如果你修改了代码并应用到机器人上, 建议你在 GitHub 上开源其最新版本.  
