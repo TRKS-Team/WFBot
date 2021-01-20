@@ -75,12 +75,7 @@ namespace MiraiHTTPConnector
 
         public override void SendGroupMessage(GroupID groupID, string message)
         {
-            var isCommonMessage = message.Contains("好嘞") || 
-                                  message.Contains("很抱歉, 这个命令可能需要更长的时间来执行.") ||
-                                  message.Contains("I want to buy");
-            
-                session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Wait();
-            
+            session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Wait();
         }
         
         

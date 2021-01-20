@@ -1,4 +1,4 @@
-# 如何填写 WFBot 的 GitHub Token
+# 如何填写 GitHub Token
 
 ## 申请一个 GitHub Token
 

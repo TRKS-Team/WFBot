@@ -43,7 +43,6 @@
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
     <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Lib.Harmony" Version="2.0.2" />
-    <PackageReference Include="ManagedLzma" Version="0.2.0-alpha-7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Richasy.WFA.Sdk" Version="1.0.6" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
