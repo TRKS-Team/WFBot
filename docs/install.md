@@ -126,4 +126,4 @@ clone 这个库, 运行 `build-wfbot.bat` 和 `build-connector.bat`, 编译的�
 > **WM 查询** 可使用中转过后的服务器 **速度大概更高**  
 > **紫卡市场** 使用 **必须** 启用 WFA 授权
 
-**授权获取** 请查看 **[云之幻的 API 文档](https://blog.richasy.cn/document/wfa/api/)**
+**授权获取** 请查看 **[云之幻的 API 文档](https://www.richasy.cn/document/wfa/data/how_to_apply.html)**

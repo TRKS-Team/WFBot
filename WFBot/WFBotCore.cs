@@ -153,6 +153,7 @@ namespace WFBot
 
         public void RequestUpdate()
         {
+            if (IsShuttingDown) return;
             ShutdownInternal();
             const int UpdateCode = 0xDEAD;
             Environment.Exit(UpdateCode);
@@ -160,6 +161,7 @@ namespace WFBot
 
         public void Shutdown()
         {
+            if (IsShuttingDown) return;
             ShutdownInternal();
             Environment.Exit(0);
         }
@@ -227,6 +229,7 @@ namespace WFBot
             {
                 Trace.WriteLine("你正在使用官方编译版本. "); // 
             }
+            
             Console.Title = $"WFBot {version}";
 
             // 设置 Ctrl C 处理
