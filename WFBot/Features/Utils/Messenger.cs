@@ -69,14 +69,13 @@ namespace WFBot.Features.Utils
         public static void SendGroup(GroupID g, string content)
         {
             var qq = g.ID;
+            // 避免重复发送同一条消息
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
-
             previousMessageDic[qq] = content;
 
             ConnectorManager.Connector.SendGroupMessage(g, content);
 
             IncreaseCallCounts(g);
-
             //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
@@ -135,7 +134,8 @@ namespace WFBot.Features.Utils
 
         public static void SendHelpdoc(GroupID group)
         {
-            SendGroup(@group, @"欢迎查看机器人唯一指定帮助文档
+            SendGroup(@group, $@"欢迎查看机器人唯一指定帮助文档
+{(WFBotCore.IsOfficial ? "WFBot 版本 "+(WFBotCore.Version) : string.Empty)}
 宣传贴地址: https://warframe.love/thread-230.htm
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
 项目地址: https://github.com/TRKS-Team/WFBot

@@ -162,8 +162,21 @@ namespace WFBot.Utils
 
         public static string AddRemainCallCount(this string str, GroupID group)
         {
-            return Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[group.ToString()] < 0
-                ? str : $"{str}\n本群每分钟还能调用{Config.Instance.CallperMinute - Messenger.GroupCallDic[group.ToString()]}次.";
+            if (Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[@group.ToString()] < 0)
+            {
+                return str;
+            }
+
+            var remainCount = Config.Instance.CallperMinute - Messenger.GroupCallDic[@group.ToString()];
+
+            if (remainCount > 0)
+            {
+                return $"{str}\n机器人在本群一分钟内还能发送{remainCount}条消息.";
+            }
+            else
+            {
+                return $"{str}\n机器人在本群一分钟内信息发送配额已经用完.";
+            }
         }
     }
 
