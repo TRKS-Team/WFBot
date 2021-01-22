@@ -44,6 +44,7 @@ namespace WFBot.Features.Other
 
         private async Task InitWFNotificationAsync()
         {
+            AsyncContext.SetCancellationToken(CancellationToken.None);
             var alerts = api.GetAlerts();
             var invs = api.GetInvasions();
             var enemies = api.GetPersistentEnemies();

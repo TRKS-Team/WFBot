@@ -59,13 +59,13 @@ namespace TextCommandCore
 
                     async Task<string> Helper()
                     {
-                        await (Task)method.Invoke(handlers, param);
+                        await (Task) method.Invoke(handlers, param);
                         return null;
                     }
                 }
                 else if (method.ReturnType == typeof(Task<string>))
                 {
-                    task = Task.Run(async () => await (Task<string>)method.Invoke(handlers, param));
+                    task = Task.Run(async () => await (Task<string>) method.Invoke(handlers, param));
                 }
                 else if (method.ReturnType == typeof(string) || method.ReturnType == typeof(void))
                 {
@@ -97,6 +97,10 @@ namespace TextCommandCore
             catch (AggregateException e)
             {
                 result = $"请将下面的消息汇报给管理员: {e}";
+            }
+            catch (OperationCanceledException e)
+            {
+                result = $"操作超时: {e}";
             }
             catch (Exception e)
             {
