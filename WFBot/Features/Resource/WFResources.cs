@@ -99,7 +99,7 @@ namespace WFBot.Features.Resource
         {
             // const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             const string source =
-                "http://wfbot.cdn.therealkamisama.top/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+                "https://wfbot-cdn.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
             var name = source.Split('/').Last();    
 
