@@ -63,9 +63,9 @@ namespace WFBot.Features.Resource
             WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
             WFResourceRequester wfResourceRequester = null)
         {
-            resourceLoader = resourceLoader ?? ResourceLoaders<T>.JsonDotNetLoader;
+            resourceLoader ??= ResourceLoaders<T>.JsonDotNetLoader;
             // 这写的太屎了
-            fileName = fileName ?? (url ?? string.Empty).Split('/').Last().Split('?').First().Split("!").First();
+            fileName ??= (url ?? string.Empty).Split('/').Last().Split('?').First().Split("!").First();
 
             this.resourceLoader = resourceLoader;
             this.url = url;
@@ -162,40 +162,43 @@ namespace WFBot.Features.Resource
 
         async Task LoadFromTheWideWorldOfWeb()
         {
+            var sw = Stopwatch.StartNew();
             try
             {
                 await using var stream = await requester(url);
-
+                
                 try
                 {
+                    // 尝试将资源保存到缓存再读取...
                     await using var fileStream = File.OpenWrite(CachePath);
                     await stream.CopyToAsync(fileStream);
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败.", "WFResource");
+                    Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
                     Trace.WriteLine(e);
+                    sw.Restart();
 
+                    // 如果保存失败 可能是网络错误 或者文件无法写入 就直接再请求一次
                     await using var stream2 = await requester(url);
                     Value = await resourceLoader(stream2);
+                    Trace.WriteLine($"资源 {FileName} 获取完成. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
                     return;
                 }
 
+                // 这里保存到了缓存里 从缓存里读入
                 await using var file = File.OpenRead(CachePath);
                 Value = await resourceLoader(file);
-                Trace.WriteLine($"资源 {FileName} 获取完成.", "WFResource");
+                Trace.WriteLine($"资源 {FileName} 获取完成. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Trace.WriteLine($"必要资源 {FileName} 从广域网载入失败.", "WFResource");
+                Trace.WriteLine(e);
+                Trace.WriteLine($"必要资源 {FileName} 载入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
                 if (!Program.DontThrowIfResourceUnableToLoad)
-                {
                     throw;
-                }
-                else
-                {
-                    Trace.WriteLine("WFBot 不会停止运行, 但是功能可能无法正常运行.");
-                }
+
+                Trace.WriteLine("WFBot 不会停止运行, 但是功能可能无法正常运行.");
             }
         }
 

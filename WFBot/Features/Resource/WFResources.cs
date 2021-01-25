@@ -27,7 +27,7 @@ namespace WFBot.Features.Resource
             WFChineseApi = new WFChineseAPI();
             ThreadPool.SetMinThreads(64, 64);
             var tasks = new List<Task>();
-            
+
             tasks.Add(Task.Run(async () => await SetWFCDResources()));
             tasks.Add(Task.Run(async () => await SetWFContentApi()));
             tasks.Add(Task.Run(() => { WFAApi = new WFAApi(); }));
@@ -129,9 +129,19 @@ namespace WFBot.Features.Resource
                     return r.ExportRelicArcane;
                 },
                 fileName: "ExportRelicArcane_zh.json",
-                requester: async _ =>  
+                requester: async _ =>
                 {
-                    var urls = await GetWFOriginUrls();
+                    List<string> urls;
+                    try
+                    {
+                        urls = await GetWFOriginUrls();
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine("WFOriginUrls 获取失败, 下面是异常:");
+                        Trace.WriteLine(e);
+                        throw;
+                    }
                     var link = source + urls.First(u => u.Contains("ExportRelicArcane_zh.json"));
                     return await new HttpClient(new RetryHandler(new HttpClientHandler())).GetStreamAsync(link);
                 });
@@ -148,7 +158,7 @@ namespace WFBot.Features.Resource
             {
                 {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}
             };
-            
+
             var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items",
                 header: header,
                 resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader);
@@ -186,6 +196,7 @@ namespace WFBot.Features.Resource
             // 呃, 还好我当时写了这局注释 不然我可能之后会拉不出屎憋死 来自2020年2月20日15:34:49的trks
             // 天哪. 这api真是野蛮不堪 我当时为什么要这么写
             // 我的上帝, 我居然需要再次修改这个野蛮的api 简直不敢相信
+            // 已经不会这么干了
             return api;
 
         }

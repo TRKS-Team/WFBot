@@ -15,8 +15,8 @@
   <PropertyGroup>
     <NoWarn>1701;1702;MSB3042</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE</DefineConstants>
+  <PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
+    <DefineConstants>WINDOWS_RELEASE</DefineConstants>
   </PropertyGroup>
 
     <Choose>

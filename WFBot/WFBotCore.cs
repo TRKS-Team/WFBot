@@ -134,7 +134,7 @@ namespace WFBot
             {
                 var text = await Console.In.ReadLineAsync();
                 if (text == null) continue;
-                
+
                 switch (text.ToLower())
                 {
                     case "ui":
@@ -231,7 +231,7 @@ namespace WFBot
             }
             
             Console.Title = $"WFBot {version}";
-
+            
             // 设置 Ctrl C 处理
             Console.CancelKeyPress += (sender, args) =>
             {
