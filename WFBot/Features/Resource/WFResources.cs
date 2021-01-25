@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using Newtonsoft.Json;
 using WFBot.Features.Utils;
 using WFBot.Utils;
@@ -97,20 +98,16 @@ namespace WFBot.Features.Resource
         {
             // const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             const string source =
-                "https://weathered-lake-14e8.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+                "http://wfbot.cdn.therealkamisama.top/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
-            var name = source.Split('/').Last();
+            var name = source.Split('/').Last();    
 
-            var wc = new WebClient();
-            var header = new WebHeaderCollection
-            {
-                {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}
-            };
-            wc.Headers = header;
+            var hc = new HttpClient();
+            hc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
             var path = Path.Combine("WFCaches", name);
             var resultpath = Path.Combine("WFCaches", "index_zh.txt");
 
-            await wc.DownloadFileTaskAsync(source, path);
+            await hc.DownloadAsync(source, path);
             LZMADecompress.DecompressFileLZMA(path, resultpath);
 
             var result = (await File.ReadAllLinesAsync(resultpath)).ToList();
