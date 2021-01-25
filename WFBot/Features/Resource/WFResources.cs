@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -154,9 +155,9 @@ namespace WFBot.Features.Resource
             var header = new WebHeaderCollection
             {
                 {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"},
-                {"Accept-Encoding", "gzip, deflate, br"}
+                {"Accept-Encoding", "gzip"}
             };
-            
+
             var resource = WFResource<WFCD_All[]>.Create(url: "https://wfcd-all.therealkamisama.top/",
                 header: header,
                 resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader,
