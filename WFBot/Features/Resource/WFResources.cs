@@ -151,22 +151,23 @@ namespace WFBot.Features.Resource
             WFContent = result;
             await resource.WaitForInited();
         }
-
+        
         private static Task SetWFCDResources()
         {
             var header = new WebHeaderCollection
             {
-                {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}
+                {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"},
+                {"Accept-Encoding", "gzip, deflate, br"}
             };
-
-            var resource = WFResource<WFCD_All[]>.Create("https://api.warframestat.us/items",
+            
+            var resource = WFResource<WFCD_All[]>.Create(url: "https://wfcd-all.therealkamisama.top/",
                 header: header,
-                resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader);
-
+                resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader,
+                fileName: "All.json");
+             
             RWFCDAll = resource;
             return resource.WaitForInited();
         }
-
         private static async Task<WFApi> GetTranslateApi()
         {
             var api = new WFApi();
