@@ -193,8 +193,8 @@ namespace WFBot.Features.Resource
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e);
                 Trace.WriteLine($"必要资源 {FileName} 载入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
+                Trace.WriteLine(e);
                 if (!Program.DontThrowIfResourceUnableToLoad)
                     throw;
 
@@ -204,7 +204,7 @@ namespace WFBot.Features.Resource
 
         public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string urlp)
         {
-            var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler()));
+            var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler{AutomaticDecompression = DecompressionMethods.GZip}));
             if (header != null)
             {
                 foreach (string key in header)
