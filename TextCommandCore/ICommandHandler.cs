@@ -31,12 +31,12 @@ namespace TextCommandCore
 
     public class CommandInfo
     {
-        public Predicate<string> Matcher { get; }
+        public List<Predicate<string>> Matchers { get; }
         public MethodInfo Method { get; }
 
         public CommandInfo(MethodInfo method)
         {
-            Matcher = method.GetCustomAttribute<MatcherAttribute>().Matcher;
+            Matchers = method.GetCustomAttributes<MatcherAttribute>().Select(attrib => attrib.Matcher).ToList();
             Method = method;
         }
     }
@@ -44,8 +44,22 @@ namespace TextCommandCore
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class MatchersAttribute : MatcherAttribute
     {
+        public string[] Matchers { get; }
+
         public MatchersAttribute(params string[] matchers) : base(msg => matchers.Any(match => match == msg))
         {
+            Matchers = matchers;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class MatchersIgnoreCaseAttribute : MatcherAttribute
+    {
+        public string[] Matchers { get; }
+
+        public MatchersIgnoreCaseAttribute(params string[] matchers) : base(msg => matchers.Any(match => match.Equals(msg, StringComparison.OrdinalIgnoreCase)))
+        {
+            Matchers = matchers;
         }
     }
 

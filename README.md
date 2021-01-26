@@ -28,6 +28,19 @@
 
 ## 如何使用
 
+### 控制台命令
+
+<details>
+    <summary>自定义命令匹配的解释</summary>
+比如 wiki 查询只能用 '/wiki', 我想让它支持'/维基', 使用 `PrintCommands` 找到 wiki 的命令 ID 为 `Wiki`(区分大小写), 再使用 `AddCustomCommandMatcher Wiki 维基`, 就可以使用 '/维基' 了.  
+</details>
+
+- **_添加自定义命令匹配_**: **AddCustomCommandMatcher <命令 ID> <匹配字符>**
+- **_移除自定义命令匹配_**: **RemoveCustomCommandMatcher <命令 ID> <匹配字符>**
+- **_列出所有命令_**: **PrintCommands**
+- **_打开 UI_**: **ui**
+- **_退出_**: **stop** 或 **exit**
+
 ### 群内命令
 
 **设置内可以更改命令前无需斜杠.**

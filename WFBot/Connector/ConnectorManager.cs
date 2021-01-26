@@ -27,8 +27,9 @@ namespace WFBot.Connector
                 .SelectMany(types=>types)
                 .Where(type => type.IsSubclassOf(typeof(WFBotConnectorBase)))
                 .ToArray();
-            Trace.WriteLine($"连接器个数有 {connectors.Length} 个.");
-            if (connectors.Length != 1) throw new Exception("连接器数目不为1, 你只能同时使用一个连接器.");
+            //Trace.WriteLine($"连接器个数有 {connectors.Length} 个.");
+            if (connectors.Length > 1) throw new Exception("连接器数目大于1, 你只能同时使用一个连接器.");
+            if (connectors.Length == 0) throw new Exception("没有找到连接器, 如果你不知道这是啥, 请看部署文档.");
             Connector = (WFBotConnectorBase)Activator.CreateInstance(connectors.Single());
             Connector.Init();
         }

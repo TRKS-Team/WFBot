@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
+using TextCommandCore;
 using WFBot.Connector;
 using WFBot.Events;
 using WFBot.Features.Other;
@@ -145,7 +146,10 @@ namespace WFBot
                         Shutdown();
                         return;
                     default:
-                        ConnectorManager.Connector.OnCommandLineInput(text);
+                        if (!(new CustomCommandMatcherHandler(text.TrimStart('/'))).ProcessCommandInput().Result.matched)
+                        {
+                            ConnectorManager.Connector.OnCommandLineInput(text);
+                        }
                         break;
                 }
             }
@@ -224,7 +228,7 @@ namespace WFBot
 
             // 设置版本号
             var version = Version;
-            Trace.WriteLine($"WFBot: 开始初始化. 版本号 {version}");
+            Trace.WriteLine($"WFBot 开始初始化. 版本号 {version}");
             if (IsOfficial)
             {
                 Trace.WriteLine("你正在使用官方编译版本. "); // 
@@ -257,19 +261,26 @@ namespace WFBot
                 Trace.WriteLine($"Task 发生异常: {args.Exception}.");
                 args.SetObserved();
             };
-
-            // 加载插件
+            
+            Trace.WriteLine("加载插件...");
             Plugins.Load();
 
-            // 加载 Connector
-            ConnectorManager.LoadConnector();
+            Trace.WriteLine("加载配置文件...");
+            Config.Update();
 
-            // 加载资源
+            Trace.WriteLine("加载 Connector...");
+            ConnectorManager.LoadConnector();
+            
+            Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();
             messageReceivedEvent = new MessageReceivedEvent();
             privateMessageReceivedEvent = new PrivateMessageReceivedEvent();
             NotificationHandler = new WFNotificationHandler();
 
+            // 加载自定义命令处理器
+            Trace.WriteLine("加载自定义命令处理器...");
+            CustomCommandMatcherHandler.InitCustomCommandHandler();
+            
             // 初始化定时器
             InitTimer();
 

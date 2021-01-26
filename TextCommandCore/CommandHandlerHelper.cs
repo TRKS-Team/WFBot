@@ -29,7 +29,7 @@ namespace TextCommandCore
             CommandInfosCache[type] = infos;
         }
 
-        static CommandInfo[] GetCommandInfos<T>()
+        public static CommandInfo[] GetCommandInfos<T>()
         {
             var type = typeof(T);
             if (!CommandInfosCache.ContainsKey(type)) InitCommandHandlerCollection<T>();
@@ -308,7 +308,7 @@ namespace TextCommandCore
         static MethodInfo GetCommandHandler<T>(string message)
         {
             var 我不知道该咋命名了 = message.Split(' ')[0];
-            var matchInfo = GetCommandInfos<T>().FirstOrDefault(info => info.Matcher(我不知道该咋命名了));
+            var matchInfo = GetCommandInfos<T>().FirstOrDefault(info => info.Matchers.Any(m => m(我不知道该咋命名了)));
             if (matchInfo is null) throw new CommandMismatchException();
 
             return matchInfo.Method;
