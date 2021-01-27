@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
+using Humanizer;
 using Newtonsoft.Json;
 using WFBot.Utils;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -166,15 +168,24 @@ namespace WFBot.Features.Resource
             try
             {
                 await using var stream = await requester(url);
-                
+                var fileStream = File.Open(CachePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+
                 try
                 {
                     // 尝试将资源保存到缓存再读取...
-                    await using var fileStream = File.OpenWrite(CachePath);
-                    await stream.CopyToAsync(fileStream);
+                    var copyTask = stream.CopyToAsync(fileStream);
+                    while (true)
+                    {
+                        var waitTask = Task.Delay(3.Seconds());
+                        await Task.WhenAny(copyTask, waitTask);
+                        if (copyTask.IsCompleted) break;
+                        Console.WriteLine($"资源 {FileName} 还没有下载完. 下载了 {fileStream.Length.Bytes().Megabytes:F2} MB.");
+                    }
+                    fileStream.Dispose();
                 }
                 catch (Exception e)
                 {
+                    fileStream.Dispose();
                     Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
                     Trace.WriteLine(e);
                     sw.Restart();

@@ -60,7 +60,7 @@ namespace WFBot.Utils
         }
         
         
-        public static async Task<T> DownloadJsonAsync<T>(string url, WebHeaderCollection header = null)
+        public static async Task<T> DownloadJsonAsync<T>(string url, WebHeaderCollection header = null, TimeSpan? timeout = null)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -71,7 +71,7 @@ namespace WFBot.Utils
                 {
                     hc.DefaultRequestHeaders.Add(key, header[key]);
                 }
-                hc.Timeout = TimeSpan.FromSeconds(25);
+                hc.Timeout = timeout ?? TimeSpan.FromSeconds(25);
 
                 try
                 {

@@ -85,7 +85,9 @@ namespace WFBot.Features.Utils
         {
             try
             {
-                var alerts = await WebHelper.DownloadJsonAsync<List<WFAlert>>(WFstat + "/alerts");
+                var alerts =
+                    await WebHelper.DownloadJsonAsync<List<WFAlert>>(WFstat + "/alerts",
+                        timeout: TimeSpan.FromSeconds(30));
                 foreach (var alert in alerts)
                 {
                     translator.TranslateAlert(alert);
@@ -94,6 +96,10 @@ namespace WFBot.Features.Utils
                 }
 
                 return alerts;
+            }
+            catch (TaskCanceledException)
+            {
+                Trace.WriteLine("警报获取超时.");
             }
             catch (HttpRequestException)
             {
