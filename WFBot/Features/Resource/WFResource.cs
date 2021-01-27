@@ -49,8 +49,8 @@ namespace WFBot.Features.Resource
         string CachePath => Path.Combine(CacheDir, FileName);
         string LocalPath => Path.Combine(OfflineDir, FileName);
         readonly WebHeaderCollection header;
-        const string OfflineDir = "WFOfflineResource";
-        const string CacheDir = "WFCaches";
+        public const string OfflineDir = "WFOfflineResource";
+        public const string CacheDir = "WFCaches";
 
 
         static WFResource()
@@ -193,18 +193,26 @@ namespace WFBot.Features.Resource
             }
             catch (Exception e)
             {
-                Trace.WriteLine($"必要资源 {FileName} 载入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
+                Trace.WriteLine($"资源 {FileName} 载入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
                 Trace.WriteLine(e);
-                if (!Program.DontThrowIfResourceUnableToLoad)
-                    throw;
+                if (initTask == null)
+                {
+                    Trace.WriteLine("这个资源已经从缓存读入, 所以不会对运行造成影响, 但是这个资源可能不是最新.");
+                }
+                else
+                {
+                    if (!Program.DontThrowIfResourceUnableToLoad)
+                        throw;
 
-                Trace.WriteLine("WFBot 不会停止运行, 但是功能可能无法正常运行.");
+                    Trace.WriteLine("WFBot 不会停止运行, 但是功能可能无法正常运行.");
+                }
             }
         }
 
         public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string urlp)
         {
             var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler{AutomaticDecompression = DecompressionMethods.GZip}));
+            httpClient.Timeout = Timeout.InfiniteTimeSpan;
             if (header != null)
             {
                 foreach (string key in header)
