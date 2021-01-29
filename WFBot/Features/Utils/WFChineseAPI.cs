@@ -71,14 +71,23 @@ namespace WFBot.Features.Utils
 
         public async Task<List<WFInvasion>> GetInvasions()
         {
-            var invasions = await WebHelper.DownloadJsonAsync<List<WFInvasion>>(WFstat + "/invasions");
-            foreach (var invasion in invasions)
+            try
             {
-                translator.TranslateInvasion(invasion);
-                invasion.activation = GetRealTime(invasion.activation);
+                var invasions = await WebHelper.DownloadJsonAsync<List<WFInvasion>>(WFstat + "/invasions");
+                foreach (var invasion in invasions)
+                {
+                    translator.TranslateInvasion(invasion);
+                    invasion.activation = GetRealTime(invasion.activation);
+                }
+
+                return invasions;
+            }
+            catch (OperationCanceledException)
+            {
+                Trace.WriteLine("入侵获取超时.");
             }
 
-            return invasions;
+            return new List<WFInvasion>();
         }
 
         public async Task<List<WFAlert>> GetAlerts()
@@ -97,7 +106,7 @@ namespace WFBot.Features.Utils
 
                 return alerts;
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 Trace.WriteLine("警报获取超时.");
             }

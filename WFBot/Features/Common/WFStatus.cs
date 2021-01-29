@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using GammaLibrary.Extensions;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
@@ -85,8 +86,15 @@ namespace WFBot.Features.Common
         public void SendRelicInfo(GroupID group, string word)
         {
             var relic = api.GetRelics(word);
-            var msg = WFFormatter.ToString(relic);
-            Messenger.SendGroup(group, msg);
+            if (relic.IsEmpty())
+            {
+                Messenger.SendGroup(group, "没有找到符合条件的遗物.");
+            }
+            else
+            {
+                var msg = WFFormatter.ToString(relic);
+                Messenger.SendGroup(group, msg);
+            }
         }
 
         public void SendEvent(GroupID group)
@@ -132,13 +140,15 @@ namespace WFBot.Features.Common
 
         public void SendArbitrationMission(GroupID group)
         {
+            Messenger.SendGroup(group, "功能暂时不可用.");
+            /*
             var sb = new StringBuilder();
             var ar = api.GetArbitrationMission().Result;
             // var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.start < DateTime.Now && DateTime.Now < k.end);
             sb.AppendLine("以下是仲裁警报的信息: ");
             sb.AppendLine(WFFormatter.ToString(ar));
             Messenger.SendGroup(group, sb.ToString().Trim());
-
+            */
         }
     }
 }

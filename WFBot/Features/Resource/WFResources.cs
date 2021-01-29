@@ -35,9 +35,8 @@ namespace WFBot.Features.Resource
             tasks.Add(Task.Run(() => { WFAApi = new WFAApi(); }));
             WFTranslateData = await GetTranslateApi();
 
-            await Task.WhenAll(
-                Task.Run(() => { WFTranslator = new WFTranslator(); }));
             await Task.WhenAll(tasks);
+            WFTranslator = new WFTranslator();
             if (ResourceLoadFailed)
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*

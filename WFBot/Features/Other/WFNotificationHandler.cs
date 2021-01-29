@@ -69,11 +69,17 @@ namespace WFBot.Features.Other
             
             lock (Locker)
             {
-                UpdateAlertPool();
-                UpdateInvasionPool();
+                var tasks = new []
+                {
+                    UpdateAlertPool(),
+                    UpdateInvasionPool(),
+                    UpdatePersistentEnemiePool(),
+                    CheckWarframeUpdates()
+                };
+
+                Task.WaitAll(tasks);
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
-                UpdatePersistentEnemiePool(); 
-                CheckWarframeUpdates();
+
                 // CheckSentientOutpost();
                 // 很不幸 S船已经被DE改的我不知道怎么写了
                 // 无法与你继续互动
@@ -115,9 +121,9 @@ namespace WFBot.Features.Other
 
             return result;
         }
-        public void CheckWarframeUpdates()
+        public async Task CheckWarframeUpdates()
         {
-            var updates = GetWarframeUpdates().Result;
+            var updates = await GetWarframeUpdates();
             if (!sendedUpdateSet.Contains(updates.First()))
             {
                 var msg = WFFormatter.ToString(updates.First());
@@ -177,20 +183,21 @@ namespace WFBot.Features.Other
         }
         */
 
-        private void UpdatePersistentEnemiePool()
+        private async Task UpdatePersistentEnemiePool()
         {
-            StalkerPool = api.GetPersistentEnemies().Result;
+            StalkerPool = await api.GetPersistentEnemies();
             CheckPersistentEnemies();
         }
-        private void UpdateAlertPool()
+
+        private async Task UpdateAlertPool()
         {
-            AlertPool = api.GetAlerts().Result;
+            AlertPool = await api.GetAlerts();
             CheckAlerts();
         }
 
-        private void UpdateInvasionPool()
+        private async Task UpdateInvasionPool()
         {
-            InvasionPool = api.GetInvasions().Result;
+            InvasionPool = await api.GetInvasions();
             CheckInvasions();
         }
 
