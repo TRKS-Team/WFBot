@@ -168,7 +168,7 @@ namespace WFBot.Features.Resource
             try
             {
                 await using var stream = await requester(url);
-                var fileStream = File.Open(CachePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                var fileStream = File.Open(CachePath + ".tmp", FileMode.Create, FileAccess.Write, FileShare.Read);
 
                 try
                 {
@@ -182,6 +182,9 @@ namespace WFBot.Features.Resource
                         Console.WriteLine($"资源 {FileName} 还没有下载完. 下载了 {fileStream.Length.Bytes().Megabytes:F2} MB.");
                     }
                     fileStream.Dispose();
+
+                    if (File.Exists(CachePath)) File.Delete(CachePath);
+                    File.Move(CachePath + ".tmp", CachePath);
                 }
                 catch (Exception e)
                 {

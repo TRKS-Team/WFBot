@@ -41,25 +41,24 @@ namespace WFBot.Utils
     {
         public static WebStatus TryGet(string url)
         {
-            var count = 3;
-            while (count-- > 0)
+            try
             {
-                try
-                {
-                    var client = new HttpClient();
-                    var sw = Stopwatch.StartNew();
-                    var response = client.GetAsync(url).Result;
-                    return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
-                }
-                catch (Exception)
-                {
-                    //
-                }
+                var client = new HttpClient(new RetryHandler(new HttpClientHandler()));
+                client.DefaultRequestVersion = new Version(2, 0);
+                client.Timeout = TimeSpan.FromSeconds(0xF);
+                var sw = Stopwatch.StartNew();
+                var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result;
+                return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
             }
+            catch (Exception)
+            {
+                //
+            }
+
             return new WebStatus(false, 6666666666/*???*/);
         }
-        
-        
+
+
         public static async Task<T> DownloadJsonAsync<T>(string url, WebHeaderCollection header = null, TimeSpan? timeout = null)
         {
             var sw = Stopwatch.StartNew();

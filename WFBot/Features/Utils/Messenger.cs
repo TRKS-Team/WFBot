@@ -104,6 +104,8 @@ namespace WFBot.Features.Utils
             var sb = new StringBuilder();
             var q1 = Task.Run(() => WebHelper.TryGet("https://warframestat.us"));
             var q2 = Task.Run(() => WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item"));
+            var commitTask = Task.Run(() =>
+                CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits?per_page=5"));
             // var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
             // var q4 = Task.Run(() => WebHelper.TryGet("https://10o.io/kuvalog.json"));
             Task.WaitAll(q1, q2/*, q3, q4*/);
@@ -127,7 +129,7 @@ namespace WFBot.Features.Utils
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
             // sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
             // sb.AppendLine($"    赤毒/仲裁API: {kuvastat.Latency}ms [{(kuvastat.IsOnline ? "在线" : "离线")}]");
-            var commit = CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits")?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
+            var commit = commitTask.Result?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
             sb.AppendLine(commit);
             sb.ToString().Trim().AddPlatformInfo().SendToGroup(group);
         }
