@@ -69,15 +69,13 @@ namespace WFBot.Features.Other
             
             lock (Locker)
             {
-                var tasks = new []
-                {
+                Task.WaitAll(
                     UpdateAlertPool(),
                     UpdateInvasionPool(),
                     UpdatePersistentEnemiePool(),
                     CheckWarframeUpdates()
-                };
-
-                Task.WaitAll(tasks);
+                );
+                
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
 
                 // CheckSentientOutpost();

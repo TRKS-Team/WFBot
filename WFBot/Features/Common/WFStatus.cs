@@ -140,15 +140,12 @@ namespace WFBot.Features.Common
 
         public void SendArbitrationMission(GroupID group)
         {
-            Messenger.SendGroup(group, "功能暂时不可用.");
-            /*
             var sb = new StringBuilder();
             var ar = api.GetArbitrationMission().Result;
             // var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.start < DateTime.Now && DateTime.Now < k.end);
             sb.AppendLine("以下是仲裁警报的信息: ");
             sb.AppendLine(WFFormatter.ToString(ar));
             Messenger.SendGroup(group, sb.ToString().Trim());
-            */
         }
     }
 }
