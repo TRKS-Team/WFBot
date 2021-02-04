@@ -259,7 +259,15 @@ namespace WFBot.Features.Other
         }
         public void SendAllInvasions(GroupID group)
         {
-            UpdateInvasionPool();
+            try
+            {
+                UpdateInvasionPool().Wait();
+            }
+            catch (OperationCanceledException)
+            {
+                Messenger.SendGroup(group, "操作超时.");
+                return;
+            }
             var invasions = InvasionPool;
             var sb = new StringBuilder();
             sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
@@ -303,7 +311,7 @@ namespace WFBot.Features.Other
 
         public void SendAllAlerts(GroupID group)
         {
-            UpdateAlertPool();
+            UpdateAlertPool().Wait();
             var alerts = AlertPool;
             var sb = new StringBuilder();
 

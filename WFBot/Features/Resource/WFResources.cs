@@ -154,7 +154,7 @@ namespace WFBot.Features.Resource
             var header = new WebHeaderCollection
             {
                 //{"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"},
-                {"Accept-Encoding", "gzip"}
+                {"Accept-Encoding", "br"}
             };
 
             var resource = WFResource<WFCD_All[]>.Create(url: "https://wfcd-all.therealkamisama.top/",

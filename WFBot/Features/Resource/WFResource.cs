@@ -169,7 +169,7 @@ namespace WFBot.Features.Resource
             {
                 await using var stream = await requester(url);
                 var fileStream = File.Open(CachePath + ".tmp", FileMode.Create, FileAccess.Write, FileShare.Read);
-
+                
                 try
                 {
                     // 尝试将资源保存到缓存再读取...
@@ -225,7 +225,7 @@ namespace WFBot.Features.Resource
 
         public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string urlp)
         {
-            var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler{AutomaticDecompression = DecompressionMethods.GZip}));
+            var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler{AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Brotli}));
             httpClient.Timeout = Timeout.InfiniteTimeSpan;
             if (header != null)
             {

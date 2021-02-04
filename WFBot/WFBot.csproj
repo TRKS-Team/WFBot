@@ -25,7 +25,10 @@
       </When>
       <Otherwise>
         <ItemGroup>
-          <PackageReference Include="GitVersion.MsBuild" Version="5.6.3" />
+          <PackageReference Include="GitVersion.MsBuild" Version="5.6.3" >
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          </PackageReference>
         </ItemGroup>
       </Otherwise>
       <!-- other conditions -->

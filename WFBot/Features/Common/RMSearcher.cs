@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GammaLibrary.Extensions;
+using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Resource;
@@ -59,8 +60,8 @@ namespace WFBot.Features.Common
 
         public List<WarframeAlertingPrime.SDK.Models.User.Order> GetRivenOrders(string weapon)
         {
-            var option = new SearchRivenOrderOption{Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon)};
-            var orders = wfaClient.QueryRivenOrdersAsync(option).Result.Items;
+            var option = new SearchRivenOrderOption { Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon) };
+            var orders = (wfaClient.QueryRivenOrdersAsync(option).Result ?? throw new CommandException("由于未知原因, 返回的数据为空.")).Items;
             translator.TranslateRivenOrders(orders);
             return orders;
         }
@@ -80,7 +81,7 @@ namespace WFBot.Features.Common
             {
                 if (isWFA)
                 {
-                    var weaponinfo = translator.GetMatchedWeapon(weapon.Format()); 
+                    var weaponinfo = translator.GetMatchedWeapon(weapon.Format());
                     if (weaponinfo.Any())
                     {
                         if (Config.Instance.NotifyBeforeResult)

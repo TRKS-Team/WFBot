@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,12 +65,13 @@ namespace WFBot.Utils
             var sw = Stopwatch.StartNew();
             try
             {
-                using var hc = new HttpClient(new RetryHandler(new HttpClientHandler()));
+                using var hc = new HttpClient(new RetryHandler(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.Brotli }));
                 header ??= new WebHeaderCollection();
                 foreach (string key in header)
                 {
                     hc.DefaultRequestHeaders.Add(key, header[key]);
                 }
+                hc.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
                 hc.Timeout = timeout ?? TimeSpan.FromSeconds(25);
 
                 try
