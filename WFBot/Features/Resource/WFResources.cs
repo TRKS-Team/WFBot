@@ -199,7 +199,7 @@ namespace WFBot.Features.Resource
 
         }
 
-        public static bool UpdateLexion()
+        public static async Task<bool> UpdateLexion()
         {
             try
             {
@@ -207,7 +207,7 @@ namespace WFBot.Features.Resource
                 var sha = commit.First().sha;
                 if (sha == Config.Instance.localsha) return true;
                 Messenger.SendDebugInfo("发现辞典有更新,正在更新···");
-                UpdateTranslateApi();
+                await UpdateTranslateApi();
                 Config.Instance.localsha = sha;
                 Config.Save();
                 return true;
@@ -219,9 +219,9 @@ namespace WFBot.Features.Resource
         }
 
         // todo 这里需要改
-        private static void UpdateTranslateApi()
+        private static async Task UpdateTranslateApi()
         {
-            WFTranslateData = GetTranslateApi().Result;
+            WFTranslateData = await GetTranslateApi();
             WFTranslator = new WFTranslator();
         }
     }

@@ -17,12 +17,12 @@ namespace TestConnector
 
         public override void SendGroupMessage(GroupID groupID, string message)
         {
-            Console.WriteLine($"ID {groupID} message {message}");
+            Console.WriteLine($"{message}");
         }
 
         public override void SendPrivateMessage(UserID userID, string message)
         {
-            Console.WriteLine($"ID {userID} message {message}");
+            Console.WriteLine($"{message}");
         }
 
         public override void OnCommandLineInput(string content)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using TextCommandCore;
 using WFBot.Features.Resource;
@@ -18,7 +19,7 @@ namespace WFBot.Events
         public void ProcessPrivateMessage(UserID senderId, string message)
         {
 
-            new PrivateMessageHandler(senderId, message).ProcessCommandInput();
+            new PrivateMessageHandler(senderId, message).ProcessCommandInput().Wait();
             // SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 8 时代变了
 
         }
@@ -107,9 +108,9 @@ namespace WFBot.Events
 
         [RequireAdmin]
         [Matchers("更新翻译API")]
-        string UpdateTranslateApi()
+        async Task<string> UpdateTranslateApi()
         {
-            if (!WFResources.UpdateLexion())
+            if (!(await WFResources.UpdateLexion()))
                 return "翻译API更新失败, 可能是请求次数过多, 请查看 FAQ 来了解如何解决这个问题.";
             return null;
         }

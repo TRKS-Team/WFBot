@@ -19,13 +19,13 @@ namespace WFBot.Features.Timers
             
         }
 
-        protected override void Tick()
+        protected override async void Tick()
         {
             try
             {
                 if (Config.Instance.UpdateLexion)
                 {
-                    WFResources.UpdateLexion();
+                    await WFResources.UpdateLexion();
                 }
             }
             catch (Exception)

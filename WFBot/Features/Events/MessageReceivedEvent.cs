@@ -34,12 +34,15 @@ namespace WFBot.Events
             // TODO cancellation token
             Task.Run(async () =>
             {
+                var sw = Stopwatch.StartNew();
                 var cancelSource = new CancellationTokenSource();
                 AsyncContext.SetCancellationToken(cancelSource.Token);
+                var sender = new GroupMessageSender(groupId);
+                AsyncContext.SetMessageSender(sender);
                 var commandProcessTask = handler.ProcessCommandInput();
 
                 using var locker = WFBotResourceLock.Create(
-                    $"命令处理 #{Interlocked.Increment(ref commandCount)} 群'{groupId}' 用户'{senderId}' 内容'{message}'");
+                    $"命令处理 #{Interlocked.Increment(ref commandCount)} 群[{groupId}] 用户[{senderId}] 内容[{message}]");
                 await Task.WhenAny(commandProcessTask, Task.Delay(TimeSpan.FromSeconds(60)));
                 
                 if (!commandProcessTask.IsCompleted)
@@ -48,10 +51,18 @@ namespace WFBot.Events
                     await Task.Delay(10.Seconds());
                     if (!commandProcessTask.IsCompleted)
                     {
-                        SendGroup(groupId, $"命令 [{message}] 处理超时.");
+                        sender.SendMessage($"命令 [{message}] 处理超时.");
                     }
+                    Trace.WriteLine($"命令 群[{groupId}] 用户[{senderId}] 内容[{message}] 处理超时.");
+                    return;
                 }
-                
+#if !DEBUG
+                if (commandProcessTask.Result.matched)
+                {
+                    Trace.WriteLine($"命令 群 [{groupId}] 用户 [{senderId}] 内容 [{message}] 处理完成: {sw.Elapsed.Seconds:N1}s.");
+                }
+#endif
+
             });
         }
 
@@ -77,21 +88,21 @@ namespace WFBot.Events
     public partial class GroupMessageHandler
     {
         [Matchers("金星赏金", "金星平原赏金", "福尔图娜赏金", "奥布山谷赏金")]
-        void FortunaMissions(int index = 0)
+        Task<string> FortunaMissions(int index = 0)
         {
-            _wfStatus.SendFortunaMissions(Group, index);
+            return _wfStatus.SendFortunaMissions(index);
         }
 
         [Matchers("地球赏金", "地球平原赏金", "希图斯赏金")]
-        void CetusMissions(int index = 0)
+        Task<string> CetusMissions(int index = 0)
         {
-            _wfStatus.SendCetusMissions(Group, index);
+            return _wfStatus.SendCetusMissions(index);
         }
 
         [Matchers("查询", "wm")]
         [CombineParams]
         [DoNotMeasureTime]
-        void WM(string word)
+        Task<string> WM(string word)
         {
             const string quickReply = " -QR";
             const string buyer = " -B";
@@ -107,99 +118,99 @@ namespace WFBot.Events
                 B = true;
             }
             // 小屎山
-            _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), Group, QR, B);
+            return _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), QR, B);
         }
 
         [Matchers("紫卡", "阿罕卡拉"/*彩蛋*/, "千语魅痕"/*彩蛋*/)]
         [CombineParams]
-        void Riven(string word)
+        Task<string> Riven(string word)
         {
             word = word.Format();
-            _rmSearcher.SendRivenInfos(Group, word);
+            return _rmSearcher.SendRivenInfos(word);
         }
 
         [Matchers("翻译")]
         [CombineParams]
-        void Translate(string word)
+        string Translate(string word)
         {
             word = word.Format();
-            _wfStatus.SendTranslateResult(Group, word);
+            return _wfStatus.SendTranslateResult(word);
         }
 
         [Matchers("遗物")]
         [CombineParams]
-        void RelicInfo(string word)
+        string RelicInfo(string word)
         {
             word = word.Format();
-            _wfStatus.SendRelicInfo(Group, word);
+            return _wfStatus.SendRelicInfo(word);
         }
 
         [Matchers("警报")]
-        void Alerts()
+        Task<string> Alerts()
         {
-            WFBotCore.Instance.NotificationHandler.SendAllAlerts(Group);
+            return WFBotCore.Instance.NotificationHandler.SendAllAlerts();
         }
 
         [Matchers("平野", "夜灵平野", "平原", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "平原温度", "平原时间")]
-        void Cycles()
+        Task<string> Cycles()
         {
-            _wfStatus.SendCycles(Group);
+            return _wfStatus.Cycles();
         }
 
         [Matchers("入侵")]
-        void Invasions()
+        Task<string> Invasions()
         {
-            WFBotCore.Instance.NotificationHandler.SendAllInvasions(Group);
+            return WFBotCore.Instance.NotificationHandler.SendAllInvasions();
         }
 
         [Matchers("突击")]
-        void Sortie()
+        Task<string> Sortie()
         {
-            _wfStatus.SendSortie(Group);
+            return _wfStatus.SendSortie();
         }
 
         [Matchers("奸商", "虚空商人", "商人")]
-        void VoidTrader()
+        Task<string> VoidTrader()
         {
-            _wfStatus.SendVoidTrader(Group);
+            return _wfStatus.SendVoidTrader();
         }
 
         [Matchers("活动", "事件")]
-        void Events()
+        Task<string> Events()
         {
-            _wfStatus.SendEvent(Group);
+            return _wfStatus.SendEvent();
         }
 
 
         [Matchers("裂隙", "裂缝")]
-        void Fissures(int tier = 0)
+        Task<string> Fissures(int tier = 0)
         {
-            _wfStatus.SendFissures(Group, tier);
+            return _wfStatus.SendFissures(tier);
         }
 
         [Matchers("小小黑", "追随者")]
-        void AllPersistentEnemies()
+        string AllPersistentEnemies()
         {
-            WFBotCore.Instance.NotificationHandler.SendAllPersistentEnemies(Group);
+            return WFBotCore.Instance.NotificationHandler.SendAllPersistentEnemies();
         }
 
         [Matchers("help", "帮助", "功能", "救命")]
         void HelpDoc()
         {
-            SendHelpdoc(Group);
+            SendHelpdoc();
         }
 
         [DoNotMeasureTime]
         [Matchers("status", "状态", "机器人状态", "机器人信息", "我需要机器人")]
-        void Status()
+        Task<string> Status()
         {
-            SendBotStatus(Group);
+            return SendBotStatus();
         }
 
         [Matchers("午夜电波", "电波", "每日任务", "每周任务", "每日任务", "每周挑战")]
-        void NightWave()
+        Task<string> NightWave()
         {
-            _wfStatus.SendNightWave(Group);
+            return _wfStatus.SendNightWave();
         }
 
         [Matchers("wiki")]
@@ -211,15 +222,15 @@ namespace WFBot.Events
         }
 
         [Matchers("仲裁", "仲裁警报", "精英警报")]
-        void Arbitration()
+        Task<string> Arbitration()
         {
-            _wfStatus.SendArbitrationMission(Group);
+            return _wfStatus.SendArbitrationMission();
         }
 
         [Matchers("赤毒", "赤毒虹吸器", "赤毒洪潮", "赤毒任务")]
-        void Kuva()
+        Task<string> Kuva()
         {
-            _wfStatus.SendKuvaMissions(Group);
+            return _wfStatus.SendKuvaMissions();
         }
         /*
         [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
@@ -237,7 +248,7 @@ namespace WFBot.Events
         public UserID Sender { get; }
         public string Message { get; }
         public GroupID Group { get; }
-
+        GroupMessageSender MsgSender => new GroupMessageSender(Group);
 
         string ICommandHandler<GroupMessageHandler>.Sender => Group;
 
@@ -252,7 +263,6 @@ namespace WFBot.Events
             MessageSender = (id, msg) =>
             {
                 SendGroup(id.ID, msg);
-                Trace.WriteLine($"Message Processed: Group [{Group}], QQ [{Sender}], Message Content [{message}], Result [{msg.Content}].", "Message");
             };
             Group = group;
             Message = message;

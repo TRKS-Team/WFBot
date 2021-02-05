@@ -1,5 +1,4 @@
-﻿#define NoGitVersion
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -126,7 +125,7 @@ namespace WFBot
 #else
             Console.WriteLine("此编译版本不包含UI. 请使用 Windows 编译版本.");
 #endif
-
+            
         }
 
         public async Task Run()

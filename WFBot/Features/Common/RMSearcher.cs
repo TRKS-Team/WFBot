@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
@@ -10,6 +11,7 @@ using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using Order = WarframeAlertingPrime.SDK.Models.User.Order;
 
 namespace WFBot.Features.Common
 {
@@ -58,25 +60,26 @@ namespace WFBot.Features.Common
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }*/
 
-        public List<WarframeAlertingPrime.SDK.Models.User.Order> GetRivenOrders(string weapon)
+        public async Task<List<Order>> GetRivenOrders(string weapon)
         {
             var option = new SearchRivenOrderOption { Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon) };
-            var orders = (wfaClient.QueryRivenOrdersAsync(option).Result ?? throw new CommandException("由于未知原因, 返回的数据为空.")).Items;
+            var orders = (await wfaClient.QueryRivenOrdersAsync(option) ?? throw new CommandException("由于未知原因, 返回的数据为空.")).Items;
             translator.TranslateRivenOrders(orders);
             return orders;
         }
 
-        public List<RivenData> GetRivenDatas()
+        public async Task<List<RivenData>> GetRivenDatas()
         {
-            var info = WebHelper.DownloadJsonAsync<List<RivenData>>(
-                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json").Result;
+            var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(
+                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
             info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
             return info;
         }
 
-        public void SendRivenInfos(GroupID group, string weapon)
+        public async Task<string> SendRivenInfos(string weapon)
         {
             var sb = new StringBuilder();
+
             try
             {
                 if (isWFA)
@@ -86,11 +89,11 @@ namespace WFBot.Features.Common
                     {
                         if (Config.Instance.NotifyBeforeResult)
                         {
-                            Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                            AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         }
-                        var orders = GetRivenOrders(weaponinfo.First().name);
-                        var data = GetRivenDatas().Where(d => d.compatibility.Format() == weapon).ToList();
-                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount(group);
+                        var orders = await GetRivenOrders(weaponinfo.First().name);
+                        var data = (await GetRivenDatas()).Where(d => d.compatibility.Format() == weapon).ToList();
+                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else
@@ -117,7 +120,7 @@ namespace WFBot.Features.Common
             {
                 sb.AppendLine("经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
             }
-            Messenger.SendGroup(group, sb.ToString().Trim());
+            return sb.ToString().Trim();
         }
     }
 }

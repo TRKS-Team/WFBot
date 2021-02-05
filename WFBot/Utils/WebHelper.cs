@@ -40,7 +40,7 @@ namespace WFBot.Utils
 
     public static class WebHelper
     {
-        public static WebStatus TryGet(string url)
+        public static async Task<WebStatus> TryGet(string url)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace WFBot.Utils
                 client.DefaultRequestVersion = new Version(2, 0);
                 client.Timeout = TimeSpan.FromSeconds(0xF);
                 var sw = Stopwatch.StartNew();
-                var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result;
+                var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
                 return new WebStatus(response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.Unauthorized, sw.ElapsedMilliseconds);
             }
             catch (Exception)
@@ -93,7 +93,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.", "Downloader");
+                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.");
             }
         }
     }

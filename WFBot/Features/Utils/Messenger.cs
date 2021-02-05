@@ -92,28 +92,28 @@ namespace WFBot.Features.Utils
                     sb.AppendLine(content);
                     if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
-                    SendGroup(group, sb.ToString().Trim());
+                    sb.ToString().Trim().SendToGroup(group);
                     count++;
                     Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
                 }
             }, TaskCreationOptions.LongRunning);
         }
 
-        public static void SendBotStatus(GroupID group)
+        public static async Task<string> SendBotStatus()
         {
             var sb = new StringBuilder();
-            var q1 = Task.Run(() => WebHelper.TryGet("https://warframestat.us"));
-            var q2 = Task.Run(() => WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item"));
+            var q1 = Task.Run(async () => await WebHelper.TryGet("https://warframestat.us"));
+            var q2 = Task.Run(async () => await WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item"));
             var commitTask = Task.Run(() =>
                 CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits?per_page=5"));
             // var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
             // var q4 = Task.Run(() => WebHelper.TryGet("https://10o.io/kuvalog.json"));
             Task.WaitAll(q1, q2/*, q3, q4*/);
 
-            var apistat = q1.Result;
-            var wmstat = q2.Result;
-            // var wfastat = q3.Result;
-            // var kuvastat = q4.Result;
+            var apistat = await q1;
+            var wmstat = await q2;
+            // var wfastat = await q3;
+            // var kuvastat = await q4;
             if (apistat.IsOnline && wmstat.IsOnline /*&& wfastat.IsOnline && kuvastat.IsOnline*/)
             {
                 sb.AppendLine("机器人状态: 一切正常");
@@ -129,14 +129,17 @@ namespace WFBot.Features.Utils
             sb.AppendLine($"    WarframeMarket: {wmstat.Latency}ms [{(wmstat.IsOnline ? "在线" : "离线")}]");
             // sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
             // sb.AppendLine($"    赤毒/仲裁API: {kuvastat.Latency}ms [{(kuvastat.IsOnline ? "在线" : "离线")}]");
-            var commit = commitTask.Result?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
+            var commit = (await commitTask)?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
             sb.AppendLine(commit);
-            sb.ToString().Trim().AddPlatformInfo().SendToGroup(group);
+            return sb.ToString().Trim().AddPlatformInfo();
         }
 
-        public static void SendHelpdoc(GroupID group)
+        public static void SendHelpdoc()
         {
-            SendGroup(@group, $@"欢迎查看机器人唯一指定帮助文档
+            var group = AsyncContext.GetMessageSender();
+
+            // 为了社区的良性发展, 请不要随意修改.
+            group.SendMessage($@"欢迎查看机器人唯一指定帮助文档
 {(WFBotCore.IsOfficial ? "WFBot 版本 "+(WFBotCore.Version) : string.Empty)}
 宣传贴地址: https://warframe.love/thread-230.htm
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
@@ -145,13 +148,7 @@ namespace WFBot.Features.Utils
 您的赞助会成为我们维护本项目的动力.
 本机器人为公益项目, 间断维护中.
 如果你想给你的群也整个机器人, 请在上方项目地址了解");
-            if (File.Exists("data/image/帮助文档.png"))
-            {
-                SendGroup(@group, @"[CQ:image,file=\帮助文档.png]");
-            }
-            else
-            {
-                SendGroup(@group, @"作者: TheRealKamisama
+            group.SendMessage(@"作者: TheRealKamisama
 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 如果群里没有自动通知 请务必检查是否启用了通知功能
     /遗物 <关键词> | 查询遗物的内容
@@ -176,7 +173,7 @@ namespace WFBot.Features.Utils
     /删除群 ******* 群号 | 禁用 [群号] 对应的群的通知功能
     没有启用通知的群不会收到机器人的任务提醒
 ");
-            }
+            
         }
 
         /* 当麻理解不了下面的代码 */
@@ -184,6 +181,11 @@ namespace WFBot.Features.Utils
         public static void SendToGroup(this string content, GroupID qq)
         {
             SendGroup(qq, content);
+        }
+
+        public static void SendTo(this string content, GroupMessageSender sender)
+        {
+            sender.SendMessage(content);
         }
 
         public static void SendToPrivate(this string content, UserID qq)
@@ -235,11 +237,6 @@ namespace WFBot.Features.Utils
             return new GroupID((uint) id);
         }
 
-        public static implicit operator GroupID(uint id)
-        {
-            return new GroupID(id);
-        }
-
         public static implicit operator GroupID(string id)
         {
             return new GroupID(id.ToUInt());
@@ -273,11 +270,6 @@ namespace WFBot.Features.Utils
         public static implicit operator UserID(long id)
         {
             return new UserID((uint)id);
-        }
-
-        public static implicit operator UserID(uint id)
-        {
-            return new UserID(id);
         }
 
         public static implicit operator UserID(string id)

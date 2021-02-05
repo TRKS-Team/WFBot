@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -52,6 +53,7 @@ namespace TextCommandCore
                 var param = BuildParams(message, method);
                 var needMeasureTime = !method.IsAttributeDefined<DoNotMeasureTimeAttribute>();
 
+                Trace.WriteLine($"命令 {handlers.Message} 开始处理..");
                 Task<string> task;
                 if (method.ReturnType == typeof(Task))
                 {

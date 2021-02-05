@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
@@ -27,7 +28,7 @@ namespace WFBot.Features.Common
         private bool isWFA => WFResources.WFAApi.isWFA;
 
         private string platform => Config.Instance.Platform.ToString();
-        public WMInfo GetWMInfo(string searchword)
+        public async Task<WMInfo> GetWMInfo(string searchword)
         {
             var header = new WebHeaderCollection();
             var platform = Config.Instance.Platform.GetSymbols().First();
@@ -36,14 +37,13 @@ namespace WFBot.Features.Common
                 platform = "switch";
             }
             header.Add("platform", platform); 
-            var info = WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header).Result;
+            var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
            
-
             info.sale = api.Sale.First(s => s.code == searchword);
             return info;
         }
 
-        public WMInfoEx GetWMINfoEx(string searchword)
+        public async Task<WMInfoEx> GetWMINfoEx(string searchword)
         {
             /*var header = new WebHeaderCollection();
             header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
@@ -55,7 +55,7 @@ namespace WFBot.Features.Common
             var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);*/
             var option = new WarframeMarketOrderQueryOption
                 {Code = searchword, OrderStatus = new List<WMOrderStatus> {WMOrderStatus.InGame, WMOrderStatus.Online}};
-            var orders = wfaClient.GetWarframeMarketOrdersAsync(option).Result;
+            var orders = await wfaClient.GetWarframeMarketOrdersAsync(option);
             var result = new WMInfoEx{orders = orders, sale = api.Sale.First(s => s.code == searchword)};
             return result;
         }
@@ -88,7 +88,7 @@ namespace WFBot.Features.Common
 
         }
 
-        public void SendWMInfo(string item, GroupID group, bool quickReply, bool isbuyer)
+        public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
         {
             // 下面 你将要 看到的 是 本项目 最大的  粪山
             // Actually 这粪山挺好用的
@@ -138,8 +138,8 @@ namespace WFBot.Features.Common
 
 
                             sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
-                            Messenger.SendGroup(group, sb.ToString().Trim().AddRemainCallCount(group));
-                            return;
+                            
+                            return sb.ToString().Trim().AddRemainCallCount();
                         }
                     }
                 }
@@ -148,7 +148,7 @@ namespace WFBot.Features.Common
             var msg = string.Empty;
             if (Config.Instance.NotifyBeforeResult)
             {
-                Messenger.SendGroup(group, "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
             }
 
             var failed = false;
@@ -159,7 +159,7 @@ namespace WFBot.Features.Common
                 {
                     if (isWFA)
                     {
-                        var infoEx = GetWMINfoEx(searchword); 
+                        var infoEx = await GetWMINfoEx(searchword); 
                         if (infoEx.orders.Items.Any())
                         {
                             OrderWMInfoEx(infoEx, isbuyer);
@@ -178,14 +178,14 @@ namespace WFBot.Features.Common
                 }
                 catch (Exception)
                 {
-                    Messenger.SendGroup(group, "很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
+                    AsyncContext.SendGroupMessage("很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
                     failed = true;
                 }
             }
 
             if (!Config.Instance.IsThirdPartyWM || failed)
             {
-                var info = GetWMInfo(searchword);
+                var info = await GetWMInfo(searchword);
                 if (info.payload.orders.Any())
                 {
                     OrderWMInfo(info, isbuyer);
@@ -209,7 +209,7 @@ namespace WFBot.Features.Common
                 msg = $"{msg}\n\n查询买家请使用指令 <查询 {item} -B>";
             }
 
-            Messenger.SendGroup(group, msg.AddPlatformInfo().AddRemainCallCount(group));
+            return msg.AddPlatformInfo().AddRemainCallCount();
         }
     }
 }

@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using GammaLibrary.Extensions;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CSharp;
 using WFBot.Events;
 using WFBot.Features.Common;
 using WFBot.Features.Other;

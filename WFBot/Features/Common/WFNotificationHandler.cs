@@ -129,24 +129,23 @@ namespace WFBot.Features.Other
                 sendedUpdateSet.Add(updates.First());
             }
         }   
-        public void SendSentientOutpost()
+        public async Task SendSentientOutpost()
         {
             var sb = new StringBuilder();
-            var outpost = api.GetSentientOutpost().Result;
+            var outpost = await api.GetSentientOutpost();
             sb.AppendLine("侦测到在途的Sentient异常事件: ");
             sb.AppendLine(WFFormatter.ToString(outpost));
             Messenger.Broadcast(sb.ToString().Trim());
         }
-        public void CheckSentientOutpost()
+        public async Task CheckSentientOutpost()
         {
-            var outpost = api.GetSentientOutpost().Result;
+            var outpost = await api.GetSentientOutpost();
             // 这api妥妥的是个wip你信不信
             if (outpost.active && DateTime.Now - Config.Instance.SendSentientOutpostTime >= TimeSpan.FromMinutes(30))
             {
-                SendSentientOutpost();
+                await SendSentientOutpost();
                 Config.Instance.SendSentientOutpostTime = DateTime.Now;
                 Config.Save();
-            
             }
         }
 
@@ -240,13 +239,12 @@ namespace WFBot.Features.Other
             }
         }
 
-        public void SendAllPersistentEnemies(GroupID group)
+        public string SendAllPersistentEnemies()
         {
             var enemies = StalkerPool;
             if (!enemies.Any())
             {
-                Messenger.SendGroup(group, "目前没有小小黑出现.");
-                return;
+                return "目前没有小小黑出现.";
             }
 
             var sb = new StringBuilder();
@@ -255,18 +253,18 @@ namespace WFBot.Features.Other
             {
                 sb.AppendLine(WFFormatter.ToString(enemy));
             }
-            Messenger.SendGroup(group, sb.ToString().Trim());
+            return sb.ToString().Trim();
         }
-        public void SendAllInvasions(GroupID group)
+
+        public async Task<string> SendAllInvasions()
         {
             try
             {
-                UpdateInvasionPool().Wait();
+                await UpdateInvasionPool();
             }
             catch (OperationCanceledException)
             {
-                Messenger.SendGroup(group, "操作超时.");
-                return;
+                return "操作超时.";
             }
             var invasions = InvasionPool;
             var sb = new StringBuilder();
@@ -279,7 +277,7 @@ namespace WFBot.Features.Other
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim().AddPlatformInfo());
+            return sb.ToString().Trim().AddPlatformInfo();
         }
 
         private void CheckAlerts()
@@ -309,9 +307,16 @@ namespace WFBot.Features.Other
             }
         }
 
-        public void SendAllAlerts(GroupID group)
+        public async Task<string> SendAllAlerts()
         {
-            UpdateAlertPool().Wait();
+            try
+            {
+                await UpdateAlertPool();
+            }
+            catch (OperationCanceledException)
+            {
+                return "操作超时.";
+            }
             var alerts = AlertPool;
             var sb = new StringBuilder();
 
@@ -322,7 +327,7 @@ namespace WFBot.Features.Other
                 sb.AppendLine();
             }
 
-            Messenger.SendGroup(group, sb.ToString().Trim().AddPlatformInfo());
+            return sb.ToString().Trim().AddPlatformInfo();
         }
 
         private void SendWFAlert(WFAlert alert)

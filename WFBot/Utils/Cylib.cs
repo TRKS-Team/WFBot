@@ -160,6 +160,11 @@ namespace WFBot.Utils
             return $"{str}\n可使用: /help来查看机器人的更多说明.";
         }
 
+        public static string AddRemainCallCount(this string str)
+        {
+            return AddRemainCallCount(str, AsyncContext.GetMessageSender().GroupID);
+        }
+
         public static string AddRemainCallCount(this string str, GroupID group)
         {
             if (Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[@group.ToString()] < 0)
