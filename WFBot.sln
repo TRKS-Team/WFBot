@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiraiHTTPConnectorWithImage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextCommandCore", "TextCommandCore\TextCommandCore.csproj", "{59B7D843-B087-4AAF-A450-7A5CCC8E2EF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFBot.Tests", "WFBot.Tests\WFBot.Tests.csproj", "{21E1A018-8A75-4A8A-9D1E-7972B782665A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,14 @@ Global
 		{59B7D843-B087-4AAF-A450-7A5CCC8E2EF6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{59B7D843-B087-4AAF-A450-7A5CCC8E2EF6}.Windows Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59B7D843-B087-4AAF-A450-7A5CCC8E2EF6}.Windows Release|Any CPU.Build.0 = Release|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Linux Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Linux Release|Any CPU.Build.0 = Release|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Windows Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E1A018-8A75-4A8A-9D1E-7972B782665A}.Windows Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

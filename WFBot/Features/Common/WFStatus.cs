@@ -30,13 +30,13 @@ namespace WFBot.Features.Common
             return msg.AddPlatformInfo().AddRemainCallCount();
         }
 
-        public async Task<string> SendSentientOutpost()
-        {
-            var outpost = await api.GetSentientOutpost();
-            var msg = $"Sentient异常事件已发现:\n{WFFormatter.ToString(outpost)}";
-
-            return msg;
-        }
+        // public async Task<string> SendSentientOutpost()
+        // {
+        //     var outpost = await api.GetSentientOutpost();
+        //     var msg = $"Sentient异常事件已发现:\n{WFFormatter.ToString(outpost)}";
+        //
+        //     return msg;
+        // }
         public async Task<string> SendSortie()
         {
             var sortie = await api.GetSortie();

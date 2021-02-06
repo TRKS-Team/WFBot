@@ -35,7 +35,7 @@ namespace WFBot
             https://github.com/TRKS-Team/WFBot
             var skipPressKey = false;
             var setCurrentFolder = false;
-
+            
             foreach (var s in args)
             {
                 switch (s)

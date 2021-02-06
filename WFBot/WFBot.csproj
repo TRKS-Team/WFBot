@@ -11,9 +11,6 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup>
     <NoWarn>1701;1702;MSB3042</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
@@ -59,14 +56,16 @@
     <Compile Update="Windows\Settings.cs" />
   </ItemGroup>
 
+  <!--
   <ItemGroup>
-    <None Include="WFBotLocalization/**/*" Link="WFBotLocalization\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Localization/Source/**/*" Link="WFBotLocalization\Source\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <Folder Include="WFBotLocalization\" />
+    <Compile Remove="WFBotLocalization\*" />
   </ItemGroup>
+  -->
+
 
 
 </Project>

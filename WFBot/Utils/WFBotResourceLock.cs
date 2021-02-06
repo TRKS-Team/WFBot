@@ -7,7 +7,6 @@ using System.Text;
 
 namespace WFBot.Utils
 {
-
     public class WFBotResourceLock : IDisposable
     {
         static readonly HashSet<WFBotResourceLock> Locks = new HashSet<WFBotResourceLock>();

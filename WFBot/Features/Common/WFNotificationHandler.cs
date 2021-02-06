@@ -129,30 +129,26 @@ namespace WFBot.Features.Other
                 sendedUpdateSet.Add(updates.First());
             }
         }   
-        public async Task SendSentientOutpost()
-        {
-            var sb = new StringBuilder();
-            var outpost = await api.GetSentientOutpost();
-            sb.AppendLine("侦测到在途的Sentient异常事件: ");
-            sb.AppendLine(WFFormatter.ToString(outpost));
-            Messenger.Broadcast(sb.ToString().Trim());
-        }
-        public async Task CheckSentientOutpost()
-        {
-            var outpost = await api.GetSentientOutpost();
-            // 这api妥妥的是个wip你信不信
-            if (outpost.active && DateTime.Now - Config.Instance.SendSentientOutpostTime >= TimeSpan.FromMinutes(30))
-            {
-                await SendSentientOutpost();
-                Config.Instance.SendSentientOutpostTime = DateTime.Now;
-                Config.Save();
-            }
-        }
-
-        private List<GroupInfo> GetGroups()
-        {
-            return null;
-        }
+        // public async Task SendSentientOutpost()
+        // {
+        //     var sb = new StringBuilder();
+        //     var outpost = await api.GetSentientOutpost();
+        //     sb.AppendLine("侦测到在途的Sentient异常事件: ");
+        //     sb.AppendLine(WFFormatter.ToString(outpost));
+        //     Messenger.Broadcast(sb.ToString().Trim());
+        // }
+        
+        // public async Task CheckSentientOutpost()
+        // {
+        //     var outpost = await api.GetSentientOutpost();
+        //     // 这api妥妥的是个wip你信不信
+        //     if (outpost.active && DateTime.Now - Config.Instance.SendSentientOutpostTime >= TimeSpan.FromMinutes(30))
+        //     {
+        //         await SendSentientOutpost();
+        //         Config.Instance.SendSentientOutpostTime = DateTime.Now;
+        //         Config.Save();
+        //     }
+        // }
 
         private void CheckPersistentEnemies()
         {

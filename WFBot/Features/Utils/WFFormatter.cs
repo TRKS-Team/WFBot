@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
@@ -19,9 +20,6 @@ namespace WFBot.Features.Utils
 {
     public static class WFFormatter
     {
-        private static WFTranslator translator => WFResources.WFTranslator;
-        private static WFCD_All[] all => WFResources.WFCDAll;
-
         public static string Format(this CommitData[] commits)
         {
             var sb = new StringBuilder();
@@ -71,43 +69,42 @@ namespace WFBot.Features.Utils
         public static string GetRelicRewardName(string unique)
         {
             var itemuniquename = unique.Replace("StoreItems/", "");
-            var items = all.Where(a => true == a.components?.Any(c => c.uniqueName.RemoveEnds() == itemuniquename.RemoveEnds()));
+            var items = WFResources.WFCDAll.Where(a => true == a.components?.Any(c => c.uniqueName.RemoveEnds() == itemuniquename.RemoveEnds())).ToImmutableArray();
             if (!items.Any())
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             var item = items.First();
-            var part = "";
-            if (item.components.Any())
-            {
-                part = item.components.First(c => c.uniqueName.RemoveEnds() == itemuniquename.RemoveEnds()).name;
-            }
-            return translator.TranslateRelicReward((item.name + part));
+            var part = item.components.FirstOrDefault(c => c.uniqueName.RemoveEnds() == itemuniquename.RemoveEnds())?.name ?? string.Empty;
+            
+            return WFResources.WFTranslator.TranslateRelicReward((item.name + part));
         }
-        [Pure]
-        public static string ToString(SentientOutpost outpost)
-        {
-            var sb = new StringBuilder();
-            if (outpost.active)
-            {
-                // TODO 交给大哥维护
-                // 回↑ 这个功能好像可以删了
-                sb.Append("此功能维护中");
-                //var expiry =  outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
-                // 这行大概是因为api是wip 以后可以直接删掉换成outpost.expiry
-                // 但愿吧
-                //var time = (expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
-                //sb.AppendLine($"    [{outpost.mission.node}]-{outpost.mission.faction} {time}后过期");
-            }
-            else
-            {
-                var time = (outpost.activation - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
-                sb.AppendLine("目前没有Sentient异常");
-                sb.AppendLine($"下一个异常在{outpost.activation}({time}后)");
-            }
-            return sb.ToString().Trim();
-        }
+
+        // [Pure]
+        // public static string ToString(SentientOutpost outpost)
+        // {
+        //     var sb = new StringBuilder();
+        //     if (outpost.active)
+        //     {
+        //         // T_O_D_O 交给大哥维护
+        //         // 回↑ 这个功能好像可以删了
+        //         sb.Append("此功能维护中");
+        //         //var expiry =  outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
+        //         // 这行大概是因为api是wip 以后可以直接删掉换成outpost.expiry
+        //         // 但愿吧
+        //         //var time = (expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+        //         //sb.AppendLine($"    [{outpost.mission.node}]-{outpost.mission.faction} {time}后过期");
+        //     }
+        //     else
+        //     {
+        //         var time = (outpost.activation - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
+        //         sb.AppendLine("目前没有Sentient异常");
+        //         sb.AppendLine($"下一个异常在{outpost.activation}({time}后)");
+        //     }
+        //     return sb.ToString().Trim();
+        // }
+
         // 他妈了个蛋 我琢磨了好久如何将两个api同步 结果第二个api就直接整合了第一个api的数据?
         // 干你娘
         /*
@@ -263,14 +260,14 @@ namespace WFBot.Features.Utils
             var sb = new StringBuilder();
             var weaponinfo = WFResources.WFTranslateData.Riven.First(d => d.name == weapon);
             sb.AppendLine($"下面是 {riven.zhname} 紫卡的基本信息(来自DE)");
-            sb.AppendLine($"类型: {translator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
-            var rerolled = datas.Where(d => !d.rerolled);
+            sb.AppendLine($"类型: {WFResources.WFTranslator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
+            var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
             if (rerolled.Any())
             {
                 sb.AppendLine($"0洗均价: {rerolled.First().avg}白金");
             }
 
-            rerolled = datas.Where(d => d.rerolled);
+            rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
             if (rerolled.Any())
             {
                 sb.AppendLine($"全部均价: {rerolled.First().avg}白金");
