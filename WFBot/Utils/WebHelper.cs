@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +17,7 @@ using GammaLibrary.Extensions;
 using Newtonsoft.Json;
 using TextCommandCore;
 using WFBot.Features.Resource;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WFBot.Utils
 {
@@ -58,25 +63,38 @@ namespace WFBot.Utils
 
             return new WebStatus(false, 6666666666/*???*/);
         }
+        
+        static readonly Lazy<HttpClient> SharedHttpClient = new Lazy<HttpClient>(() =>
+        {
+            var dHandler =
+                new RetryHandler(new HttpClientHandler {AutomaticDecompression = DecompressionMethods.Brotli});
+            
+            var hc = new HttpClient(dHandler);
+            hc.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
+            hc.Timeout = TimeSpan.FromSeconds(30);
+            return hc;
+        });
+        
 
-
-        public static async Task<T> DownloadJsonAsync<T>(string url, WebHeaderCollection header = null, TimeSpan? timeout = null)
+        public static async Task<T> DownloadJsonAsync<T>(string url, List<KeyValuePair<string, string>> header = null)
         {
             var sw = Stopwatch.StartNew();
             try
             {
-                using var hc = new HttpClient(new RetryHandler(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.Brotli }));
-                header ??= new WebHeaderCollection();
-                foreach (string key in header)
+                var hc = SharedHttpClient.Value;
+                var msg = new HttpRequestMessage(HttpMethod.Get, url);
+
+                if (header != null)
                 {
-                    hc.DefaultRequestHeaders.Add(key, header[key]);
+                    foreach (var (key, value) in header)
+                    {
+                        msg.Headers.Add(key, value);
+                    }
                 }
-                hc.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
-                hc.Timeout = timeout ?? TimeSpan.FromSeconds(25);
 
                 try
                 {
-                    var data = await hc.GetAsync(url, AsyncContext.GetCancellationToken());
+                    var data = await hc.SendAsync(msg, AsyncContext.GetCancellationToken());
                     data.EnsureSuccessStatusCode();
 
                     return await ResourceLoaders<T>.JsonDotNetLoader(await data.Content.ReadAsStreamAsync());

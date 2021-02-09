@@ -30,13 +30,13 @@ namespace WFBot.Features.Common
         private string platform => Config.Instance.Platform.ToString();
         public async Task<WMInfo> GetWMInfo(string searchword)
         {
-            var header = new WebHeaderCollection();
             var platform = Config.Instance.Platform.GetSymbols().First();
             if (Config.Instance.Platform == Platform.NS)
             {
                 platform = "switch";
             }
-            header.Add("platform", platform); 
+            var header = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("platform", platform) };
+            
             var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
            
             info.sale = api.Sale.First(s => s.code == searchword);

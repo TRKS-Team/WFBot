@@ -148,7 +148,7 @@ namespace WFBot.Features.Utils
             sb.AppendLine("以下是午夜电波挑战: ");
             sb.AppendLine();
             var onedayleft =
-                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
+                nightwave.activeChallenges.Where(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1)).ToList();
             var elsechallenges = nightwave.activeChallenges.ToList();
 
             elsechallenges.RemoveAll(challenge => challenge.expiry - DateTime.Now < TimeSpan.FromDays(1));
@@ -156,7 +156,7 @@ namespace WFBot.Features.Utils
             if (onedayleft.Any())
             {
                 sb.AppendLine("一天内将会过期: ");
-                sb.AppendLine("    " + ToString(onedayleft.ToList(), true));
+                sb.AppendLine("    " + ToString(onedayleft, true));
             }
 
             challenges = elsechallenges.Where(challenge => challenge.isDaily).ToList();

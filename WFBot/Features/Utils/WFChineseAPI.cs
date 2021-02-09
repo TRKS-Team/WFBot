@@ -69,7 +69,7 @@ namespace WFBot.Features.Utils
         private WFContentApi content => WFResources.WFContent;
 
         private static string platform => Config.Instance.Platform.GetSymbols().First();
-        private static readonly string WFstat = $"https://api.warframestat.us/{platform}";
+        private static string WFstat => $"https://api.warframestat.us/{platform}";
 
         public async Task<List<WFInvasion>> GetInvasions()
         {
@@ -97,8 +97,7 @@ namespace WFBot.Features.Utils
             try
             {
                 var alerts =
-                    await WebHelper.DownloadJsonAsync<List<WFAlert>>(WFstat + "/alerts",
-                        timeout: TimeSpan.FromSeconds(30));
+                    await WebHelper.DownloadJsonAsync<List<WFAlert>>(WFstat + "/alerts");
                 foreach (var alert in alerts)
                 {
                     translator.TranslateAlert(alert);

@@ -31,10 +31,10 @@ namespace MiraiHTTPConnector
             {
                 Directory.Delete("WFBotImageCaches", true);
             }
-            MiraiConfig.Save();
-
+            
             if (qq == default || host == default || port == default || authKey == default)
             {
+                // todo 直接控制台写
                 throw new InvalidOperationException("请在 MiraiConfig.json 内补全信息, 详情请查看文档.");
             }
 
