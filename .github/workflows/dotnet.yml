@@ -49,10 +49,10 @@ jobs:
         env:
           OFFICIAL_BUILD: official
 
-      - name: Pre Run Windows
-        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
-      - name: Pre Run Linux
-        run: dotnet LinuxPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
+#      - name: Pre Run Windows
+#        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
+#      - name: Pre Run Linux
+#        run: dotnet LinuxPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
 
       - name: Zip Windows Release
         uses: DuckSoft/create-7z-action@v1.0
