@@ -232,12 +232,12 @@ namespace WFBot.Events
         {
             return _wfStatus.SendKuvaMissions();
         }
-        /*
+        
         [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
-        void SentientOutpost()
+        Task<string> SentientOutpost()
         {
-            _wfStatus.SendSentientOutpost(Group);
-        }*/
+            return _wfStatus.SendSentientOutpost();
+        }
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender

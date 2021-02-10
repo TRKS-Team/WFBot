@@ -151,6 +151,7 @@ namespace WFBot.Features.Utils
             group.SendMessage(@"作者: TheRealKamisama
 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 如果群里没有自动通知 请务必检查是否启用了通知功能
+    /s船 | 当前的Sentient异常事件
     /遗物 <关键词> | 查询遗物的内容
     /wiki [关键词] | 搜索 wiki 上的页面
     /午夜电波 | 每日每周即将过期的挑战
