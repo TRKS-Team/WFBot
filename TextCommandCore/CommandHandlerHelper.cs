@@ -83,8 +83,14 @@ namespace TextCommandCore
                 await Task.WhenAny(task, waitTask);
                 if (waitTask.IsCompleted && !task.IsCompleted)
                     handlers.MessageSender(sender, "很抱歉, 这个命令可能需要更长的时间来执行. 请耐心等待.");
-
-                result = await task;
+                try
+                {
+                    result = await task;
+                }
+                catch (Exception e)
+                {
+                    throw new TargetInvocationException(e);
+                }
 
                 result = PostProcess(method, message, result, handlers);
             }
