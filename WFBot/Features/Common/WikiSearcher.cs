@@ -19,7 +19,7 @@ namespace WFBot.Features.Common
                 return $"为指挥官献上wiki的链接: {wikilink}";
             }
 
-            /*var wiki = GetWiki(word);
+            var wiki = GetWiki(word);
             if (!string.IsNullOrEmpty(wiki?.error?.code))
             {
                 var sb1 = new StringBuilder();
@@ -45,15 +45,15 @@ namespace WFBot.Features.Common
                 }
             }
 
-            return sb.ToString().Trim();*/
-            return
-                "灰机wiki的warframe分区由于不规范爬虫导致暂时隔离, warframe区全站不可访问, 具体信息请看: https://www.huijiwiki.com/wiki/Warframe%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA:403";
+            return sb.ToString().Trim();
+            /*return
+                "灰机wiki的warframe分区由于不规范爬虫导致暂时隔离, warframe区全站不可访问, 具体信息请看: https://www.huijiwiki.com/wiki/Warframe%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA:403";*/
         }
 
         public Wiki GetWiki(string word)
         {
             return WebHelper.DownloadJsonAsync<Wiki>(
-                $"https://warframe.huijiwiki.com/api.php?action=query&format=json&formatversion=2&list=search&srsearch={word}").Result;
+                $"http://warframe.huijiwiki.com/api.php?action=query&format=json&formatversion=2&list=search&srsearch={word}").Result;
         }
     }
 
