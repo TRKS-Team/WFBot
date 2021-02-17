@@ -63,11 +63,11 @@ namespace WFBot.Features.Common
         public void OrderWMInfo(WMInfo info, bool isbuyer)
         {
             info.payload.orders = (isbuyer ? info.payload.orders
-                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
+                .Where(order => order.order_type == "buy")
                 .Where(order => order.user.status == "online" || order.user.status == "ingame")
                 .OrderByDescending(order => order.platinum)
                 : info.payload.orders
-                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
+                .Where(order => order.order_type == "sell")
                 .Where(order => order.user.status == "online" || order.user.status == "ingame")
                 .OrderBy(order => order.platinum))
                 .Take(Config.Instance.WMSearchCount)
@@ -78,10 +78,10 @@ namespace WFBot.Features.Common
         public void OrderWMInfoEx(WMInfoEx info, bool isbuyer)
         {
             info.orders.Items = (isbuyer ? info.orders.Items
-                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
+                .Where(order => order.order_type == "buy")
                 .OrderByDescending(order => order.platinum)
                 : info.orders.Items
-                .Where(order => order.order_type == (isbuyer ? "buy" : "sell"))
+                .Where(order => order.order_type == "sell")
                 .OrderBy(order => order.platinum))
                 .Take(Config.Instance.WMSearchCount)
                 .ToList();

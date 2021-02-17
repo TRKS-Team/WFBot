@@ -55,7 +55,7 @@ namespace WFBot.Features.Resource
             */
         }
 
-        public static WFApi WFTranslateData { get; private set; }
+        public static WFApi WFTranslateData { get; set; }
         public static WFChineseAPI WFChineseApi { get; private set; }
 
         static WFTranslator _wfTranslator;

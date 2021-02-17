@@ -303,21 +303,11 @@ namespace WFBot.Features.Utils
                 invasionTranslator.AddEntry(invasion.En, invasion.Zh);
             }
 
-            translateApi.Riven.Select(r => r = new Riven
-            {
-                id = r.id,
-                modulus = r.modulus,
-                name = dictTranslator.Translate(r.name),
-                rank = r
-                    .rank,
-                thumb = r.thumb,
-                type = dictTranslator.Translate(r.type)
-            });
             weapons.Clear();
             weaponslist.Clear();
             foreach (var riven in translateApi.Riven)
             {
-                var zh = dictTranslator.Translate(riven.name);
+                var zh = riven.zhname;
                 weapons.Add(zh);
                 weaponslist.Add(new Riven { id = riven.id, modulus = riven.modulus, name = riven.name, rank = riven.rank, thumb = riven.thumb, type = riven.type, zhname = zh });
             }
@@ -560,11 +550,6 @@ namespace WFBot.Features.Utils
             }
 
             return result;
-        }
-
-        public bool ContainsWeapon(string weapon)
-        {
-            return weapons.Contains(weapon);
         }
 
 
