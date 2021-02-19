@@ -25,9 +25,15 @@ namespace WFBot.Features.Resource
             // 是不是同步执行然后直接 Task.FromResult好一些?
             return Task.Run(() =>
             {
+#if DEBUG
+                using var sr = new StreamReader(stream);
+                var str = sr.ReadToEnd();
+                return JsonConvert.DeserializeObject<T>(str);
+#else
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
                 return new Newtonsoft.Json.JsonSerializer().Deserialize<T>(reader);
+#endif
             });
         };
 

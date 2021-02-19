@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
@@ -11,10 +12,41 @@ using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
-using WFBot.Windows;
 
 namespace WFBot.Features.Common
 {
+    public static class StringWildcard
+    {
+        private static WFTranslator translator => WFResources.WFTranslator;
+        public static string TrySearch(this string source, string[] oldstrs, string[] newstrs, string[] suffixes, bool neuroptics = false)
+        {
+            var formatted = source.Format();
+            for (int i = 0; i < oldstrs.Length; i++)
+            {
+                formatted = formatted.Replace(oldstrs[i], newstrs[i]);
+            }
+
+            formatted = formatted + suffixes.Connect();
+            var result = translator.TranslateSearchWord(formatted);
+            if (neuroptics)
+            {
+                var heads = new [] { "头部神经光", "头部神经", "头部神", "头部", "头" };
+                foreach (var head in heads)
+                {
+                    if (!formatted.Contains("头部神经光元"))
+                    {
+                        if (formatted.Contains(head))
+                        {
+                            result = translator.TranslateSearchWord(formatted.Replace(head, "头部神经光元"));
+                            break;
+                        }
+                    }
+                }
+            }
+            return formatted == result ? source : result;
+        }
+
+    }
     public class WMInfoEx
     {
         public WarframeAlertingPrime.SDK.Models.WarframeMarket.OrderQueryResult orders { get; set; }
@@ -90,56 +122,42 @@ namespace WFBot.Features.Common
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
         {
-            // 下面 你将要 看到的 是 本项目 最大的  粪山
-            // Actually 这粪山挺好用的
-            var words = new List<string>{"prime", "p", "甲"};
-            var heads = new List<string> { "头部神经光", "头部神经", "头部神", "头部", "头"};
-            foreach (var word in words)
-            {
-                foreach (var head in heads)
-                {
-                    if (!item.Contains("头部神经光元"))
-                    {
-                        if (item.Contains(word + head))
-                        {
-                            item = item.Replace(word + head, word + "头部神经光元");
-                            break;
-                        }
-                    }
-                }
-            }
             var searchword = translator.TranslateSearchWord(item);
-            var formateditem = item;
             if (item == searchword)
             {
-                searchword = translator.TranslateSearchWord(item + "一套");
-                formateditem = item + "一套";
-                if (formateditem == searchword)
+                searchword = item.TrySearch(Array.Empty<string>(), Array.Empty<string>(), new []{"一套"});
+                if (item == searchword)
                 {
-                    searchword = translator.TranslateSearchWord(item.Replace("p", "prime").Replace("总图", "蓝图"));
-                    formateditem = item.Replace("p", "prime").Replace("总图", "蓝图");
-                    if (formateditem == searchword)
+                    searchword = item.TrySearch(new []{"总图", "p"}, new []{ "蓝图", "prime"}, Array.Empty<string>());
+                    if (item == searchword)
                     {
-                        searchword = translator.TranslateSearchWord(item.Replace("p", "prime") + "一套");
-                        formateditem = item.Replace("p", "prime") + "一套";
-                        if (formateditem == searchword)
+                        searchword = item.TrySearch(new []{ "p"}, new []{"prime"}, new []{"一套"});
+                        if (item == searchword)
                         {
-                            var sb = new StringBuilder();
-                            var similarlist = translator.GetSimilarItem(item.Format(), "wm");
-                            sb.AppendLine($"物品 {item} 不存在或格式错误.");
-                            if (similarlist.Any())
+                            searchword = item.TrySearch(new []{"p", "头"}, new []{"prime", "头部"}, Array.Empty<string>());
+                            if (item == searchword)
                             {
-                                sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
-                                foreach (var similarresult in similarlist)
-                                {
-                                    sb.AppendLine($"    {similarresult}");
-                                }
+                                searchword = item.TrySearch(new []{ "p"}, new []{ "prime"}, Array.Empty<string>(), true);
                             }
+                            if (item == searchword)
+                            {
+                                var sb = new StringBuilder();
+                                var similarlist = translator.GetSimilarItem(item.Format(), "wm");
+                                sb.AppendLine($"物品 {item} 不存在或格式错误.");
+                                if (similarlist.Any())
+                                {
+                                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                                    foreach (var similarresult in similarlist)
+                                    {
+                                        sb.AppendLine($"    {similarresult}");
+                                    }
+                                }
 
 
-                            sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
-                            
-                            return sb.ToString().Trim().AddRemainCallCount();
+                                sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
+
+                                return sb.ToString().Trim().AddRemainCallCount();
+                            }
                         }
                     }
                 }
@@ -185,7 +203,7 @@ namespace WFBot.Features.Common
 
             if (!Config.Instance.IsThirdPartyWM || failed)
             {
-                var info = await GetWMInfo(searchword);
+                var info = GetWMInfo(searchword).Result;
                 if (info.payload.orders.Any())
                 {
                     OrderWMInfo(info, isbuyer);
