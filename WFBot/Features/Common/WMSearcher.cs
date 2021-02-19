@@ -122,6 +122,8 @@ namespace WFBot.Features.Common
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
         {
+            // 详细逻辑图在我笔记本上有手稿
+            // 不建议重构
             var searchword = translator.TranslateSearchWord(item);
             if (item == searchword)
             {
@@ -138,25 +140,25 @@ namespace WFBot.Features.Common
                             if (item == searchword)
                             {
                                 searchword = item.TrySearch(new []{ "p"}, new []{ "prime"}, Array.Empty<string>(), true);
-                            }
-                            if (item == searchword)
-                            {
-                                var sb = new StringBuilder();
-                                var similarlist = translator.GetSimilarItem(item.Format(), "wm");
-                                sb.AppendLine($"物品 {item} 不存在或格式错误.");
-                                if (similarlist.Any())
+                                if (item == searchword)
                                 {
-                                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
-                                    foreach (var similarresult in similarlist)
+                                    var sb = new StringBuilder();
+                                    var similarlist = translator.GetSimilarItem(item.Format(), "wm");
+                                    sb.AppendLine($"物品 {item} 不存在或格式错误.");
+                                    if (similarlist.Any())
                                     {
-                                        sb.AppendLine($"    {similarresult}");
+                                        sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                                        foreach (var similarresult in similarlist)
+                                        {
+                                            sb.AppendLine($"    {similarresult}");
+                                        }
                                     }
+
+
+                                    sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
+
+                                    return sb.ToString().Trim().AddRemainCallCount();
                                 }
-
-
-                                sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
-
-                                return sb.ToString().Trim().AddRemainCallCount();
                             }
                         }
                     }
