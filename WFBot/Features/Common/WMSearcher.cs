@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
@@ -18,11 +19,27 @@ namespace WFBot.Features.Common
     public static class StringWildcard
     {
         private static WFTranslator translator => WFResources.WFTranslator;
-        public static string TrySearch(this string source, string[] oldstrs = default, string[] newstrs = default, string[] suffixes = default, bool neuroptics = false)
+
+        public static string[] ToWordArray(this object obj)
         {
-            oldstrs ??= Array.Empty<string>();
-            newstrs ??= Array.Empty<string>();
-            suffixes ??= Array.Empty<string>();
+            if (obj == null) return Array.Empty<string>();
+            if (obj is string s) return new[] {s};
+            
+            var tuple = (ITuple) obj;
+            var array = new string[tuple.Length];
+            for (var i = 0; i < tuple.Length; i++)
+            {
+                array[i] = (string)tuple[i]!;
+            }
+
+            return array;
+        }
+
+        public static string TrySearch(this string source, object oldstrst = default, object newstrst = default, object suffixest = default, bool neuroptics = false)
+        {
+            var oldstrs = oldstrst.ToWordArray();
+            var newstrs = newstrst.ToWordArray();
+            var suffixes = suffixest.ToWordArray();
 
             var formatted = source.Format();
             for (var i = 0; i < oldstrs.Length; i++)
@@ -121,11 +138,11 @@ namespace WFBot.Features.Common
         public static bool Search(string item, out string searchword)
         {
             return item == (searchword = translator.TranslateSearchWord(item)) &&
-                   item == (searchword = item.TrySearch(Array.Empty<string>(), Array.Empty<string>(), new[] { "一套" })) &&
-                   item == (searchword = item.TrySearch(new[] { "总图", "p" }, new[] { "蓝图", "prime" }, Array.Empty<string>())) &&
-                   item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, new[] { "一套" })) &&
-                   item == (searchword = item.TrySearch(new[] { "p", "头" }, new[] { "prime", "头部" }, Array.Empty<string>())) &&
-                   item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, Array.Empty<string>(), true));
+                   item == (searchword = item.TrySearch(suffixest: ("一套"))) &&
+                   item == (searchword = item.TrySearch(("总图", "p" ),  ("蓝图", "prime"))) &&
+                   item == (searchword = item.TrySearch("p",  "prime", "一套")) &&
+                   item == (searchword = item.TrySearch(("p", "头"), ("prime", "头部" ))) &&
+                   item == (searchword = item.TrySearch("p", "prime", neuroptics: true));
         }
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)

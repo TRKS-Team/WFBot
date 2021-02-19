@@ -96,7 +96,7 @@ namespace WFBot.Features.Utils
         public int skipBuildTimePrice { get; set; }
         public int buildQuantity { get; set; }
         public bool consumeOnBuild { get; set; }
-        public int ammo { get; set; }
+        public string ammo { get; set; }
         public Areaattack areaAttack { get; set; }
         public object damage { get; set; }
         public Damagetypes damageTypes { get; set; }
