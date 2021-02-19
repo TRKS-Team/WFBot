@@ -20,12 +20,8 @@ namespace WFBot.Features.Common
     {
         private static WFTranslator translator => WFResources.WFTranslator;
 
-        public static string[] ToWordArray(this object obj)
+        private static string[] ToArray(ITuple tuple)
         {
-            if (obj == null) return Array.Empty<string>();
-            if (obj is string s) return new[] {s};
-            
-            var tuple = (ITuple) obj;
             var array = new string[tuple.Length];
             for (var i = 0; i < tuple.Length; i++)
             {
@@ -34,6 +30,15 @@ namespace WFBot.Features.Common
 
             return array;
         }
+
+        private static string[] ToWordArray(this object obj) =>
+            obj switch
+            {
+                null => Array.Empty<string>(),
+                string s => new[] { s },
+                ITuple tuple => ToArray(tuple),
+                _ => throw new ArgumentException()
+            };
 
         public static string TrySearch(this string source, object oldstrst = default, object newstrst = default, object suffixest = default, bool neuroptics = false)
         {
