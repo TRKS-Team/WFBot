@@ -123,6 +123,7 @@ namespace WFBot.Events
 
         [Matchers("紫卡", "阿罕卡拉"/*彩蛋*/, "千语魅痕"/*彩蛋*/)]
         [CombineParams]
+        [DoNotMeasureTime]
         Task<string> Riven(string word)
         {
             word = word.Format();

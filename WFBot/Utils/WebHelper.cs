@@ -33,7 +33,7 @@ namespace WFBot.Utils
         public long Latency { get; set; }
     }
 
-    public class Container<T> where T : struct
+    public class Container<T>
     {
         public Container(T value)
         {

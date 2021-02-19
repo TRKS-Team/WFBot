@@ -61,7 +61,6 @@ namespace WFBot
             }
             
             var wfbot = new WFBotCore();
-            WFBotCore.Instance = wfbot;
             try
             {
                 await wfbot.Init();
@@ -83,6 +82,11 @@ namespace WFBot
     }
     public sealed class WFBotCore
     {
+        public WFBotCore()
+        {
+            Instance = this;
+        }
+
         public WFNotificationHandler NotificationHandler { get; private set; }
         public static WFBotCore Instance { get; internal set; }
         private MessageReceivedEvent messageReceivedEvent;
@@ -218,7 +222,7 @@ namespace WFBot
 
         bool _requestedCtrlCShutdown;
 
-        internal async Task Init()
+        public async Task Init()
         {
             var sw = Stopwatch.StartNew();
             // ------------------------------------------------------------------
@@ -291,6 +295,7 @@ namespace WFBot
         }
 
         public bool Inited { get; private set; }
+        public static bool UseTestConnector { get; set; }
 
         private void InitLogger()
         {

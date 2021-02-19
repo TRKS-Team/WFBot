@@ -18,8 +18,12 @@ namespace WFBot.Features.Common
     public static class StringWildcard
     {
         private static WFTranslator translator => WFResources.WFTranslator;
-        public static string TrySearch(this string source, string[] oldstrs, string[] newstrs, string[] suffixes, bool neuroptics = false)
+        public static string TrySearch(this string source, string[] oldstrs = default, string[] newstrs = default, string[] suffixes = default, bool neuroptics = false)
         {
+            oldstrs ??= Array.Empty<string>();
+            newstrs ??= Array.Empty<string>();
+            suffixes ??= Array.Empty<string>();
+
             var formatted = source.Format();
             for (var i = 0; i < oldstrs.Length; i++)
             {
@@ -48,7 +52,7 @@ namespace WFBot.Features.Common
     }
     public class WMSearcher
     {
-        private WFTranslator translator => WFResources.WFTranslator;
+        private static WFTranslator translator => WFResources.WFTranslator;
         private WFApi api => WFResources.WFTranslateData;
         private Client wfaClient => WFResources.WFAApi.WfaClient;
         private bool isWFA => WFResources.WFAApi.isWFA;
@@ -114,18 +118,21 @@ namespace WFBot.Features.Common
 
         }
 
+        public static bool Search(string item, out string searchword)
+        {
+            return item == (searchword = translator.TranslateSearchWord(item)) &&
+                   item == (searchword = item.TrySearch(Array.Empty<string>(), Array.Empty<string>(), new[] { "一套" })) &&
+                   item == (searchword = item.TrySearch(new[] { "总图", "p" }, new[] { "蓝图", "prime" }, Array.Empty<string>())) &&
+                   item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, new[] { "一套" })) &&
+                   item == (searchword = item.TrySearch(new[] { "p", "头" }, new[] { "prime", "头部" }, Array.Empty<string>())) &&
+                   item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, Array.Empty<string>(), true));
+        }
+
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
         {
             // 详细逻辑图在我笔记本上有手稿
             // 不建议重构
-            string searchword;
-            if (item == (searchword = translator.TranslateSearchWord(item)) &&
-                item == (searchword = item.TrySearch(Array.Empty<string>(), Array.Empty<string>(), new[] { "一套" })) &&
-                item == (searchword = item.TrySearch(new[] { "总图", "p" }, new[] { "蓝图", "prime" }, Array.Empty<string>())) &&
-                item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, new[] { "一套" })) &&
-                item == (searchword = item.TrySearch(new[] { "p", "头" }, new[] { "prime", "头部" }, Array.Empty<string>())) &&
-                item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, Array.Empty<string>(), true))
-            )
+            if (Search(item, out var searchword))
             {
                 var sb = new StringBuilder();
                 var similarlist = translator.GetSimilarItem(item.Format(), "wm");

@@ -13,4 +13,9 @@
     <PackageReference Include="coverlet.collector" Version="1.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TextCommandCore\TextCommandCore.csproj" />
+    <ProjectReference Include="..\WFBot\WFBot.csproj" />
+  </ItemGroup>
+
 </Project>

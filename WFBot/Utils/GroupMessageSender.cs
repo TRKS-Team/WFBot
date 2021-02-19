@@ -5,9 +5,9 @@ using WFBot.Features.Utils;
 
 namespace WFBot.Utils
 {
-    public struct GroupMessageSender
+    public class GroupMessageSender : IGroupMessageSender
     {
-        public GroupID GroupID;
+        public GroupID GroupID { get; }
 
         public GroupMessageSender(GroupID groupID)
         {
@@ -18,5 +18,11 @@ namespace WFBot.Utils
         {
             msg.SendToGroup(GroupID);
         }
+    }
+
+    public interface IGroupMessageSender
+    {
+        GroupID GroupID { get; }
+        void SendMessage(string msg);
     }
 }

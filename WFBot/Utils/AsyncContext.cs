@@ -7,15 +7,15 @@ namespace WFBot.Utils
     {
         internal static readonly AsyncLocal<Container<CancellationToken>> CurrentCancellationToken =
             new AsyncLocal<Container<CancellationToken>>();
-        internal static readonly AsyncLocal<Container<GroupMessageSender>> CurrentMessageSender =
-            new AsyncLocal<Container<GroupMessageSender>>();
+        internal static readonly AsyncLocal<Container<IGroupMessageSender>> CurrentMessageSender =
+            new AsyncLocal<Container<IGroupMessageSender>>();
 
-        public static void SetMessageSender(GroupMessageSender sender)
+        public static void SetMessageSender(IGroupMessageSender sender)
         {
-            CurrentMessageSender.Value = new Container<GroupMessageSender>(sender);
+            CurrentMessageSender.Value = new Container<IGroupMessageSender>(sender);
         }
 
-        public static GroupMessageSender GetMessageSender()
+        public static IGroupMessageSender GetMessageSender()
         {
             return CurrentMessageSender.Value?.Value ?? throw new Exception("Message Sender not found.");
         }

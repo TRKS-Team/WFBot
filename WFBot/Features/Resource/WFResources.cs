@@ -159,7 +159,7 @@ namespace WFBot.Features.Resource
 
             var resource = WFResource<WFCD_All[]>.Create(url: "https://wfcd-all.therealkamisama.top/",
                 header: header,
-                resourceLoader: ResourceLoaders<WFCD_All[]>.SystemTextJsonLoader,
+                resourceLoader: ResourceLoaders<WFCD_All[]>.JsonDotNetLoader, // todo .NET 5 再换
                 fileName: "All.json");
              
             RWFCDAll = resource;
