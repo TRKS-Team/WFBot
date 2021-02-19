@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -114,13 +115,7 @@ namespace TextCommandCore
             {
                 do
                 {
-                    if (!(e is AggregateException) && !(e is TargetInvocationException))
-                    {
-                        result = $"TextCommandCore 核心库错误. 请将下面的信息汇报给管理员: \n{e}";
-                        break;
-                    }
-
-                    var innerException = Unwrap(e);
+                    var innerException = !(e is AggregateException) && !(e is TargetInvocationException) ? e : Unwrap(e);
 
                     Exception Unwrap(Exception e1)
                     {
@@ -153,6 +148,9 @@ namespace TextCommandCore
                         case OperationCanceledException _:
                         case TimeoutException _:
                             result = $"操作超时: {handlers.Message}";
+                            break;
+                        case HttpRequestException _:
+                            result = $"网络请求错误: ";
                             break;
                         default:
                             result = $"发生异常: {innerException?.Message}.";
