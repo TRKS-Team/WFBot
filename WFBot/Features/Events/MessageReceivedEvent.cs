@@ -69,6 +69,7 @@ namespace WFBot.Events
 
         void RunAutoReply(GroupID groupId, string message)
         {
+            message = message.ToLowerInvariant();
             if (Config.Instance.CustomReplies.ContainsKey(message))
             {
                 Config.Instance.CustomReplies[message].SendToGroup(groupId);

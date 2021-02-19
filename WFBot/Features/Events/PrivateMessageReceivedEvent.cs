@@ -82,6 +82,7 @@ namespace WFBot.Events
         [Matchers("添加自动回复")]
         string AddCustomReply(string code, string key, string value)
         {
+            key = key.ToLowerInvariant();
             if (Config.Instance.CustomReplies.ContainsKey(key)) return "命令已经存在";
             Config.Instance.CustomReplies.Add(key, value);
 
@@ -94,6 +95,7 @@ namespace WFBot.Events
         [Matchers("删除自动回复")]
         string RemoveCustomReply(string code, string key)
         {
+            key = key.ToLowerInvariant();
             if (!Config.Instance.CustomReplies.ContainsKey(key)) return "命令不存在.";
             Config.Instance.CustomReplies.Remove(key);
 
