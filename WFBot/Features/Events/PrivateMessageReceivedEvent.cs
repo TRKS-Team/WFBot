@@ -79,6 +79,36 @@ namespace WFBot.Events
 
         [RequireContainsCode]
         [SaveConfig]
+        [Matchers("添加自动回复")]
+        string AddCustomReply(string code, string key, string value)
+        {
+            if (Config.Instance.CustomReplies.ContainsKey(key)) return "命令已经存在";
+            Config.Instance.CustomReplies.Add(key, value);
+
+            return "完事.";
+        }
+
+
+        [RequireContainsCode]
+        [SaveConfig]
+        [Matchers("删除自动回复")]
+        string RemoveCustomReply(string code, string key)
+        {
+            if (!Config.Instance.CustomReplies.ContainsKey(key)) return "命令不存在.";
+            Config.Instance.CustomReplies.Remove(key);
+
+            return "完事.";
+        }
+
+        [Matchers("列出自动回复")]
+        string ListCustomReply()
+        {
+            return Config.Instance.CustomReplies.Select(pair => $"{pair.Key}: {pair.Value}").Connect("\n\n");
+        }
+
+
+        [RequireContainsCode]
+        [SaveConfig]
         [Matchers("添加群")]
         string AddGroup(string code, Number group)
         {

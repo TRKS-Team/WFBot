@@ -59,6 +59,8 @@ namespace WFBot
 
         public bool NotifyBeforeResult = true;
 
+        public Dictionary<string, string> CustomReplies = new Dictionary<string, string>();
+
     }
 
 }

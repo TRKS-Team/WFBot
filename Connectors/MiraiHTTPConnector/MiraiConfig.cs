@@ -11,7 +11,7 @@ namespace MiraiHTTPConnector
     public class MiraiConfig : Configuration<MiraiConfig>
     {
         public string Host = "127.0.0.1";
-        public short Port = 8080;
+        public ushort Port = 8080;
         public string AuthKey = "";
 
         public long BotQQ = default;

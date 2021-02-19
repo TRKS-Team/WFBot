@@ -25,6 +25,7 @@ namespace WFBot.Events
             if (CheckCallPerMin(groupId)) return;
 
             // 处理以 '/' 开头的消息
+            RunAutoReply(groupId, message);
             if (Config.Instance.IsSlashRequired && !message.StartsWith("/")) return;
             message = message.TrimStart('/');
 
@@ -64,6 +65,14 @@ namespace WFBot.Events
 #endif
 
             });
+        }
+
+        void RunAutoReply(GroupID groupId, string message)
+        {
+            if (Config.Instance.CustomReplies.ContainsKey(message))
+            {
+                Config.Instance.CustomReplies[message].SendToGroup(groupId);
+            }
         }
 
         private static bool CheckCallPerMin(GroupID groupId)
@@ -239,6 +248,8 @@ namespace WFBot.Events
         {
             return _wfStatus.SendSentientOutpost();
         }
+
+        
     }
 
     public partial class GroupMessageHandler : ICommandHandler<GroupMessageHandler>, ISender
