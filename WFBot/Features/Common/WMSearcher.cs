@@ -21,26 +21,20 @@ namespace WFBot.Features.Common
         public static string TrySearch(this string source, string[] oldstrs, string[] newstrs, string[] suffixes, bool neuroptics = false)
         {
             var formatted = source.Format();
-            for (int i = 0; i < oldstrs.Length; i++)
+            for (var i = 0; i < oldstrs.Length; i++)
             {
                 formatted = formatted.Replace(oldstrs[i], newstrs[i]);
             }
 
-            formatted = formatted + suffixes.Connect();
+            formatted += suffixes.Connect();
             var result = translator.TranslateSearchWord(formatted);
             if (neuroptics)
             {
-                var heads = new [] { "头部神经光", "头部神经", "头部神", "头部", "头" };
-                foreach (var head in heads)
+                var heads = new[] { "头部神经光", "头部神经", "头部神", "头部", "头" };
+                foreach (var head in heads.Where(head => !formatted.Contains("头部神经光元")).Where(head => formatted.Contains(head)))
                 {
-                    if (!formatted.Contains("头部神经光元"))
-                    {
-                        if (formatted.Contains(head))
-                        {
-                            result = translator.TranslateSearchWord(formatted.Replace(head, "头部神经光元"));
-                            break;
-                        }
-                    }
+                    result = translator.TranslateSearchWord(formatted.Replace(head, "头部神经光元"));
+                    break;
                 }
             }
             return formatted == result ? source : result;
@@ -68,9 +62,9 @@ namespace WFBot.Features.Common
                 platform = "switch";
             }
             var header = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("platform", platform) };
-            
+
             var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
-           
+
             info.sale = api.Sale.First(s => s.code == searchword);
             return info;
         }
@@ -86,9 +80,9 @@ namespace WFBot.Features.Common
             }
             var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);*/
             var option = new WarframeMarketOrderQueryOption
-                {Code = searchword, OrderStatus = new List<WMOrderStatus> {WMOrderStatus.InGame, WMOrderStatus.Online}};
+            { Code = searchword, OrderStatus = new List<WMOrderStatus> { WMOrderStatus.InGame, WMOrderStatus.Online } };
             var orders = await wfaClient.GetWarframeMarketOrdersAsync(option);
-            var result = new WMInfoEx{orders = orders, sale = api.Sale.First(s => s.code == searchword)};
+            var result = new WMInfoEx { orders = orders, sale = api.Sale.First(s => s.code == searchword) };
             return result;
         }
 
@@ -124,45 +118,30 @@ namespace WFBot.Features.Common
         {
             // 详细逻辑图在我笔记本上有手稿
             // 不建议重构
-            var searchword = translator.TranslateSearchWord(item);
-            if (item == searchword)
+            string searchword;
+            if (item == (searchword = translator.TranslateSearchWord(item)) &&
+                item == (searchword = item.TrySearch(Array.Empty<string>(), Array.Empty<string>(), new[] { "一套" })) &&
+                item == (searchword = item.TrySearch(new[] { "总图", "p" }, new[] { "蓝图", "prime" }, Array.Empty<string>())) &&
+                item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, new[] { "一套" })) &&
+                item == (searchword = item.TrySearch(new[] { "p", "头" }, new[] { "prime", "头部" }, Array.Empty<string>())) &&
+                item == (searchword = item.TrySearch(new[] { "p" }, new[] { "prime" }, Array.Empty<string>(), true))
+            )
             {
-                searchword = item.TrySearch(Array.Empty<string>(), Array.Empty<string>(), new []{"一套"});
-                if (item == searchword)
+                var sb = new StringBuilder();
+                var similarlist = translator.GetSimilarItem(item.Format(), "wm");
+                sb.AppendLine($"物品 {item} 不存在或格式错误.");
+                if (similarlist.Any())
                 {
-                    searchword = item.TrySearch(new []{"总图", "p"}, new []{ "蓝图", "prime"}, Array.Empty<string>());
-                    if (item == searchword)
+                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                    foreach (var similarresult in similarlist)
                     {
-                        searchword = item.TrySearch(new []{ "p"}, new []{"prime"}, new []{"一套"});
-                        if (item == searchword)
-                        {
-                            searchword = item.TrySearch(new []{"p", "头"}, new []{"prime", "头部"}, Array.Empty<string>());
-                            if (item == searchword)
-                            {
-                                searchword = item.TrySearch(new []{ "p"}, new []{ "prime"}, Array.Empty<string>(), true);
-                                if (item == searchword)
-                                {
-                                    var sb = new StringBuilder();
-                                    var similarlist = translator.GetSimilarItem(item.Format(), "wm");
-                                    sb.AppendLine($"物品 {item} 不存在或格式错误.");
-                                    if (similarlist.Any())
-                                    {
-                                        sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
-                                        foreach (var similarresult in similarlist)
-                                        {
-                                            sb.AppendLine($"    {similarresult}");
-                                        }
-                                    }
-
-
-                                    sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
-
-                                    return sb.ToString().Trim().AddRemainCallCount();
-                                }
-                            }
-                        }
+                        sb.AppendLine($"    {similarresult}");
                     }
                 }
+
+                sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
+
+                return sb.ToString().Trim().AddRemainCallCount();
             }
 
             var msg = string.Empty;
@@ -174,12 +153,12 @@ namespace WFBot.Features.Common
             var failed = false;
             if (Config.Instance.IsThirdPartyWM)
             {
-                
+
                 try
                 {
                     if (isWFA)
                     {
-                        var infoEx = await GetWMINfoEx(searchword); 
+                        var infoEx = await GetWMINfoEx(searchword);
                         if (infoEx.orders.Items.Any())
                         {
                             OrderWMInfoEx(infoEx, isbuyer);
