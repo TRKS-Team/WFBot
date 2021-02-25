@@ -152,6 +152,9 @@ namespace TextCommandCore
                         case HttpRequestException _:
                             result = $"网络请求错误: ";
                             break;
+                        case NullReferenceException _:
+                            result = "找不到对象.";
+                            break;
                         default:
                             result = $"发生异常: {innerException?.Message}.";
                             handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
