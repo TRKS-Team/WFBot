@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Timers;
 using GammaLibrary.Extensions;
+using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WFBot.Features.Timers;
@@ -22,6 +23,9 @@ namespace WFBot.Features.Utils
             {
                 lock (wfaClientLock)
                 {
+                    if (wfaClient == null)
+                        throw new CommandException("WFAClient 没有被初始化成功.");
+
                     return wfaClient;
                 }
             }
@@ -87,6 +91,7 @@ namespace WFBot.Features.Utils
                     var initResult = WfaClient.InitAsync().Result;
                     if (initResult != InitResultType.Success)
                     {
+                        WfaClient = null;
                         throw new Exception($"在初始化 WFAClient 时出现了问题. 返回的类型为 {initResult}");
                     }
                     Config.Instance.Last_update = DateTime.Now;
