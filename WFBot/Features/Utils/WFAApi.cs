@@ -65,7 +65,7 @@ namespace WFBot.Features.Utils
 
                 if (isWFA) // 今后所有用到client的地方都要判断一次
                 {
-                    if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7))
+                    if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7) || Config.Instance.AcessToken.IsNullOrEmpty())
                     {
                         WfaClient = new Client(Config.Instance.ClientId, Config.Instance.ClientSecret, new[]
                         {

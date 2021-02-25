@@ -314,7 +314,7 @@ namespace WFBot
         internal List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
         {
-            AddTimer<LexionTimer>();
+            AddTimer<LexiconTimer>();
             AddTimer<NotificationTimer>();
 
             void AddTimer<T>() where T : WFBotTimer
