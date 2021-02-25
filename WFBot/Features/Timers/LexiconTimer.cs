@@ -12,9 +12,9 @@ using WFBot.Features.Utils;
 
 namespace WFBot.Features.Timers
 {
-    class LexionTimer : WFBotTimer
+    class LexiconTimer : WFBotTimer
     {
-        public LexionTimer() : base((Config.Instance.GitHubOAuthKey.IsNullOrWhiteSpace() ? 600 : 60).Seconds())
+        public LexiconTimer() : base((Config.Instance.GitHubOAuthKey.IsNullOrWhiteSpace() ? 600 : 60).Seconds())
         {
             
         }

@@ -286,7 +286,6 @@ namespace WFBot.Features.Utils
             {
 
                 dictTranslator.AddEntry(dict.En, dict.Zh);
-                dictTranslator.AddEntry(dict.En, dict.Zh);
                 searchwordTranslator.Clear();
             }
 
@@ -307,7 +306,7 @@ namespace WFBot.Features.Utils
             weaponslist.Clear();
             foreach (var riven in translateApi.Riven)
             {
-                var zh = riven.zhname;
+                var zh = dictTranslator.Translate(riven.name);
                 weapons.Add(zh);
                 weaponslist.Add(new Riven { id = riven.id, modulus = riven.modulus, name = riven.name, rank = riven.rank, thumb = riven.thumb, type = riven.type, zhname = zh });
             }
