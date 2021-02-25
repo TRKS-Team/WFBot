@@ -153,10 +153,10 @@ namespace TextCommandCore
                             result = $"网络请求错误: ";
                             break;
                         case NullReferenceException _:
-                            result = "找不到对象.";
+                            result = "发生异常: 找不到对象.";
                             break;
                         default:
-                            result = $"发生异常: {innerException?.Message}.";
+                            result = $"发生异常: {innerException?.Message}";
                             handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
                                                         $"命令内容为 [{message}].\n" +
                                                         $"异常信息:\n" +
