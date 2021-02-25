@@ -67,20 +67,31 @@ namespace WFBot.Features.Utils
                 {
                     if (DateTime.Now - Config.Instance.Last_update > TimeSpan.FromDays(7) || Config.Instance.AcessToken.IsNullOrEmpty())
                     {
-                        WfaClient = new Client(Config.Instance.ClientId, Config.Instance.ClientSecret, new[]
-                        {
-                            "wfa.basic", "wfa.riven.query", "wfa.user.read", "wfa.lib.query"
-
-                        }, wfaPlatform);
-                        WfaClient.InitAsync().Wait();
-                        Config.Instance.Last_update = DateTime.Now;
-                        Config.Instance.AcessToken = WfaClient.Token;
-                        Config.Save();
+                        ReNew();
                     }
                     else
                     {
                         WfaClient = new Client(Config.Instance.AcessToken, wfaPlatform);
+                        if (WfaClient.InitAsync().Result != InitResultType.Success) ReNew();
                     }
+                    
+                }
+
+                void ReNew()
+                {
+                    WfaClient = new Client(Config.Instance.ClientId, Config.Instance.ClientSecret, new[]
+                    {
+                        "wfa.basic", "wfa.riven.query", "wfa.user.read", "wfa.lib.query"
+
+                    }, wfaPlatform);
+                    var initResult = WfaClient.InitAsync().Result;
+                    if (initResult != InitResultType.Success)
+                    {
+                        throw new Exception($"在初始化 WFAClient 时出现了问题. 返回的类型为 {initResult}");
+                    }
+                    Config.Instance.Last_update = DateTime.Now;
+                    Config.Instance.AcessToken = WfaClient.Token;
+                    Config.Save();
                 }
             }
 
