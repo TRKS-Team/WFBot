@@ -1,5 +1,6 @@
 # WFBot
-
+![GitHub Actions](https://github.com/TRKS-Team/WFBot/workflows/.NET/badge.svg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_shield)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 聊天机器人.  
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
@@ -12,7 +13,8 @@
 > 本分支是 WFBot 通用版的分支, 原基于 Mahua 框架(已停更)的可在[这里](https://github.com/TRKS-Team/WFBot/tree/old-sbmahua)找到  
 > 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配
 
-![MONEY](docs/images/MONEY.png) --by [@Lasm_Gratel](https://github.com/LasmGratel)  
+![MONEY](docs/images/MONEY.png) 
+--by [@Lasm_Gratel](https://github.com/LasmGratel)  
 ~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)  
 您的赞助会成为我们维护此项目的动力
 
@@ -181,3 +183,7 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 感谢 JetBrain 公司为我们提供的 All-Product-License  
 [![jetbrains](docs/images/jetbrains-variant-3-201x231.png)](https://www.jetbrains.com/?from=WFBot)  
 **_感谢这些贡献者, 开源项目有你们才有未来_**
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_large)
