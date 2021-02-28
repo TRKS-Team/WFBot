@@ -1,5 +1,6 @@
 # WFBot
 ![GitHub Actions](https://github.com/TRKS-Team/WFBot/workflows/.NET/badge.svg)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_shield)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 聊天机器人.  
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
