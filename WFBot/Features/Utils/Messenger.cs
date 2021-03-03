@@ -123,7 +123,7 @@ namespace WFBot.Features.Utils
                 sb.AppendLine("机器人状态: 不正常");
             }
 
-            sb.AppendLine($"插件版本: *不知道*");
+            sb.AppendLine($"WFBot 版本: {VersionString}");
 
             sb.AppendLine($"    任务API:  {(apistat.IsOnline ? $"{apistat.Latency}ms [在线]" : "[离线]")}");
             sb.AppendLine($"    WarframeMarket: {(wmstat.IsOnline ? $"{wmstat.Latency}ms [在线]" : "[离线]")}]");
@@ -134,13 +134,15 @@ namespace WFBot.Features.Utils
             return sb.ToString().Trim().AddPlatformInfo();
         }
 
+        private static string VersionString => WFBotCore.IsOfficial ? $"WFBot 官方 {(WFBotCore.Version)}" : $"WFBot 非官方 {(WFBotCore.Version)}";
+
         public static void SendHelpdoc()
         {
             var group = AsyncContext.GetMessageSender();
 
             // 为了社区的良性发展, 请不要随意修改.
             group.SendMessage($@"欢迎查看机器人唯一指定帮助文档
-{(WFBotCore.IsOfficial ? "WFBot 版本 "+(WFBotCore.Version) : string.Empty)}
+{VersionString}
 宣传贴地址: https://warframe.love/thread-230.htm
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
 项目地址: https://github.com/TRKS-Team/WFBot
