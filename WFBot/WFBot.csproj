@@ -14,7 +14,7 @@
     <NoWarn>1701;1702;MSB3042</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
-    <DefineConstants>WINDOWS_RELEASE</DefineConstants>
+    <DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
   </PropertyGroup>
 
     <Choose>
