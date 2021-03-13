@@ -33,7 +33,7 @@ namespace WFBot
         [JsonProperty("Git" + "hubOAuthKey")]
         public string GitHubOAuthKey;
 
-        public bool IsSlashRequired = true;
+        public bool IsSlashRequired = false;
 
         public int CallperMinute = 0;
 

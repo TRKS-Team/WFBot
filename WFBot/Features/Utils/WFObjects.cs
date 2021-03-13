@@ -177,11 +177,11 @@ namespace WFBot.Features.Utils
         public Falloff falloff { get; set; }
         public float slash { get; set; }
         public float puncture { get; set; }
-        public int crit_chance { get; set; }
+        public int? crit_chance { get; set; }
         public int blast { get; set; }
         public string damage { get; set; }
         public float heat { get; set; }
-        public float crit_mult { get; set; }
+        public float? crit_mult { get; set; }
         public float status_chance { get; set; }
         public int toxin { get; set; }
         public string shot_type { get; set; }
@@ -236,8 +236,8 @@ namespace WFBot.Features.Utils
         public int blast { get; set; }
         public string damage { get; set; }
         public float speed { get; set; }
-        public float crit_chance { get; set; }
-        public float crit_mult { get; set; }
+        public float? crit_chance { get; set; }
+        public float? crit_mult { get; set; }
         public float status_chance { get; set; }
         public object shot_type { get; set; }
         // holy sh*t

@@ -57,7 +57,7 @@ namespace WFBot
 
     public static class EnumExtensions
     {
-        public static string[] GetSymbols<TEnum>(this TEnum obj)
+        public static string[] GetSymbols<TEnum>(this TEnum obj) where TEnum : Enum
         {
             try
             {

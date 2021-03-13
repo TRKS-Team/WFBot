@@ -284,7 +284,6 @@ namespace WFBot.Features.Utils
             dictTranslator.Clear();
             foreach (var dict in translateApi.Dict)
             {
-
                 dictTranslator.AddEntry(dict.En, dict.Zh);
                 searchwordTranslator.Clear();
             }
@@ -295,6 +294,8 @@ namespace WFBot.Features.Utils
                 relicrewardTranslator.AddEntry(sale.en.Format(), sale.zh);
             }
             relicrewardTranslator.AddEntry("Forma Blueprint".Format(), "福马 蓝图");
+
+            ApplySlang(searchwordTranslator);
             // TODO 找一个更加全面的翻译对照表
             invasionTranslator.Clear();
             foreach (var invasion in translateApi.Invasion)
@@ -314,6 +315,23 @@ namespace WFBot.Features.Utils
             foreach (var wave in translateApi.NightWave)
             {
                 nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
+            }
+        }
+
+        void ApplySlang(Translator translator)
+        {
+            var sales = translateApi.Sale.ToDictionary(s => s.zh);
+            foreach (var slangItem in SlangManager.AllSlang)
+            {
+                if (!sales.TryGetValue(slangItem.Source, out var sale))
+                {
+                    Console.WriteLine($"黑话: {slangItem.Source} 未能在 API 中找到对应条目.");
+                }
+
+                foreach (var s in slangItem.Slang)
+                {
+                    translator.AddEntry(s.Format(), sale!.code);
+                }
             }
         }
 

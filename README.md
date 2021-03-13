@@ -48,7 +48,7 @@
 
 ### 群内命令
 
-**设置内可以更改命令前无需斜杠.**
+**设置内可以更改命令前需要斜杠.**
 
 > 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 
@@ -120,6 +120,9 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 
 ---
 
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_large)
+
 ## 代码部分
 
 代码注释极少... 并且大部分都是一些瞎记的.  
@@ -190,5 +193,3 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 **_感谢这些贡献者, 开源项目有你们才有未来_**
 
 
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_large)
