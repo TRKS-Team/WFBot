@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 
@@ -23,7 +25,21 @@ namespace WFBot.Features.Resource
                 SlangResource = WFResource<List<SlangItem>>.Create(
                     "http://github.cdn.therealkamisama.top/https://github.com/TRKS-Team/WFBotSlang/blob/main/slang.json", 
                     category: nameof(WFTranslator),
-                    resourceLoader: ResourceLoaders<List<SlangItem>>.JsonDotNetLoader);
+                    resourceLoader: s =>
+                    {
+                        try
+                        {
+                            using var sr = new StreamReader(s);
+                            var str = sr.ReadToEnd();
+                            return Task.FromResult(JsonConvert.DeserializeObject<List<SlangItem>>(str));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("黑话辞典加载出错.");
+                            Console.WriteLine(e);
+                            return Task.FromResult(new List<SlangItem>());
+                        }
+                    });
                 await SlangResource.WaitForInited();
                 return;
             }
