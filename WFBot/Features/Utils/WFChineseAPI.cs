@@ -318,9 +318,19 @@ namespace WFBot.Features.Utils
             }
         }
 
+        static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(IEnumerable<TValue> enumerable, Func<TValue, TKey> selector)
+        {
+            var result = new Dictionary<TKey, TValue>();
+            foreach (var item in enumerable)
+            {
+                result[selector(item)] = item;
+            }
+
+            return result;
+        }
         void ApplySlang(Translator translator)
         {
-            var sales = translateApi.Sale.ToDictionary(s => s.zh);
+            var sales = ToDictionary(translateApi.Sale, s => s.zh);
             foreach (var slangItem in SlangManager.AllSlang)
             {
                 if (!sales.TryGetValue(slangItem.Source, out var sale))
@@ -330,7 +340,7 @@ namespace WFBot.Features.Utils
 
                 foreach (var s in slangItem.Slang)
                 {
-                    translator.AddEntry(s.Format(), sale!.code);
+                    translator.AddEntry(s.Format(), sale.code);
                 }
             }
         }
