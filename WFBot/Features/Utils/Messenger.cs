@@ -141,7 +141,6 @@ namespace WFBot.Features.Utils
             // 为了社区的良性发展, 请不要随意修改.
             group.SendMessage($@"欢迎查看机器人唯一指定帮助文档
 {(WFBotCore.IsOfficial ? "WFBot 版本 "+(WFBotCore.Version) : string.Empty)}
-宣传贴地址: https://warframe.love/thread-230.htm
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
 项目地址: https://github.com/TRKS-Team/WFBot
 赞助(乞讨)地址: https://afdian.net/@TheRealKamisama

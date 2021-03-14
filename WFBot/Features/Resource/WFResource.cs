@@ -73,6 +73,7 @@ namespace WFBot.Features.Resource
         {
             resourceLoader ??= ResourceLoaders<T>.JsonDotNetLoader;
             // 这写的太屎了
+            // 屎虽臭但能饱腹
             fileName ??= (url ?? string.Empty).Split('/').Last().Split('?').First().Split("!").First();
 
             this.resourceLoader = resourceLoader;

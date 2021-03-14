@@ -34,6 +34,7 @@ namespace WFBot.Features.Resource
             tasks.Add(Task.Run(async () => await SetWFContentApi()));
             tasks.Add(Task.Run(() => { WFAApi = new WFAApi(); }));
             WFTranslateData = await GetTranslateApi();
+            WMAuction = await GetWMAResources();
 
             await Task.WhenAll(tasks);
             WFTranslator = new WFTranslator();
@@ -90,6 +91,7 @@ namespace WFBot.Features.Resource
         public static WFAApi WFAApi { get; private set; }
 
         public static WFCD_All[] WFCDAll => RWFCDAll.Value;
+        public static WMAuction WMAuction { get; private set; }
         public static WFResource<WFCD_All[]> RWFCDAll { get; private set; }
 
         public static WFContentApi WFContent { get; private set; }
@@ -148,7 +150,29 @@ namespace WFBot.Features.Resource
             WFContent = result;
             await resource.WaitForInited();
         }
-        
+
+        private static async Task<WMAuction> GetWMAResources()
+        {
+            var Auction = new WMAuction();
+            var tasks = new List<Task>();
+            var ZHheader = new WebHeaderCollection
+            {
+                {"Language", "zh"}
+            };
+
+            AddTask(ref Auction.RAttributes, "https://api.warframe.market/v1/riven/attributes", "WMA_Attributes.json", ZHheader);
+            AddTask(ref Auction.RRivens, "https://api.warframe.market/v1/riven/items", "WMA_Rivens.json");
+            await Task.WhenAll(tasks.ToArray());
+            void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
+            {
+                var resource = WFResource<T>.Create(url, fileName: name, header: header);
+                obj = resource;
+                tasks.Add(resource.WaitForInited());
+            }
+
+            return Auction;
+        }
+
         private static Task SetWFCDResources()
         {
             var header = new WebHeaderCollection
