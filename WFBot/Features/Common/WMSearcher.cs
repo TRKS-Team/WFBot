@@ -59,7 +59,8 @@ namespace WFBot.Features.Common
                 var heads = new[] { "头部神经光", "头部神经", "头部神", "头部", "头" };
                 foreach (var head in heads.Where(head => !formatted.Contains("头部神经光元")).Where(head => formatted.Contains(head)))
                 {
-                    result = translator.TranslateSearchWord(formatted.Replace(head, "头部神经光元"));
+                    formatted = formatted.Replace(head, "头部神经光元");
+                    result = translator.TranslateSearchWord(formatted);
                     break;
                 }
             }
@@ -98,7 +99,7 @@ namespace WFBot.Features.Common
         public async Task<WMInfoEx> GetWMINfoEx(string searchword)
         {
             /*var header = new WebHeaderCollection();
-            header.Add("Authorization", $"Bearer {Config.Instance.AcessToken}");
+            header.Add("Authorization", $"Bearer {Config.Instance.AccessToken}");
             var platform = Config.Instance.Platform.GetSymbols().First();
             if (Config.Instance.Platform == Platform.NS)
             {
