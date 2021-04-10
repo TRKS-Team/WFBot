@@ -69,16 +69,17 @@ namespace WFBot.Events
 
         [Matchers("没有开启通知的群")]
         [RequireAdmin, RequireCode]
-        string DisabledGroups()
+        string DisabledGroups(string code)
         {
             var groups = GetGroups();
             var gs = groups.Where(g => !groups.Contains(g)).Select(g => $"{g.Name}-{g.Name}");
 
             return gs.Connect("\r\n");
         }
-
-        [RequireContainsCode]
+        
         [SaveConfig]
+        [CombineEnd]
+        [RequireCode]
         [Matchers("添加自动回复")]
         string AddCustomReply(string code, string key, string value)
         {
