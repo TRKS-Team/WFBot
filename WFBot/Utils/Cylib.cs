@@ -31,19 +31,17 @@ namespace WFBot.Utils
             try
             {
                 var savePath = SavePath;
-                T obj;
                 if (FileSystem.Exists(savePath))
                 {
-                    obj = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
+                    Instance = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
                 }
                 else
                 {
-                    obj = new T();
+                    Instance = new T();
                     Save();
                 }
 
-                obj.AfterUpdate();
-                Instance = obj;
+                Instance.AfterUpdate();
             }
             catch (Exception e)
             {
