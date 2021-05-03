@@ -5,8 +5,168 @@ using WFBot.Features.Resource;
 
 namespace WFBot.Features.Utils
 {
+    public class WMAuction
+    {
+        public WMRRiven[] Rivens => RRivens.Value.Payload.Rivens;
+        public WFResource<WMRRivens> RRivens;
+        public WMRAttribute[] Attributes => RAttributes.Value.Payload.Attributes;
+        public WFResource<WMRAttributes> RAttributes;
+    }
+    public partial class WMRRivens
+    {
+        [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
+        public Payload2 Payload { get; set; }
+    }
 
-   public class WFContentApi
+    public partial class Payload2
+    {
+        [JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
+        public WMRRiven[] Rivens { get; set; }
+    }
+
+    public partial class WMRRiven
+    {
+        [JsonProperty("url_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string UrlName { get; set; }
+
+        [JsonProperty("riven_type", NullValueHandling = NullValueHandling.Ignore)]
+        public RivenType? RivenType { get; set; }
+
+        [JsonProperty("item_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string ItemName { get; set; }
+
+        [JsonProperty("group", NullValueHandling = NullValueHandling.Ignore)]
+        public Group1? Group { get; set; }
+
+        [JsonProperty("icon_format", NullValueHandling = NullValueHandling.Ignore)]
+        public IconFormat? IconFormat { get; set; }
+
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        [JsonProperty("thumb", NullValueHandling = NullValueHandling.Ignore)]
+        public string Thumb { get; set; }
+
+        [JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
+        public string Icon { get; set; }
+    }
+
+    public enum Group1 { Archgun, Kitgun, Melee, Primary, Secondary, Sentinel, Zaw };
+
+    public enum IconFormat { Land, Port };
+
+    public enum RivenType { Kitgun, Melee, Pistol, Rifle, Shotgun, Zaw };
+    public partial class RivenAuctions
+    {
+        public Payload2 Payload { get; set; }
+    }
+
+    public partial class Payload2
+    {
+        public List<RivenAuction> Auctions { get; set; }
+    }
+
+    public partial class RivenAuction
+    {
+        public bool? Private { get; set; }
+        public long? StartingPrice { get; set; }
+        public bool? Visible { get; set; }
+        public long? BuyoutPrice { get; set; }
+        public string Note { get; set; }
+        public Item1 Item { get; set; }
+        public long? MinimalReputation { get; set; }
+        public Owner Owner { get; set; }
+        public string Platform { get; set; }
+        public bool? Closed { get; set; }
+        public object TopBid { get; set; }
+        public object Winner { get; set; }
+        public object IsMarkedFor { get; set; }
+        public object MarkedOperationAt { get; set; }
+        public DateTimeOffset? Created { get; set; }
+        public DateTimeOffset? Updated { get; set; }
+        public string NoteRaw { get; set; }
+        public bool? IsDirectSell { get; set; }
+        public string Id { get; set; }
+    }
+
+    public partial class Item1
+    {
+        public string WeaponUrlName { get; set; }
+        public List<RAttribute> Attributes { get; set; }
+        public long? MasteryLevel { get; set; }
+        public string Name { get; set; }
+        public string Polarity { get; set; }
+        public long? ReRolls { get; set; }
+        public long? ModRank { get; set; }
+        public string Type { get; set; }
+    }
+
+    public partial class RAttribute
+    {
+        public bool? Positive { get; set; }
+        public double? Value { get; set; }
+        public string UrlName { get; set; }
+    }
+
+    public partial class Owner
+    {
+        public long? Reputation { get; set; }
+        public string Region { get; set; }
+        public DateTimeOffset? LastSeen { get; set; }
+        public string IngameName { get; set; }
+        public string Status { get; set; }
+        public string Id { get; set; }
+        public string Avatar { get; set; }
+    }
+    public partial class WMRAttributes
+    {
+        [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
+        public Payload1 Payload { get; set; }
+    }
+
+    public partial class Payload1
+    {
+        [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
+        public WMRAttribute[] Attributes { get; set; }
+    }
+
+    public partial class WMRAttribute
+    {
+        [JsonProperty("group", NullValueHandling = NullValueHandling.Ignore)]
+        public Group? Group { get; set; }
+
+        [JsonProperty("suffix")]
+        public string Suffix { get; set; }
+
+        [JsonProperty("negative_only", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? NegativeOnly { get; set; }
+
+        [JsonProperty("effect", NullValueHandling = NullValueHandling.Ignore)]
+        public string Effect { get; set; }
+
+        [JsonProperty("prefix")]
+        public string Prefix { get; set; }
+
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public string Id { get; set; }
+
+        [JsonProperty("units")]
+        public Units? Units { get; set; }
+
+        [JsonProperty("url_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string UrlName { get; set; }
+
+        [JsonProperty("exclusive_to")]
+        public List<string> ExclusiveTo { get; set; }
+
+        [JsonProperty("positive_is_negative", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? PositiveIsNegative { get; set; }
+    }
+
+    public enum Group { Default, Melee, Top};
+
+    public enum Units { Percent, Seconds };
+    public class WFContentApi
    {
        public ExportRelicArcane[] ExportRelicArcanes => RExportRelicArcanes.Value;
        public WFResource<ExportRelicArcane[]> RExportRelicArcanes;
@@ -47,7 +207,7 @@ namespace WFBot.Features.Utils
     {
         public string name { get; set; }
         public List<Component> components { get; set; } = new List<Component>();
-#if DEBUG
+#if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
         public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }
@@ -78,8 +238,8 @@ namespace WFBot.Features.Utils
         public WFCD_Drop[] drops { get; set; }
         public float[] damagePerShot { get; set; }
         public float totalDamage { get; set; }
-        public float criticalChance { get; set; }
-        public float criticalMultiplier { get; set; }
+        public float? criticalChance { get; set; }
+        public float? criticalMultiplier { get; set; }
         public float procChance { get; set; }
         public float fireRate { get; set; }
         public string productCategory { get; set; }

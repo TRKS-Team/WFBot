@@ -20,7 +20,8 @@ namespace WFBot.Features.Common
         private Client wfaClient => WFResources.WFAApi.WfaClient;
         private bool isWFA => WFResources.WFAApi.isWFA;
         private WFTranslator translator => WFResources.WFTranslator;
-
+        private static string platform => Config.Instance.Platform == Platform.NS ? "switch" : Config.Instance.Platform.GetSymbols().First();
+        // 这是给WarframeMarketAuctions用的
 
         /*public string GetAccessToken()
         {
@@ -66,6 +67,15 @@ namespace WFBot.Features.Common
             var orders = (await wfaClient.QueryRivenOrdersAsync(option) ?? throw new CommandException("由于未知原因, 返回的数据为空.")).Items;
             translator.TranslateRivenOrders(orders);
             return orders;
+        }
+
+        public async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
+        {
+            var header = new List<KeyValuePair<string, string>>
+                {new KeyValuePair<string, string>("Platform", platform)};
+            var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(
+                $"https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name={urlname}&sort_by=price_desc", header);
+            return auctions.Payload.Auctions;
         }
 
         public async Task<List<RivenData>> GetRivenDatas()
@@ -121,6 +131,12 @@ namespace WFBot.Features.Common
                 sb.AppendLine("经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
             }
             return sb.ToString().Trim();
+        }
+
+        public async Task<string> SendRivenAuctions(string weapon)
+        {
+            var weaponinfo = translator.GetMatchedWeapon(weapon.Format());
+            return null;
         }
     }
 }

@@ -67,6 +67,7 @@ namespace WFBot.Features.Utils
         private WFTranslator translator => WFResources.WFTranslator;
         private WFCD_All[] all => WFResources.WFCDAll;
         private WFContentApi content => WFResources.WFContent;
+        private WMRAttribute[] attributes => WFResources.WMAuction.Attributes;
 
         private static string platform => Config.Instance.Platform.GetSymbols().First();
         private static string WFstat => $"https://api.warframestat.us/{platform}";
@@ -264,6 +265,7 @@ namespace WFBot.Features.Utils
     {
         private Translator dictTranslator = new Translator(); // 翻译器之祖
         private Translator searchwordTranslator = new Translator(); // 将中文物品转换成wm的搜索地址
+        private Translator urlnameTranslator = new Translator();  // 将WMR的urlname转换成人类可读
         private Translator wikiTranslator = new Translator(); // 我忘了是干嘛的 好像没用了
         private Translator nightwaveTranslator = new Translator(); // 午夜电波任务翻译
         private Translator relicrewardTranslator = new Translator();
@@ -272,6 +274,8 @@ namespace WFBot.Features.Utils
         // She is known as riven, riven of a thousand voice, the last known ahamkara.
         private List<string> weapons = new List<string>();// 所有武器的中文
         private WFApi translateApi => WFResources.WFTranslateData;
+        private WMRAttribute[] attributes => WFResources.WMAuction.Attributes;
+        private WMRRiven[] rivens => WFResources.WMAuction.Rivens;
 
 
         public WFTranslator()
@@ -315,6 +319,11 @@ namespace WFBot.Features.Utils
             foreach (var wave in translateApi.NightWave)
             {
                 nightwaveTranslator.AddEntry(wave.en.Format(), wave.zh);
+            }
+            urlnameTranslator.Clear();
+            foreach (var attribute in attributes)
+            {
+                urlnameTranslator.AddEntry(attribute.UrlName, attribute.Effect);
             }
         }
 
@@ -437,6 +446,15 @@ namespace WFBot.Features.Utils
             return time + TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
         }
 
+        public string GetAttributeEffect(string urlname)
+        {
+            return urlnameTranslator.Translate(urlname);
+        }
+
+        public string GetRivenUrlName(string weapon)
+        {
+            return rivens.First(r => StringExtensions.Format(r.ItemName) == weapon).UrlName;
+        }
         public List<Riven> GetMatchedWeapon(string weapon)
         {
             return weaponslist.Where(w => w.zhname.Format() == weapon).ToList();
