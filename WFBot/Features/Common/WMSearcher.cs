@@ -22,7 +22,7 @@ namespace WFBot.Features.Common
     {
         public SWWCO((string, string) pair = default, bool reverse = false, int times = int.MaxValue, object suffixes = default)
         {
-            Pair = new KeyValuePair<string, string>(pair.Item1, pair.Item2);
+            Pair = new KeyValuePair<string, string>(pair.Item1.IsNullOrEmpty() ? "" : pair.Item1, pair.Item2.IsNullOrEmpty() ? "" : pair.Item2);
             Times = times;
             Reverse = reverse;
             Suffixes = suffixes.ToWordArray();
