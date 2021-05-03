@@ -136,6 +136,7 @@ namespace WFBot.Features.Common
         public async Task<string> SendRivenAuctions(string weapon)
         {
             var weaponinfo = translator.GetMatchedWeapon(weapon.Format());
+            return null;
         }
     }
 }

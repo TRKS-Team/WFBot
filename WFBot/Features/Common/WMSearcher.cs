@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using TextCommandCore;
@@ -16,11 +17,26 @@ using WFBot.Utils;
 
 namespace WFBot.Features.Common
 {
+    public class SWWCO
+    // SearchWordWildCardOption
+    {
+        public SWWCO((string, string) pair, bool reverse = false, int times = int.MaxValue)
+        {
+            Pair = new KeyValuePair<string, string>(pair.Item1, pair.Item2);
+            Times = times;
+            Reverse = reverse;
+        }
+
+        public KeyValuePair<string, string> Pair { get; set; }
+        public int Times { get; set; }
+        public bool Reverse { get; set; }
+    }
     public static class StringWildcard
+    // And you're dealing with a wildcard.
     {
         private static WFTranslator translator => WFResources.WFTranslator;
 
-        private static string[] ToArray(ITuple tuple)
+        private static string[] ToStringArray(ITuple tuple)
         {
             var array = new string[tuple.Length];
             for (var i = 0; i < tuple.Length; i++)
@@ -30,28 +46,50 @@ namespace WFBot.Features.Common
 
             return array;
         }
-
-        private static string[] ToWordArray(this object obj) =>
+        public static string[] ToWordArray(this object obj) =>
             obj switch
             {
                 null => Array.Empty<string>(),
                 string s => new[] { s },
-                ITuple tuple => ToArray(tuple),
+                ITuple tuple => ToStringArray(tuple),
                 _ => throw new ArgumentException()
             };
-
-        public static string TrySearch(this string source, object oldstrst = default, object newstrst = default, object suffixest = default, bool neuroptics = false)
-        {
-            var oldstrs = oldstrst.ToWordArray();
-            var newstrs = newstrst.ToWordArray();
-            var suffixes = suffixest.ToWordArray();
-
-            var formatted = source.Format();
-            for (var i = 0; i < oldstrs.Length; i++)
+        public static KeyValuePair<TKey, TValue>[] ToPairArray<TKey, TValue>(this object obj) =>
+            obj switch
             {
-                formatted = formatted.Replace(oldstrs[i], newstrs[i]);
+                null => Array.Empty<KeyValuePair<TKey, TValue>>(),
+                KeyValuePair<TKey, TValue> kv => new []{ kv },
+                ITuple tuple => ToKVPairArray<TKey, TValue>(tuple),
+                _ => throw new ArgumentException()
+            };
+        private static KeyValuePair<TKey, TValue>[] ToKVPairArray<TKey, TValue>(ITuple tuple)
+        {
+            var array = new KeyValuePair<TKey, TValue>[tuple.Length];
+            for (int i = 0; i < tuple.Length; i++)
+            {
+                array[i] = (KeyValuePair<TKey, TValue>) tuple[i];
             }
 
+            return array;
+            // 我并不知道这么写会不会有问题
+        }
+
+
+        public static string TrySearch(this string source, List<SWWCO> options, object suffixest = null, bool neuroptics = false)
+        {
+            var suffixes = suffixest.ToWordArray();
+            var formatted = source.Format();
+            var count = 0;
+            foreach (var option in options)
+            {
+                var eva = new MatchEvaluator(match =>
+                {
+                    count++;
+                    return count > option.Times ? match.Value : option.Pair.Value;
+                });
+                formatted = Regex.Replace(formatted, option.Pair.Key, eva,
+                    option.Reverse ? RegexOptions.None : RegexOptions.RightToLeft);
+            }
             formatted += suffixes.Connect();
             var result = translator.TranslateSearchWord(formatted);
             if (neuroptics)
@@ -142,12 +180,23 @@ namespace WFBot.Features.Common
 
         public static bool Search(string item, out string searchword)
         {
+            var p = new SWWCO(("p", "prime"), true, 1);
+            var 头 = new SWWCO(("头", "头部"));
+            var 总图 = new SWWCO(("总图", "蓝图"));
+
+
             return item == (searchword = translator.TranslateSearchWord(item)) &&
+                   item == (searchword = item.TrySearch(new List<SWWCO>(), ("一套"))) && 
+                   item == (searchword = item.TrySearch(new List<SWWCO>{总图,p })) &&
+                   item == (searchword = item.TrySearch(new List<SWWCO>{p}, ("一套"))) &&
+                   item == (searchword = item.TrySearch(new List<SWWCO>{p, 头})) &&
+                   item == (searchword = item.TrySearch(new List<SWWCO>{p}, neuroptics: true));
+            /*return item == (searchword = translator.TranslateSearchWord(item)) &&
                    item == (searchword = item.TrySearch(suffixest: ("一套"))) &&
                    item == (searchword = item.TrySearch(("总图", "p" ),  ("蓝图", "prime"))) &&
                    item == (searchword = item.TrySearch("p",  "prime", "一套")) &&
                    item == (searchword = item.TrySearch(("p", "头"), ("prime", "头部" ))) &&
-                   item == (searchword = item.TrySearch("p", "prime", neuroptics: true));
+                   item == (searchword = item.TrySearch("p", "prime", neuroptics: true));*/
         }
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
@@ -187,6 +236,10 @@ namespace WFBot.Features.Common
                 {
                     if (isWFA)
                     {
+                        var header = new WebHeaderCollection()
+                        {
+                            {"", ""}
+                        };
                         var infoEx = await GetWMINfoEx(searchword);
                         if (infoEx.orders.Items.Any())
                         {
