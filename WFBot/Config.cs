@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using GammaLibrary.Extensions;
 using Newtonsoft.Json;
 using WFBot.Features.Other;
 using WFBot.Utils;
@@ -33,7 +35,7 @@ namespace WFBot
         [JsonProperty("Git" + "hubOAuthKey")]
         public string GitHubOAuthKey;
 
-        public bool IsSlashRequired = true;
+        public bool IsSlashRequired = false;
 
         public int CallperMinute = 0;
 
@@ -60,7 +62,20 @@ namespace WFBot
         public bool NotifyBeforeResult = true;
 
         public Dictionary<string, string> CustomReplies = new Dictionary<string, string>();
+        
+        protected override void AfterUpdate()
+        {
+            // 这里我写的好丑
+            if (Code.IsNullOrWhiteSpace() || Code.Contains(' '))
+            {
+                Trace.WriteLine("警告: 口令中包含空格, 可能会影响带口令指令的使用.");
+            }
 
+            if (GitHubOAuthKey.NotNullNorWhiteSpace() && GitHubOAuthKey.Length != 40)
+            {
+                Trace.WriteLine("警告: GitHubOauthKey 格式错误, 如果你不知道这是什么请不要乱填.");
+            }
+        }
     }
 
 }

@@ -19,6 +19,8 @@ namespace WFBot.Events
     public class MessageReceivedEvent
     {
         int commandCount;
+        bool showedSlashTip = false;
+
         public void ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
         {
             // 检查每分钟最大调用
@@ -26,8 +28,16 @@ namespace WFBot.Events
 
             // 处理以 '/' 开头的消息
             RunAutoReply(groupId, message);
-            if (Config.Instance.IsSlashRequired && !message.StartsWith("/")) return;
-            message = message.TrimStart('/');
+            if (Config.Instance.IsSlashRequired && !message.StartsWith('/'))
+            {
+                if (!showedSlashTip)
+                {
+                    Trace.WriteLine("提示: 设置中要求命令必须以 / 开头. ");
+                    showedSlashTip = true;
+                }
+                return;
+            }
+            message = message.TrimStart('/', '、', '／');
 
             var handler = new GroupMessageHandler(senderId, groupId, message);
             
@@ -148,6 +158,14 @@ namespace WFBot.Events
             return _wfStatus.SendTranslateResult(word);
         }
 
+        [Matchers("wiki")]
+        [CombineParams]
+        string Wiki(string word = "wiki")
+        {
+            return _wikiSearcher.SendSearch(word).Replace("'", "%27");
+            // 这简直就是官方吞mod最形象的解释
+        }
+
         [Matchers("遗物")]
         [CombineParams]
         string RelicInfo(string word)
@@ -222,14 +240,6 @@ namespace WFBot.Events
         Task<string> NightWave()
         {
             return _wfStatus.SendNightWave();
-        }
-
-        [Matchers("wiki")]
-        [CombineParams]
-        string Wiki(string word = "wiki")
-        {
-            return _wikiSearcher.SendSearch(word).Replace("'", "%27");
-            // 这简直就是官方吞mod最形象的解释
         }
 
         [Matchers("仲裁", "仲裁警报", "精英警报")]

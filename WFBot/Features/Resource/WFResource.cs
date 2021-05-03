@@ -45,7 +45,10 @@ namespace WFBot.Features.Resource
 
     public static class WFResourceStatic
     {
-        public static readonly ConcurrentDictionary<string, int> CategoryVersionDictionary = new ConcurrentDictionary<string, int>();
+        public static readonly ConcurrentDictionary<string, int> CategoryVersionDictionary =
+            new ConcurrentDictionary<string, int>();
+        internal static int ResourceCount;
+        internal static int FinishedResourceCount;
     }
 
     public class WFResource<T> where T : class
@@ -59,7 +62,6 @@ namespace WFBot.Features.Resource
         readonly WebHeaderCollection header;
         public const string OfflineDir = "WFOfflineResource";
         public const string CacheDir = "WFCaches";
-
 
         static WFResource()
         {
@@ -92,6 +94,7 @@ namespace WFBot.Features.Resource
         public static WFResource<T> Create(string url = null, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null, WFResourceRequester requester = null)
         {
             var result = new WFResource<T>(url, category, fileName, header, resourceLoader, requester);
+            Interlocked.Increment(ref WFResourceStatic.ResourceCount);
             result.initTask = result.Reload(true);
             return result;
         }
@@ -166,6 +169,8 @@ namespace WFBot.Features.Resource
                 {
                     initTask = null;
                 }
+                Interlocked.Increment(ref WFResourceStatic.FinishedResourceCount);
+                Console.WriteLine($"资源加载进程: {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount}.");
             }
         }
 

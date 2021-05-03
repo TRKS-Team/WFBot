@@ -1,5 +1,9 @@
 # WFBot
-
+![GitHub Actions](https://github.com/TRKS-Team/WFBot/workflows/.NET/badge.svg)
+[![GitHub release](https://img.shields.io/github/release/TRKS-Team/WFBot.svg)](https://GitHub.com/TRKS-Team/WFBot/releases/)
+[![Github releases (by release)](https://img.shields.io/github/downloads/TRKS-Team/WFBot/latest/total.svg)](https://GitHub.com/TRKS-Team/WFBot/releases/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_shield)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 聊天机器人.  
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
@@ -12,7 +16,8 @@
 > 本分支是 WFBot 通用版的分支, 原基于 Mahua 框架(已停更)的可在[这里](https://github.com/TRKS-Team/WFBot/tree/old-sbmahua)找到  
 > 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配
 
-![MONEY](docs/images/MONEY.png) --by [@Lasm_Gratel](https://github.com/LasmGratel)  
+![MONEY](docs/images/MONEY.png) 
+--by [@Lasm_Gratel](https://github.com/LasmGratel)  
 ~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)  
 您的赞助会成为我们维护此项目的动力
 
@@ -43,7 +48,7 @@
 
 ### 群内命令
 
-**设置内可以更改命令前无需斜杠.**
+**设置内可以更改命令前需要斜杠.**
 
 > 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 
@@ -106,12 +111,17 @@
 |      [HtmlAgilityPack](https://html-agility-pack.net/)      |        MIT        |        HTML 分析         |
 |       [Harmony](https://github.com/pardeike/Harmony)        |        MIT        |         插件支持         |
 |    [Richasy.WFA.Sdk](https://github.com/Richasy/WFA-SDK)    | richasy Copyright |         WFA API          |
-
+| [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) | AGPL-3.0 | Mirai C# 连接 |
+| [GitVersion](https://github.com/GitTools/GitVersion) | MIT | 提供版本号支持 |
+| [Magick.NET](https://github.com/dlemstra/Magick.NET) | Apache-2.0 | 临时图片渲染 |
 ---
 
 Warframe 是 Digital Extremes Ltd. 的商标.
 
 ---
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_large)
 
 ## 代码部分
 
@@ -181,3 +191,5 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 感谢 JetBrain 公司为我们提供的 All-Product-License  
 [![jetbrains](docs/images/jetbrains-variant-3-201x231.png)](https://www.jetbrains.com/?from=WFBot)  
 **_感谢这些贡献者, 开源项目有你们才有未来_**
+
+

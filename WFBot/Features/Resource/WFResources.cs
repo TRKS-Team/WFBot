@@ -28,17 +28,22 @@ namespace WFBot.Features.Resource
         {
             WFChineseApi = new WFChineseAPI();
             ThreadPool.SetMinThreads(64, 64);
-            var tasks = new List<Task>();
 
-            tasks.Add(Task.Run(async () => await SetWFCDResources()));
-            tasks.Add(Task.Run(async () => await SetWFContentApi()));
-            tasks.Add(Task.Run(() => { WFAApi = new WFAApi(); }));
-            WFTranslateData = await GetTranslateApi();
-            WMAuction = await GetWMAResources();
-
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(
+                Task.Run(SetWFCDResources),
+                Task.Run(SetWFContentApi),
+                Task.Run(() => { WFAApi = new WFAApi(); }),
+                WFTranslateData = await GetTranslateApi();
+                WMAuction = await GetWMAResources();
+                Task.Run(async () =>
+                {
+                    WFTranslateData = await GetTranslateApi();
+                }),
+                Task.Run(SlangManager.UpdateOnline)
+            );
             WFTranslator = new WFTranslator();
-            if (ResourceLoadFailed)
+            
+            if (ResourceLoadFailed) 
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
             catch (Exception e)

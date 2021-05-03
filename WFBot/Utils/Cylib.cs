@@ -40,11 +40,18 @@ namespace WFBot.Utils
                     Instance = new T();
                     Save();
                 }
+
+                Instance.AfterUpdate();
             }
             catch (Exception e)
             {
                 Trace.WriteLine(e, nameof(Configuration<T>));
+                throw;
             }
+        }
+
+        protected virtual void AfterUpdate()
+        {
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

@@ -17,7 +17,7 @@ namespace TextCommandCore
     public static class CommandHandlerHelper
     {
         static readonly ConcurrentDictionary<Type, CommandInfo[]> CommandInfosCache = new ConcurrentDictionary<Type, CommandInfo[]>();
-        public static int CommandExpectedTime = 10 * 1000;
+        public static int CommandExpectedTime = 12 * 1000;
 
         public static void InitCommandHandlerCollection<T>()
         {
