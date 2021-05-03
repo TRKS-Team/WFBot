@@ -20,16 +20,18 @@ namespace WFBot.Features.Common
     public class SWWCO
     // SearchWordWildCardOption
     {
-        public SWWCO((string, string) pair, bool reverse = false, int times = int.MaxValue)
+        public SWWCO((string, string) pair = default, bool reverse = false, int times = int.MaxValue, object suffixes = default)
         {
             Pair = new KeyValuePair<string, string>(pair.Item1, pair.Item2);
             Times = times;
             Reverse = reverse;
+            Suffixes = suffixes.ToWordArray();
         }
 
         public KeyValuePair<string, string> Pair { get; set; }
         public int Times { get; set; }
         public bool Reverse { get; set; }
+        public string[] Suffixes { get; set; }
     }
     public static class StringWildcard
     // And you're dealing with a wildcard.
@@ -74,10 +76,30 @@ namespace WFBot.Features.Common
             // 我并不知道这么写会不会有问题
         }
 
-
-        public static string TrySearch(this string source, List<SWWCO> options, object suffixest = null, bool neuroptics = false)
+        private static SWWCO[] ToSearchWordWildCardOptionArray(ITuple tuple)
         {
-            var suffixes = suffixest.ToWordArray();
+            var array = new SWWCO[tuple.Length];
+            for (var i = 0; i < tuple.Length; i++)
+            {
+                array[i] = (SWWCO)tuple[i]!;
+            }
+
+            return array;
+        }
+
+        public static SWWCO[] ToOptions(this object obj) => obj switch
+        {
+            null => Array.Empty<SWWCO>(),
+            SWWCO option => new[] {option},
+            ITuple tuple => ToSearchWordWildCardOptionArray(tuple),
+            _ => throw new ArgumentException()
+
+        };
+
+
+        public static string TrySearch(this string source, object optionst, bool neuroptics = false)
+        {
+            var options = optionst.ToOptions();
             var formatted = source.Format();
             var count = 0;
             foreach (var option in options)
@@ -88,9 +110,9 @@ namespace WFBot.Features.Common
                     return count > option.Times ? match.Value : option.Pair.Value;
                 });
                 formatted = Regex.Replace(formatted, option.Pair.Key, eva,
-                    option.Reverse ? RegexOptions.None : RegexOptions.RightToLeft);
+                    option.Reverse ? RegexOptions.RightToLeft : RegexOptions.None);
+                formatted += option.Suffixes.Connect("");
             }
-            formatted += suffixes.Connect();
             var result = translator.TranslateSearchWord(formatted);
             if (neuroptics)
             {
@@ -101,6 +123,7 @@ namespace WFBot.Features.Common
                     break;
                 }
             }
+            // 到时候把SWWCO改好一点, 把上面这段也装进去
             return formatted == result ? source : result;
         }
 
@@ -183,26 +206,19 @@ namespace WFBot.Features.Common
             var p = new SWWCO(("p", "prime"), true, 1);
             var 头 = new SWWCO(("头", "头部"));
             var 总图 = new SWWCO(("总图", "蓝图"));
-
-
+            var 一套 = new SWWCO(suffixes: ("一套"));
+            // 详细逻辑图在我笔记本上有手稿
+            // 不建议重构
             return item == (searchword = translator.TranslateSearchWord(item)) &&
-                   item == (searchword = item.TrySearch(new List<SWWCO>(), ("一套"))) && 
-                   item == (searchword = item.TrySearch(new List<SWWCO>{总图,p })) &&
-                   item == (searchword = item.TrySearch(new List<SWWCO>{p}, ("一套"))) &&
-                   item == (searchword = item.TrySearch(new List<SWWCO>{p, 头})) &&
-                   item == (searchword = item.TrySearch(new List<SWWCO>{p}, neuroptics: true));
-            /*return item == (searchword = translator.TranslateSearchWord(item)) &&
-                   item == (searchword = item.TrySearch(suffixest: ("一套"))) &&
-                   item == (searchword = item.TrySearch(("总图", "p" ),  ("蓝图", "prime"))) &&
-                   item == (searchword = item.TrySearch("p",  "prime", "一套")) &&
-                   item == (searchword = item.TrySearch(("p", "头"), ("prime", "头部" ))) &&
-                   item == (searchword = item.TrySearch("p", "prime", neuroptics: true));*/
+                   item == (searchword = item.TrySearch((一套))) && 
+                   item == (searchword = item.TrySearch((总图, p))) &&
+                   item == (searchword = item.TrySearch((p, 一套))) &&
+                   item == (searchword = item.TrySearch((p, 头))) &&
+                   item == (searchword = item.TrySearch((p), neuroptics: true));
         }
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
         {
-            // 详细逻辑图在我笔记本上有手稿
-            // 不建议重构
             if (Search(item, out var searchword))
             {
                 var sb = new StringBuilder();

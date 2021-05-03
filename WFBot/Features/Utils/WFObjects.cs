@@ -163,7 +163,7 @@ namespace WFBot.Features.Utils
         public bool? PositiveIsNegative { get; set; }
     }
 
-    public enum Group { Default, Melee };
+    public enum Group { Default, Melee, Top};
 
     public enum Units { Percent, Seconds };
     public class WFContentApi
@@ -207,7 +207,7 @@ namespace WFBot.Features.Utils
     {
         public string name { get; set; }
         public List<Component> components { get; set; } = new List<Component>();
-#if DEBUG
+#if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
         public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }
@@ -238,8 +238,8 @@ namespace WFBot.Features.Utils
         public WFCD_Drop[] drops { get; set; }
         public float[] damagePerShot { get; set; }
         public float totalDamage { get; set; }
-        public float criticalChance { get; set; }
-        public float criticalMultiplier { get; set; }
+        public float? criticalChance { get; set; }
+        public float? criticalMultiplier { get; set; }
         public float procChance { get; set; }
         public float fireRate { get; set; }
         public string productCategory { get; set; }
