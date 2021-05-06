@@ -22,7 +22,7 @@ namespace WFBot.Features.Common
     {
         public SWWCO((string, string) pair = default, bool reverse = false, int times = int.MaxValue, object suffixes = default)
         {
-            Pair = new KeyValuePair<string, string>(pair.Item1.IsNullOrEmpty() ? "" : pair.Item1, pair.Item2.IsNullOrEmpty() ? "" : pair.Item2);
+            Pair = new KeyValuePair<string, string>(pair.Item1 ?? "", pair.Item2 ?? "");
             Times = times;
             Reverse = reverse;
             Suffixes = suffixes.ToWordArray();
@@ -74,6 +74,8 @@ namespace WFBot.Features.Common
 
             return array;
             // 我并不知道这么写会不会有问题
+            // ↑用强转之前先想想是不是确实是这个类型
+            // 这里代码的意思是 把(new kvpair(k1,v1), new kvpair(k2,v2)) 的元组给转成一个 kvpair1和kvpair2的数组
         }
 
         private static SWWCO[] ToSearchWordWildCardOptionArray(ITuple tuple)

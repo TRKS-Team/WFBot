@@ -136,7 +136,9 @@ namespace WFBot.Features.Common
         public async Task<string> SendRivenAuctions(string weapon)
         {
             var weaponinfo = translator.GetMatchedWeapon(weapon.Format());
-            return null;
+            // 这玩意 如果方法里面用到了 await 就写 async Task<string>
+            // 如果没有用到 await 那直接返回string就好
+            throw new NotImplementedException();
         }
     }
 }

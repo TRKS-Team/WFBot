@@ -33,8 +33,7 @@ namespace WFBot.Features.Resource
                 Task.Run(SetWFCDResources),
                 Task.Run(SetWFContentApi),
                 Task.Run(() => { WFAApi = new WFAApi(); }),
-                Task.Run(() => WFTranslateData = GetTranslateApi().Result),
-                Task.Run(() => WMAuction = GetWMAResources().Result),
+                Task.Run(async () => WMAuction = await GetWMAResources()),
                 Task.Run(async () =>
                 {
                     WFTranslateData = await GetTranslateApi();
