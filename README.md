@@ -128,7 +128,8 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 代码注释极少... 并且大部分都是一些瞎记的.  
 我不写注释是因为: **这代码这么难写 那他应该也难读**  
 如果发现 Bug 或者你有好的想法可以在[GitHub Issue](https://github.com/TRKS-Team/WFBot/issues)里直接提出, 我会尽量去修改和实现.  
-特别鸣谢 [@Cyl18](https://github.com/Cyl18)
+
+苦力 [@Cyl18](https://github.com/Cyl18)
 
 > Cyl18 是我雇佣的一个劳工  
 > 他每天坐在电脑前 看到我 Commit 的时候 他就戳一下 build.bat  
@@ -141,6 +142,7 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 > 如果有新的 他就发到群里  
 > 如果群里有人调用机器人 他就手动把信息发过去
 
+乐子: <https://github.com/TRKS-Team/WFBot/commit/a43c2c944231389b4f95489a6aa180fdb2cdf6b9#r50572036>
 ## 贡献者列表 [排名不分先后]
 
 - 代码贡献:
