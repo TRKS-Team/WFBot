@@ -170,7 +170,7 @@ namespace WFBot.Features.Resource
                     initTask = null;
                 }
                 Interlocked.Increment(ref WFResourceStatic.FinishedResourceCount);
-                Console.WriteLine($"资源加载进程: {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount}.");
+                Console.WriteLine($">>>> 资源加载进程: {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount} <<<<");
             }
         }
 
