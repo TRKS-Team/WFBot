@@ -9,8 +9,8 @@
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
 
 > 基于 莎比的 [mirai](https://github.com/mamoe/mirai) 及 [mirai-http-api](https://github.com/project-mirai/mirai-api-http) 和 [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) 开发.  
-> 翻译 [词典](https://github.com/Richasy/WFA_Lexicon) 作者: 云之幻  
-> 使用 [API](https://blog.richasy.cn/document/wfa/api/) 文档由云之幻整理  
+> 翻译 云之幻整理的 [词典](https://github.com/Richasy/WFA_Lexicon)  
+> 使用 云之幻 的 [WFAAPI](https://www.richasy.cn/wfa-api-overview/)  
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
 
 > 本分支是 WFBot 通用版的分支, 原基于 Mahua 框架(已停更)的可在[这里](https://github.com/TRKS-Team/WFBot/tree/old-sbmahua)找到  
@@ -152,41 +152,36 @@ Warframe 是 Digital Extremes Ltd. 的商标.
   > **@wu452148993** 解决了一个令我很头疼的问题
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:
-  KONYCN
-  Trinitatem
-  爱发电用户\_pPYQ
-  Pharsaria
-  LouisJane
-  L·A·Y
-  dc 姐姐好棒哒
-  爱发电用户\_Ymhw
-  琪露诺
-  wosiwq
-  Zatermelon
-  aecine
-  DreaM1ku
-  果汁
-  Flashbang233
-  SM_Chicov
-  曲水流觞 ℡
-  luoroz
-  玄白 SAMA
-  难喝的鸡汤
-  爱发电用户\_edf3
-  苟 Cy
-  780712
-  vian
-  爱发电用户\_Ayhf
-  爱发电用户\_mQps
-  老腊肉
-  Neptune
-  君莫笑
-  Deadwings
-  爱发电用户\_x9FU
-  不够温柔
-  爱发电用户\_FtaS
-  大番茄一号
-  爱发电用户\_JV6j
+KONYCN
+Trinitatem
+爱发电用户_pPYQ
+Pharsaria
+LouisJane
+L·A·Y
+爱发电用户_Ymhw
+琪露诺
+wosiwq
+Zatermelon
+aecine
+dc姐姐好棒哒
+◆Philip
+DreaM1ku
+果汁
+Flashbang233
+SM_Chicov
+曲水流觞℡
+luoroz
+玄白SAMA
+难喝的鸡汤
+爱发电用户_edf3
+苟Cy
+780712
+vian
+爱发电用户_Ayhf
+爱发电用户_mQps
+老腊肉
+Neptune
+君莫笑
 
 ---
 
