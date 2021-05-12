@@ -68,7 +68,7 @@ namespace WFBot.Events
         }
 
         [Matchers("没有开启通知的群")]
-        [RequireAdmin, RequireCode]
+        [RequireAdmin, RequireContainsCode]
         string DisabledGroups(string code)
         {
             var groups = GetGroups();
@@ -79,7 +79,7 @@ namespace WFBot.Events
         
         [SaveConfig]
         [CombineEnd]
-        [RequireCode]
+        [RequireContainsCode]
         [Matchers("添加自动回复")]
         string AddCustomReply(string code, string key, string value)
         {
