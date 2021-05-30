@@ -15,23 +15,11 @@
 首先新建两个文件夹, 分别叫 WFBot 和 mirai _并不一定非得是这个名字, 仅以方便演示为主_
 
 ## 第一步: 配置 mirai
+> mirai 安装教程可能较旧. 总体上来说你需要的只有登录上 mirai 和 mirai-api-http 插件. 我们将在等会(鸽了)更新这个教程.
 
 1. 进入 mirai 文件夹.
-2. 下载 Java: 从 [清华大学开源软件镜像站(推荐)](https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/15/jre/x64/), [adoptopenjdk](https://adoptopenjdk.net/releases.html?variant=openjdk15&jvmVariant=hotspot) 或者 [openjdk](https://openjdk.java.net/projects/jdk/15/) 下载对应系统版本的 zip 版本的 Java, 解压到 jre 文件夹中(新建). 解压后应该像下面这样:
-   ![1](images/2021-01-20-22-31-26.png)  
-   (确保 jre 下面就有 bin 文件夹)
 
-3. 下载 mcl: 从 [MCL GitHub Release](https://github.com/iTXTech/mirai-console-loader/releases/latest) (中国大概很难下) 或者 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/iTXTech/mirai-console-loader/releases/download/v1.0.3/mcl-1.0.3.zip) (目前为 1.0.3 版本) 下载 mcl 并解压. 解压完后大概像这样:
-   ![1](images/2021-01-20-22-36-23.png)
-
-4. 修改 mcl.cmd: 用记事本打开 mcl.cmd, 把 `set JAVA_BINARY` 的那一行改为 `set JAVA_BINARY="jre/bin/java.exe"`:
-
-   ```diff
-   @echo off
-   -set JAVA_BINARY=java
-   +set JAVA_BINARY="jre/bin/java.exe"
-   %JAVA_BINARY% -jar mcl.jar %*
-   ```
+2. 前往 <https://github.com/iTXTech/mcl-installer> 安装.
 
 5. 运行一下 mirai: 双击 mcl.cmd, 等待 mirai 输出
    ![](images/2021-01-20-22-41-51.png) (如果这一步窗口闪一下就没了, 检查上面的 Java 配置是否正确, 特别是文件放的位置), 然后关闭 mirai (直接关闭窗口或者输入 `exit`).
