@@ -78,7 +78,7 @@ namespace WFBot.Features.Common
             return auctions.Payload.Auctions;
         }
 
-        public async Task<List<RivenData>> GetRivenDatas()
+        public async Task<List<RivenData>> GetRivenData()
         {
             var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(
                 "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
@@ -102,7 +102,7 @@ namespace WFBot.Features.Common
                             AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         }
                         var orders = await GetRivenOrders(weaponinfo.First().name);
-                        var data = (await GetRivenDatas()).Where(d => d.compatibility.Format() == weapon).ToList();
+                        var data = (await GetRivenData()).Where(d => d.compatibility.Format() == weapon).ToList();
                         var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
