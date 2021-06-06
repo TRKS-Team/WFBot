@@ -454,9 +454,9 @@ namespace WFBot.Features.Utils
         public static string ToString(Sortie sortie)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("指挥官, 下面是今天的突击任务.");
+            sb.AppendLine("指挥官, 下面是今天的突击任务：");
             sb.AppendLine($"> 阵营: {sortie.faction}");
-            sb.AppendLine($"> 头头: {sortie.boss}");
+            sb.AppendLine($"> 首领: {sortie.boss}");
             sb.AppendLine();
             foreach (var variant in sortie.variants)
             {
@@ -504,7 +504,7 @@ namespace WFBot.Features.Utils
             sb.AppendLine();
             foreach (var order in info.payload.orders)
             {
-                sb.AppendLine($"{order.order_type} {order.platinum} 白鸡 [{order.user.ingame_name}] {order.user.status} ");
+                sb.AppendLine($"{order.order_type} {order.platinum} 白金 [{order.user.ingame_name}] {order.user.status} ");
                 if (withQR)
                 {
                     sb.AppendLine(
@@ -524,7 +524,7 @@ namespace WFBot.Features.Utils
 
             foreach (var order in info.orders.Items)
             {
-                sb.AppendLine($"{order.order_type} {order.platinum} 白鸡 [{order.user.ingame_name}] {order.user.status}");
+                sb.AppendLine($"{order.order_type} {order.platinum} 白金 [{order.user.ingame_name}] {order.user.status}");
                 if (withQR)
                 {
                     sb.AppendLine(

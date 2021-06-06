@@ -88,7 +88,7 @@ namespace WFBot.Features.Common
             var relic = api.GetRelics(word);
             if (relic.IsEmpty())
             {
-                return "没有找到符合条件的遗物.";
+                return "没有找到符合条件的遗物";
             }
             else
             {

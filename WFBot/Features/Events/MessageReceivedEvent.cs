@@ -119,7 +119,7 @@ namespace WFBot.Events
             return _wfStatus.SendCetusMissions(index);
         }
 
-        [Matchers("查询", "wm")]
+        [Matchers("查询", "wm", "Wm", "WM", "wM")]
         [CombineParams]
         [DoNotMeasureTime]
         Task<string> WM(string word)
@@ -141,7 +141,7 @@ namespace WFBot.Events
             return _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), QR, B);
         }
 
-        [Matchers("紫卡", "阿罕卡拉"/*彩蛋*/, "千语魅痕"/*彩蛋*/)]
+        [Matchers("紫卡")]
         [CombineParams]
         [DoNotMeasureTime]
         Task<string> Riven(string word)
@@ -150,7 +150,7 @@ namespace WFBot.Events
             return _rmSearcher.SendRivenInfos(word);
         }
 
-        [Matchers("翻译")]
+        [Matchers("翻译", "trans", "TRANS", "Trans")]
         [CombineParams]
         string Translate(string word)
         {
@@ -158,15 +158,15 @@ namespace WFBot.Events
             return _wfStatus.SendTranslateResult(word);
         }
 
-        [Matchers("wiki")]
+        /*[Matchers("wiki")]
         [CombineParams]
         string Wiki(string word = "wiki")
         {
             return _wikiSearcher.SendSearch(word).Replace("'", "%27");
             // 这简直就是官方吞mod最形象的解释
-        }
+        }*/
 
-        [Matchers("遗物")]
+        [Matchers("遗物", "核桃")]
         [CombineParams]
         string RelicInfo(string word)
         {
@@ -180,7 +180,7 @@ namespace WFBot.Events
             return WFBotCore.Instance.NotificationHandler.SendAllAlerts();
         }
 
-        [Matchers("平野", "夜灵平野", "平原", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "平原温度", "平原时间")]
+        [Matchers("地球平原", "平野", "夜灵平野", "平原", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "火卫二平原", "魔胎之境", "平原温度", "平原时间")]
         Task<string> Cycles()
         {
             return _wfStatus.Cycles();
@@ -198,7 +198,7 @@ namespace WFBot.Events
             return _wfStatus.SendSortie();
         }
 
-        [Matchers("奸商", "虚空商人", "商人")]
+        [Matchers("奸商", "虚空商人")]
         Task<string> VoidTrader()
         {
             return _wfStatus.SendVoidTrader();
@@ -223,14 +223,14 @@ namespace WFBot.Events
             return WFBotCore.Instance.NotificationHandler.SendAllPersistentEnemies();
         }
 
-        [Matchers("help", "帮助", "功能", "救命")]
+        [Matchers("磨弓救救我", "磨弓帮帮我", "磨弓救救我！", "磨弓帮帮我！", "磨弓救救我!", "磨弓帮帮我!"/*"help", "帮助", "功能", "救命"*/)]
         void HelpDoc()
         {
             SendHelpdoc();
         }
 
         [DoNotMeasureTime]
-        [Matchers("status", "状态", "机器人状态", "机器人信息", "我需要机器人")]
+        [Matchers("磨弓状态" /*"status", "状态", "机器人状态", "机器人信息", "我需要机器人"*/)]
         Task<string> Status()
         {
             return SendBotStatus();
@@ -248,13 +248,13 @@ namespace WFBot.Events
             return _wfStatus.SendArbitrationMission();
         }
 
-        [Matchers("赤毒", "赤毒虹吸器", "赤毒洪潮", "赤毒任务")]
+        [Matchers("赤毒虹吸器", "赤毒洪潮", "赤毒任务")]
         Task<string> Kuva()
         {
             return _wfStatus.SendKuvaMissions();
         }
         
-        [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
+        [Matchers("s船状态","S船状态")]
         Task<string> SentientOutpost()
         {
             return _wfStatus.SendSentientOutpost();

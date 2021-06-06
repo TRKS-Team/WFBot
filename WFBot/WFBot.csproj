@@ -16,6 +16,9 @@
   <PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
     <DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;NoGitVersion</DefineConstants>
+  </PropertyGroup>
 
     <Choose>
       <When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">

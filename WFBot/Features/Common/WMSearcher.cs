@@ -226,7 +226,7 @@ namespace WFBot.Features.Common
             {
                 var sb = new StringBuilder();
                 var similarlist = translator.GetSimilarItem(item.Format(), "wm");
-                sb.AppendLine($"物品 {item} 不存在或格式错误.");
+                sb.AppendLine($"物品 {item} 不存在或格式错误");
                 if (similarlist.Any())
                 {
                     sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
@@ -236,7 +236,7 @@ namespace WFBot.Features.Common
                     }
                 }
 
-                sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
+                sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的，请不要用来查找其它怪怪的东西");
 
                 return sb.ToString().Trim().AddRemainCallCount();
             }
@@ -244,7 +244,7 @@ namespace WFBot.Features.Common
             var msg = string.Empty;
             if (Config.Instance.NotifyBeforeResult)
             {
-                AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                //AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
             }
 
             var failed = false;
@@ -273,12 +273,12 @@ namespace WFBot.Features.Common
                     }
                     else
                     {
-                        msg = "很抱歉, 本机器人没有 WFA 授权, 无法使用第三方 WM, 这很可能是由于错误设置导致的. 请联系机器人负责人.";
+                        msg = "抱歉，磨弓没有 WFA 授权，无法使用第三方 WM，这很可能是由于错误设置导致的。详情请联系@Zqrous";
                     }
                 }
                 catch (Exception)
                 {
-                    AsyncContext.SendGroupMessage("很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
+                    AsyncContext.SendGroupMessage("抱歉，磨弓在使用第三方 API 时遇到了网络问题，正在为您转官方 API");
                     failed = true;
                 }
             }
@@ -301,12 +301,12 @@ namespace WFBot.Features.Common
 
             if (!quickReply)
             {
-                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {item} -QR>";
+                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {item} -qr>";
             }
 
             if (!isbuyer)
             {
-                msg = $"{msg}\n\n查询买家请使用指令 <查询 {item} -B>";
+                msg = $"{msg}\n\n查询买家请使用指令 <查询 {item} -b>";
             }
 
             return msg.AddPlatformInfo().AddRemainCallCount();

@@ -64,7 +64,7 @@ namespace WFBot.Features.Common
         public async Task<List<Order>> GetRivenOrders(string weapon)
         {
             var option = new SearchRivenOrderOption { Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon) };
-            var orders = (await wfaClient.QueryRivenOrdersAsync(option) ?? throw new CommandException("由于未知原因, 返回的数据为空.")).Items;
+            var orders = (await wfaClient.QueryRivenOrdersAsync(option) ?? throw new CommandException("由于未知原因, 返回的数据为空")).Items;
             translator.TranslateRivenOrders(orders);
             return orders;
         }
@@ -99,16 +99,16 @@ namespace WFBot.Features.Common
                     {
                         if (Config.Instance.NotifyBeforeResult)
                         {
-                            AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                            //AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         }
                         var orders = await GetRivenOrders(weaponinfo.First().name);
                         var data = (await GetRivenData()).Where(d => d.compatibility.Format() == weapon).ToList();
-                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();
+                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉，目前紫卡市场没有任何出售: {weapon} 紫卡的用户".AddRemainCallCount();
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else
                     {
-                        sb.AppendLine($"武器 {weapon} 不存在.");
+                        sb.AppendLine($"武器 {weapon} 不存在的样子？");
                         var similarlist = translator.GetSimilarItem(weapon, "rm");
                         if (similarlist.Any())
                         {
@@ -123,12 +123,12 @@ namespace WFBot.Features.Common
                 }
                 else
                 {
-                    sb.AppendLine("本机器人没有 WFA 授权, 本功能无法使用, 请联系机器人管理员.");
+                    sb.AppendLine("由于磨弓没有获得WFA授权，该功能暂时无法使用。详情请联系@Zqrous");
                 }
             }
             catch (WebException)
             {
-                sb.AppendLine("经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
+                sb.AppendLine("经过多次尝试, 依然无法访问紫卡市场……大概是API服务器崩了？");
             }
             return sb.ToString().Trim();
         }

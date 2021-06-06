@@ -59,7 +59,7 @@ namespace WFBot.Features.Other
             foreach (var update in await updates)
                 sendedUpdateSet.Add(update);
             WFNotificationLoaded = true;
-            Trace.WriteLine("WF 通知初始化完成.");
+            Trace.WriteLine("Warframe通知初始化完成！");
         }
 
         [CalledByTimer(typeof(NotificationTimer))]
@@ -156,7 +156,7 @@ namespace WFBot.Features.Other
             if (!enemies.Any(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime))) return;
 
             var sb = new StringBuilder();
-            sb.AppendLine("我看到有小小黑冒头了? 干!");
+            sb.AppendLine("有小小黑出现了!");
 
             foreach (var enemy in enemies.Where(enemy => enemy.isDiscovered && !sendedStalkerSet.Contains(enemy.lastDiscoveredTime)))
             {
@@ -206,7 +206,7 @@ namespace WFBot.Features.Other
 
                     if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
                     {
-                        var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
+                        var notifyText = $"指挥官, 太阳系陷入了一片混乱。请查看你的星图！\r\n" +
                                          $"{WFFormatter.ToString(inv)}";
 
                         Messenger.Broadcast(notifyText.AddPlatformInfo());
@@ -240,11 +240,11 @@ namespace WFBot.Features.Other
             var enemies = StalkerPool;
             if (!enemies.Any())
             {
-                return "目前没有小小黑出现.";
+                return "目前没有小小黑出现";
             }
 
             var sb = new StringBuilder();
-            sb.AppendLine("下面是全太阳系内的小小黑, 快去锤爆?");
+            sb.AppendLine("下面是全太阳系内的小小黑：");
             foreach (var enemy in enemies)
             {
                 sb.AppendLine(WFFormatter.ToString(enemy));
@@ -260,11 +260,11 @@ namespace WFBot.Features.Other
             }
             catch (OperationCanceledException)
             {
-                return "操作超时.";
+                return "操作超时";
             }
             var invasions = InvasionPool;
             var sb = new StringBuilder();
-            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
+            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务：");
             sb.AppendLine();
 
             foreach (var invasion in invasions.Where(invasion => !invasion.completed))
@@ -311,12 +311,12 @@ namespace WFBot.Features.Other
             }
             catch (OperationCanceledException)
             {
-                return "操作超时.";
+                return "操作超时";
             }
             var alerts = AlertPool;
             var sb = new StringBuilder();
 
-            sb.AppendLine("指挥官, 下面是太阳系内所有的警报任务, 供您挑选.");
+            sb.AppendLine("指挥官, 下面是太阳系内所有的警报任务：");
             foreach (var alert in alerts)
             {
                 sb.AppendLine(WFFormatter.ToString(alert));
@@ -328,7 +328,7 @@ namespace WFBot.Features.Other
 
         private void SendWFAlert(WFAlert alert)
         {
-            var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
+            var result = "指挥官, 刚刚拦截到了一条警报！\r\n" +
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
             Messenger.Broadcast(result);
             sendedAlertsSet.Add(alert.Id);

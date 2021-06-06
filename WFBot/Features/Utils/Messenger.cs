@@ -86,7 +86,7 @@ namespace WFBot.Features.Utils
                 var count = 0;
                 foreach (var group in Config.Instance.WFGroupList)
                 {
-                    if (count > 20 && content.StartsWith("机器人开始了自动更新")) return;
+                    if (count > 20 && content.StartsWith("开始自动更新")) return;
 
                     var sb = new StringBuilder();
                     sb.AppendLine(content);
@@ -116,11 +116,11 @@ namespace WFBot.Features.Utils
             // var kuvastat = await q4;
             if (apistat.IsOnline && wmstat.IsOnline /*&& wfastat.IsOnline && kuvastat.IsOnline*/)
             {
-                sb.AppendLine("机器人状态: 一切正常");
+                sb.AppendLine("磨弓状态: 正常");
             }
             else
             {
-                sb.AppendLine("机器人状态: 不正常");
+                sb.AppendLine("磨弓状态: 坏掉了");
             }
 
             sb.AppendLine($"WFBot 版本: {VersionString}");
@@ -129,7 +129,7 @@ namespace WFBot.Features.Utils
             sb.AppendLine($"    WarframeMarket: {(wmstat.IsOnline ? $"{wmstat.Latency}ms [在线]" : "[离线]")}]");
             // sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
             // sb.AppendLine($"    赤毒/仲裁API: {kuvastat.Latency}ms [{(kuvastat.IsOnline ? "在线" : "离线")}]");
-            var commit = (await commitTask)?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
+            var commit = (await commitTask)?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多";
             sb.AppendLine(commit);
             return sb.ToString().Trim().AddPlatformInfo();
         }
@@ -141,39 +141,29 @@ namespace WFBot.Features.Utils
             var group = AsyncContext.GetMessageSender();
 
             // 为了社区的良性发展, 请不要随意修改.
-            group.SendMessage($@"欢迎查看机器人唯一指定帮助文档
-{VersionString}
-在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
-项目地址: https://github.com/TRKS-Team/WFBot
-赞助(乞讨)地址: https://afdian.net/@TheRealKamisama
-您的赞助会成为我们维护本项目的动力.
-本机器人为公益项目, 间断维护中.
-如果你想给你的群也整个机器人, 请在上方项目地址了解");
-            group.SendMessage(@"作者: TheRealKamisama
+            group.SendMessage($@"欢迎查看磨弓使用说明！
+源项目地址: https://github.com/TRKS-Team/WFBot
+");
+            group.SendMessage(@"原作者: TheRealKamisama
 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
-如果群里没有自动通知 请务必检查是否启用了通知功能
-    /s船 | 当前的Sentient异常事件
-    /遗物 <关键词> | 查询遗物的内容
-    /wiki [关键词] | 搜索 wiki 上的页面
-    /午夜电波 | 每日每周即将过期的挑战
-    /机器人状态 | 机器人目前的运行状态
+    /突击 | 今日突击
     /警报 | 所有警报
+    /仲裁 | 仲裁任务
     /入侵 | 所有入侵
-    /突击 | 所有突击
-    /活动 | 所有活动
-    /虚空商人 | 奸商的状态
+    /裂隙 | 查询裂隙
+    /活动 | 活动和事件，比如热美亚
+    /电波 | 每日每周即将过期的挑战
     /平原 | 地球&金星&火卫二平原的时间循环
-    /查询 <物品名称> {-qr} {-b} | 查询 WarframeMarket, 查询未开紫卡请输入: 手枪未开紫卡
-    /紫卡 <武器名称> | 紫卡市场 数据来自 WFA 紫卡市场
+    /赤毒任务 | 赤毒虹吸器和红潮
+    /s船状态 | 当前的Sentient异常事件
+    /小小黑 小小黑的信息
+    /奸商 | 虚空商人的状态
     /地球赏金 [1-5]| 地球平原的全部/单一赏金任务
     /金星赏金 [1-5]| 金星平原的全部/单一赏金任务
-    /裂隙 | 查询全部裂隙
+    /遗物 <关键词> | 查询遗物的内容
     /翻译 <关键词> |（eg. 致残突击 犀牛prime) 中 -> 英 / 英 -> 中 翻译
-    /小小黑 小小黑的信息
-*私聊*管理命令:
-    /添加群 ******* 群号 | 启用 [群号] 对应的群的通知功能
-    /删除群 ******* 群号 | 禁用 [群号] 对应的群的通知功能
-    没有启用通知的群不会收到机器人的任务提醒
+    /wm <物品名称> {-qr} {-b} | 查询 WarframeMarket, 查询未开紫卡请输入: 近战未开紫卡
+    /紫卡 <武器名称> | 紫卡市场 数据来自 WFA 紫卡市场(暂时修复中)
 ");
             
         }

@@ -164,7 +164,7 @@ namespace WFBot.Utils
 
         public static string AddHelpInfo(this string str)
         {
-            return $"{str}\n可使用: /help来查看机器人的更多说明.";
+            return $"{str}\n可以在群里大喊“磨弓帮帮我！”来查看更多说明";
         }
 
         public static string AddRemainCallCount(this string str)
@@ -183,11 +183,11 @@ namespace WFBot.Utils
 
             if (remainCount > 0)
             {
-                return $"{str}\n机器人在本群一分钟内还能发送{remainCount}条消息.";
+                return $"{str}\n磨弓在本群一分钟内还能发送{remainCount}条消息";
             }
             else
             {
-                return $"{str}\n机器人在本群一分钟内信息发送配额已经用完.";
+                return $"{str}\n磨弓在本群一分钟内信息发送配额已经用完";
             }
         }
     }
