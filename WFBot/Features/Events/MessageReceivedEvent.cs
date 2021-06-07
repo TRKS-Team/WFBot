@@ -150,6 +150,14 @@ namespace WFBot.Events
             return _rmSearcher.SendRivenInfos(word);
         }
 
+        [Matchers("WM紫卡", "wm紫卡")]
+        [CombineParams]
+        [DoNotMeasureTime]
+        Task<string> WMRiven(string word)
+        {
+            word = word.Format();
+            return _wmaSearcher.SendRivenAuctions(word);
+        }
         [Matchers("翻译")]
         [CombineParams]
         string Translate(string word)
@@ -279,7 +287,7 @@ namespace WFBot.Events
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
         private static readonly WikiSearcher _wikiSearcher = new WikiSearcher();
-
+        private static readonly WMASearcher _wmaSearcher = new WMASearcher();
         public GroupMessageHandler(UserID sender, GroupID group, string message)
         {
             Sender = sender;

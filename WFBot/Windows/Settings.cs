@@ -50,6 +50,7 @@ namespace WFBot.Windows
             GitHubTokenBox.Text = Config.Instance.GitHubOAuthKey;
             textBox7.Text = Config.Instance.WMSearchCount.ToString();
             textBox8.Text = Config.Instance.WFASearchCount.ToString();
+            checkBox16.Checked = Config.Instance.NotifyBeforeResult;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -328,6 +329,12 @@ namespace WFBot.Windows
             {
                 MessageBox.Show("您输入的参数不是数字嗷?");
             }
+        }
+
+        private void checkBox16_CheckedChanged(object sender, EventArgs e)
+        {
+            Config.Instance.NotifyBeforeResult = checkBox16.Checked;
+            Config.Save();
         }
     }
 

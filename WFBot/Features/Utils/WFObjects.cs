@@ -58,66 +58,145 @@ namespace WFBot.Features.Utils
     public enum RivenType { Kitgun, Melee, Pistol, Rifle, Shotgun, Zaw };
     public partial class RivenAuctions
     {
-        public Payload2 Payload { get; set; }
+        [JsonProperty("payload")]
+        public Payload1 Payload { get; set; }
     }
 
-    public partial class Payload2
+    public partial class Payload1
     {
+        [JsonProperty("auctions")]
         public List<RivenAuction> Auctions { get; set; }
     }
 
     public partial class RivenAuction
     {
-        public bool? Private { get; set; }
+        [JsonProperty("starting_price")]
         public long? StartingPrice { get; set; }
-        public bool? Visible { get; set; }
+
+        [JsonProperty("buyout_price")]
         public long? BuyoutPrice { get; set; }
+
+        [JsonProperty("minimal_reputation")]
+        public long MinimalReputation { get; set; }
+
+        [JsonProperty("private")]
+        public bool Private { get; set; }
+
+        [JsonProperty("visible")]
+        public bool Visible { get; set; }
+
+        [JsonProperty("note")]
         public string Note { get; set; }
+
+        [JsonProperty("item")]
         public Item1 Item { get; set; }
-        public long? MinimalReputation { get; set; }
+
+        [JsonProperty("owner")]
         public Owner Owner { get; set; }
+
+        [JsonProperty("platform")]
         public string Platform { get; set; }
-        public bool? Closed { get; set; }
-        public object TopBid { get; set; }
-        public object Winner { get; set; }
+
+        [JsonProperty("closed")]
+        public bool Closed { get; set; }
+
+        [JsonProperty("top_bid")]
+        public long? TopBid { get; set; }
+
+        [JsonProperty("winner")]
+        public string Winner { get; set; }
+
+        [JsonProperty("is_marked_for")]
         public object IsMarkedFor { get; set; }
+
+        [JsonProperty("marked_operation_at")]
         public object MarkedOperationAt { get; set; }
-        public DateTimeOffset? Created { get; set; }
-        public DateTimeOffset? Updated { get; set; }
+
+        [JsonProperty("created")]
+        public DateTimeOffset Created { get; set; }
+
+        [JsonProperty("updated")]
+        public DateTimeOffset Updated { get; set; }
+
+        [JsonProperty("note_raw")]
         public string NoteRaw { get; set; }
-        public bool? IsDirectSell { get; set; }
+
+        [JsonProperty("is_direct_sell")]
+        public bool IsDirectSell { get; set; }
+
+        [JsonProperty("id")]
         public string Id { get; set; }
     }
 
     public partial class Item1
     {
-        public string WeaponUrlName { get; set; }
-        public List<RAttribute> Attributes { get; set; }
-        public long? MasteryLevel { get; set; }
-        public string Name { get; set; }
-        public string Polarity { get; set; }
-        public long? ReRolls { get; set; }
-        public long? ModRank { get; set; }
+        [JsonProperty("mastery_level")]
+        public long MasteryLevel { get; set; }
+
+        [JsonProperty("type")]
         public string Type { get; set; }
+
+        [JsonProperty("mod_rank")]
+        public long ModRank { get; set; }
+
+        [JsonProperty("weapon_url_name")]
+        public string WeaponUrlName { get; set; }
+
+        [JsonProperty("re_rolls")]
+        public long ReRolls { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("attributes")]
+        public List<AuctionAttribute> Attributes { get; set; }
+
+        [JsonProperty("polarity")]
+        public string Polarity { get; set; }
     }
 
-    public partial class RAttribute
+    public partial class AuctionAttribute
     {
-        public bool? Positive { get; set; }
-        public double? Value { get; set; }
+        [JsonProperty("positive")]
+        public bool Positive { get; set; }
+
+        [JsonProperty("value")]
+        public double Value { get; set; }
+
+        [JsonProperty("url_name")]
         public string UrlName { get; set; }
     }
 
     public partial class Owner
     {
-        public long? Reputation { get; set; }
+        [JsonProperty("reputation")]
+        public long Reputation { get; set; }
+
+        [JsonProperty("region")]
         public string Region { get; set; }
-        public DateTimeOffset? LastSeen { get; set; }
+
+        [JsonProperty("last_seen")]
+        public DateTimeOffset LastSeen { get; set; }
+
+        [JsonProperty("ingame_name")]
         public string IngameName { get; set; }
+
+        [JsonProperty("status")]
         public string Status { get; set; }
+
+        [JsonProperty("id")]
         public string Id { get; set; }
+
+        [JsonProperty("avatar")]
         public string Avatar { get; set; }
     }
+    public partial class WMAAttribute
+    {
+        public bool Positive { get; set; }
+        public double? Value { get; set; }
+        public string UrlName { get; set; }
+    }
+
     public partial class WMRAttributes
     {
         [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
@@ -208,6 +287,8 @@ namespace WFBot.Features.Utils
         public string name { get; set; }
         public List<Component> components { get; set; } = new List<Component>();
 #if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
+// 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
+// TODO 换数据源
         public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }

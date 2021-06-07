@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using Humanizer;
 using Humanizer.Localisation;
 using WarframeAlertingPrime.SDK.Models.Enums;
@@ -20,6 +22,7 @@ namespace WFBot.Features.Utils
 {
     public static class WFFormatter
     {
+        private static WFTranslator translator => WFResources.WFTranslator;
         public static string Format(this CommitData[] commits)
         {
             var sb = new StringBuilder();
@@ -63,6 +66,8 @@ namespace WFBot.Features.Utils
         }
 
         public static string RemoveEnds(this string str)
+        // 这个写的不错
+        // 还符合我的意思
         {
             return str.Replace("Component", "").Replace("Blueprint", "");
         }
@@ -87,8 +92,7 @@ namespace WFBot.Features.Utils
              var sb = new StringBuilder();
              if (outpost.active)
              {
-                 sb.Append("此功能维护中");
-                // var expiry = outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
+                 // var expiry = outpost.expiry > DateTime.Now + TimeSpan.FromHours(1) ? outpost.previous.expiry : outpost.expiry; 
                 // 这行大概是因为api是wip 以后可以直接删掉换成outpost.expiry
                 // 但愿吧
                 var expiry = outpost.expiry;
@@ -252,12 +256,20 @@ namespace WFBot.Features.Utils
 
             return sb.ToString().Trim();
         }
-        [Pure]
-        public static string ToString(List<WarframeAlertingPrime.SDK.Models.User.Order> infos, List<RivenData> datas, Riven riven)
+        public static async Task<List<RivenData>> GetRivenData()
+            // 这个数据每周(大概是)变化, 所以不作为静态数据保存.
         {
-            var weapon = infos.First().weapon;
+            var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(
+                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
+            info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
+            return info;
+        }
+        public static string GetRivenInfoString(Riven riven)
+        {
             var sb = new StringBuilder();
-            var weaponinfo = WFResources.WFTranslateData.Riven.First(d => d.name == weapon);
+            var datas = GetRivenData().Result.Where(d => d.compatibility == riven.name).ToList();
+            var weaponinfo = WFResources.WFTranslateData.Riven.First(d => d.name == riven.name);
+
             sb.AppendLine($"下面是 {riven.zhname} 紫卡的基本信息(来自DE)");
             sb.AppendLine($"类型: {WFResources.WFTranslator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
             var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
@@ -271,6 +283,73 @@ namespace WFBot.Features.Utils
             {
                 sb.AppendLine($"全部均价: {rerolled.First().avg}白金");
             }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string ToString(List<RivenAuction> auctions, Riven riven)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(GetRivenInfoString(riven));
+            sb.AppendLine($"下面是 {riven.zhname} 紫卡的 {auctions.Count} 条卖家信息(来自WM紫卡市场)");
+            foreach (var auction in auctions)
+            {
+                string polarity;
+                switch (auction.Item.Polarity)
+                {
+                    case "madurai":
+                        polarity = "r";
+                        break;
+                    case "vazarin":
+                        polarity = "三角";
+                        break;
+                    case "naramon":
+                        polarity = "横线";
+                        break;
+                    case "zenurik":
+                        polarity = "双横";
+                        break;
+                    default:
+                        polarity = "";
+                        break;
+                }
+
+                string ownerstatus;
+                switch (auction.Owner.Status)
+                {
+                    case "ingame":
+                        ownerstatus = "游戏中";
+                        break;
+                    case "online":
+                        ownerstatus = "在线";
+                        break;
+                    case "offline":
+                        ownerstatus = "离线";
+                        break;
+                    default:
+                        ownerstatus = "";
+                        break;
+                }
+
+                var price = auction.BuyoutPrice ?? auction.StartingPrice;
+                sb.Append($"[{auction.Owner.IngameName} {ownerstatus}]");
+                sb.AppendLine($"<{riven.zhname} {auction.Item.Name}> {price}白金 {auction.Item.MasteryLevel}段 {auction.Item.ModRank}级 {auction.Item.ReRolls}洗 {polarity}槽");
+                foreach (var attribute in auction.Item.Attributes)
+                {
+                    sb.Append($"{(attribute.Positive ? "+" : ""/*fun fact, 后面这个数据带正负*/)}{attribute.Value}%{translator.GetAttributeEffect(attribute.UrlName)}|");
+                }
+
+                sb.AppendLine();
+
+            }
+
+            return sb.ToString().Trim();
+        }
+        [Pure]
+        public static string ToString(List<WarframeAlertingPrime.SDK.Models.User.Order> infos, Riven riven)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(GetRivenInfoString(riven));
             sb.AppendLine($"下面是 {riven.zhname} 紫卡的 {infos.Count} 条卖家信息(来自WFA紫卡市场)");
             foreach (var info in infos)
             {

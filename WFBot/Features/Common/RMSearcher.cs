@@ -20,8 +20,6 @@ namespace WFBot.Features.Common
         private Client wfaClient => WFResources.WFAApi.WfaClient;
         private bool isWFA => WFResources.WFAApi.isWFA;
         private WFTranslator translator => WFResources.WFTranslator;
-        private static string platform => Config.Instance.Platform == Platform.NS ? "switch" : Config.Instance.Platform.GetSymbols().First();
-        // 这是给WarframeMarketAuctions用的
 
         /*public string GetAccessToken()
         {
@@ -69,22 +67,7 @@ namespace WFBot.Features.Common
             return orders;
         }
 
-        public async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
-        {
-            var header = new List<KeyValuePair<string, string>>
-                {new KeyValuePair<string, string>("Platform", platform)};
-            var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(
-                $"https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name={urlname}&sort_by=price_desc", header);
-            return auctions.Payload.Auctions;
-        }
 
-        public async Task<List<RivenData>> GetRivenData()
-        {
-            var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(
-                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
-            info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
-            return info;
-        }
 
         public async Task<string> SendRivenInfos(string weapon)
         {
@@ -102,8 +85,7 @@ namespace WFBot.Features.Common
                             AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         }
                         var orders = await GetRivenOrders(weaponinfo.First().name);
-                        var data = (await GetRivenData()).Where(d => d.compatibility.Format() == weapon).ToList();
-                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), data, weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();
+                        var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();
                         sb.AppendLine(msg.AddPlatformInfo());
                     }
                     else
@@ -133,12 +115,5 @@ namespace WFBot.Features.Common
             return sb.ToString().Trim();
         }
 
-        public async Task<string> SendRivenAuctions(string weapon)
-        {
-            var weaponinfo = translator.GetMatchedWeapon(weapon.Format());
-            // 这玩意 如果方法里面用到了 await 就写 async Task<string>
-            // 如果没有用到 await 那直接返回string就好
-            throw new NotImplementedException();
-        }
     }
 }

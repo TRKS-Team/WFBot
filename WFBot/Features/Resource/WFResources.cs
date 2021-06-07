@@ -161,11 +161,11 @@ namespace WFBot.Features.Resource
             var tasks = new List<Task>();
             var ZHheader = new WebHeaderCollection
             {
-                {"Language", "zh"}
+                {"Language", "zh-hans"}
             };
 
             AddTask(ref Auction.RAttributes, "https://api.warframe.market/v1/riven/attributes", "WMA_Attributes.json", ZHheader);
-            AddTask(ref Auction.RRivens, "https://api.warframe.market/v1/riven/items", "WMA_Rivens.json");
+            AddTask(ref Auction.RRivens, "https://api.warframe.market/v1/riven/items", "WMA_Rivens.json", ZHheader);
             await Task.WhenAll(tasks.ToArray());
             void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
             {
