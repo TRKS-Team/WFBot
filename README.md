@@ -5,7 +5,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_shield)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 聊天机器人.  
-此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/master/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
+此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/universal/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
 
 > 基于 莎比的 [mirai](https://github.com/mamoe/mirai) 及 [mirai-http-api](https://github.com/project-mirai/mirai-api-http) 和 [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) 开发.  
@@ -71,10 +71,14 @@
 - **_WarframeMarket_**: **/查询 <物品名称> {-qr}(快捷回复) {-b}(查询买家)**
   > - _目前模糊匹配功能十分强大,无需强制按照格式_
   > - _查询未开紫卡请输入: 手枪未开紫卡_
-- **_紫卡市场_**: **/紫卡 <武器名称>**
+- **_WM紫卡市场_**: **/紫卡 <武器名称>**  
+  > _数据来自 [**WM 紫卡市场**](https://warframe.market/auctions)_  
+  > _未来支持指定词条_  
+- **_WFA紫卡市场_**: **/WFA紫卡 <武器名称>**
   > _数据来自 [**WFA 紫卡市场**](https://riven.richasy.cn/#/)_
-- **_地球赏金_**: **/地球赏金 [赏金等级(如 5)]** 地球平原的 全部/单一 赏金任务.
-- **_金星赏金_**: **/金星赏金 [赏金等级(如 5)]** 金星平原的 全部/单一 赏金任务.
+- **_地球赏金_**: **/地球赏金 [赏金等级(如 5)]** 地球平原的 全部/单一 赏金任务  
+- **_金星赏金_**: **/金星赏金 [赏金等级(如 5)]** 金星平原的 全部/单一 赏金任务  
+- **_火卫二赏金_**: **/火卫赏金 [赏金等级(如 7)]** 火卫二平原的 全部/单一 赏金任务  
 - **_裂隙_**: **/裂隙** 全部裂隙.
 - **_翻译_**: **/翻译 <关键词> (eg. 犀牛 prime, 致残突击)** 中 => 英 或 英 => 中
 - **_小小黑_**: **/小小黑** 来查询目前追随者的信息.

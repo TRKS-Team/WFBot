@@ -59,7 +59,7 @@ namespace WFBot.Features.Common
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index));
             sb.AppendLine();
-            sb.Append($"您正在查看 福尔图娜 的全部赏金任务, 使用: /地球赏金 来查询希图斯的赏金任务.");
+            sb.Append($"您正在查看 福尔图娜 的全部赏金任务, 使用 /地球赏金 /火卫二赏金 来查询其他地区.");
             return sb.ToString().AddPlatformInfo().AddRemainCallCount();
         }
 
@@ -69,9 +69,18 @@ namespace WFBot.Features.Common
             var sb = new StringBuilder();
             sb.AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index));
             sb.AppendLine();
-            sb.Append("您正在查看 希图斯 的全部赏金任务, 使用: /金星赏金 来查询 福尔图娜 的赏金任务.");
+            sb.Append("您正在查看 希图斯 的全部赏金任务, 使用 /金星赏金 /火卫二赏金 来查询其他地区.");
             return sb.ToString().AddPlatformInfo().AddRemainCallCount();
         }
+
+        public async Task<string> SendNecraliskMissions(int index)
+        {
+            var missions = await api.GetSyndicateMissions();
+            var sb = new StringBuilder(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Entrati"), index));
+            sb.AppendLine();
+            sb.AppendLine("您正在查看 殁世幽都 的全部赏金任务, 使用 /金星赏金 /地球赏金 来查询其他地区.");
+            return sb.ToString().AddPlatformInfo().AddRemainCallCount();
+        } 
 
         //public void SendFissures(string group, List<string> words)
         public async Task<string> SendFissures(int tier)
