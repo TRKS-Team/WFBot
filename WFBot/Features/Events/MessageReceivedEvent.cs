@@ -119,6 +119,13 @@ namespace WFBot.Events
             return _wfStatus.SendCetusMissions(index);
         }
 
+        [Matchers("火卫赏金", "火卫二赏金", "火卫平原赏金", "火卫二平原赏金", "殁世幽都赏金", "魔胎之境赏金")]
+        Task<string> NecraliskMissions(int index = 0)
+        {
+            return _wfStatus.SendNecraliskMissions(index);
+        }
+
+
         [Matchers("查询", "wm")]
         [CombineParams]
         [DoNotMeasureTime]
@@ -141,22 +148,22 @@ namespace WFBot.Events
             return _wmSearcher.SendWMInfo(word.Replace(quickReply, "").Replace(quickReply.ToLower(), "").Replace(buyer, "").Replace(buyer.ToLower(), "").Format(), QR, B);
         }
 
-        [Matchers("紫卡", "阿罕卡拉"/*彩蛋*/, "千语魅痕"/*彩蛋*/)]
+        [Matchers("紫卡")]
         [CombineParams]
         [DoNotMeasureTime]
         Task<string> Riven(string word)
         {
             word = word.Format();
-            return _rmSearcher.SendRivenInfos(word);
+            return _wmaSearcher.SendRivenAuctions(word);
         }
 
-        [Matchers("WM紫卡", "wm紫卡")]
+        [Matchers("WFA紫卡", "wfa紫卡")]
         [CombineParams]
         [DoNotMeasureTime]
-        Task<string> WMRiven(string word)
+        Task<string> WFARiven(string word)
         {
             word = word.Format();
-            return _wmaSearcher.SendRivenAuctions(word);
+            return _rmSearcher.SendRivenInfos(word);
         }
         [Matchers("翻译")]
         [CombineParams]

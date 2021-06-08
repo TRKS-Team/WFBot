@@ -23,8 +23,8 @@ namespace WFBot.Features.Utils
         // She is known as riven, riven of a thousand voice, the last known ahamkara.
         private List<string> weapons = new List<string>();// 所有武器的中文
         private WFApi translateApi => WFResources.WFTranslateData;
-        private WMRAttribute[] attributes => WFResources.WMAuction.Attributes;
-        private WMRRiven[] rivens => WFResources.WMAuction.Rivens;
+        private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
+        private WMARiven[] rivens => WFResources.WMAuction.Rivens;
 
 
         public WFTranslator()
@@ -385,7 +385,7 @@ namespace WFBot.Features.Utils
                 }
                 else
                 {
-                    if (mission.syndicate == "Ostrons" || mission.syndicate == "Solaris United")
+                    if (mission.syndicate == "Ostrons" || mission.syndicate == "Solaris United" || mission.syndicate == "Entrati")
                     {
                         foreach (var job in mission.jobs)
                         {

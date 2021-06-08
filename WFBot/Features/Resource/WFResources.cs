@@ -163,9 +163,10 @@ namespace WFBot.Features.Resource
             {
                 {"Language", "zh-hans"}
             };
-
-            AddTask(ref Auction.RAttributes, "https://api.warframe.market/v1/riven/attributes", "WMA_Attributes.json", ZHheader);
-            AddTask(ref Auction.RRivens, "https://api.warframe.market/v1/riven/items", "WMA_Rivens.json", ZHheader);
+            const string source = "https://api.warframe.market/v1";
+            AddTask(ref Auction.RAttributes, $"{source}/riven/attributes", "WMA_Attributes.json", ZHheader);
+            AddTask(ref Auction.RRivens, $"{source}/riven/items", "WMA_Rivens.json", ZHheader);
+            AddTask(ref Auction.RItems, $"{source}/items", "WMA_Items.json", ZHheader);
             await Task.WhenAll(tasks.ToArray());
             void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
             {

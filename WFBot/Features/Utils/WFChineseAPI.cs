@@ -63,7 +63,7 @@ namespace WFBot.Features.Utils
         private WFTranslator translator => WFResources.WFTranslator;
         private WFCD_All[] all => WFResources.WFCDAll;
         private WFContentApi content => WFResources.WFContent;
-        private WMRAttribute[] attributes => WFResources.WMAuction.Attributes;
+        private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
 
         private static string platform => Config.Instance.Platform.GetSymbols().First();
         private static string WFstat => $"https://api.warframestat.us/{platform}";

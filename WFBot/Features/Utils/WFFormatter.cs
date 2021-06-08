@@ -298,16 +298,16 @@ namespace WFBot.Features.Utils
                 switch (auction.Item.Polarity)
                 {
                     case "madurai":
-                        polarity = "r";
+                        polarity = "γ";
                         break;
                     case "vazarin":
-                        polarity = "三角";
+                        polarity = "▽";
                         break;
                     case "naramon":
-                        polarity = "横线";
+                        polarity = "—";
                         break;
                     case "zenurik":
-                        polarity = "双横";
+                        polarity = "=";
                         break;
                     default:
                         polarity = "";
@@ -417,23 +417,26 @@ namespace WFBot.Features.Utils
             sb.AppendLine($"集团: {mission.syndicate}");
             sb.AppendLine();
             var count = 0;
-            if (index >= 1 && index <= 5)
+            var validindex = index >= 1 && index <= mission.jobs.Length;
+            if (validindex)
             {
                 mission.jobs = new[] { mission.jobs[index - 1] };
             }
             foreach (var job in mission.jobs)
             {
                 count++;
-                if (index >= 1 && index <= 5)
+                if (validindex)
                 {
-                    sb.AppendLine($"> 赏金{index}等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
+                    sb.AppendLine($"> 赏金{index} 等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
                 }
                 else
                 {
-                    sb.AppendLine($"> 赏金{count}等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
+                    sb.AppendLine($"> 赏金{count} 等级: {job.enemyLevels[0]} - {job.enemyLevels[1]}");
                 }
 
-                sb.AppendLine("- 奖励:");
+                sb.Append("- 奖励:");
+                // 我非常确认这里以前一定是个Append, 有人多换了个行, 然后难看死了
+                // 但是谁会改呢
                 foreach (var reward in job.rewardPool)
                 {
                     sb.Append($"[{reward}]");
@@ -535,7 +538,7 @@ namespace WFBot.Features.Utils
             var sb = new StringBuilder();
             sb.AppendLine("指挥官, 下面是今天的突击任务.");
             sb.AppendLine($"> 阵营: {sortie.faction}");
-            sb.AppendLine($"> 头头: {sortie.boss}");
+            sb.AppendLine($"> 首领: {sortie.boss}");
             sb.AppendLine();
             foreach (var variant in sortie.variants)
             {

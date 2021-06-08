@@ -10,11 +10,15 @@ using WFBot.Utils;
 
 namespace WFBot.Features.Common
 {
+    public class RivenAuctionOption
+    {
+        // TODO
+    }
     class WMASearcher
     {
         private WFTranslator translator => WFResources.WFTranslator;
-        private WMRAttribute[] attributes => WFResources.WMAuction.Attributes;
-        private WMRRiven[] rivens => WFResources.WMAuction.Rivens;
+        private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
+        private WMARiven[] rivens => WFResources.WMAuction.Rivens;
         private static string platform => Config.Instance.Platform == Platform.NS ? "switch" : Config.Instance.Platform.GetSymbols().First();
         // 这是给WarframeMarketAuctions用的
         public async Task<List<RivenAuction>> GetRivenAuctions(string urlname)

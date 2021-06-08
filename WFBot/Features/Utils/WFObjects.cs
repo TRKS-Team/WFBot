@@ -7,12 +7,40 @@ namespace WFBot.Features.Utils
 {
     public class WMAuction
     {
-        public WMRRiven[] Rivens => RRivens.Value.Payload.Rivens;
-        public WFResource<WMRRivens> RRivens;
-        public WMRAttribute[] Attributes => RAttributes.Value.Payload.Attributes;
-        public WFResource<WMRAttributes> RAttributes;
+        public WMARiven[] Rivens => RRivens.Value.Payload.Rivens;
+        public WFResource<WMARivens> RRivens;
+        public WMAAttribute[] Attributes => RAttributes.Value.Payload.Attributes;
+        public WFResource<WMAAttributes> RAttributes;
+        public WMAItem[] Items =>RItems.Value.Payload.Items;
+        public WFResource<WMAItems> RItems;
     }
-    public partial class WMRRivens
+    public partial class WMAItems
+    {
+        [JsonProperty("payload")]
+        public Payload3 Payload { get; set; }
+    }
+
+    public partial class Payload3
+    {
+        [JsonProperty("items")]
+        public WMAItem[] Items { get; set; }
+    }
+
+    public partial class WMAItem
+    {
+        [JsonProperty("thumb")]
+        public string Thumb { get; set; }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("item_name")]
+        public string ItemName { get; set; }
+
+        [JsonProperty("url_name")]
+        public string UrlName { get; set; }
+    }
+    public partial class WMARivens
     {
         [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
         public Payload2 Payload { get; set; }
@@ -21,10 +49,10 @@ namespace WFBot.Features.Utils
     public partial class Payload2
     {
         [JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
-        public WMRRiven[] Rivens { get; set; }
+        public WMARiven[] Rivens { get; set; }
     }
 
-    public partial class WMRRiven
+    public partial class WMARiven
     {
         [JsonProperty("url_name", NullValueHandling = NullValueHandling.Ignore)]
         public string UrlName { get; set; }
@@ -190,14 +218,8 @@ namespace WFBot.Features.Utils
         [JsonProperty("avatar")]
         public string Avatar { get; set; }
     }
-    public partial class WMAAttribute
-    {
-        public bool Positive { get; set; }
-        public double? Value { get; set; }
-        public string UrlName { get; set; }
-    }
 
-    public partial class WMRAttributes
+    public partial class WMAAttributes
     {
         [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
         public Payload1 Payload { get; set; }
@@ -206,10 +228,10 @@ namespace WFBot.Features.Utils
     public partial class Payload1
     {
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
-        public WMRAttribute[] Attributes { get; set; }
+        public WMAAttribute[] Attributes { get; set; }
     }
 
-    public partial class WMRAttribute
+    public partial class WMAAttribute
     {
         [JsonProperty("group", NullValueHandling = NullValueHandling.Ignore)]
         public Group? Group { get; set; }
