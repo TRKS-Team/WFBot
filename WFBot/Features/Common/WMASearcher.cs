@@ -18,7 +18,7 @@ namespace WFBot.Features.Common
     {
         private WFTranslator translator => WFResources.WFTranslator;
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
-        private WMARiven[] rivens => WFResources.WMAuction.Rivens;
+        private WeaponInfo[] weaponInfos => WFResources.Weaponinfos;
         private static string platform => Config.Instance.Platform == Platform.NS ? "switch" : Config.Instance.Platform.GetSymbols().First();
         // 这是给WarframeMarketAuctions用的
         public async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
@@ -32,20 +32,19 @@ namespace WFBot.Features.Common
         public async Task<string> SendRivenAuctions(string name)
         {
             var sb = new StringBuilder();
-            // 规范一下 武器的名字都按中文传递, 需要英文/更详细信息的时候会调用translate里的weaponinfo或rivens
-            var matchedweapon = rivens.Where(r => r.ItemName == name).ToList();
-            if (matchedweapon.Any())
+            // 规范一下 武器的名字都按中文传递 使用WFResources.WeaponInfos来获取在判断武器存在后所传递的对象
+            var weapons = weaponInfos.Where(r => r.zhname == name).ToList();
+            if (weapons.Any())
             {
-                var weapon = matchedweapon.First();
-                var weaponinfo = translator.GetMatchedWeapon(weapon.ItemName).First();
+                var weapon = weapons.First();
                 if (Config.Instance.NotifyBeforeResult)
                 {
                     AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                 }
 
-                var auctions = GetRivenAuctions(weapon.UrlName).Result;
+                var auctions = GetRivenAuctions(weapon.urlname).Result;
 
-                var msg = WFFormatter.ToString(auctions.Take(Config.Instance.WFASearchCount).ToList(), weaponinfo).AddPlatformInfo();
+                var msg = WFFormatter.ToString(auctions.Take(Config.Instance.WFASearchCount).ToList(), weapon).AddPlatformInfo();
                 sb.AppendLine(msg);
             }
             else

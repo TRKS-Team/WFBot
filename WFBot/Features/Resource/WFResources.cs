@@ -41,7 +41,7 @@ namespace WFBot.Features.Resource
                 Task.Run(SlangManager.UpdateOnline)
             );
             WFTranslator = new WFTranslator();
-            
+            Weaponinfos = SetWeaponInfos();
             if (ResourceLoadFailed) 
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
@@ -100,11 +100,25 @@ namespace WFBot.Features.Resource
 
         public static WFContentApi WFContent { get; private set; }
 
+        public static WeaponInfo[] Weaponinfos { get; private set; }
+
+        private static WeaponInfo[] SetWeaponInfos()
+        {
+            var result = new List<WeaponInfo>();
+            foreach (var urlname in WMAuction.ENRivens.Select(r => r.UrlName))
+            {
+                var zhriven = WMAuction.ZHRivens.First(r => r.UrlName == urlname);
+                var enriven = WMAuction.ENRivens.First(r => r.UrlName == urlname);
+                result.Add(new WeaponInfo { enname = enriven.ItemName, urlname = urlname, zhname = zhriven.ItemName });
+            }
+
+            return result.ToArray();
+        }
         private static async Task<List<string>> GetWFOriginUrls()
         {
-            // const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
-            const string source =
-                "https://wfbot-cdn.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            /*const string source =
+                "https://wfbot-cdn.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";*/
             // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
             var name = source.Split('/').Last();    
 
@@ -159,14 +173,19 @@ namespace WFBot.Features.Resource
         {
             var Auction = new WMAuction();
             var tasks = new List<Task>();
-            var ZHheader = new WebHeaderCollection
+            var ZHHeader = new WebHeaderCollection
             {
                 {"Language", "zh-hans"}
             };
+            var ENHeader = new WebHeaderCollection
+            {
+                {"Language", "en"}
+            };
             const string source = "https://api.warframe.market/v1";
-            AddTask(ref Auction.RAttributes, $"{source}/riven/attributes", "WMA_Attributes.json", ZHheader);
-            AddTask(ref Auction.RRivens, $"{source}/riven/items", "WMA_Rivens.json", ZHheader);
-            AddTask(ref Auction.RItems, $"{source}/items", "WMA_Items.json", ZHheader);
+            AddTask(ref Auction.RAttributes, $"{source}/riven/attributes", "WMA_Attributes.json", ZHHeader);
+            AddTask(ref Auction.ZHRRivens, $"{source}/riven/items", "WMA_Rivens_Zh.json", ZHHeader);
+            AddTask(ref Auction.ENRRivens, $"{source}/riven/items", "WMA_Rivens.En.json", ENHeader);
+            AddTask(ref Auction.RItems, $"{source}/items", "WMA_Items.json", ZHHeader);
             await Task.WhenAll(tasks.ToArray());
             void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
             {
