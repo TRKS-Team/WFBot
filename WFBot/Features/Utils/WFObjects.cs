@@ -5,13 +5,21 @@ using WFBot.Features.Resource;
 
 namespace WFBot.Features.Utils
 {
+    public class WeaponInfo
+    {
+        public string zhname { get; set; }
+        public string enname { get; set; }
+        public string urlname { get; set; }
+    }
     public class WMAuction
     {
-        public WMARiven[] Rivens => RRivens.Value.Payload.Rivens;
-        public WFResource<WMARivens> RRivens;
+        public WMARiven[] ZHRivens => ZHRRivens.Value.Payload.Rivens;
+        public WFResource<WMARivens> ZHRRivens;
+        public WMARiven[] ENRivens => ENRRivens.Value.Payload.Rivens;
+        public WFResource<WMARivens> ENRRivens;
         public WMAAttribute[] Attributes => RAttributes.Value.Payload.Attributes;
         public WFResource<WMAAttributes> RAttributes;
-        public WMAItem[] Items =>RItems.Value.Payload.Items;
+        public WMAItem[] Items => RItems.Value.Payload.Items;
         public WFResource<WMAItems> RItems;
     }
     public partial class WMAItems

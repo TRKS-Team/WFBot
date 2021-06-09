@@ -286,12 +286,38 @@ namespace WFBot.Features.Utils
 
             return sb.ToString().Trim();
         }
-
-        public static string ToString(List<RivenAuction> auctions, Riven riven)
+        public static string GetRivenInfoString(WeaponInfo weapon)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(GetRivenInfoString(riven));
-            sb.AppendLine($"下面是 {riven.zhname} 紫卡的 {auctions.Count} 条卖家信息(来自WM紫卡市场)");
+            var datas = GetRivenData().Result.Where(d => d.compatibility.Format() == weapon.enname.Format()).ToList();
+            var rivens = WFResources.WFTranslateData.Riven.Where(d => d.name == weapon.enname).ToList();
+
+            if (rivens.Any())
+            {
+                var riven = rivens.First();
+                sb.AppendLine($"下面是 {weapon.zhname} 紫卡的基本信息");
+                sb.AppendLine($"类型: {WFResources.WFTranslator.TranslateWeaponType(riven.type)} 倾向: {riven.rank}星 倍率: {Math.Round(riven.modulus, 2)}");
+            }
+            var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
+            if (rerolled.Any())
+            {
+                sb.AppendLine($"0洗均价: {rerolled.First().avg}白金(每周交易数据)");
+            }
+
+            rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
+            if (rerolled.Any())
+            {
+                sb.AppendLine($"全部均价: {rerolled.First().avg}白金(每周交易数据)");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string ToString(List<RivenAuction> auctions, WeaponInfo weapon)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(GetRivenInfoString(weapon ));
+            sb.AppendLine($"下面是 {weapon.zhname} 紫卡的 {auctions.Count} 条卖家信息(来自WM紫卡市场)");
             foreach (var auction in auctions)
             {
                 string polarity;
@@ -304,7 +330,7 @@ namespace WFBot.Features.Utils
                         polarity = "▽";
                         break;
                     case "naramon":
-                        polarity = "—";
+                        polarity = "-";
                         break;
                     case "zenurik":
                         polarity = "=";
@@ -333,7 +359,7 @@ namespace WFBot.Features.Utils
 
                 var price = auction.BuyoutPrice ?? auction.StartingPrice;
                 sb.Append($"[{auction.Owner.IngameName} {ownerstatus}]");
-                sb.AppendLine($"<{riven.zhname} {auction.Item.Name}> {price}白金 {auction.Item.MasteryLevel}段 {auction.Item.ModRank}级 {auction.Item.ReRolls}洗 {polarity}槽");
+                sb.AppendLine($"<{weapon.zhname} {auction.Item.Name}> {price}白金 {auction.Item.MasteryLevel}段 {auction.Item.ModRank}级 {auction.Item.ReRolls}洗 {polarity}槽");
                 foreach (var attribute in auction.Item.Attributes)
                 {
                     sb.Append($"{(attribute.Positive ? "+" : ""/*fun fact, 后面这个数据带正负*/)}{attribute.Value}%{translator.GetAttributeEffect(attribute.UrlName)}|");
