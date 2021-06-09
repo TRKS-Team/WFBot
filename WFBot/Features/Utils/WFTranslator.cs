@@ -24,7 +24,7 @@ namespace WFBot.Features.Utils
         private List<string> weapons = new List<string>();// 所有武器的中文
         private WFApi translateApi => WFResources.WFTranslateData;
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
-        private WMARiven[] rivens => WFResources.WMAuction.Rivens;
+        private WMARiven[] rivens => WFResources.WMAuction.ZHRivens;
 
 
         public WFTranslator()
