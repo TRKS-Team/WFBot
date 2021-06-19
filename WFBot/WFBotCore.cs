@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -19,8 +20,7 @@ using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Utils;
-using WFBot.Windows;
-using Timer = System.Timers.Timer;
+
 #pragma warning disable 164
 
 namespace WFBot
@@ -52,6 +52,14 @@ namespace WFBot
                     case "--dont-throw-if-resource-unable-to-load":
                         DontThrowIfResourceUnableToLoad = true;
                         break;
+                }
+
+                const string tokenid = "--wfbot-wrapper-token=";
+                if (s.StartsWith(tokenid))
+                {
+                    var token = s[tokenid.Length..];
+
+                    WFBotWrapperInterop.Init(token);
                 }
             }
             
@@ -323,8 +331,7 @@ namespace WFBot
             }
         }
 
-
-
+        
     }
 }
 

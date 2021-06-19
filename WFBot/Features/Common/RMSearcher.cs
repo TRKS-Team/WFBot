@@ -94,7 +94,7 @@ namespace WFBot.Features.Common
                         var similarlist = translator.GetSimilarItem(weapon, "rm");
                         if (similarlist.Any())
                         {
-                            sb.AppendLine("请问这下面有没有你要找的武器呢?（可尝试复制下面的名称来进行搜索)");
+                            sb.AppendLine("请问这下面有没有你要找的武器呢? (可尝试复制下面的名称来进行搜索)");
                             foreach (var item in similarlist)
                             {
                                 sb.AppendLine($"    {item}");

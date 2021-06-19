@@ -113,7 +113,7 @@ namespace WFBot.Features.Utils
 
             /*var formatedDict = translateApi.Dict.Select(dict => new Dict
                     {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();*/
-            var zhResults = translateApi.Dict.Where(dict => StringExtensions.Format(dict.Zh) == str).ToList();
+            var zhResults = translateApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
             var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
             if (!zhResults.Any() && !enResults.Any())
             {
@@ -202,7 +202,7 @@ namespace WFBot.Features.Utils
 
         public string GetRivenUrlName(string weapon)
         {
-            return rivens.First(r => StringExtensions.Format(r.ItemName) == weapon).UrlName;
+            return rivens.First(r => r.ItemName.Format() == weapon).UrlName;
         }
         public List<Riven> GetMatchedWeapon(string weapon)
         {
