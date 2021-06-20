@@ -53,14 +53,6 @@ namespace WFBot
                         DontThrowIfResourceUnableToLoad = true;
                         break;
                 }
-
-                const string tokenid = "--wfbot-wrapper-token=";
-                if (s.StartsWith(tokenid))
-                {
-                    var token = s[tokenid.Length..];
-
-                    WFBotWrapperInterop.Init(token);
-                }
             }
             
             if (setCurrentFolder)
