@@ -28,7 +28,7 @@ namespace WFBot.Features.Resource
 #if DEBUG
                 using var sr = new StreamReader(stream);
                 var str = sr.ReadToEnd();
-                return JsonConvert.DeserializeObject<T>(str);
+                return JsonConvert.DeserializeObject<T>(str, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 #else
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
