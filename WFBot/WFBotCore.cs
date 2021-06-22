@@ -14,6 +14,7 @@ using GammaLibrary.Extensions;
 using TextCommandCore;
 using WFBot.Connector;
 using WFBot.Events;
+using WFBot.Features.Events;
 using WFBot.Features.Other;
 using WFBot.Features.Resource;
 using WFBot.Features.Timers;

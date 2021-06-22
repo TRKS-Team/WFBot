@@ -8,6 +8,7 @@ using System.Runtime.Loader;
 using System.Text;
 using System.Threading.Tasks;
 using WFBot.Features.Utils;
+using WFBot.Utils;
 
 namespace WFBot.Connector
 {
@@ -20,6 +21,7 @@ namespace WFBot.Connector
             AppDomain.CurrentDomain.AppendPrivatePath("WFBotConnector");
 
             Directory.CreateDirectory("WFBotConnector");
+            // todo 自动下载miraiconnector
             var connectors = Directory.GetFiles("WFBotConnector", "*.dll")
                 .Select(file => //Program.Context == null 
                     /*?*/ new PluginLoadContext(Path.GetFullPath(file)).LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(file))).ExportedTypes
