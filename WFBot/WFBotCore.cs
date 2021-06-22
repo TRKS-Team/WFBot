@@ -32,10 +32,10 @@ namespace WFBot
 
         public static async Task Main(string[] args)
         {
-            https://github.com/TRKS-Team/WFBot
+        https://github.com/TRKS-Team/WFBot
             var skipPressKey = false;
             var setCurrentFolder = false;
-            
+
             foreach (var s in args)
             {
                 switch (s)
@@ -54,12 +54,12 @@ namespace WFBot
                         break;
                 }
             }
-            
+
             if (setCurrentFolder)
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             }
-            
+
             var wfbot = new WFBotCore();
             try
             {
@@ -76,7 +76,7 @@ namespace WFBot
                 }
                 return;
             }
-            
+
             await wfbot.Run();
         }
     }
@@ -99,21 +99,15 @@ namespace WFBot
         {
             Version = GetVersion();
             IsOfficial = Version.Split('+').Last() == "official";
-            
+
             static string GetVersion()
             {
-                try
-                {
-                    var assembly = Assembly.GetExecutingAssembly();
-                    var gitVersionInformationType = assembly.GetType("GitVersionInformation");
-                    var versionField = gitVersionInformationType.GetField("InformationalVersion");
-                    return versionField.GetValue(null) as string;
-                }
-                catch (Exception)
-                {
-                    return "unofficial";
-                }
-                
+                var assembly = Assembly.GetExecutingAssembly();
+                var gitVersionInformationType = assembly.GetType("GitVersionInformation");
+                var versionField = gitVersionInformationType?.GetField("InformationalVersion");
+                if (versionField is null) return "unofficial";
+
+                return versionField.GetValue(null) as string;
             }
         }
 
@@ -129,7 +123,7 @@ namespace WFBot
 #else
             Console.WriteLine("此编译版本不包含UI. 请使用 Windows 编译版本.");
 #endif
-            
+
         }
 
         public async Task Run()
@@ -236,9 +230,9 @@ namespace WFBot
             {
                 Trace.WriteLine("你正在使用官方编译版本. "); // 
             }
-            
+
             Console.Title = $"WFBot {version}";
-            
+
             // 设置 Ctrl C 处理
             Console.CancelKeyPress += (sender, args) =>
             {
@@ -264,7 +258,7 @@ namespace WFBot
                 Trace.WriteLine($"Task 发生异常: {args.Exception}.");
                 args.SetObserved();
             };
-            
+
             Trace.WriteLine("加载插件...");
             Plugins.Load();
 
@@ -273,7 +267,7 @@ namespace WFBot
 
             Trace.WriteLine("加载 Connector...");
             ConnectorManager.LoadConnector();
-            
+
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();
             messageReceivedEvent = new MessageReceivedEvent();
@@ -283,7 +277,7 @@ namespace WFBot
             // 加载自定义命令处理器
             Trace.WriteLine("加载自定义命令处理器...");
             CustomCommandMatcherHandler.InitCustomCommandHandler();
-            
+
             // 初始化定时器
             InitTimer();
 
@@ -304,13 +298,13 @@ namespace WFBot
                 Directory.CreateDirectory("WFBotLogs");
                 var fileListener = new TextWriterTraceListener(File.Open(Path.Combine($"WFBotLogs", $"WFBot-{DateTime.Now:yy-MM-dd_HH.mm.ss}.log"),
                         FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-                    { TraceOutputOptions = TraceOptions.Timestamp };
+                { TraceOutputOptions = TraceOptions.Timestamp };
                 Trace.Listeners.Add(fileListener);
             }
             Trace.Listeners.Add(new ConsoleTraceListener());
             Trace.AutoFlush = true;
         }
-        
+
         internal List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
         {
@@ -323,7 +317,7 @@ namespace WFBot
             }
         }
 
-        
+
     }
 }
 
