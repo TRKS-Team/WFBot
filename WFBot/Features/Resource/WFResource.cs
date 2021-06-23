@@ -32,7 +32,8 @@ namespace WFBot.Features.Resource
 #else
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
-                return new Newtonsoft.Json.JsonSerializer().Deserialize<T>(reader);
+                return new Newtonsoft.Json.JsonSerializer {NullValueHandling = NullValueHandling.Ignore}
+                    .Deserialize<T>(reader);
 #endif
             });
         };
