@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CSharp;
 using WFBot.Events;
 using WFBot.Features.Other;

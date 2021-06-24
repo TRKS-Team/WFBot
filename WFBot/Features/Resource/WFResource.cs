@@ -39,8 +39,8 @@ namespace WFBot.Features.Resource
                 char c;
                 while (!((c = (char) sr.Peek()) == '[' || c == '{')) sr.Read();
                 using var reader = new JsonTextReader(sr);
-                
-                return new Newtonsoft.Json.JsonSerializer().Deserialize<T>(reader);
+                return new Newtonsoft.Json.JsonSerializer {NullValueHandling = NullValueHandling.Ignore}
+                    .Deserialize<T>(reader);
 #endif
             });
         };

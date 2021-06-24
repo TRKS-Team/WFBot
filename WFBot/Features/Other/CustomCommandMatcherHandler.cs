@@ -5,7 +5,8 @@ using System.Reflection;
 using System.Text;
 using GammaLibrary.Extensions;
 using TextCommandCore;
-using WFBot.Events;
+using WFBot.Features.Commands;
+using WFBot.Features.Events;
 using WFBot.Utils;
 
 namespace WFBot.Features.Other
@@ -13,7 +14,7 @@ namespace WFBot.Features.Other
     public class CustomCommandMatcherHandler : ICommandHandler<CustomCommandMatcherHandler>
     {
         static Lazy<CommandInfo[]> _commandInfos =
-            new Lazy<CommandInfo[]>(CommandHandlerHelper.GetCommandInfos<GroupMessageHandler>());
+            new Lazy<CommandInfo[]>(CommandHandlerHelper.GetCommandInfos<CommandsHandler>());
 
         static Dictionary<string, List<string>> CustomCommandsRegistry => CustomCommandConfig.Instance.CustomCommands;
 

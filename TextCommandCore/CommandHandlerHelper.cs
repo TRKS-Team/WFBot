@@ -154,6 +154,10 @@ namespace TextCommandCore
                             break;
                         case NullReferenceException _:
                             result = "发生异常: 找不到对象.";
+                            handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
+                                                        $"命令内容为 [{message}].\n" +
+                                                        $"异常信息:\n" +
+                                                        $"{innerException}");
                             break;
                         default:
                             result = $"发生异常: {innerException?.Message}";

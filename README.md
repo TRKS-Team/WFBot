@@ -153,44 +153,15 @@ Warframe 是 Digital Extremes Ltd. 的商标.
   > **TheRealKamisama** 项目发起人 主要开发者 文档撰写 问题回答 ~~骗钱~~  
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)  
-  > **@wu452148993** 解决了一个令我很头疼的问题
+  > **@wu452148993** 解决了一个令我很头疼的问题  
+  > **Kengxxiao** 解决#91
+
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:
-KONYCN
-Trinitatem
-爱发电用户_pPYQ
-Pharsaria
-LouisJane
-L·A·Y
-爱发电用户_Ymhw
-琪露诺
-wosiwq
-Zatermelon
-aecine
-dc姐姐好棒哒
-◆Philip
-DreaM1ku
-果汁
-Flashbang233
-SM_Chicov
-曲水流觞℡
-luoroz
-玄白SAMA
-难喝的鸡汤
-爱发电用户_edf3
-苟Cy
-780712
-vian
-爱发电用户_Ayhf
-爱发电用户_mQps
-老腊肉
-Neptune
-君莫笑
+<!--SPONSORS_BEGIN-->KONYCN Trinitatem 爱发电用户_pPYQ Pharsaria LouisJane L·A·Y 爱发电用户_Ymhw 琪露诺 wosiwq Zatermelon aecine dc姐姐好棒哒 ◆Philip DreaM1ku 果汁 Flashbang233 SM_Chicov 曲水流觞℡ luoroz 玄白SAMA 难喝的鸡汤 爱发电用户_edf3 苟Cy 780712 vian 爱发电用户_Ayhf 爱发电用户_mQps 老腊肉 Neptune 君莫笑
 
 ---
 
 感谢 JetBrain 公司为我们提供的 All-Product-License  
 [![jetbrains](docs/images/jetbrains-variant-3-201x231.png)](https://www.jetbrains.com/?from=WFBot)  
 **_感谢这些贡献者, 开源项目有你们才有未来_**
-
-

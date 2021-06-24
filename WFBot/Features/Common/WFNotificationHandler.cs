@@ -29,10 +29,9 @@ namespace WFBot.Features.Other
         private readonly HashSet<WarframeUpdate> sendedUpdateSet = new HashSet<WarframeUpdate>();
         // 如果你把它改到5分钟以上 sentientoutpost会出错
         private WFChineseAPI api => WFResources.WFChineseApi;
-        private string platform => Config.Instance.Platform.ToString();
-        private List<WFAlert> AlertPool = new List<WFAlert>();
-        private List<WFInvasion> InvasionPool = new List<WFInvasion>();
-        private List<PersistentEnemie> StalkerPool = new List<PersistentEnemie>();
+        public List<WFAlert> AlertPool = new List<WFAlert>();
+        public List<WFInvasion> InvasionPool = new List<WFInvasion>();
+        public List<PersistentEnemie> StalkerPool = new List<PersistentEnemie>();
         volatile bool WFNotificationLoaded = false;
 
         public WFNotificationHandler()
@@ -84,29 +83,6 @@ namespace WFBot.Features.Other
             }
         }
 
-        public class WarframeUpdate
-        {
-            protected bool Equals(WarframeUpdate other)
-            {
-                return title == other.title && url == other.url;
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((WarframeUpdate) obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(title, url);
-            }
-
-            public string title { get; set; }
-            public string url { get; set; }
-        }
         public async Task<List<WarframeUpdate>> GetWarframeUpdates()
         {
             var result = new List<WarframeUpdate>();
@@ -182,13 +158,13 @@ namespace WFBot.Features.Other
             CheckPersistentEnemies();
         }
 
-        private async Task UpdateAlertPool()
+        public async Task UpdateAlertPool()
         {
             AlertPool = await api.GetAlerts();
             CheckAlerts();
         }
 
-        private async Task UpdateInvasionPool()
+        public async Task UpdateInvasionPool()
         {
             InvasionPool = await api.GetInvasions();
             CheckInvasions();
@@ -234,48 +210,7 @@ namespace WFBot.Features.Other
                 yield return reward.type;
             }
         }
-
-        public string SendAllPersistentEnemies()
-        {
-            var enemies = StalkerPool;
-            if (!enemies.Any())
-            {
-                return "目前没有小小黑出现.";
-            }
-
-            var sb = new StringBuilder();
-            sb.AppendLine("下面是全太阳系内的小小黑, 快去锤爆?");
-            foreach (var enemy in enemies)
-            {
-                sb.AppendLine(WFFormatter.ToString(enemy));
-            }
-            return sb.ToString().Trim();
-        }
-
-        public async Task<string> SendAllInvasions()
-        {
-            try
-            {
-                await UpdateInvasionPool();
-            }
-            catch (OperationCanceledException)
-            {
-                return "操作超时.";
-            }
-            var invasions = InvasionPool;
-            var sb = new StringBuilder();
-            sb.AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
-            sb.AppendLine();
-
-            foreach (var invasion in invasions.Where(invasion => !invasion.completed))
-            {
-                sb.AppendLine(WFFormatter.ToString(invasion));
-                sb.AppendLine();
-            }
-
-            return sb.ToString().Trim().AddPlatformInfo();
-        }
-
+        
         private void CheckAlerts()
         {
             try
@@ -302,30 +237,7 @@ namespace WFBot.Features.Other
                 Messenger.SendDebugInfo(e.ToString());
             }
         }
-
-        public async Task<string> SendAllAlerts()
-        {
-            try
-            {
-                await UpdateAlertPool();
-            }
-            catch (OperationCanceledException)
-            {
-                return "操作超时.";
-            }
-            var alerts = AlertPool;
-            var sb = new StringBuilder();
-
-            sb.AppendLine("指挥官, 下面是太阳系内所有的警报任务, 供您挑选.");
-            foreach (var alert in alerts)
-            {
-                sb.AppendLine(WFFormatter.ToString(alert));
-                sb.AppendLine();
-            }
-
-            return sb.ToString().Trim().AddPlatformInfo();
-        }
-
+        
         private void SendWFAlert(WFAlert alert)
         {
             var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +

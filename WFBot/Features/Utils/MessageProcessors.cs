@@ -1,8 +1,11 @@
-﻿using System;
+﻿using GammaLibrary.Extensions;
+using System;
 using System.Linq;
 using System.Reflection;
 using TextCommandCore;
 using WFBot.Events;
+using WFBot.Features.Commands;
+using WFBot.Utils;
 
 namespace WFBot.Features.Utils
 {
@@ -55,4 +58,51 @@ namespace WFBot.Features.Utils
             return result;
         }
     }
+
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEverAttribute : Attribute, IPostProcessor
+    {
+        public string Process<T>(MethodInfo method, string msg, string result, ICommandHandler<T> handlers) where T : ICommandHandler<T>
+        {
+            var handler = (CommandsHandler)handlers;
+            if (handler.OutputStringBuilder.IsValueCreated)
+            {
+                handler.OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
+            }
+
+            return result.IsNullOrEmpty() ? null : result.AddPlatformInfo().AddRemainCallCount();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class AddRemainCallCountAttribute : Attribute, IPostProcessor
+    {
+        public string Process<T>(MethodInfo method, string msg, string result, ICommandHandler<T> handlers) where T : ICommandHandler<T>
+        {
+            var handler = (CommandsHandler)handlers;
+            if (handler.OutputStringBuilder.IsValueCreated)
+            {
+                handler.OutputStringBuilder.Value.AddRemainCallCount();
+            }
+
+            return result.IsNullOrEmpty() ? null : result.AddRemainCallCount();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class AddPlatformInfoAttribute : Attribute, IPostProcessor
+    {
+        public string Process<T>(MethodInfo method, string msg, string result, ICommandHandler<T> handlers) where T : ICommandHandler<T>
+        {
+            var handler = (CommandsHandler)handlers;
+            if (handler.OutputStringBuilder.IsValueCreated)
+            {
+                handler.OutputStringBuilder.Value.TrimEnd().AddPlatformInfo();
+            }
+
+            return result.IsNullOrEmpty() ? null : result.AddPlatformInfo();
+        }
+    }
+
 }
