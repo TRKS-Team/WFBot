@@ -9,11 +9,11 @@ COPY ["WFBot/WFBot.csproj", "WFBot/"]
 COPY ["TextCommandCore/TextCommandCore.csproj", "TextCommandCore/"]
 RUN dotnet restore "WFBot/WFBot.csproj"
 COPY . .
-WORKDIR "/src/WFBot"
-RUN dotnet build "WFBot.csproj" -c "Linux Release" -o /app/build
+#WORKDIR "/src/WFBot"
+RUN dotnet build "WFBot" -c "Linux Release" -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "WFBot.csproj" -c "Linux Release" -o /app/publish
+RUN dotnet publish "WFBot" -c "Linux Release" -o /app/publish
 
 FROM base AS final
 WORKDIR /app
