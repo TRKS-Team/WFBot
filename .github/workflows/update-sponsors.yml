@@ -21,10 +21,10 @@ jobs:
           dotnet-version: 5.0.x
 
       - name: Clone Updater
-        run: git clone https://github.com/TRKS-Team/WFBotSponsorUpdater.git %temp%/WFBotSponsorUpdater/
+        run: git clone https://github.com/TRKS-Team/WFBotSponsorUpdater.git ../WFBotSponsorUpdater/
 
       - name: Run Updater
-        run: dotnet run -p %temp%/WFBotSponsorUpdater
+        run: dotnet run -p ../WFBotSponsorUpdater
 
       - name: Get current date
         id: date
