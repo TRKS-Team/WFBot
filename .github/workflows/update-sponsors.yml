@@ -1,10 +1,9 @@
 name: Update Sponsors
 
 on:
-  workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 7,19 * * *'
+    - cron:  '35 7,19 * * *'
 
 jobs:
   build:
