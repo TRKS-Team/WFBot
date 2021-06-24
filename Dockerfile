@@ -10,7 +10,7 @@ COPY ["TextCommandCore/TextCommandCore.csproj", "TextCommandCore/"]
 RUN dotnet restore "WFBot/WFBot.csproj"
 COPY . .
 #WORKDIR "/src/WFBot"
-RUN dotnet publish "WFBot" -c "Linux Release" -o /app/publish && rf -rf .git
+RUN dotnet publish "WFBot" -c "Linux Release" -o /app/publish && rm -rf .git
 
 FROM base AS final
 WORKDIR /app
