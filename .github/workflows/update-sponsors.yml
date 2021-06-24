@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 5,17 * * *'
+    - cron:  '30 7,19 * * *'
 
 jobs:
   build:
@@ -36,3 +36,6 @@ jobs:
           commit-message: 更新赞助者名单
           delete-branch: true
           title: 更新赞助者名单
+          body: 更新赞助者名单 by Cyl18
+          labels: awsl, doc
+
