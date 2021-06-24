@@ -1,12 +1,6 @@
-name: Build
+name: Build Check
 
-on:
-  push:
-    branches-ignore:
-      - 'universal'
-  pull_request:
-    branches:
-      - '*'
+on: [push, pull_request]
 
 jobs:
   build:

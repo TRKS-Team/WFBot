@@ -67,6 +67,11 @@ namespace WFBot.Features.Events
                     Trace.WriteLine($"命令 群[{groupId}] 用户[{senderId}] 内容[{message}] 处理超时.");
                     return;
                 }
+
+                if (handler.OutputStringBuilder.IsValueCreated)
+                {
+                    sender.SendMessage(handler.OutputStringBuilder.ToString().Trim());
+                }
 #if !DEBUG
                 if (commandProcessTask.Result.matched)
                 {

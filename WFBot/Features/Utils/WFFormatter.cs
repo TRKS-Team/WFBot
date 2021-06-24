@@ -120,7 +120,7 @@ namespace WFBot.Features.Utils
             return sb.ToString().Trim();
         }*/
         [Pure]
-        public static string ToString(WFNotificationHandler.WarframeUpdate update)
+        public static string ToString(WarframeUpdate update)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"DE发布了一次更新: {update.title}");

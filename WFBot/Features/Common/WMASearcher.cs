@@ -42,7 +42,7 @@ namespace WFBot.Features.Common
                     AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                 }
 
-                var auctions = GetRivenAuctions(weapon.urlname).Result;
+                var auctions = await GetRivenAuctions(weapon.urlname);
 
                 var msg = WFFormatter.ToString(auctions.Take(Config.Instance.WFASearchCount).ToList(), weapon).AddPlatformInfo();
                 sb.AppendLine(msg);

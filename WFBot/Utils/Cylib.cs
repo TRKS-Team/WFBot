@@ -153,13 +153,32 @@ namespace WFBot.Utils
         }
     }
 
+    public static class SomeExtensions
+    {
+        public static StringBuilder TrimEnd(this StringBuilder sb)
+        {
+            if (sb == null || sb.Length == 0) return sb;
+
+            int i = sb.Length - 1;
+
+            for (; i >= 0; i--)
+                if (!char.IsWhiteSpace(sb[i]))
+                    break;
+
+            if (i < sb.Length - 1)
+                sb.Length = i + 1;
+
+            return sb;
+        }
+    }
+
     public static class MessageExtensions
     {
         private static string platform => Config.Instance.Platform.ToString();
 
         public static string AddPlatformInfo(this string str)
         {
-            return $"{str}\n\n数据来自[{platform} 平台]";
+            return $"{str.TrimEnd()}\n\n数据来自[{platform} 平台]";
         }
 
         public static string AddHelpInfo(this string str)
@@ -167,9 +186,29 @@ namespace WFBot.Utils
             return $"{str}\n可使用: /help来查看机器人的更多说明.";
         }
 
+        public static StringBuilder AddPlatformInfo(this StringBuilder str)
+        {
+            str.TrimEnd();
+            str.Append($"\n\n数据来自[{platform} 平台]");
+            return str;
+        }
+
+        // unused
+        public static StringBuilder AddHelpInfo(this StringBuilder str)
+        {
+            str.Append("\n可使用: /help来查看机器人的更多说明.");
+            return str;
+        }
+
         public static string AddRemainCallCount(this string str)
         {
-            return AddRemainCallCount(str, AsyncContext.GetMessageSender().GroupID);
+            return AddRemainCallCount(str.TrimEnd(), AsyncContext.GetMessageSender().GroupID);
+        }
+
+        public static StringBuilder AddRemainCallCount(this StringBuilder str)
+        {
+            AddRemainCallCount(str.TrimEnd(), AsyncContext.GetMessageSender().GroupID);
+            return str;
         }
 
         public static string AddRemainCallCount(this string str, GroupID group)
@@ -188,6 +227,25 @@ namespace WFBot.Utils
             else
             {
                 return $"{str}\n机器人在本群一分钟内信息发送配额已经用完.";
+            }
+        }
+
+        public static void AddRemainCallCount(this StringBuilder str, GroupID group)
+        {
+            if (Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[@group.ToString()] < 0)
+            {
+                return;
+            }
+
+            var remainCount = Config.Instance.CallperMinute - Messenger.GroupCallDic[@group.ToString()];
+
+            if (remainCount > 0)
+            {
+                str.Append($"{str}\n机器人在本群一分钟内还能发送{remainCount}条消息.");
+            }
+            else
+            {
+                str.Append($"{str}\n机器人在本群一分钟内信息发送配额已经用完.");
             }
         }
     }

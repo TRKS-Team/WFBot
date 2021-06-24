@@ -5,6 +5,31 @@ using WFBot.Features.Resource;
 
 namespace WFBot.Features.Utils
 {
+    // 整个文件就是用来丢垃圾的
+
+    public class WarframeUpdate
+    {
+        protected bool Equals(WarframeUpdate other)
+        {
+            return title == other.title && url == other.url;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((WarframeUpdate)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(title, url);
+        }
+
+        public string title { get; set; }
+        public string url { get; set; }
+    }
     public class WeaponInfo
     {
         public string zhname { get; set; }
@@ -431,7 +456,7 @@ namespace WFBot.Features.Utils
         public float primeOmegaAttenuation { get; set; }
         public int binCount { get; set; }
         public int binCapacity { get; set; }
-        public int fillRate { get; set; }
+        public double fillRate { get; set; }
         public int durability { get; set; }
         public int repairRate { get; set; }
         public int[] capacityMultiplier { get; set; }
