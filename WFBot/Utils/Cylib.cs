@@ -33,14 +33,18 @@ namespace WFBot.Utils
                 var savePath = SavePath;
                 if (FileSystem.Exists(savePath))
                 {
-                    Instance = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
+                    _instance = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
                 }
                 else
                 {
-                    Instance = new T();
+                    _instance = new T();
                     Save();
                 }
 
+                if (_instance == null)
+                {
+                    throw new Exception("有些东西出了点问题.");
+                }
                 Instance.AfterUpdate();
             }
             catch (Exception e)

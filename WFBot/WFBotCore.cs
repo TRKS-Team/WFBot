@@ -56,6 +56,7 @@ namespace WFBot
                         DontThrowIfResourceUnableToLoad = true;
                         break;
                     case "--use-config-folder":
+                        Directory.CreateDirectory("WFBotConfigs");
                         UseConfigFolder = true;
                         break;
                 }
