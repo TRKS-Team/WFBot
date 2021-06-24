@@ -15,4 +15,4 @@ RUN dotnet publish "WFBot" -c "Linux Release" -o /app/publish && rm -rf .git
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WFBot.dll"]
+ENTRYPOINT ["dotnet", "WFBot.dll", "--", "--use-config-folder"]

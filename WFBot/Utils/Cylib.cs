@@ -57,7 +57,14 @@ namespace WFBot.Utils
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Save() => Instance.ToJsonString().SaveToFile(SavePath);
 
-        public static string SavePath => typeof(T).GetCustomAttribute<ConfigurationAttribute>().SaveName + ".json";
+        public static string SavePath
+        {
+            get
+            {
+                var basePath = typeof(T).GetCustomAttribute<ConfigurationAttribute>().SaveName + ".json";
+                return Program.UseConfigFolder ? Path.Combine("WFBotConfigs", basePath) : basePath;
+            }
+        }
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]

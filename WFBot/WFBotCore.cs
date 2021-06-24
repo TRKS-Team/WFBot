@@ -31,6 +31,7 @@ namespace WFBot
     {
         internal static bool NoLog { get; private set; } = false;
         internal static bool DontThrowIfResourceUnableToLoad { get; private set; } = false;
+        internal static bool UseConfigFolder { get; private set; }
 
         public static async Task Main(string[] args)
         {
@@ -53,6 +54,9 @@ namespace WFBot
                         break;
                     case "--dont-throw-if-resource-unable-to-load":
                         DontThrowIfResourceUnableToLoad = true;
+                        break;
+                    case "--use-config-folder":
+                        UseConfigFolder = true;
                         break;
                 }
             }
