@@ -158,7 +158,7 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:
-<!--SPONSORS_BEGIN-->KONYCN Trinitatem 爱发电用户_pPYQ Pharsaria LouisJane L·A·Y 爱发电用户_Ymhw 琪露诺 wosiwq Zatermelon aecine dc姐姐好棒哒 ◆Philip DreaM1ku 果汁 Flashbang233 SM_Chicov 曲水流觞℡ luoroz 玄白SAMA 难喝的鸡汤 爱发电用户_edf3 苟Cy 780712 vian 爱发电用户_Ayhf 爱发电用户_mQps 老腊肉 Neptune 君莫笑
+<!--SPONSORS_BEGIN-->嘿 ◆Philip dc姐姐好棒哒 LouisJane 爱发电用户_Ayhf 爱发电用户_edf3 vian 爱发电用户_JV6j aecine 大番茄一号 爱发电用户_FtaS 不够温柔 难喝的鸡汤 玄白SAMA luoroz Pharsaria 曲水流觞℡ L·A·Y 爱发电用户_x9FU Deadwings Zatermelon SM_Chicov 780712 君莫笑 Neptune Flashbang233 wosiwq 老腊肉 爱发电用户_pPYQ 果汁 DreaM1ku 琪露诺 爱发电用户_Ymhw Cyl18 Trinitatem KONYCN 爱发电用户_mQps
 
 ---
 
