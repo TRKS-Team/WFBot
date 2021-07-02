@@ -19,7 +19,7 @@
   </PropertyGroup>
 
     <Choose>
-      <When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
+      <When Condition="('$(NoGitVersion)' == 'hso' ) or $([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
         <!-- When DEFINED_CONSTANT is defined. -->
       </When>
       <Otherwise>
