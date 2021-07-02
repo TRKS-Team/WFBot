@@ -25,9 +25,12 @@
 
 ## 🚧 如何部署
 
+[**🐳Docker 部署**](docs/docker.md)  
+
 [**部署指南**](docs/install.md)  
 [**部署指南**](docs/install.md)  
-[**部署指南**](docs/install.md)
+[**部署指南**](docs/install.md)  
+
 
 ---
 

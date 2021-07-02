@@ -2,6 +2,8 @@
 
 > 如果你在部署过程中遇到了问题, 请先查看下面的 FAQ. 如果还是无法解决, 可以添加 [QQ 群](http://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53) 或者使用 [GitHub Issues](https://github.com/TRKS-Team/WFBot/issues). 群内问问题请指明你在哪一步遇到了问题.
 
+> 你也可以使用 [**Docker 部署**](docker.md)
+
 [**部署 FAQ (常见问题解答)**](faq.md)
 
 目录:
