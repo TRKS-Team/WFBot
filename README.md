@@ -1,7 +1,9 @@
 # WFBot
-![GitHub Actions](https://github.com/TRKS-Team/WFBot/workflows/.NET/badge.svg)
+[![Build](https://github.com/TRKS-Team/WFBot/actions/workflows/check.yml/badge.svg?branch=universal)](https://github.com/TRKS-Team/WFBot/actions/workflows/check.yml)
 [![GitHub release](https://img.shields.io/github/release/TRKS-Team/WFBot.svg)](https://GitHub.com/TRKS-Team/WFBot/releases/)
 [![Github releases (by release)](https://img.shields.io/github/downloads/TRKS-Team/WFBot/latest/total.svg)](https://GitHub.com/TRKS-Team/WFBot/releases/)
+![Docker Pulls](https://img.shields.io/docker/pulls/trksteam/wfbot)
+![Lines of code](https://img.shields.io/tokei/lines/github/TRKS-Team/WFBot)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTRKS-Team%2FWFBot?ref=badge_shield)  
 这是一个可进行多种游戏内任务通知以及查询的 Warframe 聊天机器人.  
