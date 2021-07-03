@@ -35,7 +35,7 @@ jobs:
         env:
           OFFICIAL_BUILD: official
       - name: Linux Build
-        run: dotnet publish WFBot -c "Linux Release" -o LinuxPublish --self-contained false
+        run: dotnet publish WFBot -c "Linux Release" -o LinuxPublish --self-contained false /p:UseAppHost=false
         env:
           OFFICIAL_BUILD: official
       - name: Mirai Connector Build
