@@ -145,7 +145,13 @@ namespace WFBot.Features.Commands
         async Task Kuva()
         {
             var kuvas = await api.GetKuvaMissions();
-            AppendLine("以下是所有赤毒任务: \n\n");
+            if (kuvas.Count == 0)
+            {
+                Append("当前没有赤毒任务.");
+                return;
+            }
+
+            AppendLine("以下是当前所有赤毒任务: \n\n");
             // foreach (var kuva in kuvas.Where(k => k.missiontype.Contains("KuvaMission") && k.start < DateTime.Now && DateTime.Now < k.end))
             foreach (var kuva in kuvas)
             {
