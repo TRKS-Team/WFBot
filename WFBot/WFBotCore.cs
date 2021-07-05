@@ -291,6 +291,11 @@ namespace WFBot
             // ------------------------------------------------------------------
             // 完成
             Inited = true;
+            if (_requestedCtrlCShutdown)
+            {
+                Task.Run(() => Shutdown());
+            }
+
             _requestedCtrlCShutdown = false;
             Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
         }

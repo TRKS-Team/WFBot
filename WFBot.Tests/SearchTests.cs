@@ -14,21 +14,13 @@ namespace WFBot.Tests
     [TestClass]
     public class SearchTests
     {
+
         [TestInitialize]
         public void Init()
         {
-            return;
-            throw new NotImplementedException("这里还没写好");
             AsyncContext.SetMessageSender(new MessageSender());
             WFBotCore.UseTestConnector = true;
             new WFBotCore().Init().Wait();
-            if (Directory.GetFiles("WFOfflineResource").IsEmpty())
-            {
-                foreach (var file in Directory.GetFiles("WFOfflineResource"))
-                {
-                    File.Copy(file, "WFOfflineResource\\"+ Path.GetFileName(file));
-                }
-            }
         }
 
         [TestMethod]
