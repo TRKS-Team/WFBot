@@ -136,6 +136,11 @@ namespace WFBot.Features.Commands
         async Task Arbitration()
         {
             var ar = await api.GetArbitrationMission();
+            if (ar == null) 
+            {
+                Append("暂时没有查询到仲裁信息, 请稍后再试.");
+                return;
+            }
             // var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.start < DateTime.Now && DateTime.Now < k.end);
             AppendLine("以下是仲裁警报的信息: ");
             AppendLine(WFFormatter.ToString(ar));

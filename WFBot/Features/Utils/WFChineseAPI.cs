@@ -133,6 +133,8 @@ namespace WFBot.Features.Utils
         public async Task<Arbitration> GetArbitrationMission()
         {
             var ar = await WebHelper.DownloadJsonAsync<Arbitration>(WFstat + "/arbitration");
+            if (ar?.type == null) return null;
+            
             translator.TranslateArbitrationMission(ar);
             return ar;
         }
@@ -283,6 +285,8 @@ namespace WFBot.Features.Utils
 
         public string Translate(string source)
         {
+            if (source == null) return source;
+            
             return dic.ContainsKey(source) ? dic[source] : source;
         }
 
