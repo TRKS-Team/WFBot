@@ -29,7 +29,7 @@ $ curl -LJO https://github.com/iTXTech/mcl-installer/releases/download/72b890d/m
 $ chmod +x mcl-installer-72b890d-linux-amd64
 $ ./mcl-installer-72b890d-linux-amd64
 ```
-**一路路回车就安装成功啦.**
+**一路回车就安装成功啦.**
 **最后一步是下载mcl脚本包，如果没有下载，是网络的问题，请重复执行.**
 **如果重复执行后还是不下载请自己手动下载[mcl脚本包](https://github.com/iTXTech/mirai-console-loader/releases)解压到目录，更改mcl脚本里的java路径.**
 
