@@ -73,6 +73,7 @@ $ ./mcl-installer-72b890d-linux-amd64
 5. 终端输入dotnet WFBot.dll启动 WFBot.dll
 
 6. 目录会生成 MiraiConfig.json,打开配置好保存.
+
    ![image](https://user-images.githubusercontent.com/52833112/125391845-b808f280-e3d7-11eb-9881-9769bd2cfd2d.png)
 
 7. 再次打开 WFBot.dll, 就可以运行了.  
