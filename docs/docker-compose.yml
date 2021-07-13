@@ -3,7 +3,6 @@ version: '3.7'
 services:
   wfbot:
     image: trksteam/wfbot
-    pull_policy: always
     volumes: 
         - ./WFBotConnector:/app/WFBotConnector
         - ./WFBotPlugins:/app/WFBotPlugins
