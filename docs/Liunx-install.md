@@ -29,29 +29,31 @@ $ curl -LJO https://github.com/iTXTech/mcl-installer/releases/download/72b890d/m
 $ chmod +x mcl-installer-72b890d-linux-amd64
 $ ./mcl-installer-72b890d-linux-amd64
 ```
-**一路回车就安装成功啦.**
-**最后一步是下载mcl脚本包，如果没有下载，是网络的问题，请重复执行.**
-**如果重复执行后还是不下载请自己手动下载[mcl脚本包](https://github.com/iTXTech/mirai-console-loader/releases)解压到目录，更改mcl脚本里的java路径.**
+> - **一路回车就安装成功啦.**
+> - **最后一步是下载mcl脚本包，如果没有下载，是网络的问题，请重复执行.**
+> - **如果重复执行后还是不下载请自己手动下载[mcl脚本包](https://github.com/iTXTech/mirai-console-loader/releases)解压到目录，更改mcl脚本里的java路径.**
 
 3. 安装完毕后运行一下目录中的mcl, 等待 mirai 输出, 然后关闭 mirai.
 
 4. 打开目录config文件夹里的Console，找到AutoLogin.yml，配置好QQ号及密码保存.![image](https://user-images.githubusercontent.com/52833112/125388125-83923800-e3d1-11eb-9488-5e853ae16472.png)
 
 5. 再运行mcl，无视中间报错，运行完后退出。目录会生成bots文件夹，打开找到你的qq号文件夹，进去之后有个deviceInfo.json文件.
-   **这里的deviceInfo文件需要替换，因为QQ在新设备登录需要验证，Liunx目前不支持滑屏验证**
-   **替换方式建议使用手机下载 [ MiraiAndroid](https://github.com/mzdluo123/MiraiAndroid/releases)**
-   **安装好MiralAndroid后启动，在软件右上角登录QQ（这里需要给软件打开通知栏权限），登录后在左边菜单里下载device.json文件上传替换deviceInfo.json文件即可**
+> - **这里的deviceInfo文件需要替换，因为QQ在新设备登录需要验证，Liunx目前不支持滑屏验证**
+> - **替换方式建议使用手机下载 [ MiraiAndroid](https://github.com/mzdluo123/MiraiAndroid/releases)**
+> - **安装好MiralAndroid后启动，在软件右上角登录QQ（这里需要给软件打开通知栏权限），登录后在左边菜单里下载device.json文件上传替换deviceInfo.json文件即可**
    
 5. 下载 mirai-api-http 插件: 从 [mirai-api-http GitHub Release](https://github.com/project-mirai/mirai-api-http/releases/latest) 下载 (中国下载可能较慢), 或 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/project-mirai/mirai-api-http/releases/download/v1.9.6/mirai-api-http-v1.9.6.mirai.jar) (版本为 1.9.6, 不一定最新), 下载 mirai-api-http-vx.x.x.mirai.jar, 放入 plugins 文件夹.
 
 6. 再次启动 mirai 并等待输出，这次我们不会报错了，关闭 mirai，这里我们的config文件里会生成net.mamoe.mirai-api-http文件夹.
 
 6. 打开 config\net.mamoe.mirai-api-http\setting.yml 文件. 将 `port` (端口号, 不能大于 65536) 和 `authKey` (连接用密码, 至少 8 位) 修改为一个独特的内容. (后面配置 WFBot 会用到)
-   ![image](https://user-images.githubusercontent.com/52833112/125391568-4c268a00-e3d7-11eb-84ff-a77a0065e494.png)
+ 
+ ![image](https://user-images.githubusercontent.com/52833112/125391568-4c268a00-e3d7-11eb-84ff-a77a0065e494.png)
 
 7. 执行 `./mcl --update-package net.mamoe:mirai-login-solver-selenium --channel nightly --type plugin`
 
 8. 启动 mirai.
+> - **这里我们需要守护进程**
 
 ---
 
@@ -70,14 +72,13 @@ $ ./mcl-installer-72b890d-linux-amd64
 
 5. 终端输入dotnet WFBot.dll启动 WFBot.dll
 
-6. 目录会生成 MiraiConfig.json,打开配置好:
+6. 目录会生成 MiraiConfig.json,打开配置好保存.
    ![image](https://user-images.githubusercontent.com/52833112/125391845-b808f280-e3d7-11eb-9881-9769bd2cfd2d.png)
-   保存.
 
 7. 再次打开 WFBot.dll, 就可以运行了.  
-   **注意 你得先打开 mirai, 再打开 WFBot**
-   **建议使用tmux命令守护进程**
-   **词库放在WFOfflineResource文件夹内**
+> - **注意 你得先打开 mirai, 再打开 WFBot**
+> - **建议使用tmux命令守护进程**
+> - **词库放在WFOfflineResource文件夹内**
 
 8. 设置界面可以直接修改 WFConfig.json文件.
 
