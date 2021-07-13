@@ -57,8 +57,8 @@ $ ./mcl-installer-72b890d-linux-amd64
 
 ## 第二步: 配置 WFBot
 
-1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) 
-   (Linux 用户 下载 .NET Core Runtime, 自己寻找答案, 或者加群来问)
+1. 安装 .NET Core 3.1 [官方链接](https://docs.microsoft.com/zh-cn/dotnet/core/install/linux) 
+   (Linux 用户下载 .NET Core Runtime)
 
 2. 将WFBot文件夹放在安装好的mirai根目录 进入 WFBot 文件夹
 
