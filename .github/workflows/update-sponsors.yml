@@ -1,9 +1,10 @@
-name: Update Sponsors
+name: [Deprecated]Update Sponsors
 
-on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '35 7,19 * * *'
+on: workflow_dispatch
+
+#  schedule:
+#    # * is a special character in YAML so you have to quote this string
+#    - cron:  '35 7,19 * * *'
 
 jobs:
   build:
