@@ -29,10 +29,8 @@
 
 [**🐳Docker 部署**](docs/docker.md)  
 
-[**部署指南**](docs/install.md)  
-[**部署指南**](docs/install.md)  
-[**部署指南**](docs/install.md)  
-
+[**🟦普通部署指南**](docs/install.md)  
+[**🐧来自社区的 Linux 部署指南**](https://github.com/Wapriaily/WFBot/blob/patch-1/docs/Liunx-install.md)
 
 ---
 
