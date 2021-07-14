@@ -44,7 +44,7 @@ $ ./mcl-installer-72b890d-linux-amd64
    
 6. 下载 mirai-api-http 插件: 从 [mirai-api-http GitHub Release](https://github.com/project-mirai/mirai-api-http/releases/latest) 下载 (中国下载可能较慢), 或 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/project-mirai/mirai-api-http/releases/download/v1.9.6/mirai-api-http-v1.9.6.mirai.jar) (版本为 1.9.6, 不一定最新), 下载 mirai-api-http-vx.x.x.mirai.jar, 放入 plugins 文件夹.
 
-7. 再次启动 mirai 并等待输出，这次我们不会报错了，关闭 mirai，这里我们的config文件里会生成net.mamoe.mirai-api-http文件夹.
+7. 再次运行mcl启动 mirai 并等待输出，这次我们不会报错了，关闭 mirai，这里我们的config文件夹里会生成net.mamoe.mirai-api-http文件夹.
 
 8. 打开 config\net.mamoe.mirai-api-http\setting.yml 文件. 将 `port` (端口号, 不能大于 65536) 和 `authKey` (连接用密码, 至少 8 位) 修改为一个独特的内容. (后面配置 WFBot 会用到)
  
@@ -52,7 +52,7 @@ $ ./mcl-installer-72b890d-linux-amd64
 
 9. 执行 `./mcl --update-package net.mamoe:mirai-login-solver-selenium --channel nightly --type plugin`
 
-10. 启动 mirai.
+10. 运行mcl启动 mirai.
 > - **这里我们需要守护进程**
 
 ---
@@ -62,7 +62,7 @@ $ ./mcl-installer-72b890d-linux-amd64
 1. 安装 .NET Core 3.1 [官方链接](https://docs.microsoft.com/zh-cn/dotnet/core/install/linux) 
    (Linux 用户下载 .NET Core Runtime)
 
-2. 将WFBot文件夹放在安装好的mirai根目录 进入 WFBot 文件夹
+2. 进入 WFBot 文件夹
 
 3. 下载 WFBot: [链接](https://github.com/TRKS-Team/WFBot/releases/latest). 你需要下载这两个东西:WFBot-Connector-MiraiConnector.7z和WFBot-Linux.7z（
 
@@ -70,18 +70,16 @@ $ ./mcl-installer-72b890d-linux-amd64
    (确保 MiraiHTTPConnector.dll 直接在 WFBotConnector 内)
    (如没有安装.7z解压命令需自行安装或在自行更改压缩类型）
 
-5. 终端输入dotnet WFBot.dll启动 WFBot.dll
+5. 终端输入dotnet WFBot.dll启动 WFBot.dll，等待加载，然后关闭.
 
 6. 目录会生成 MiraiConfig.json,打开配置好保存.
 
    ![image](https://user-images.githubusercontent.com/52833112/125391845-b808f280-e3d7-11eb-9881-9769bd2cfd2d.png)
 
-7. 再次打开 WFBot.dll, 就可以运行了.  
+7. 再次运行 WFBot.dll, 就成功啦.  
 > - **注意 你得先打开 mirai, 再打开 WFBot**
 > - **建议使用tmux命令守护进程**
 > - **词库放在WFOfflineResource文件夹内**
-
-8. 设置界面可以直接修改 WFConfig.json文件.
 
 ### 如果你想自己编译...
 
