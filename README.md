@@ -161,7 +161,7 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:
-![nb](https://wfbot.cyan.cafe/api/Sponsors)
+![nb](https://wfbot.cyan.cafe/api/Sponsors?)
 
 ---
 
