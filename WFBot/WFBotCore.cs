@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
+using InternetTime;
 using TextCommandCore;
 using WFBot.Connector;
 using WFBot.Events;
@@ -285,7 +287,11 @@ namespace WFBot
             Trace.WriteLine("加载自定义命令处理器...");
             CustomCommandMatcherHandler.InitCustomCommandHandler();
 
+            // 检查时间...
+            Task.Run(() => CheckTime());
+
             // 初始化定时器
+            Trace.WriteLine("初始化定时器...");
             InitTimer();
 
             // ------------------------------------------------------------------
@@ -298,6 +304,33 @@ namespace WFBot
 
             _requestedCtrlCShutdown = false;
             Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
+        }
+
+        void CheckTime()
+        {
+            try
+            {
+                if (TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).Hours != 8)
+                {
+                    var msg = "**************警告: 你的系统时区不为 UTC+8, 会造成任务通知不精确.";
+                    Messenger.SendDebugInfo(msg);
+                }
+                var sntpClient = new SNTPClient("ntp.aliyun.com");
+                sntpClient.Connect(false);
+                var timeSpan = TimeSpan.FromMilliseconds(sntpClient.LocalClockOffset);
+                if (timeSpan.TotalMinutes > 1)
+                {
+                    var msg = $"*************警告: 你的系统时间与世界时间相差了1分钟以上, 具体来说是{timeSpan.TotalMinutes}分钟, 请调整系统时间, 否则可能会造成通知不精确.";
+                    Messenger.SendDebugInfo(msg);
+                    Console.WriteLine(msg);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("时间检查出错:");
+                Console.WriteLine(e);
+            }
+
         }
 
         public bool Inited { get; private set; }
