@@ -109,7 +109,7 @@ namespace WFBot.Features.Resource
             {
                 var zhriven = WMAuction.ZHRivens.First(r => r.UrlName == urlname);
                 var enriven = WMAuction.ENRivens.First(r => r.UrlName == urlname);
-                result.Add(new WeaponInfo { enname = enriven.ItemName, urlname = urlname, zhname = zhriven.ItemName });
+                result.Add(new WeaponInfo { enname = enriven.ItemName, urlname = urlname, zhname = zhriven.ItemName.Format() });
             }
 
             return result.ToArray();
