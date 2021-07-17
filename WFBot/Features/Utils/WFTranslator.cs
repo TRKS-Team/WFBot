@@ -25,6 +25,7 @@ namespace WFBot.Features.Utils
         private WFApi translateApi => WFResources.WFTranslateData;
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
         private WMARiven[] rivens => WFResources.WMAuction.ZHRivens;
+        private WeaponInfo[] weaponInfos => WFResources.Weaponinfos;
 
 
         public WFTranslator()
@@ -165,6 +166,16 @@ namespace WFBot.Features.Utils
                         {
                             var distance = lev.DistanceFrom(weapon.Format());
                             distancelist.Add(new StringInfo { LevDistance = distance, Name = weapon });
+                        }
+                    }
+                    break;
+                case "wma":
+                    foreach (var info in weaponInfos.Select(w => w.zhname))
+                    {
+                        if (info.StartsWith(str))
+                        {
+                            var distance = lev.DistanceFrom(info.Format());
+                            distancelist.Add(new StringInfo {LevDistance = distance, Name = info});
                         }
                     }
                     break;

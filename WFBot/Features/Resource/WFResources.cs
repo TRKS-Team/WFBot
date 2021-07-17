@@ -41,7 +41,7 @@ namespace WFBot.Features.Resource
                 Task.Run(SlangManager.UpdateOnline)
             );
             WFTranslator = new WFTranslator();
-            Weaponinfos = SetWeaponInfos();
+            Weaponinfos = GetWeaponInfos();
             if (ResourceLoadFailed) 
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
@@ -102,14 +102,14 @@ namespace WFBot.Features.Resource
 
         public static WeaponInfo[] Weaponinfos { get; private set; }
 
-        private static WeaponInfo[] SetWeaponInfos()
+        private static WeaponInfo[] GetWeaponInfos()
         {
             var result = new List<WeaponInfo>();
             foreach (var urlname in WMAuction.ENRivens.Select(r => r.UrlName))
             {
                 var zhriven = WMAuction.ZHRivens.First(r => r.UrlName == urlname);
                 var enriven = WMAuction.ENRivens.First(r => r.UrlName == urlname);
-                result.Add(new WeaponInfo { enname = enriven.ItemName, urlname = urlname, zhname = zhriven.ItemName.Format() });
+                result.Add(new WeaponInfo { enname = enriven.ItemName, urlname = urlname, zhname = zhriven.ItemName });
             }
 
             return result.ToArray();

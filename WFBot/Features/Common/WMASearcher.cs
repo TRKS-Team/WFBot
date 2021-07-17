@@ -33,7 +33,7 @@ namespace WFBot.Features.Common
         {
             var sb = new StringBuilder();
             // 规范一下 武器的名字都按中文传递 使用WFResources.WeaponInfos来获取在判断武器存在后所传递的对象
-            var weapons = weaponInfos.Where(r => r.zhname == name).ToList();
+            var weapons = weaponInfos.Where(r => r.zhname.Format() == name).ToList();
             if (weapons.Any())
             {
                 var weapon = weapons.First();
@@ -50,7 +50,7 @@ namespace WFBot.Features.Common
             else
             {
                 sb.AppendLine($"武器 {name} 不存在");
-                var similarlist = translator.GetSimilarItem(name, "rm");
+                var similarlist = translator.GetSimilarItem(name, "wma");
                 if (similarlist.Any())
                 {
                     sb.AppendLine("请问这下面有没有你要找的武器呢?（可尝试复制下面的名称来进行搜索)");

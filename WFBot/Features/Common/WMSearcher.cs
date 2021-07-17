@@ -210,6 +210,7 @@ namespace WFBot.Features.Common
             var 头 = new SWWCO(("头", "头部"));
             var 总图 = new SWWCO(("总图", "蓝图"));
             var 一套 = new SWWCO(suffixes: ("一套"));
+            var none = new SWWCO();
             // 详细逻辑图在我笔记本上有手稿
             // 不建议重构
             return item == (searchword = translator.TranslateSearchWord(item)) &&
@@ -217,7 +218,8 @@ namespace WFBot.Features.Common
                    item == (searchword = item.TrySearch((总图, p))) &&
                    item == (searchword = item.TrySearch((p, 一套))) &&
                    item == (searchword = item.TrySearch((p, 头))) &&
-                   item == (searchword = item.TrySearch((p), neuroptics: true));
+                   item == (searchword = item.TrySearch((p), neuroptics: true)) &&
+                   item == (searchword = item.TrySearch(none, neuroptics: true));
         }
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)

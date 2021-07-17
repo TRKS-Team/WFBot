@@ -28,8 +28,6 @@ namespace WFBot.Features.Resource
 #if DEBUG
                 using var sr = new StreamReader(stream);
                 var str = sr.ReadToEnd();
-                //修复 http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json 因PHP警告导致多输出一句话的问题
-                //issue #91 https://github.com/TRKS-Team/WFBot/issues/91
                 str = str[str.IndexOfAny(new[] { '{', '[' })..];
 
                 return JsonConvert.DeserializeObject<T>(str, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });

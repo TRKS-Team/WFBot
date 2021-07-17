@@ -61,7 +61,7 @@ namespace WFBot.Utils
                 //
             }
 
-            return new WebStatus(false, 6666666666/*???*/);
+            return new WebStatus(false, int.MaxValue);
         }
         
         static readonly Lazy<HttpClient> SharedHttpClient = new Lazy<HttpClient>(() =>
