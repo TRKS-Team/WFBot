@@ -449,7 +449,7 @@ namespace WFBot.Features.Utils
         public string aura { get; set; }
         public bool conclave { get; set; }
         public int color { get; set; }
-        public string introduced { get; set; }
+        //public string introduced { get; set; }
         public string sex { get; set; }
         public float sprint { get; set; }
         public string[] exalted { get; set; }
