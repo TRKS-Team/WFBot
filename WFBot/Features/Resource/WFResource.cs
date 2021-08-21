@@ -7,12 +7,15 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
+using GammaLibrary.Extensions;
 using Humanizer;
 using Newtonsoft.Json;
+using WFBot.Features.Utils;
 using WFBot.Utils;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -48,7 +51,61 @@ namespace WFBot.Features.Resource
 
     public delegate Task<T> WFResourceLoader<T>(Stream data);
     public delegate Task<Stream> WFResourceRequester(string url);
+    public delegate Task<bool> WFResourceUpdater<T>(WFResource<T> resource) where T : class;
 
+    public static class WFResourceUpdaters<T> where T : class
+    {
+        public static async Task<bool> MD5CompareUpdater(WFResource<T> resource)
+        {
+            await using (var file = File.OpenRead(resource.CachePath))
+            {
+                await using (var stream = resource.requester(resource.url).Result)
+                {
+                    using var md5 = MD5.Create();
+                    if (md5.ComputeHash(stream) == md5.ComputeHash(file)) return false;
+                }
+            }
+            await resource.Reload();
+            Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
+            WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
+            return true;
+
+        }
+
+        public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
+        {
+            try
+            {
+                var infos = GitHubInfos.Instance.Infos.Where(i => i.Category == resource.Category).ToList();
+
+                if (!infos.Any()) return false;
+                var info = infos.First();
+                if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
+                // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
+                var commits = CommitsGetter.Get($"https://api.github.com/repos/{info.Name}/commits");
+                var sha = commits.First().sha;
+             
+                if (sha == info.SHA) return false;
+                Messenger.SendDebugInfo($"发现{info.Category}有更新,正在更新···");
+                await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
+                WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
+
+                GitHubInfos.Instance.Infos.Where(i => i.Category == info.Category).ForEach(i =>
+                {
+                    i.LastUpdated = DateTime.Now;
+                    i.SHA = sha;
+                });
+                GitHubInfos.Save();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                Trace.WriteLine("用于刷新资源文件的GitHub Commits获取失败, 这可能和网络有关系, 可以尝试阅读https://github.com/TRKS-Team/WFBot/blob/universal/docs/token.md");
+                return false;
+            }
+        }   
+    }
     public static class WFResourceStatic
     {
         public static readonly ConcurrentDictionary<string, int> CategoryVersionDictionary =
@@ -57,14 +114,14 @@ namespace WFBot.Features.Resource
         internal static int FinishedResourceCount;
     }
 
-    public class WFResource<T> where T : class
+    public class WFResource<T> : IWFResource where T : class
     {
         volatile T value;
         readonly object locker = new object();
-        readonly string url;
-        readonly WFResourceLoader<T> resourceLoader;
-        string CachePath => Path.Combine(CacheDir, FileName);
-        string LocalPath => Path.Combine(OfflineDir, FileName);
+        public string url { get; }
+        public readonly WFResourceLoader<T> resourceLoader;
+        public string CachePath => Path.Combine(CacheDir, FileName);
+        public string LocalPath => Path.Combine(OfflineDir, FileName);
         readonly WebHeaderCollection header;
         public const string OfflineDir = "WFOfflineResource";
         public const string CacheDir = "WFCaches";
@@ -77,7 +134,7 @@ namespace WFBot.Features.Resource
 
         protected WFResource(string url = null, string category = null, string fileName = null,
             WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
-            WFResourceRequester wfResourceRequester = null)
+            WFResourceRequester wfResourceRequester = null, WFResourceUpdater<T> updater = null)
         {
             resourceLoader ??= ResourceLoaders<T>.JsonDotNetLoader;
             // 这写的太屎了
@@ -90,6 +147,7 @@ namespace WFBot.Features.Resource
             this.header = header;
             Category = category;
             requester = wfResourceRequester ?? RequestResourceFromTheWideWorldOfWeb;
+            this.updater = updater ?? WFResourceUpdaters<T>.MD5CompareUpdater;
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;
@@ -97,11 +155,21 @@ namespace WFBot.Features.Resource
             Version = 0;
         }
 
-        public static WFResource<T> Create(string url = null, string category = null, string fileName = null, WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null, WFResourceRequester requester = null)
+        public static WFResource<T> Create(string url = null, string category = null, string fileName = null,
+            WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
+            WFResourceRequester requester = null, WFResourceUpdater<T> updater = null)
         {
-            var result = new WFResource<T>(url, category, fileName, header, resourceLoader, requester);
+            var result = new WFResource<T>(url, category, fileName, header, resourceLoader, requester, updater);
             Interlocked.Increment(ref WFResourceStatic.ResourceCount);
             result.initTask = result.Reload(true);
+            if (WFResourcesManager.WFResourceDic.ContainsKey(result.Category ?? ""))
+            {
+                WFResourcesManager.WFResourceDic[result.Category ?? ""].Add(result);
+            }
+            else
+            {
+                WFResourcesManager.WFResourceDic[result.Category ?? ""] = new List<IWFResource> {result};
+            }
             return result;
         }
 
@@ -140,8 +208,13 @@ namespace WFBot.Features.Resource
         public int Version { get; private set; }
 
         readonly SemaphoreSlim _locker = new SemaphoreSlim(1);
-        WFResourceRequester requester;
+        public WFResourceRequester requester { get; set; }
+        WFResourceUpdater<T> updater;
 
+        public async Task<bool> Update()
+        {
+            return await updater(this);
+        }
         public async Task Reload(bool isFirstTime = false)
         {
             using var resourceLock = WFBotResourceLock.Create($"资源刷新 {FileName}");
@@ -174,12 +247,11 @@ namespace WFBot.Features.Resource
                 if (isFirstTime)
                 {
                     initTask = null;
+                    Interlocked.Increment(ref WFResourceStatic.FinishedResourceCount);
+                    Console.WriteLine($">>>> 资源加载进程: {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount} <<<<");
                 }
-                Interlocked.Increment(ref WFResourceStatic.FinishedResourceCount);
-                Console.WriteLine($">>>> 资源加载进程: {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount} <<<<");
             }
         }
-
         async Task LoadFromTheWideWorldOfWeb()
         {
             var sw = Stopwatch.StartNew();
@@ -241,7 +313,7 @@ namespace WFBot.Features.Resource
             }
         }
 
-        public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string urlp)
+        public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string url)
         {
             var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler{AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Brotli}));
             httpClient.Timeout = Timeout.InfiniteTimeSpan;
@@ -253,7 +325,7 @@ namespace WFBot.Features.Resource
                 }
             }
 
-            var dataString = await httpClient.GetStreamAsync(urlp);
+            var dataString = await httpClient.GetStreamAsync(url);
             return dataString;
         }
 

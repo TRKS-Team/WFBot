@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using Newtonsoft.Json;
+using WFBot.Features.Common;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -189,7 +190,7 @@ namespace WFBot.Features.Resource
             await Task.WhenAll(tasks.ToArray());
             void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
             {
-                var resource = WFResource<T>.Create(url, fileName: name, header: header);
+                var resource = WFResource<T>.Create(url, fileName: name, category: nameof(WMASearcher), header: header);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -205,11 +206,15 @@ namespace WFBot.Features.Resource
                 {"Accept-Encoding", "br"}
             };
 
-            var resource = WFResource<WFCD_All[]>.Create(url: "https://wfcd-all.therealkamisama.top/",
-                header: header,
-                resourceLoader: ResourceLoaders<WFCD_All[]>.JsonDotNetLoader, // todo .NET 5 再换
-                fileName: "All.json");
-             
+            var resource = WFResource<WFCD_All[]>.Create(url: "https://wfcd-all.therealkamisama.top/", nameof(WFCD_All),
+                "All.json", 
+                header, 
+                ResourceLoaders<WFCD_All[]>.JsonDotNetLoader,
+                null,
+                WFResourceUpdaters<WFCD_All[]>.GitHubSHAUpdater);
+            WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = "WFCD/warframe-items" , Category = nameof(WFCD_All) });
+
+
             RWFCDAll = resource;
             return resource.WaitForInited();
         }
@@ -227,13 +232,13 @@ namespace WFBot.Features.Resource
             AddTask(ref api.RAllriven, "WF_AllRiven.json");
             AddTask(ref api.RLib, "WF_Lib.json");
             AddTask(ref api.RNightWave, "WF_NightWave.json");
-
+            WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo{Name = "Richasy/WFA_Lexicon", Category = nameof(WFTranslator)});
             await Task.WhenAll(tasks.ToArray());
 
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class
             {
                 var path = $"{source}{name}";
-                var resource = WFResource<T>.Create(path, category: nameof(WFTranslator));
+                var resource = WFResource<T>.Create(path, category: nameof(WFTranslator), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -247,7 +252,12 @@ namespace WFBot.Features.Resource
 
         }
 
-        public static async Task<bool> UpdateLexion()
+        public static void UpdateWFTranslator()
+        {
+            Trace.WriteLine("正在刷新翻译器...");
+            WFTranslator = new WFTranslator();
+        }
+        /*public static async Task<bool> UpdateLexion()
         {
             try
             {
@@ -271,6 +281,7 @@ namespace WFBot.Features.Resource
         {
             WFTranslateData = await GetTranslateApi();
             WFTranslator = new WFTranslator();
-        }
+        }*/
+
     }
 }

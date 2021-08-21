@@ -353,8 +353,8 @@ namespace WFBot
         internal List<WFBotTimer> timers = new List<WFBotTimer>();
         private void InitTimer()
         {
-            AddTimer<LexiconTimer>();
             AddTimer<NotificationTimer>();
+            AddTimer<WFResourcesTimer>();
 
             void AddTimer<T>() where T : WFBotTimer
             {

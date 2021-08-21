@@ -66,6 +66,7 @@ namespace WFBot
         protected override void AfterUpdate()
         {
             // 这里我写的好丑
+            // It's not stupid if it works
             if (Code.IsNullOrWhiteSpace() || Code.Contains(' '))
             {
                 Trace.WriteLine("警告: 口令中包含空格, 可能会影响带口令指令的使用.");

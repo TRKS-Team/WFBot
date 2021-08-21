@@ -143,9 +143,8 @@ namespace WFBot.Events
         [Matchers("更新翻译API")]
         async Task<string> UpdateTranslateApi()
         {
-            if (!(await WFResources.UpdateLexion()))
-                return "翻译API更新失败, 可能是请求次数过多, 请查看 FAQ 来了解如何解决这个问题.";
-            return null;
+            await Task.WhenAll(WFResourcesManager.WFResourceDic[nameof(WFTranslator)].Select(r => r.Reload(false)));
+            return "好了.";
         }
 
         [RequireAdmin]

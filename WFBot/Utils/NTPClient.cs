@@ -360,7 +360,7 @@ namespace InternetTime
                             case 4: // Version 4, Reference ID is the timestamp of last update
                                 DateTime time = ComputeDate(GetMilliSeconds(offReferenceID));
                                 // Take care of the time zone
-                                TimeSpan offspan = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+                                TimeSpan offspan = TimeZoneInfo.Utc.GetUtcOffset(DateTime.Now);
                                 val = (time + offspan).ToString();
                                 break;
                             default:
@@ -381,7 +381,7 @@ namespace InternetTime
             {
                 DateTime time = ComputeDate(GetMilliSeconds(offReferenceTimestamp));
                 // Take care of the time zone
-                TimeSpan offspan = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+                TimeSpan offspan = TimeZoneInfo.Utc.GetUtcOffset(DateTime.Now);
                 return time + offspan;
             }
         }
@@ -402,7 +402,7 @@ namespace InternetTime
             {
                 DateTime time = ComputeDate(GetMilliSeconds(offReceiveTimestamp));
                 // Take care of the time zone
-                TimeSpan offspan = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+                TimeSpan offspan = TimeZoneInfo.Utc.GetUtcOffset(DateTime.Now);
                 return time + offspan;
             }
         }
@@ -414,7 +414,8 @@ namespace InternetTime
             {
                 DateTime time = ComputeDate(GetMilliSeconds(offTransmitTimestamp));
                 // Take care of the time zone
-                TimeSpan offspan = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+                TimeSpan offspan = TimeZoneInfo.Utc.GetUtcOffset(DateTime.Now);
+                
                 return time + offspan;
             }
             set

@@ -152,7 +152,7 @@ namespace WFBot.Features.Other
         }
         */
 
-        private async Task UpdatePersistentEnemiePool()
+        public async Task UpdatePersistentEnemiePool()
         {
             StalkerPool = await api.GetPersistentEnemies();
             CheckPersistentEnemies();

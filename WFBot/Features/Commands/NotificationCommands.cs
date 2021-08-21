@@ -65,10 +65,19 @@ namespace WFBot.Features.Commands
         }
 
         [Matchers("小小黑", "追随者")]
-        void AllPersistentEnemies()
+        async Task AllPersistentEnemies()
         {
-#warning todo
-            // todo ask toma 为什么这里不需要 UpdatePersistentEnemiePool
+            // ask toma 为什么这里不需要 UpdatePersistentEnemiePool
+            // 我他妈忘了
+            try
+            {
+                await WFNotificationHandler.UpdatePersistentEnemiePool();
+            }
+            catch (OperationCanceledException)
+            {
+                Append("操作超时.");
+                return;
+            }
             var enemies = WFNotificationHandler.StalkerPool;
             if (!enemies.Any())
             {

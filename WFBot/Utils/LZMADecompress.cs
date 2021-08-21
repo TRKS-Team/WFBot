@@ -26,6 +26,8 @@ namespace WFBot.Utils
             coder.Code(input, output, input.Length, fileLength, null);
             output.Flush();
             output.Close();
+            input.Flush();
+            input.Close();
         }
     }
 }
