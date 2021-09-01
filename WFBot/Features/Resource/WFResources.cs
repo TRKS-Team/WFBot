@@ -169,7 +169,11 @@ namespace WFBot.Features.Resource
             WFContent = result;
             await resource.WaitForInited();
         }
-
+        private static string GetSHA(string name)
+        {
+            var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
+            return commits.First().sha;
+        }
         private static async Task<WMAuction> GetWMAResources()
         {
             var Auction = new WMAuction();
@@ -188,9 +192,11 @@ namespace WFBot.Features.Resource
             AddTask(ref Auction.ENRRivens, $"{source}/riven/items", "WMA_Rivens.En.json", ENHeader);
             AddTask(ref Auction.RItems, $"{source}/items", "WMA_Items.json", ZHHeader);
             await Task.WhenAll(tasks.ToArray());
+            //// 这几个网络资源每次请求时返回的String都不太一样但是实际上内容一样, 所以用JsonStringCompareUpdater
+            // 我没时间写了, 就先不实现比较后刷新了
             void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
             {
-                var resource = WFResource<T>.Create(url, fileName: name, category: nameof(WMASearcher), header: header);
+                var resource = WFResource<T>.Create(url, fileName: name, category: nameof(WMASearcher), header: header, updater: WFResourceUpdaters<T>.JustUpdateUpdater);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -212,7 +218,11 @@ namespace WFBot.Features.Resource
                 ResourceLoaders<WFCD_All[]>.JsonDotNetLoader,
                 null,
                 WFResourceUpdaters<WFCD_All[]>.GitHubSHAUpdater);
-            WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = "WFCD/warframe-items" , Category = nameof(WFCD_All) });
+            if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WFCD_All)))
+            {
+                var name = "WFCD/warframe-items";
+                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WFCD_All), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+            }
 
 
             RWFCDAll = resource;
@@ -232,7 +242,12 @@ namespace WFBot.Features.Resource
             AddTask(ref api.RAllriven, "WF_AllRiven.json");
             AddTask(ref api.RLib, "WF_Lib.json");
             AddTask(ref api.RNightWave, "WF_NightWave.json");
-            WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo{Name = "Richasy/WFA_Lexicon", Category = nameof(WFTranslator)});
+            if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WFTranslator)))
+            {
+                var name = "Richasy/WFA_Lexicon";
+
+                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WFTranslator), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+            }
             await Task.WhenAll(tasks.ToArray());
 
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class

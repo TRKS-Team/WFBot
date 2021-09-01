@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using WFBot.Features.Resource;
 
@@ -49,14 +50,40 @@ namespace WFBot.Features.Utils
     }
     public partial class WMAItems
     {
+        protected bool Equals(WMAItems other)
+        {
+            return Equals(Payload, other.Payload);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((WMAItems) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Payload != null ? Payload.GetHashCode() : 0);
+        }
+
         [JsonProperty("payload")]
         public Payload3 Payload { get; set; }
     }
 
     public partial class Payload3
     {
+        private WMAItem[] _items;
+
         [JsonProperty("items")]
-        public WMAItem[] Items { get; set; }
+        public WMAItem[] Items {
+            get => _items;
+            set
+            {
+                _items = value.OrderBy(i => i.Id).ToArray();
+            }
+        }
     }
 
     public partial class WMAItem
@@ -75,14 +102,40 @@ namespace WFBot.Features.Utils
     }
     public partial class WMARivens
     {
+        protected bool Equals(WMARivens other)
+        {
+            return Equals(Payload, other.Payload);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((WMARivens) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Payload != null ? Payload.GetHashCode() : 0);
+        }
+
         [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
         public Payload2 Payload { get; set; }
     }
 
     public partial class Payload2
     {
+        private WMARiven[] _rivens;
+
         [JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
-        public WMARiven[] Rivens { get; set; }
+        public WMARiven[] Rivens { 
+            get => _rivens;
+            set
+            {
+                _rivens = value.OrderBy(r => r.Id).ToArray();
+            }
+        }
     }
 
     public partial class WMARiven
@@ -120,10 +173,10 @@ namespace WFBot.Features.Utils
     public partial class RivenAuctions
     {
         [JsonProperty("payload")]
-        public Payload1 Payload { get; set; }
+        public Payload4 Payload { get; set; }
     }
 
-    public partial class Payload1
+    public partial class Payload4
     {
         [JsonProperty("auctions")]
         public List<RivenAuction> Auctions { get; set; }
@@ -254,14 +307,39 @@ namespace WFBot.Features.Utils
 
     public partial class WMAAttributes
     {
+        protected bool Equals(WMAAttributes other)
+        {
+            return Equals(Payload, other.Payload);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((WMAAttributes) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Payload != null ? Payload.GetHashCode() : 0);
+        }
+
         [JsonProperty("payload", NullValueHandling = NullValueHandling.Ignore)]
         public Payload1 Payload { get; set; }
     }
 
     public partial class Payload1
     {
+        private WMAAttribute[] _attributes;
+
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
-        public WMAAttribute[] Attributes { get; set; }
+        public WMAAttribute[] Attributes { get => _attributes;
+            set
+            {
+                _attributes = value.OrderBy(a => a.Id).ToArray();
+            }
+        }
     }
 
     public partial class WMAAttribute
@@ -344,6 +422,7 @@ namespace WFBot.Features.Utils
 #if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
 // 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
 // TODO 换数据源
+// 笑死 CY还因为这个问题专门写了个Commit, 以为机器人开不起是这玩意造成的
         public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }

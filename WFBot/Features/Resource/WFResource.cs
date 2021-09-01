@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Humanizer;
+using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
 using WFBot.Features.Utils;
 using WFBot.Utils;
@@ -55,14 +56,13 @@ namespace WFBot.Features.Resource
 
     public static class WFResourceUpdaters<T> where T : class
     {
-        public static async Task<bool> MD5CompareUpdater(WFResource<T> resource)
+        public static async Task<bool> StringCompareUpdater(WFResource<T> resource)
         {
             await using (var file = File.OpenRead(resource.CachePath))
             {
-                await using (var stream = resource.requester(resource.url).Result)
+                await using (var stream = await resource.requester(resource.url))
                 {
-                    using var md5 = MD5.Create();
-                    if (md5.ComputeHash(stream) == md5.ComputeHash(file)) return false;
+                    if (file.ReadToEnd() == stream.ReadToEnd()) return false;
                 }
             }
             await resource.Reload();
@@ -72,6 +72,35 @@ namespace WFBot.Features.Resource
 
         }
 
+        public static async Task<bool> JsonStringCompareUpdater(WFResource<T> resource)
+        {
+            await using (var file = File.OpenRead(resource.CachePath))
+            {
+                await using (var stream = await resource.requester(resource.url))
+                {
+                    if (JsonConvert.SerializeObject(resource.resourceLoader(file)) == JsonConvert.SerializeObject(resource.resourceLoader(stream)))
+                    {
+                        return false;
+                    }
+                }
+            }
+            await resource.Reload();
+            Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
+            WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
+            return true;
+        }
+        public static async Task<bool> JustUpdateUpdater(WFResource<T> resource)
+        {
+            await resource.Reload();
+            Trace.WriteLine($"正在刷新资源: {resource.FileName}");
+            WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
+            return true;
+        }
+        private static string GetSHA(string name)
+        {
+            var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
+            return commits.First().sha;
+        }
         public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
         {
             try
@@ -82,8 +111,7 @@ namespace WFBot.Features.Resource
                 var info = infos.First();
                 if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
                 // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
-                var commits = CommitsGetter.Get($"https://api.github.com/repos/{info.Name}/commits");
-                var sha = commits.First().sha;
+                var sha = GetSHA(info.Name);
              
                 if (sha == info.SHA) return false;
                 Messenger.SendDebugInfo($"发现{info.Category}有更新,正在更新···");
@@ -147,7 +175,7 @@ namespace WFBot.Features.Resource
             this.header = header;
             Category = category;
             requester = wfResourceRequester ?? RequestResourceFromTheWideWorldOfWeb;
-            this.updater = updater ?? WFResourceUpdaters<T>.MD5CompareUpdater;
+            this.updater = updater ?? WFResourceUpdaters<T>.StringCompareUpdater;
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;

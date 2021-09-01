@@ -316,7 +316,7 @@ namespace WFBot.Features.Utils
         public static string ToString(List<RivenAuction> auctions, WeaponInfo weapon)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(GetRivenInfoString(weapon ));
+            sb.AppendLine(GetRivenInfoString(weapon));
             sb.AppendLine($"下面是 {weapon.zhname} 紫卡的 {auctions.Count} 条卖家信息(来自WM紫卡市场)");
             foreach (var auction in auctions)
             {
