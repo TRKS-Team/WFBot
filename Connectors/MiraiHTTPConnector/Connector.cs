@@ -75,7 +75,13 @@ namespace MiraiHTTPConnector
 
         public override void SendGroupMessage(GroupID groupID, string message)
         {
-            session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Wait();
+            var msgID = session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Result;
+
+            if (MiraiConfigInMain.Instance.AutoRevoke)
+            {
+                Task.Delay(MiraiConfigInMain.Instance.RevokeTimeInSeconds)
+                    .ContinueWith((t) => { session.RevokeMessageAsync(msgID); });
+            }
         }
         
         

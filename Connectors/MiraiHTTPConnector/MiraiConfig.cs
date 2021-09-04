@@ -14,6 +14,8 @@ namespace MiraiHTTPConnector
         public ushort Port = 8080;
         public string AuthKey = "";
 
+        public bool AutoRevoke = false;
+        public int RevokeTimeInSeconds = 60;
         public long BotQQ = default;
     }
 }

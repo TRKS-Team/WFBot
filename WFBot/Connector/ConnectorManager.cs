@@ -106,7 +106,12 @@ namespace WFBot.Connector
 
         public override void SendGroupMessage(GroupID groupID, string message)
         {
-            session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Wait();
+            var msgID = session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Result;
+            if (MiraiConfigInMain.Instance.AutoRevoke)
+            {
+                Task.Delay(MiraiConfigInMain.Instance.RevokeTimeInSeconds)
+                    .ContinueWith((t) => { session.RevokeMessageAsync(msgID); });
+            }
         }
 
 
@@ -123,7 +128,8 @@ namespace WFBot.Connector
         public string Host = "127.0.0.1";
         public ushort Port = 8080;
         public string AuthKey = "";
-
+        public bool AutoRevoke = false;
+        public int RevokeTimeInSeconds = 60;
         public long BotQQ = default;
     }
 
