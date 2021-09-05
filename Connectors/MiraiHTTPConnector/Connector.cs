@@ -75,11 +75,17 @@ namespace MiraiHTTPConnector
 
         public override void SendGroupMessage(GroupID groupID, string message)
         {
-            var msgID = session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Result;
-
-            if (MiraiConfigInMain.Instance.AutoRevoke)
+            const string NotificationHead = "[WFBot通知] ";
+            var isNotification = message.StartsWith(NotificationHead);
+            if (isNotification)
             {
-                var time = MiraiConfigInMain.Instance.RevokeTimeInSeconds;
+                message = message.Substring(NotificationHead.Length);
+            }
+            var msgID = session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Result;
+            
+            if (MiraiConfig.Instance.AutoRevoke && !isNotification)
+            {
+                var time = MiraiConfig.Instance.RevokeTimeInSeconds;
                 var tr = time < 1000 ? time * 1000 : time;
                 Task.Delay(tr)
                     .ContinueWith((t) => { session.RevokeMessageAsync(msgID); });

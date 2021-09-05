@@ -89,6 +89,7 @@ namespace WFBot.Features.Utils
                     if (count > 20 && content.StartsWith("机器人开始了自动更新")) return;
 
                     var sb = new StringBuilder();
+                    sb.Append("[WFBot通知] ");
                     sb.AppendLine(content);
                     if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
                     sb.AppendLine($"如果想要获取更好的体验,请自行部署.");

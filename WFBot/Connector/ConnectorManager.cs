@@ -103,11 +103,18 @@ namespace WFBot.Connector
             };
             session.ConnectAsync(options, qq).Wait();
         }
-
+        
         public override void SendGroupMessage(GroupID groupID, string message)
         {
+            const string NotificationHead = "[WFBot通知] ";
+            var isNotification = message.StartsWith(NotificationHead);
+            if (isNotification)
+            {
+                message = message.Substring(NotificationHead.Length);
+            }
             var msgID = session.SendGroupMessageAsync(groupID, new PlainMessage(message)).Result;
-            if (MiraiConfigInMain.Instance.AutoRevoke)
+
+            if (MiraiConfigInMain.Instance.AutoRevoke && !isNotification)
             {
                 var time = MiraiConfigInMain.Instance.RevokeTimeInSeconds;
                 var tr = time < 1000 ? time * 1000 : time;
@@ -115,8 +122,6 @@ namespace WFBot.Connector
                     .ContinueWith((t) => { session.RevokeMessageAsync(msgID); });
             }
         }
-
-
 
         public override void SendPrivateMessage(UserID userID, string message)
         {
