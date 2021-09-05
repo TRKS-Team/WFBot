@@ -79,7 +79,9 @@ namespace MiraiHTTPConnector
 
             if (MiraiConfigInMain.Instance.AutoRevoke)
             {
-                Task.Delay(MiraiConfigInMain.Instance.RevokeTimeInSeconds)
+                var time = MiraiConfigInMain.Instance.RevokeTimeInSeconds;
+                var tr = time < 1000 ? time * 1000 : time;
+                Task.Delay(tr)
                     .ContinueWith((t) => { session.RevokeMessageAsync(msgID); });
             }
         }
