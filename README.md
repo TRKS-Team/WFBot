@@ -16,7 +16,8 @@
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
 
 > 本分支是 WFBot 通用版的分支, 原基于 Mahua 框架(已停更)的可在[这里](https://github.com/TRKS-Team/WFBot/tree/old-sbmahua)找到  
-> 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配
+> 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配  
+> 官方QQ群: [878527767](https://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)
 
 ![MONEY](docs/images/MONEY.png) 
 --by [@Lasm_Gratel](https://github.com/LasmGratel)  
@@ -87,7 +88,7 @@
 - **_小小黑_**: **/小小黑** 来查询目前追随者的信息.
   > _仅限此活动激活时可以使用_
 
-另外还有一些不影响大局的调试命令和命令别名, 可以自己在代码中 ([私聊](https://github.com/TRKS-Team/WFBot/blob/universal/WFBot/Events/PrivateMessageReceivedEvent.cs)/[群聊](https://github.com/TRKS-Team/WFBot/blob/universal/WFBot/Events/MessageReceivedEvent.cs)) 查阅.
+另外还有一些不影响大局的调试命令和命令别名, 可以自己在代码中 ([私聊](https://github.com/TRKS-Team/WFBot/blob/universal/WFBot/Features/Events/PrivateMessageReceivedEvent.cs)/[群聊](https://github.com/TRKS-Team/WFBot/blob/universal/WFBot/Features/Events/MessageReceivedEvent.cs)) 查阅.
 
 ### **私聊**命令
 
