@@ -41,7 +41,16 @@ namespace WFBot.Features.Resource
                 char c;
                 while (!((c = (char) sr.Peek()) == '[' || c == '{')) sr.Read();
                 using var reader = new JsonTextReader(sr);
-                return new Newtonsoft.Json.JsonSerializer {NullValueHandling = NullValueHandling.Ignore}
+
+                var serializer = new Newtonsoft.Json.JsonSerializer {NullValueHandling = NullValueHandling.Ignore};
+                serializer.Error += (sender, args) =>
+                {
+                    if (args.ErrorContext.Error.Message.Contains("Error converting value {null} to type"))
+                    {
+                        args.ErrorContext.Handled = true;
+                    }
+                };
+                return serializer
                     .Deserialize<T>(reader);
 #endif
             });

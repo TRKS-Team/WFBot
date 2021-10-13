@@ -1201,7 +1201,7 @@ namespace WFBot.Features.Utils
         public string startString { get; set; }
         public DateTime expiry { get; set; }
         public bool active { get; set; }
-        public int maximumScore { get; set; }
+        public int? maximumScore { get; set; }
         public string faction { get; set; }
         public string description { get; set; }
         public string node { get; set; }
