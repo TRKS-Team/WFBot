@@ -269,6 +269,11 @@ namespace WFBot.Features.Utils
         }
     }
     */
+    public class TranslateResult
+    {
+        public string Result { get; set; }
+        public bool IsTranslated { get; set; }
+    }
     public class Translator
     {
         private readonly Dictionary<string, string> dic;
@@ -283,11 +288,11 @@ namespace WFBot.Features.Utils
             dic = dictionary;
         }
 
-        public string Translate(string source)
+        public TranslateResult Translate(string source)
         {
-            if (source == null) return source;
-            
-            return dic.ContainsKey(source) ? dic[source] : source;
+            if (source == null) return new TranslateResult {IsTranslated = false, Result = source};
+            var translated = dic.ContainsKey(source);
+            return new TranslateResult {IsTranslated = translated, Result = translated ? dic[source] : source};
         }
 
         public void AddEntry(string source, string target)

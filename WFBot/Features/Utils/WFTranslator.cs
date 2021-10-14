@@ -61,7 +61,7 @@ namespace WFBot.Features.Utils
             weaponslist.Clear();
             foreach (var riven in translateApi.Riven)
             {
-                var zh = dictTranslator.Translate(riven.name);
+                var zh = dictTranslator.Translate(riven.name).Result;
                 weapons.Add(zh);
                 weaponslist.Add(new Riven { id = riven.id, modulus = riven.modulus, name = riven.name, rank = riven.rank, thumb = riven.thumb, type = riven.type, zhname = zh });
             }
@@ -208,7 +208,7 @@ namespace WFBot.Features.Utils
 
         public string GetAttributeEffect(string urlname)
         {
-            return urlnameTranslator.Translate(urlname);
+            return urlnameTranslator.Translate(urlname).Result;
         }
 
         public string GetRivenUrlName(string weapon)
@@ -221,11 +221,11 @@ namespace WFBot.Features.Utils
         }
         public string TranslateWeaponType(string type)
         {
-            return dictTranslator.Translate(type);
+            return dictTranslator.Translate(type).Result;
         }
         public string TranslateRelicReward(string reward)
         {
-            return relicrewardTranslator.Translate(reward.Format());
+            return relicrewardTranslator.Translate(reward.Format()).Result;
         }
 
         public void TranslateKuvaMission(List<Kuva> kuvas)
@@ -237,7 +237,7 @@ namespace WFBot.Features.Utils
                 kuva.name = TranslateNode(kuva.name);
                 // // trick
                 // 同↓
-                kuva.type = dictTranslator.Translate(kuva.type);
+                kuva.type = dictTranslator.Translate(kuva.type).Result;
             }
         }
 
@@ -266,7 +266,7 @@ namespace WFBot.Features.Utils
             {
                 foreach (var property in order.properties)
                 {
-                    property.name = dictTranslator.Translate(property.name);
+                    property.name = dictTranslator.Translate(property.name).Result;
                 }
             }
         }
@@ -282,15 +282,15 @@ namespace WFBot.Features.Utils
             ar.node = TranslateNode(ar.node);
             // // trick
             // 不需要trick了
-            ar.type = dictTranslator.Translate(ar.type);
+            ar.type = dictTranslator.Translate(ar.type).Result;
 
         }
         public void TranslateNightWave(WFNightWave nightwave)
         {
             foreach (var challenge in nightwave.activeChallenges)
             {
-                challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format().Replace(",", ""));
-                challenge.title = nightwaveTranslator.Translate(challenge.title.Format());
+                challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format().Replace(",", "")).Result;
+                challenge.title = nightwaveTranslator.Translate(challenge.title.Format()).Result;
                 challenge.expiry = GetRealTime(challenge.expiry);
             }
         }
@@ -298,7 +298,7 @@ namespace WFBot.Features.Utils
         {
             foreach (var enemy in enemies)
             {
-                enemy.agentType = dictTranslator.Translate(enemy.agentType);
+                enemy.agentType = dictTranslator.Translate(enemy.agentType).Result;
                 enemy.lastDiscoveredAt = TranslateNode(enemy.lastDiscoveredAt);
                 enemy.lastDiscoveredTime = GetRealTime(enemy.lastDiscoveredTime);
             }
@@ -307,11 +307,11 @@ namespace WFBot.Features.Utils
         {
             foreach (var @event in events)
             {
-                @event.description = dictTranslator.Translate(@event.description);
+                @event.description = dictTranslator.Translate(@event.description).Result;
             }
         }
 
-        public string TranslateSearchWord(string source)
+        public TranslateResult TranslateSearchWord(string source)
         {
             return searchwordTranslator.Translate(source);
         }
@@ -327,12 +327,12 @@ namespace WFBot.Features.Utils
         {
             foreach (var item in reward.countedItems)
             {
-                item.type = invasionTranslator.Translate(item.type);
+                item.type = invasionTranslator.Translate(item.type).Result;
             }
 
             foreach (var t in reward.countedItems)
             {
-                t.type = dictTranslator.Translate(t.type);
+                t.type = dictTranslator.Translate(t.type).Result;
             }
         }
 
@@ -349,7 +349,7 @@ namespace WFBot.Features.Utils
                 }
                 else
                 {
-                    return dictTranslator.Translate(node);
+                    return dictTranslator.Translate(node).Result;
                 }
 
             }
@@ -362,19 +362,19 @@ namespace WFBot.Features.Utils
         {
             var mission = alert.Mission;
             mission.Node = TranslateNode(mission.Node);
-            mission.Type = dictTranslator.Translate(mission.Type);
+            mission.Type = dictTranslator.Translate(mission.Type).Result;
             TranslateReward(mission.Reward);
 
             void TranslateReward(Reward reward)
             {
                 foreach (var item in reward.CountedItems)
                 {
-                    item.Type = dictTranslator.Translate(item.Type);
+                    item.Type = dictTranslator.Translate(item.Type).Result;
                 }
 
                 for (var i = 0; i < reward.Items.Length; i++)
                 {
-                    reward.Items[i] = dictTranslator.Translate(reward.Items[i]);
+                    reward.Items[i] = dictTranslator.Translate(reward.Items[i]).Result;
                 }
             }
 
@@ -435,16 +435,16 @@ namespace WFBot.Features.Utils
             foreach (var variant in sortie.variants)
             {
                 variant.node = TranslateNode(variant.node).Replace("Plains of Eidolon", "夜灵平野"); // 这个不在翻译api里
-                variant.missionType = dictTranslator.Translate(variant.missionType);
+                variant.missionType = dictTranslator.Translate(variant.missionType).Result;
                 if (variant.modifier.Contains(":"))
                 {
                     var strs = variant.modifier.Split(":".ToCharArray());
-                    strs = strs.Select(s => dictTranslator.Translate(s.Trim())).ToArray();
+                    strs = strs.Select(s => dictTranslator.Translate(s.Trim()).Result).ToArray();
                     variant.modifier = strs.Connect(": ");
                 }
-                variant.modifier = dictTranslator.Translate(variant.modifier);
+                variant.modifier = dictTranslator.Translate(variant.modifier).Result;
             }
-            sortie.boss = dictTranslator.Translate(sortie.boss);
+            sortie.boss = dictTranslator.Translate(sortie.boss).Result;
         }
 
         public void TranslateFissures(List<Fissure> fissures)
@@ -453,8 +453,8 @@ namespace WFBot.Features.Utils
             foreach (var fissure in fissures)
             {
                 fissure.node = TranslateNode(fissure.node);
-                fissure.tier = dictTranslator.Translate(fissure.tier);
-                fissure.missionType = dictTranslator.Translate(fissure.missionType);
+                fissure.tier = dictTranslator.Translate(fissure.tier).Result;
+                fissure.missionType = dictTranslator.Translate(fissure.missionType).Result;
                 fissure.expiry = GetRealTime(fissure.expiry);
                 var delay = fissure.expiry - DateTime.Now;
                 if (delay.Ticks > 0)
@@ -470,7 +470,7 @@ namespace WFBot.Features.Utils
             trader.location = TranslateNode(trader.location).Replace("Relay", "中继站");
             foreach (var inventory in trader.inventory)
             {
-                inventory.item = dictTranslator.Translate(inventory.item);
+                inventory.item = dictTranslator.Translate(inventory.item).Result;
             }
             // ohhhhhhhhhhhhhhhhhhhhhhh奸商第一百次来带的东西真他妈劲爆啊啊啊啊啊啊啊啊啊啊啊 啊啊啊啊啊啊啊啊啊啊之后还带了活动电可我没囤多少呜呜呜呜呜呜穷了 哈哈哈哈哈哈老子开出一张绝路啊啊啊啊啊啊爽死了 呜呜呜呜电男loki出库我没刷我穷死了 为啥带金首发DENMSL 爷爷退坑了D2真好玩
 

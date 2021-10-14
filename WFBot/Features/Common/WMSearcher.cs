@@ -99,7 +99,7 @@ namespace WFBot.Features.Common
         };
 
 
-        public static string TrySearch(this string source, object optionst, bool neuroptics = false)
+        public static TranslateResult TrySearch(this string source, object optionst, bool neuroptics = false)
         {
             var options = optionst.ToOptions();
             var formatted = source.Format();
@@ -127,7 +127,7 @@ namespace WFBot.Features.Common
                 }
             }
             // 到时候把SWWCO改好一点, 把上面这段也装进去
-            return formatted == result ? source : result;
+            return result;
         }
 
     }
@@ -213,13 +213,26 @@ namespace WFBot.Features.Common
             var none = new SWWCO();
             // 详细逻辑图在我笔记本上有手稿
             // 不建议重构
-            return item == (searchword = translator.TranslateSearchWord(item)) &&
+            TranslateResult Assign(TranslateResult result, out string searchword)
+            {
+                searchword = result.Result;
+                return result;
+            }
+
+            return !Assign(translator.TranslateSearchWord(item), out searchword).IsTranslated &&
+                   !Assign(item.TrySearch(一套), out searchword).IsTranslated &&
+                   !Assign(item.TrySearch((总图, p)), out searchword).IsTranslated &&
+                   !Assign(item.TrySearch((p, 一套)), out searchword).IsTranslated &&
+                   !Assign(item.TrySearch((p, 头)), out searchword).IsTranslated &&
+                   !Assign(item.TrySearch((p), neuroptics: true), out searchword).IsTranslated &&
+                   !Assign(item.TrySearch((none), neuroptics: true), out searchword).IsTranslated;
+            /*return item == (searchword = translator.TranslateSearchWord(item)) &&
                    item == (searchword = item.TrySearch((一套))) && 
                    item == (searchword = item.TrySearch((总图, p))) &&
                    item == (searchword = item.TrySearch((p, 一套))) &&
                    item == (searchword = item.TrySearch((p, 头))) &&
                    item == (searchword = item.TrySearch((p), neuroptics: true)) &&
-                   item == (searchword = item.TrySearch(none, neuroptics: true));
+                   item == (searchword = item.TrySearch(none, neuroptics: true));*/
         }
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
