@@ -273,6 +273,10 @@ namespace WFBot.Features.Utils
     {
         public string Result { get; set; }
         public bool IsTranslated { get; set; }
+        public override string ToString()
+        {
+            return Result;
+        }
     }
     public class Translator
     {

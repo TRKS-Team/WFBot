@@ -98,8 +98,8 @@ namespace WFBot
 
         public WFNotificationHandler NotificationHandler { get; private set; }
         public static WFBotCore Instance { get; internal set; }
-        private MessageReceivedEvent messageReceivedEvent;
-        private PrivateMessageReceivedEvent privateMessageReceivedEvent;
+        public MessageReceivedEvent messageReceivedEvent;
+        public PrivateMessageReceivedEvent privateMessageReceivedEvent;
         public static string Version { get; }
         public static bool IsOfficial { get; }
         public static bool IsShuttingDown { get; private set; }
@@ -207,14 +207,14 @@ namespace WFBot
             }
         }
 
-        public void OnGroupMessage(GroupID groupID, UserID userID, string message)
+        public async Task OnGroupMessage(GroupID groupID, UserID userID, string message)
         {
             if (!Inited)
             {
                 Trace.WriteLine($"Message ignored due to uninitialized: {groupID} {userID} {message}");
                 return;
             }
-            messageReceivedEvent.ProcessGroupMessage(groupID, userID, message);
+            await messageReceivedEvent.ProcessGroupMessage(groupID, userID, message);
         }
 
         public void OnFriendMessage(UserID userID, string message)

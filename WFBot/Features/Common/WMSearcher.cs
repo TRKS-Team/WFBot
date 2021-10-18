@@ -219,13 +219,13 @@ namespace WFBot.Features.Common
                 return result;
             }
 
-            return !Assign(translator.TranslateSearchWord(item), out searchword).IsTranslated &&
-                   !Assign(item.TrySearch(一套), out searchword).IsTranslated &&
-                   !Assign(item.TrySearch((总图, p)), out searchword).IsTranslated &&
-                   !Assign(item.TrySearch((p, 一套)), out searchword).IsTranslated &&
-                   !Assign(item.TrySearch((p, 头)), out searchword).IsTranslated &&
-                   !Assign(item.TrySearch((p), neuroptics: true), out searchword).IsTranslated &&
-                   !Assign(item.TrySearch((none), neuroptics: true), out searchword).IsTranslated;
+            return Assign(translator.TranslateSearchWord(item), out searchword).IsTranslated ||
+                   Assign(item.TrySearch(一套), out searchword).IsTranslated ||
+                   Assign(item.TrySearch((p, 总图)), out searchword).IsTranslated ||
+                   Assign(item.TrySearch((p, 一套)), out searchword).IsTranslated ||
+                   Assign(item.TrySearch((p, 头)), out searchword).IsTranslated ||
+                   Assign(item.TrySearch((p), neuroptics: true), out searchword).IsTranslated ||
+                   Assign(item.TrySearch((none), neuroptics: true), out searchword).IsTranslated;
             /*return item == (searchword = translator.TranslateSearchWord(item)) &&
                    item == (searchword = item.TrySearch((一套))) && 
                    item == (searchword = item.TrySearch((总图, p))) &&
@@ -237,7 +237,7 @@ namespace WFBot.Features.Common
 
         public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
         {
-            if (Search(item, out var searchword))
+            if (!Search(item, out var searchword))
             {
                 var sb = new StringBuilder();
                 var similarlist = translator.GetSimilarItem(item.Format(), "wm");

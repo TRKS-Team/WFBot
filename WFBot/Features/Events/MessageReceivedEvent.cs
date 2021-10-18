@@ -21,10 +21,10 @@ namespace WFBot.Features.Events
         int commandCount;
         bool showedSlashTip = false;
 
-        public void ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
+        public Task ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
         {
             // 检查每分钟最大调用
-            if (CheckCallPerMin(groupId)) return;
+            if (CheckCallPerMin(groupId)) return Task.CompletedTask;
 
             // 处理以 '/' 开头的消息
             RunAutoReply(groupId, message);
@@ -35,7 +35,7 @@ namespace WFBot.Features.Events
                     Trace.WriteLine("提示: 设置中要求命令必须以 / 开头. ");
                     showedSlashTip = true;
                 }
-                return;
+                return Task.CompletedTask;
             }
             message = message.TrimStart('/', '、', '／');
 
@@ -43,13 +43,22 @@ namespace WFBot.Features.Events
             
             // TODO 优化task数量
             // TODO cancellation token
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 var sw = Stopwatch.StartNew();
                 var cancelSource = new CancellationTokenSource();
                 AsyncContext.SetCancellationToken(cancelSource.Token);
-                var sender = new GroupMessageSender(groupId);
-                AsyncContext.SetMessageSender(sender);
+                IGroupMessageSender sender;
+                if (WFBotCore.UseTestConnector)
+                {
+                    sender = AsyncContext.GetMessageSender();
+                }
+                else
+                {                 
+                    sender = new GroupMessageSender(groupId);
+                    AsyncContext.SetMessageSender(sender);
+                    
+                }
                 var commandProcessTask = handler.ProcessCommandInput();
 
                 using var locker = WFBotResourceLock.Create(
