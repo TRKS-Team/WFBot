@@ -24,8 +24,10 @@ namespace WFBot.Features.Commands
 
             // 小屎山
             return _wmSearcher.SendWMInfo(
-                word.ToLower().Replace(quickReply, "")
-                    .Replace(buyer, "").Format(), QR, B);
+                word.ToLower()
+                    .Replace(quickReply, "")
+                    .Replace(buyer, "")
+                    .Format(), QR, B);
         }
 
         [Matchers("紫卡")]

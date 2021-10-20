@@ -15,7 +15,15 @@ namespace WFBot.Features.Commands
     {
         
         
-        void SendMessage(string msg) => MsgSender.SendMessage(msg);
+        void SendMessage(string msg)
+        {
+            if (WFBotCore.UseTestConnector)
+            {
+                AsyncContext.SendGroupMessage(msg);
+                return;
+            }
+            MsgSender.SendMessage(msg);
+        }
     }
 
     public partial class CommandsHandler : ICommandHandler<CommandsHandler>, ISender
@@ -26,13 +34,16 @@ namespace WFBot.Features.Commands
         public UserID Sender { get; }
         public string Message { get; }
         public GroupID Group { get; }
-        GroupMessageSender MsgSender => new GroupMessageSender(Group);
+
+        private GroupMessageSender MsgSender => new GroupMessageSender(Group);
         public readonly Lazy<StringBuilder> OutputStringBuilder = new Lazy<StringBuilder>(() => new StringBuilder());
         string ICommandHandler<CommandsHandler>.Sender => Group;
         
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
         private static readonly WMASearcher _wmaSearcher = new WMASearcher();
+
+
 
         void Append(string s)
         {
@@ -54,7 +65,14 @@ namespace WFBot.Features.Commands
             Sender = sender;
             MessageSender = (id, msg) =>
             {
-                SendGroup(id.ID, msg);
+                if (WFBotCore.UseTestConnector)
+                {
+                    AsyncContext.SendGroupMessage(msg);
+                }
+                else
+                {
+                    new GroupMessageSender(id.ID).SendMessage(msg);
+                }
             };
             Group = group;
             Message = message;
