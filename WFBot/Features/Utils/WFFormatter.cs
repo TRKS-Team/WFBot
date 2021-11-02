@@ -261,7 +261,7 @@ namespace WFBot.Features.Utils
         {
             var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(
                 "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
-            info.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
+            info?.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
             return info;
         }
         public static string GetRivenInfoString(Riven riven)
@@ -289,7 +289,7 @@ namespace WFBot.Features.Utils
         public static string GetRivenInfoString(WeaponInfo weapon)
         {
             var sb = new StringBuilder();
-            var datas = GetRivenData().Result.Where(d => d.compatibility.Format() == weapon.enname.Format()).ToList();
+            var datas = GetRivenData().Result?.Where(d => d.compatibility.Format() == weapon.enname.Format()).ToList();
             var rivens = WFResources.WFTranslateData.Riven.Where(d => d.name == weapon.enname).ToList();
 
             if (rivens.Any())
@@ -298,16 +298,20 @@ namespace WFBot.Features.Utils
                 sb.AppendLine($"下面是 {weapon.zhname} 紫卡的基本信息");
                 sb.AppendLine($"类型: {WFResources.WFTranslator.TranslateWeaponType(riven.type)} 倾向: {riven.rank}星 倍率: {Math.Round(riven.modulus, 2)}");
             }
-            var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
-            if (rerolled.Any())
-            {
-                sb.AppendLine($"0洗均价: {rerolled.First().avg}白金(每周交易数据)");
-            }
 
-            rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
-            if (rerolled.Any())
+            if (datas != null)
             {
-                sb.AppendLine($"全部均价: {rerolled.First().avg}白金(每周交易数据)");
+                var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
+                if (rerolled.Any())
+                {
+                    sb.AppendLine($"0洗均价: {rerolled.First().avg}白金(每周交易数据)");
+                }
+
+                rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
+                if (rerolled.Any())
+                {
+                    sb.AppendLine($"全部均价: {rerolled.First().avg}白金(每周交易数据)");
+                }
             }
 
             return sb.ToString().Trim();
