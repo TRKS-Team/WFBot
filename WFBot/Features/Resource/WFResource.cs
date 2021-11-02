@@ -32,14 +32,15 @@ namespace WFBot.Features.Resource
 #if DEBUG
                 using var sr = new StreamReader(stream);
                 var str = sr.ReadToEnd();
-                str = str[str.IndexOfAny(new[] { '{', '[' })..];
+                if (str != string.Empty)
+                    str = str[str.IndexOfAny(new[] { '{', '[' })..];
 
                 return JsonConvert.DeserializeObject<T>(str, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
 #else
                 using var sr = new StreamReader(stream);
-                char c;
-                while (!((c = (char) sr.Peek()) == '[' || c == '{')) sr.Read();
+                int c;
+                while (!((char)(c = sr.Peek()) == '[' || (char)c == '{' || c == -1)) sr.Read();
                 using var reader = new JsonTextReader(sr);
 
                 var serializer = new Newtonsoft.Json.JsonSerializer {NullValueHandling = NullValueHandling.Ignore};
@@ -245,6 +246,7 @@ namespace WFBot.Features.Resource
         public int Version { get; private set; }
 
         readonly SemaphoreSlim _locker = new SemaphoreSlim(1);
+        public bool Reloading => _locker.CurrentCount == 0;
         public WFResourceRequester requester { get; set; }
         WFResourceUpdater<T> updater;
 

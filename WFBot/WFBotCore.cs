@@ -273,6 +273,7 @@ namespace WFBot
 
             Trace.WriteLine("加载配置文件...");
             Config.Update();
+            Config.Save();
 
             Trace.WriteLine("加载 Connector...");
             ConnectorManager.LoadConnector();

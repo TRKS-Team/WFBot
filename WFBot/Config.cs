@@ -62,7 +62,9 @@ namespace WFBot
         public bool NotifyBeforeResult = true;
 
         public Dictionary<string, string> CustomReplies = new Dictionary<string, string>();
-        
+
+        public bool UseTelemetry = true;
+
         protected override void AfterUpdate()
         {
             // 这里我写的好丑
