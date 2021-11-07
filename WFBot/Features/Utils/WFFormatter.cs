@@ -257,10 +257,28 @@ namespace WFBot.Features.Utils
             return sb.ToString().Trim();
         }
         public static async Task<List<RivenData>> GetRivenData()
-            // 这个数据每周(大概是)变化, 所以不作为静态数据保存.
+            // 这个数据每周变化, 所以不作为静态数据保存.
         {
-            var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(
-                "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json");
+            string source;
+            switch (Config.Instance.Platform)
+            {
+                case Platform.PC:
+                    source = "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json";
+                    break;
+                case Platform.NS:
+                    source = "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensSWI.json";
+                    break;
+                case Platform.PS4:
+                    source = "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPS4.json";
+                    break;
+                case Platform.XBOX:
+                    source = "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPS4.json";
+                    break;
+                default:
+                    source = "http://n9e5v4d8.ssl.hwcdn.net/repos/weeklyRivensPC.json";
+                    break;
+            }
+            var info = await WebHelper.DownloadJsonAsync<List<RivenData>>(source);
             info?.ForEach(d => d.compatibility = d.compatibility.IsNullOrEmpty() ? "" : d.compatibility.Replace("<ARCHWING> ", "").Format());
             return info;
         }
