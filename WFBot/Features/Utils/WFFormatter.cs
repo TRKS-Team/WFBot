@@ -53,7 +53,21 @@ namespace WFBot.Features.Utils
                 foreach (var reward in relic.RelicRewards)
                 {
                     var name = GetRelicRewardName(reward.RewardName);
-                    sb.Append($"[{name}]");
+                    sb.Append($"[");
+                    switch (reward.Rarity)
+                    {
+                        case "RARE":
+                            sb.Append("(金)");
+                            break;
+                        case "UNCOMMON":
+                            sb.Append("(银)");
+                            break;
+                        case "COMMON":
+                            sb.Append("(铜)");
+                            break;
+                    }
+
+                    sb.Append($" {name}]");
                 }
                 sb.AppendLine();
             }
