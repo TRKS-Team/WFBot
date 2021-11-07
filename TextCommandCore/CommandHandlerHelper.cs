@@ -211,7 +211,7 @@ namespace TextCommandCore
             if (method.IsAttributeDefined<CombineEndAttribute>())
                 providedParams = CombineEnd(providedParams, requiredParams);
 
-            if (providedParams.Length > maxRequiredParams) throw new CommandException("参数过多");
+            if (providedParams.Length > maxRequiredParams && maxRequiredParams != 0) throw new CommandException("参数过多");
 
             for (var index = 0; index < requiredParams.Length; index++)
             {
