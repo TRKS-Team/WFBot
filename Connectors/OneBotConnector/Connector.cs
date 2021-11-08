@@ -51,9 +51,11 @@ namespace OneBotConnector
             var url = $"ws://{config.host}:{config.port}";
             client = new CqHttpWebSocketApiClient($"{url}/api", config.accesstoken);
             wsevent = new CqHttpWebSocketEvent($"{url}/event", config.accesstoken);
+            wsevent.StartListen();
             wsevent.ApiClient = client;
             wsevent.MessageEvent += (api, message) =>
             {
+                Console.WriteLine(message.Content.Raw);
                 switch (message.MessageType)
                 {
                     case "private":
