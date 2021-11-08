@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GammaLibrary;
+using WFBot.Utils;
 
 namespace WFBot.Features.Resource
 {
