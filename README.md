@@ -19,6 +19,8 @@
 > 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配  
 > 官方QQ群: [878527767](https://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)
 
+> 目前已经支持的平台/协议: [mirai-http-api](https://github.com/project-mirai/mirai-api-http) [OneBot11](https://11.onebot.dev/)
+
 ![MONEY](docs/images/MONEY.png) 
 --by [@Lasm_Gratel](https://github.com/LasmGratel)  
 ~~骗钱~~赞助网址: [爱发电](https://afdian.net/@TheRealKamisama)  

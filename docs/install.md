@@ -8,15 +8,20 @@
 
 目录:
 
-- [配置 mirai](#第一步-配置-mirai)
-- [配置 WFBot](#第二步-配置-wfbot)
-  - [如果你想自己编译...](#如果你想自己编译)
+- [使用mirai和MiraiHTTPConnector](#使用Mirai和MiraiHTTPConnector)
+   - [配置 Mirai](#第一步-配置-Mirai)
+   - [配置 WFBot](#第二步-配置-WFBot)
+      - [如果你想自己编译...](#如果你想自己编译)
+- [使用支持OneBot协议的平台和OneBotConnector](#使用支持OneBot协议的平台和OneBotConnector)
+   - []
 - [自定义](#自定义)
-  - [启用 WFA 授权 (非必须)](#启用-wfa-授权-非必须)
+   - [启用 WFA 授权 (非必须)](#启用-wfa-授权-非必须)
 
 首先新建两个文件夹, 分别叫 WFBot 和 mirai _并不一定非得是这个名字, 仅以方便演示为主_
 
-## 第一步: 配置 mirai
+## 使用mirai和MiraiHTTPConnector
+
+### 第一步: 配置 mirai
 > mirai 安装教程可能较旧. 总体上来说你需要的只有登录上 mirai 和 mirai-api-http 插件. 我们将在等会(鸽了)更新这个教程.
 
 1. 进入 mirai 文件夹.
@@ -44,7 +49,7 @@
 
 ---
 
-## 第二步: 配置 WFBot
+### 第二步: 配置 WFBot
 
 1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)
    ![](images/2021-01-20-23-07-05.png)
@@ -71,7 +76,7 @@
 
 8. 可以在控制台输入 ui 来打开设置界面. 直接修改 WFConfig.json 也行.
 
-### 如果你想自己编译...
+#### 如果你想自己编译...
 
 clone 这个库, 运行 `build-wfbot.bat` 和 `build-connector.bat`, 编译的结果在 out 文件夹内.
 如果你是直接下载的这个库, 在 vs 内右键 WFBot, 转到 Build -> Conditional conpliation symbols, 填入 `NoGitVersion`, 编译时使用 `build-wfbot-nogitversion.bat` 来正常编译.
@@ -81,6 +86,54 @@ clone 这个库, 运行 `build-wfbot.bat` 和 `build-connector.bat`, 编译的�
 > 如果你不需要修改代码, 我们强烈建议你从上面下载.  
 > 如果你修改了代码并应用到机器人上, 建议你在 GitHub 上开源其最新版本.  
 > **如果你使用非官方版 我们将不保证运行安全与稳定.**
+
+---
+## 使用支持OneBot协议的平台和OneBotConnector
+### 第一步: 配置OneBot协议正向WebSocket
+> 这里使用OneBot Mirai插件来演示, 你可以使用任何支持OneBot协议的正向WebSocket的机器人平台来照猫画虎.  
+
+1. 安装Mirai
+   > 如果你使用其他平台, 直接跳过这一步  
+
+   类似上文, 在[https://github.com/iTXTech/mcl-installer](https://github.com/iTXTech/mcl-installer)下载mcl.  
+   双击mirai.cmd启动一次.  
+   在[https://github.com/yyuueexxiinngg/onebot-kotlin/releases](https://github.com/yyuueexxiinngg/onebot-kotlin/releases)下载最新的OneBot Mirai插件  
+   拖入./plugins文件夹下  
+   双击mirai.cmd等待输出
+   ![](images/2021-01-20-22-41-51.png)
+
+2. 配置OneBot正向WebSocket  
+   > OneBotConnector基于的是[OneBot](https://github.com/botuniverse/onebot-11)协议给出的正向WebSocket通讯方案  
+   > 你需要配置三样东西: AccessToken, 地址, 端口  
+   > AccessToken类似密码, 是你的OneBot机器人和WFBot通信时鉴权需要, 可随意选取.  
+   > 地址和端口是OneBot机器人所提供WebSocket连接的地址, 如无特殊需求基本上可以保持默认.  
+   > 具体每种OneBot机器人如何修改这三样东西可以查询它们给出的教程, 这里简单举个例子.
+
+   以OneBot Mirai插件的配置文件作为例子, 修改这几行配置文件  
+   ![](images/QQ截图20211110000226.png)  
+   改好后重启Mirai, 等待那堆绿绿的输出.
+
+### 第二步: 配置WFBot
+1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)
+   ![](images/2021-01-20-23-07-05.png)
+   (Linux 用户 下载 .NET Core Runtime, 自己寻找答案, 或者加群来问)
+
+2. 进入 WFBot 文件夹
+
+3. 下载 WFBot: [链接](https://github.com/TRKS-Team/WFBot/releases/latest). 你需要下载这两个东西:  
+   ![](images/QQ截图20211110001258.png)
+
+4. 解压: 把 WFBot-Windows.7z 直接解压, 接着把 WFBot-Connector-OneBotConnector.7z 解压到            WFBotConnector 文件夹内.  
+   解压完成后像这样:
+   ![](images/QQ截图20211110001446.png)
+   (确保 OneBotConnector.dll 直接在 WFBotConnector 内)
+
+5. 启动 WFBot.exe 跟随设置向导填写你在第一步里填写的那三样东西:  
+   ![](images/QQ截图20211110001645.png)
+
+6. 可以在控制台输入 ui 来打开设置界面. 直接修改 WFConfig.json 也行.
+
+7. 由于WebSocket的灵活性, 先开mirai(OneBot机器人)或者先开WFBot没影响.
 
 ---
 
