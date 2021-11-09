@@ -34,3 +34,5 @@ jobs:
         run: dotnet publish Connectors/MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false
       - name: Test Connector Build
         run: dotnet publish Connectors/TestConnector -c "Linux Release" -o TestConnector --self-contained false
+      - name: OneBot Connector Build
+        run: dotnet publish Connectors/OneBotConnector -c "Linux Release" -o OneBotConnector --self-contained false
