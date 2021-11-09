@@ -13,7 +13,9 @@
    - [配置 WFBot](#第二步-配置-WFBot)
       - [如果你想自己编译...](#如果你想自己编译)
 - [使用支持OneBot协议的平台和OneBotConnector](#使用支持OneBot协议的平台和OneBotConnector)
-   - []
+   - [配置OneBot协议正向WebSocket](#第一步-配置OneBot协议正向WebSocket)
+   - [配置WFBot](#第二步-配置-WFBot)
+      - [如果你想自己编译...](#如果你想自己编译)
 - [自定义](#自定义)
    - [启用 WFA 授权 (非必须)](#启用-wfa-授权-非必须)
 
