@@ -46,6 +46,10 @@ jobs:
         run: dotnet publish Connectors/TestConnector -c "Linux Release" -o TestConnector --self-contained false
         env:
           OFFICIAL_BUILD: official
+      - name: OneBot Connector Build
+        run: dotnet publish Connectors/OneBotConnector -c "Linux Release" -o OneBotConnector --self-contained false
+        env:
+          OFFICIAL_BUILD: official
 
 #      - name: Pre Run Windows
 #        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
@@ -72,6 +76,12 @@ jobs:
         with:
           pathTarget: WFBot-Connector-TestConnector.7z
           pathSource: ./TestConnector/*
+      - name: Zip OneBot Connector
+        uses: DuckSoft/create-7z-action@v1.0
+        with:
+          pathTarget: WFBot-Connector-OneBotConnector.7z
+          pathSource: ./OneBotConnector/*
+
 
       - name: Upload Windows
         uses: actions/upload-artifact@v2
@@ -96,6 +106,12 @@ jobs:
         with:
           name: WFBot Test Connector
           path: ./WFBot-Connector-TestConnector.7z
+          retention-days: 30
+      - name: Upload OneBot Connector
+        uses: actions/upload-artifact@v2
+        with:
+          name: WFBot OneBot Connector
+          path: ./WFBot-Connector-OneBotConnector.7z
           retention-days: 30
 
       - name: Install GitVersion
@@ -152,6 +168,15 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./WFBot-Connector-TestConnector.7z
           asset_name: WFBot-Connector-TestConnector.7z
+          asset_content_type: application/x-7z-compressed
+      - name: Upload WFBot OneBot Connector
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./WFBot-Connector-OneBotConnector.7z
+          asset_name: WFBot-Connector-OneBotConnector.7z
           asset_content_type: application/x-7z-compressed
   docker-publish:
     
