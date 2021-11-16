@@ -24,16 +24,17 @@
 ## 使用mirai和MiraiHTTPConnector
 
 ### 第一步: 配置 mirai
-> mirai 安装教程可能较旧. 总体上来说你需要的只有登录上 mirai 和 mirai-api-http 插件. 我们将在等会(鸽了)更新这个教程.
+> 总体上来说你需要的只有登录上 mirai 和 mirai-api-http 插件.
 
 1. 进入 mirai 文件夹.
 
-2. 前往 <https://github.com/iTXTech/mcl-installer> 安装.
+2. 前往 <https://github.com/iTXTech/mcl-installer> 安装,或 [Mcl 镜像](https://pan.wapriaily.com/index.php/s/LyZrSarRP4A6PPm/download/mcl-1.0.4.zip).
 
 5. 运行一下 mirai: 双击 mcl.cmd, 等待 mirai 输出
    ![](images/2021-01-20-22-41-51.png) (如果这一步窗口闪一下就没了, 检查上面的 Java 配置是否正确, 特别是文件放的位置), 然后关闭 mirai (直接关闭窗口或者输入 `exit`).
 
-6. 下载 mirai-api-http 插件: 从 [mirai-api-http GitHub Release](https://github.com/project-mirai/mirai-api-http/releases/latest) 下载 (中国下载可能较慢), 或 [WFBot 镜像](https://orange-hill-1312.therealkamisama.workers.dev/https://github.com/project-mirai/mirai-api-http/releases/download/v1.9.6/mirai-api-http-v1.9.6.mirai.jar) (版本为 1.9.6, 不一定最新), 下载 mirai-api-http-vx.x.x.mirai.jar, 放入 plugins 文件夹.
+6. 下载 mirai-api-http 插件: 从 [mirai-api-http](https://github.com/project-mirai/mirai-api-http/releases/download/v1.12.0/mirai-api-http-v1.12.0.mirai.jar) 下载 (中国下载可能较慢), 或 [WFBot 镜像](https://pan.wapriaily.com/index.php/s/qN8qDoJEgY4trN5/download/mirai-api-http-v1.12.0.mirai.jar) , 下载 mirai-api-http-vx.x.x.mirai.jar, 放入 plugins 文件夹.
+> - **Mirai-http插件用2.x版本的不会生成正确的setting.yml文件，这里默认下载最新的1.x版本**
 
 7. 再次启动 mirai 并等待输出
    ![](images/2021-01-20-22-41-51.png)
@@ -55,7 +56,6 @@
 
 1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)
    ![](images/2021-01-20-23-07-05.png)
-   (Linux 用户 下载 .NET Core Runtime, 自己寻找答案, 或者加群来问)
 
 2. 进入 WFBot 文件夹
 
