@@ -12,6 +12,12 @@ namespace WFBot.Features.Commands
     {
         string VersionText => WFBotCore.IsOfficial ? $"WFBot 官方 {(WFBotCore.Version)}" : $"WFBot 非官方 {(WFBotCore.Version)}";
 
+        [MatchersIgnoreCase("wfbotversion", "wfbot-version")]
+        string Version()
+        {
+            return VersionText;
+        }
+
         [Matchers("help", "帮助", "功能", "救命")]
         void HelpDoc()
         {
