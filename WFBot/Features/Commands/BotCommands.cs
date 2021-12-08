@@ -22,7 +22,7 @@ namespace WFBot.Features.Commands
         void HelpDoc()
         {
             // 为了社区的良性发展, 请不要随意修改.
-            SendMessage($@"欢迎查看机器人唯一指定帮助文档
+            AsyncContext.SendGroupMessage($@"欢迎查看机器人唯一指定帮助文档
 {VersionText}
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
 项目地址: https://github.com/TRKS-Team/WFBot
@@ -30,7 +30,7 @@ namespace WFBot.Features.Commands
 您的赞助会成为我们维护本项目的动力.
 本机器人为公益项目, 间断维护中.
 如果你想给你的群也整个机器人, 请在上方项目地址了解");
-            SendMessage(@"作者: TheRealKamisama
+            AsyncContext.SendGroupMessage(@"作者: TheRealKamisama
 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 如果群里没有自动通知 请务必检查是否启用了通知功能
     /s船 | 当前的Sentient异常事件
@@ -61,18 +61,18 @@ namespace WFBot.Features.Commands
         }
         
         [DoNotMeasureTime]
+        [AddPlatformInfo]
         [Matchers("status", "状态", "机器人状态", "机器人信息", "我需要机器人")]
         async Task<string> Status()
         {
             var sb = new StringBuilder();
-            var q1 = Task.Run(async () => await WebHelper.TryGet("https://warframestat.us"));
-            var q2 = Task.Run(async () => await WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item"));
+            var q1 = WebHelper.TryGet("https://warframestat.us");
+            var q2 = WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item");
             var commitTask = Task.Run(() =>
                 CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits?per_page=5"));
             // var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
             // var q4 = Task.Run(() => WebHelper.TryGet("https://10o.io/kuvalog.json"));
-            Task.WaitAll(q1, q2/*, q3, q4*/);
-
+            
             var apistat = await q1;
             var wmstat = await q2;
             // var wfastat = await q3;
@@ -94,7 +94,7 @@ namespace WFBot.Features.Commands
             // sb.AppendLine($"    赤毒/仲裁API: {kuvastat.Latency}ms [{(kuvastat.IsOnline ? "在线" : "离线")}]");
             var commit = (await commitTask)?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";
             sb.AppendLine(commit);
-            return sb.ToString().Trim().AddPlatformInfo();
+            return sb.ToString();
         }
     }
 }
