@@ -11,21 +11,6 @@ using static WFBot.Features.Utils.Messenger;
 
 namespace WFBot.Features.Commands
 {
-    public partial class CommandsHandler
-    {
-        
-        
-        void SendMessage(string msg)
-        {
-            if (WFBotCore.UseTestConnector)
-            {
-                AsyncContext.SendGroupMessage(msg);
-                return;
-            }
-            MsgSender.SendMessage(msg);
-        }
-    }
-
     public partial class CommandsHandler : ICommandHandler<CommandsHandler>, ISender
     {
         public Action<TargetID, Message> MessageSender { get; }

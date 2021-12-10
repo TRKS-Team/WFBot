@@ -106,10 +106,11 @@ namespace WFBot.Features.Resource
             WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
             return true;
         }
+        // todo 旁边某个类还有 GetSHA 重复了
         private static string GetSHA(string name)
         {
             var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
-            return commits.First().sha;
+            return commits.FirstOrDefault()?.sha;
         }
         public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
         {
@@ -122,7 +123,13 @@ namespace WFBot.Features.Resource
                 if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
                 // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
                 var sha = GetSHA(info.Name);
-             
+                if (sha == null) return false;
+                if (info.SHA.IsNullOrEmpty())
+                {
+                    info.SHA = sha;
+                    GitHubInfos.Save();
+                    return false;
+                }
                 if (sha == info.SHA) return false;
                 Messenger.SendDebugInfo($"发现{info.Category}有更新,正在更新···");
                 await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
