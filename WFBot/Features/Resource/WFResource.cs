@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Humanizer;
-using KellermanSoftware.CompareNetObjects;
 using Newtonsoft.Json;
 using WFBot.Features.Utils;
 using WFBot.Utils;
