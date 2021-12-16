@@ -18,7 +18,7 @@ namespace WFBot.Features.Commands
             return VersionText;
         }
 
-        [Matchers("help", "帮助", "功能", "救命")]
+        [Matchers("help", "帮助", "功能")]
         void HelpDoc()
         {
             // 为了社区的良性发展, 请不要随意修改.
