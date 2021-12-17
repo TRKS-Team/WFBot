@@ -212,6 +212,7 @@ namespace WFBot.Features.Common
             var 总图 = new SWWCO(("总图", "蓝图"));*/
             var 一套 = new SWWCO(suffixes: ("一套"));
             var none = new SWWCO();
+            var p = new SWWCO(suffixes: ("p"));
 
             bool Check(List<Sale> input, List<Sale> items)
             {
@@ -230,7 +231,9 @@ namespace WFBot.Features.Common
             }
 
             return Check(item.TrySearch((none)), items) ||
-                   Check(item.TrySearch((一套)), items);
+                   Check(item.TrySearch((一套)), items) ||
+                   Check(item.TrySearch((p)), items) ||
+                   Check(item.TrySearch((p, 一套)), items);
 
             /*// 详细逻辑图在我笔记本上有手稿
             // 不建议重构
