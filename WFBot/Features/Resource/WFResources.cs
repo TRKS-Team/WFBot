@@ -35,14 +35,12 @@ namespace WFBot.Features.Resource
                 Task.Run(SetWFContentApi),
                 Task.Run(() => { WFAApi = new WFAApi(); }),
                 Task.Run(async () => WMAuction = await GetWMAResources()),
-                Task.Run(async () =>
-                {
-                    WFTranslateData = await GetTranslateApi();
-                }),
-                Task.Run(SlangManager.UpdateOnline)
+                Task.Run(async () => WFTranslateData = await GetTranslateApi()),
+                Task.Run(async () => WildcardAndSlang = await GetWildcardAndSlang())
             );
             WFTranslator = new WFTranslator();
             Weaponinfos = GetWeaponInfos();
+            WildCardSearcher = new WildCardSearcher();
             if (ResourceLoadFailed) 
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
@@ -102,7 +100,8 @@ namespace WFBot.Features.Resource
         public static WFContentApi WFContent { get; private set; }
 
         public static WeaponInfo[] Weaponinfos { get; private set; }
-
+        public static WildcardAndSlang WildcardAndSlang { get; private set; }
+        public static WildCardSearcher WildCardSearcher { get; private set; }
         private static WeaponInfo[] GetWeaponInfos()
         {
             var result = new List<WeaponInfo>();
@@ -265,6 +264,65 @@ namespace WFBot.Features.Resource
             // 已经不会这么干了
             return api;
 
+        }
+
+        private static async Task<WildcardAndSlang> GetWildcardAndSlang()
+        {
+            var resource =
+                WFResource<WildcardAndSlang>.Create(
+                    "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBotSlang@main/WF_Sale_Wildcard.json",
+                    nameof(WildcardAndSlang),
+                    "WF_Sale_Wildcard.json",
+                    resourceLoader: ResourceLoaders<WildcardAndSlang>.JsonDotNetLoader,
+                    updater: Updater);
+            if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WildcardAndSlang)))
+            {
+                var name = "TRKS-Team/WFBotSlang";
+
+                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WildcardAndSlang), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+            }
+
+            await resource.WaitForInited();
+            return resource.Value;
+        }
+
+        private static async Task<bool> Updater(WFResource<WildcardAndSlang> resource)
+        {
+            try
+            {
+                var infos = GitHubInfos.Instance.Infos.Where(i => i.Category == resource.Category).ToList();
+
+                if (!infos.Any()) return false;
+                var info = infos.First();
+                if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
+                // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
+                var sha = GetSHA(info.Name);
+                if (sha == null) return false;
+                if (info.SHA.IsNullOrEmpty())
+                {
+                    info.SHA = sha;
+                    GitHubInfos.Save();
+                    return false;
+                }
+                if (sha == info.SHA) return false;
+                Messenger.SendDebugInfo($"发现{info.Category}有更新,正在更新···");
+                await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
+                WildCardSearcher.UpdateSearcher(); /*不用刷新翻译器*/
+
+                GitHubInfos.Instance.Infos.Where(i => i.Category == info.Category).ForEach(i =>
+                {
+                    i.LastUpdated = DateTime.Now;
+                    i.SHA = sha;
+                });
+                GitHubInfos.Save();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                Trace.WriteLine("用于刷新资源文件的GitHub Commits获取失败, 这可能和网络有关系, 可以尝试阅读https://github.com/TRKS-Team/WFBot/blob/universal/docs/token.md");
+                return false;
+            }
         }
 
         public static void UpdateWFTranslator()

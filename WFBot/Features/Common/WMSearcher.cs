@@ -37,7 +37,7 @@ namespace WFBot.Features.Common
     // And you're dealing with a wildcard.
     {
         private static WFTranslator translator => WFResources.WFTranslator;
-
+        private static WildCardSearcher searcher => WFResources.WildCardSearcher;
         private static string[] ToStringArray(ITuple tuple)
         {
             var array = new string[tuple.Length];
@@ -99,7 +99,7 @@ namespace WFBot.Features.Common
         };
 
 
-        public static TranslateResult TrySearch(this string source, object optionst, bool neuroptics = false)
+        public static List<Sale> TrySearch(this string source, object optionst)
         {
             var options = optionst.ToOptions();
             var formatted = source.Format();
@@ -115,8 +115,9 @@ namespace WFBot.Features.Common
                     option.Reverse ? RegexOptions.RightToLeft : RegexOptions.None);
                 formatted += option.Suffixes.Connect("");
             }
-            var result = translator.TranslateSearchWord(formatted);
-            if (neuroptics)
+
+            var result = searcher.Search(formatted);
+            /*if (neuroptics)
             {
                 var heads = new[] { "头部神经光", "头部神经", "头部神", "头部", "头" };
                 foreach (var head in heads.Where(head => !formatted.Contains("头部神经光元")).Where(head => formatted.Contains(head)))
@@ -125,7 +126,7 @@ namespace WFBot.Features.Common
                     result = translator.TranslateSearchWord(formatted);
                     break;
                 }
-            }
+            }*/
             // 到时候把SWWCO改好一点, 把上面这段也装进去
             return result;
         }
@@ -204,14 +205,34 @@ namespace WFBot.Features.Common
 
         }
 
-        public static bool Search(string item, out string searchword)
+        public static bool Search(string item, ref List<Sale> items)
         {
-            var p = new SWWCO(("p", "prime"), true, 1);
+            /*var p = new SWWCO(("p", "prime"), true, 1);
             var 头 = new SWWCO(("头", "头部"));
-            var 总图 = new SWWCO(("总图", "蓝图"));
+            var 总图 = new SWWCO(("总图", "蓝图"));*/
             var 一套 = new SWWCO(suffixes: ("一套"));
             var none = new SWWCO();
-            // 详细逻辑图在我笔记本上有手稿
+
+            bool Check(List<Sale> input, List<Sale> items)
+            {
+                if (input.Count == 1)
+                {
+                    items.Clear();
+                    items.AddRange(input);
+                    return true;
+                }
+                if (input.Count > items.Count && items.Count != 1)
+                {
+                    items.Clear();
+                    items.AddRange(input);
+                }
+                return false;
+            }
+
+            return Check(item.TrySearch((none)), items) ||
+                   Check(item.TrySearch((一套)), items);
+
+            /*// 详细逻辑图在我笔记本上有手稿
             // 不建议重构
             TranslateResult Assign(TranslateResult result, out string searchword)
             {
@@ -225,7 +246,7 @@ namespace WFBot.Features.Common
                    Assign(item.TrySearch((p, 一套)), out searchword).IsTranslated ||
                    Assign(item.TrySearch((p, 头)), out searchword).IsTranslated ||
                    Assign(item.TrySearch((p), neuroptics: true), out searchword).IsTranslated ||
-                   Assign(item.TrySearch((none), neuroptics: true), out searchword).IsTranslated;
+                   Assign(item.TrySearch((none), neuroptics: true), out searchword).IsTranslated;*/
             /*return item == (searchword = translator.TranslateSearchWord(item)) &&
                    item == (searchword = item.TrySearch((一套))) && 
                    item == (searchword = item.TrySearch((总图, p))) &&
@@ -235,27 +256,36 @@ namespace WFBot.Features.Common
                    item == (searchword = item.TrySearch(none, neuroptics: true));*/
         }
 
-        public async Task<string> SendWMInfo(string item, bool quickReply, bool isbuyer)
+        public async Task<string> SendWMInfo(string word, bool quickReply, bool isbuyer)
         {
-            if (!Search(item, out var searchword))
+            var items = new List<Sale>();
+            if (!Search(word, ref items) || items.IsEmpty())
             {
                 var sb = new StringBuilder();
-                var similarlist = translator.GetSimilarItem(item.Format(), "wm");
-                sb.AppendLine($"物品 {item} 不存在或格式错误.");
-                if (similarlist.Any())
+                // var similarlist = translator.GetSimilarItem(item.Format(), "wm");
+                sb.AppendLine($"物品 {word} 不存在或格式错误.");
+                /*if (similarlist.Any())
                 {
                     sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
                     foreach (var similarresult in similarlist)
                     {
                         sb.AppendLine($"    {similarresult}");
                     }
+                }*/
+                if (items.Any())
+                {
+                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                    foreach (var item in items.Take(5).Select(i => i.zh))
+                    {
+                        sb.AppendLine($"    {item}");
+                    }
                 }
-
                 sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
 
                 return sb.ToString().Trim().AddRemainCallCount();
             }
 
+            var searchword = items.First().code;
             var msg = string.Empty;
             if (Config.Instance.NotifyBeforeResult)
             {
@@ -283,7 +313,7 @@ namespace WFBot.Features.Common
                         }
                         else
                         {
-                            msg = $"抱歉, WarframeMarket 上目前还没有售卖 {item} 的用户";
+                            msg = $"抱歉, WarframeMarket 上目前还没有售卖 {word} 的用户";
                         }
                     }
                     else
@@ -309,19 +339,19 @@ namespace WFBot.Features.Common
                 }
                 else
                 {
-                    msg = $"抱歉, WarframeMarket 上目前还没有售卖 {item} 的用户";
+                    msg = $"抱歉, WarframeMarket 上目前还没有售卖 {word} 的用户";
                 }
 
             }
 
             if (!quickReply)
             {
-                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {item} -QR>";
+                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {word} -QR>";
             }
 
             if (!isbuyer)
             {
-                msg = $"{msg}\n\n查询买家请使用指令 <查询 {item} -B>";
+                msg = $"{msg}\n\n查询买家请使用指令 <查询 {word} -B>";
             }
 
             return msg.AddPlatformInfo().AddRemainCallCount();

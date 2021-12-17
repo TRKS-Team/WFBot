@@ -7,7 +7,6 @@ using WFBot.Features.Resource;
 namespace WFBot.Features.Utils
 {
     // 整个文件就是用来丢垃圾的
-
     public class WarframeUpdate
     {
         protected bool Equals(WarframeUpdate other)

@@ -59,6 +59,8 @@ namespace WFBot.Tests
             InputCommand("/wiki Valkyr");
             InputCommand("/status");
             InputCommand("/help");
+            InputCommand("/查询 瓦喵");
+            InputCommand("/查询 致残");
             File.AppendAllText("TestResult.log", Environment.NewLine + "Done.");
         }
 
@@ -69,12 +71,22 @@ namespace WFBot.Tests
         [TestMethod]
         public void TestWildcards()
         {
-            Assert.IsTrue(WMSearcher.Search("凯旋将军破坏者", out _)); // 破坏者不加p
-            Assert.IsTrue(WMSearcher.Search("valkyrp", out _)); // p自动补全为prime
-            Assert.IsTrue(WMSearcher.Search("valkyrp总图", out _)); // 总图替换成蓝图且替换p
-            Assert.IsTrue(WMSearcher.Search("赫利俄斯p头", out _)); // 头替换成头部且替换p
-            Assert.IsTrue(WMSearcher.Search("valkyrp头", out _)); // 头替换成头部神经光元且替换p
-            Assert.IsTrue(WMSearcher.Search("vome", out _)); // 纯英物品
+            var test = new List<Sale>();
+            Assert.IsTrue(WMSearcher.Search("凯旋将军破坏者", ref test)); // 破坏者不加p
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("valkyrp", ref test)); // p自动补全为prime
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("valkyrp总图", ref test)); // 总图替换成蓝图且替换p
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("赫利俄斯p头", ref test)); // 头替换成头部且替换p
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("valkyrp头", ref test)); // 头替换成头部神经光元且替换p
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("vome", ref test)); // 纯英物品
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("hlesptb", ref test)); // 拼音匹配
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("hlesptbsjgy", ref test)); // 头部替换成头部神经光元
         }
     }
 

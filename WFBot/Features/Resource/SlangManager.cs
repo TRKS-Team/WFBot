@@ -12,7 +12,7 @@ namespace WFBot.Features.Resource
 {
     public static class SlangManager
     {
-        public static WFResource<List<SlangItem>> SlangResource;
+        /*public static WFResource<List<SlangItem>> SlangResource;
         public static List<SlangItem> LocalSlang => SlangConfig.Instance.AllSlang;
 
         public static IEnumerable<SlangItem> AllSlang => SlangResource.Value.Concat(LocalSlang);
@@ -63,5 +63,6 @@ namespace WFBot.Features.Resource
 
         public SlangItem(string source, string[] slang) => 
             (Source, Slang) = (source, slang);
+    }*/
     }
 }

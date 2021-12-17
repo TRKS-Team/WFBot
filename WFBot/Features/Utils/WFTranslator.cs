@@ -49,7 +49,7 @@ namespace WFBot.Features.Utils
             }
             relicrewardTranslator.AddEntry("Forma Blueprint".Format(), "福马 蓝图");
 
-            ApplySlang(searchwordTranslator);
+            // ApplySlang(searchwordTranslator);
             // TODO 找一个更加全面的翻译对照表
             invasionTranslator.Clear();
             foreach (var invasion in translateApi.Invasion)
@@ -87,7 +87,7 @@ namespace WFBot.Features.Utils
 
             return result;
         }
-        void ApplySlang(Translator translator)
+        /*void ApplySlang(Translator translator)
         {
             var sales = ToDictionary(translateApi.Sale, s => s.zh);
             foreach (var slangItem in SlangManager.AllSlang)
@@ -102,7 +102,7 @@ namespace WFBot.Features.Utils
                     translator.AddEntry(s.Format(), sale.code);
                 }
             }
-        }
+        }*/
 
         public string GetTranslateResult(string str)
         {
