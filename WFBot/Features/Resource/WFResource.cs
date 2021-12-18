@@ -109,7 +109,7 @@ namespace WFBot.Features.Resource
         private static string GetSHA(string name)
         {
             var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
-            return commits.FirstOrDefault()?.sha;
+            return commits?.FirstOrDefault()?.sha;
         }
         public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
         {
