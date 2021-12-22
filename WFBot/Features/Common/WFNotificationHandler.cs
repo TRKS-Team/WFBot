@@ -43,22 +43,29 @@ namespace WFBot.Features.Other
 
         private async Task InitWFNotificationAsync()
         {
-            AsyncContext.SetCancellationToken(CancellationToken.None);
-            var alerts = api.GetAlerts();
-            var invs = api.GetInvasions();
-            var enemies = api.GetPersistentEnemies();
-            var updates = GetWarframeUpdates();
+            try
+            {
+                AsyncContext.SetCancellationToken(CancellationToken.None);
+                var alerts = api.GetAlerts();
+                var invs = api.GetInvasions();
+                var enemies = api.GetPersistentEnemies();
+                var updates = GetWarframeUpdates();
 
-            foreach (var alert in await alerts)
-                sendedAlertsSet.Add(alert.Id);
-            foreach (var inv in await invs)
-                sendedInvSet.Add(inv.id);
-            foreach (var enemy in await enemies)
-                sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-            foreach (var update in await updates)
-                sendedUpdateSet.Add(update);
-            WFNotificationLoaded = true;
-            Trace.WriteLine("WF 通知初始化完成.");
+                foreach (var alert in await alerts)
+                    sendedAlertsSet.Add(alert.Id);
+                foreach (var inv in await invs)
+                    sendedInvSet.Add(inv.id);
+                foreach (var enemy in await enemies)
+                    sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+                foreach (var update in await updates)
+                    sendedUpdateSet.Add(update);
+                WFNotificationLoaded = true;
+                Trace.WriteLine("WF 通知初始化完成.");
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine($"WF 通知初始化出错: {e}");
+            }
         }
 
         [CalledByTimer(typeof(NotificationTimer))]
@@ -88,6 +95,7 @@ namespace WFBot.Features.Other
             var result = new List<WarframeUpdate>();
             var web = new HtmlWeb();
             var doc = await web.LoadFromWebAsync("https://forums.warframe.com/forum/3-pc-update-notes/");
+            //todo 这里有异常抛出
             foreach (var node in doc.DocumentNode.SelectNodes("/html/body/main/div/div/div/div[3]/div/ol/li/div/h4/span/a"))
             {
                 result.Add(new WarframeUpdate {title = node.InnerText.Trim(), url = node.GetAttributeValue("href", "")});
