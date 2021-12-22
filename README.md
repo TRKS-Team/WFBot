@@ -117,11 +117,13 @@
 |            [Fody](https://github.com/Fody/Fody)             |        MIT        |   GammaLibrary 一依赖    |
 | [Fastenshtein](https://github.com/DanHarltey/Fastenshtein)  |        MIT        |     字符串相似度比较     |
 | [TextMessageCore](https://github.com/Cyl18/TextCommandCore) |       WTFPL       |        命令分析库        |
+| [PininSharp](https://github.com/LasmGratel/PininSharp) | MIT | 拼音匹配 |
 |    [GammaLibrary](https://github.com/Cyl18/GammaLibrary)    | Anti-996 License  |        C# 工具库         |
 |      [HtmlAgilityPack](https://html-agility-pack.net/)      |        MIT        |        HTML 分析         |
 |       [Harmony](https://github.com/pardeike/Harmony)        |        MIT        |         插件支持         |
 |    [Richasy.WFA.Sdk](https://github.com/Richasy/WFA-SDK)    | richasy Copyright |         WFA API          |
 | [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) | AGPL-3.0 | Mirai C# 连接 |
+| [WudiLib](https://github.com/int-and-his-friends/Sisters.WudiLib) | MIT | OntBot C# 连接 |
 | [GitVersion](https://github.com/GitTools/GitVersion) | MIT | 提供版本号支持 |
 | [Magick.NET](https://github.com/dlemstra/Magick.NET) | Apache-2.0 | 临时图片渲染 |
 ---
