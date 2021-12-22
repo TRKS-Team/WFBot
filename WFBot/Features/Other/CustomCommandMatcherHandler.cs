@@ -34,7 +34,7 @@ namespace WFBot.Features.Other
                     if (ContainsCustomCommand(commandID))
                     {
                         return CustomCommandConfig.Instance.CustomCommands[commandID]
-                            .Any(customMatcher => customMatcher == s);
+                            .Any(customMatcher => string.Equals(customMatcher, s, StringComparison.OrdinalIgnoreCase));
                     }
                     return false;
                 });
