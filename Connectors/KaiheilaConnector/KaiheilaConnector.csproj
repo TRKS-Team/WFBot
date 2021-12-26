@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WFBot\WFBot.csproj" />
+    <ProjectReference Include="..\..\WFBot\WFBot.csproj" />
   </ItemGroup>
 
 </Project>
