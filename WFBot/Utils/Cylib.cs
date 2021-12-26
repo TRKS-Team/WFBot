@@ -252,11 +252,11 @@ namespace WFBot.Utils
 
             if (remainCount > 0)
             {
-                str.Append($"{str}\n机器人在本群一分钟内还能发送{remainCount}条消息.");
+                str.Append($"\n机器人在本群一分钟内还能发送{remainCount}条消息.");
             }
             else
             {
-                str.Append($"{str}\n机器人在本群一分钟内信息发送配额已经用完.");
+                str.Append($"\n机器人在本群一分钟内信息发送配额已经用完.");
             }
         }
     }

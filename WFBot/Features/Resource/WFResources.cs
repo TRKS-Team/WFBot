@@ -197,7 +197,7 @@ namespace WFBot.Features.Resource
         private static string GetSHA(string name)
         {
             var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
-            return commits.FirstOrDefault()?.sha;
+            return commits?.FirstOrDefault()?.sha;
         }
         private static async Task<WMAuction> GetWMAResources()
         {

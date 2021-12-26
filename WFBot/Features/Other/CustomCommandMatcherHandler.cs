@@ -34,7 +34,7 @@ namespace WFBot.Features.Other
                     if (ContainsCustomCommand(commandID))
                     {
                         return CustomCommandConfig.Instance.CustomCommands[commandID]
-                            .Any(customMatcher => customMatcher == s);
+                            .Any(customMatcher => string.Equals(customMatcher, s, StringComparison.OrdinalIgnoreCase));
                     }
                     return false;
                 });
@@ -68,8 +68,16 @@ namespace WFBot.Features.Other
             foreach (var info in _commandInfos.Value)
             {
                 var commandID = info.Method.Name;
-                Console.WriteLine($"ID: {commandID}\n" +
-                                  $"    预定义匹配器: [{info.Method.GetCustomAttribute<MatchersAttribute>().Matchers.Connect()}]");
+                Console.WriteLine($"ID: {commandID}");
+                if (info.Method.IsAttributeDefined<MatchersAttribute>())
+                {
+                    Console.WriteLine($"    预定义匹配器: [{info.Method.GetCustomAttribute<MatchersAttribute>().Matchers.Connect()}]");
+                }
+                if (info.Method.IsAttributeDefined<MatchersIgnoreCaseAttribute>())
+                {
+                    Console.WriteLine($"    预定义匹配器(不区分大小写): [{info.Method.GetCustomAttribute<MatchersIgnoreCaseAttribute>().Matchers.Connect()}]");
+                }
+
                 if (ContainsCustomCommand(commandID))
                 {
                     Console.WriteLine($"    自定义匹配器: [{GetCustomCommandList(commandID).Connect()}]\n");
