@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using Mono.Cecil.Cil;
 using Newtonsoft.Json;
 using WFBot.Features.Common;
 using WFBot.Features.Utils;
@@ -114,23 +115,37 @@ namespace WFBot.Features.Resource
 
             return result.ToArray();
         }
-        private static async Task<List<string>> GetWFOriginUrls()
+        private static async Task<List<string>> GetWFOriginUrls(bool refresh = false)
         {
             const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
-            /*const string source =
-                "https://wfbot-cdn.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";*/
+            const string cdn =
+                "https://wfbot-cdn.therealkamisama.workers.dev/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
             var name = source.Split('/').Last();    
-
-            var hc = new HttpClient();
-            hc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
             var path = Path.Combine("WFCaches", name);
             var resultpath = Path.Combine("WFCaches", "index_zh.txt");
+            List<string> result;
+            if (File.Exists(resultpath) && !refresh)
+            {
+                result = (await File.ReadAllLinesAsync(resultpath)).ToList();
+                return result;
+            }
+            var hc = new HttpClient();
+            hc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
 
-            await hc.DownloadAsync(source, path);
+            var response = await hc.GetAsync(source);
+            if (!response.IsSuccessStatusCode)
+            {
+                response = await hc.GetAsync(cdn);
+            }
+
+            await using (var stream = File.OpenWrite(path))
+            {
+                await response.Content.CopyToAsync(stream);
+            }
             LZMADecompress.DecompressFileLZMA(path, resultpath);
 
-            var result = (await File.ReadAllLinesAsync(resultpath)).ToList();
+            result = (await File.ReadAllLinesAsync(resultpath)).ToList();
             return result;
         }
 
@@ -148,6 +163,7 @@ namespace WFBot.Features.Resource
                 fileName: "ExportRelicArcane_zh.json",
                 requester: async _ =>
                 {
+                    var count = 0;
                     List<string> urls;
                     try
                     {
@@ -159,8 +175,18 @@ namespace WFBot.Features.Resource
                         Trace.WriteLine(e);
                         throw;
                     }
+                    
                     var link = source + urls.First(u => u.Contains("ExportRelicArcane_zh.json"));
-                    return await new HttpClient(new RetryHandler(new HttpClientHandler())).GetStreamAsync(link);
+                    var hc = new HttpClient(new RetryHandler(new HttpClientHandler()));
+                    var response = await hc.GetAsync(link);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        urls = await GetWFOriginUrls(true);
+                        response = await hc.GetAsync(link);
+                    }
+
+                    return await response.Content.ReadAsStreamAsync();
+
                 });
 
             result.RExportRelicArcanes = resource;
