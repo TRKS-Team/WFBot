@@ -59,7 +59,8 @@ namespace WFBot.Tests
             InputCommand("/wiki Valkyr");
             InputCommand("/status");
             InputCommand("/help");
-            InputCommand("/查询 瓦喵");
+            InputCommand("/查询 瓦尔基里");
+            InputCommand("/查询 电男");
             InputCommand("/查询 致残");
             File.AppendAllText("TestResult.log", Environment.NewLine + "Done.");
         }
@@ -87,6 +88,8 @@ namespace WFBot.Tests
             Assert.IsTrue(WMSearcher.Search("hlesptb", ref test)); // 拼音匹配
             test.Clear();
             Assert.IsTrue(WMSearcher.Search("hlesptbsjgy", ref test)); // 头部替换成头部神经光元
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("电男p", ref test)); // 黑话
         }
     }
 

@@ -16,7 +16,7 @@ namespace WFBot.Features.Common
     public class WildCardSearcher
     {
         private WildcardAndSlang was => WFResources.WildcardAndSlang;
-        private Sale[] sales => WFResources.WFTranslateData.Sale;
+        private Sale[] sales => WFResources.WFBotTranslateData.Sale;
         private TreeSearcher<Sale> _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
         public WildCardSearcher()
         {

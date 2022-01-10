@@ -140,7 +140,7 @@ namespace WFBot.Features.Common
     public class WMSearcher
     {
         private static WFTranslator translator => WFResources.WFTranslator;
-        private WFApi api => WFResources.WFTranslateData;
+        private WFBotApi wfbotapi => WFResources.WFBotTranslateData;
         private Client wfaClient => WFResources.WFAApi.WfaClient;
         private bool isWFA => WFResources.WFAApi.isWFA;
 
@@ -156,7 +156,7 @@ namespace WFBot.Features.Common
 
             var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
 
-            info.sale = api.Sale.First(s => s.code == searchword);
+            info.sale = wfbotapi.Sale.First(s => s.code == searchword);
             return info;
         }
 
@@ -173,7 +173,7 @@ namespace WFBot.Features.Common
             var option = new WarframeMarketOrderQueryOption
             { Code = searchword, OrderStatus = new List<WMOrderStatus> { WMOrderStatus.InGame, WMOrderStatus.Online } };
             var orders = await wfaClient.GetWarframeMarketOrdersAsync(option);
-            var result = new WMInfoEx { orders = orders, sale = api.Sale.First(s => s.code == searchword) };
+            var result = new WMInfoEx { orders = orders, sale = wfbotapi.Sale.First(s => s.code == searchword) };
             return result;
         }
 

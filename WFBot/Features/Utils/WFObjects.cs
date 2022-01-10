@@ -44,8 +44,8 @@ namespace WFBot.Features.Utils
         public WFResource<WMARivens> ENRRivens;
         public WMAAttribute[] Attributes => RAttributes.Value.Payload.Attributes;
         public WFResource<WMAAttributes> RAttributes;
-        public WMAItem[] Items => RItems.Value.Payload.Items;
-        public WFResource<WMAItems> RItems;
+        /*public WMAItem[] Items => RItems.Value.Payload.Items;
+        public WFResource<WMAItems> RItems;*/
     }
     public partial class WMAItems
     {
@@ -1507,6 +1507,11 @@ namespace WFBot.Features.Utils
         public int credits { get; set; }
     }
 
+    public class WFBotApi
+    {
+        public Sale[] Sale => RSale.Value;
+        public WFResource<Sale[]> RSale;
+    }
 
     public class WFApi
     {

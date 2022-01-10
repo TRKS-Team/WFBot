@@ -37,6 +37,7 @@ namespace WFBot.Features.Resource
                 Task.Run(() => { WFAApi = new WFAApi(); }),
                 Task.Run(async () => WMAuction = await GetWMAResources()),
                 Task.Run(async () => WFTranslateData = await GetTranslateApi()),
+                Task.Run(async () => WFBotTranslateData = await GetWFBotTranslateApi()),
                 Task.Run(async () => WildcardAndSlang = await GetWildcardAndSlang())
             );
             WFTranslator = new WFTranslator();
@@ -61,6 +62,7 @@ namespace WFBot.Features.Resource
         }
 
         public static WFApi WFTranslateData { get; set; }
+        public static WFBotApi WFBotTranslateData { get; set; }
         public static WFChineseAPI WFChineseApi { get; private set; }
 
         static WFTranslator _wfTranslator;
@@ -215,7 +217,7 @@ namespace WFBot.Features.Resource
             AddTask(ref Auction.RAttributes, $"{source}/riven/attributes", "WMA_Attributes.json", ZHHeader);
             AddTask(ref Auction.ZHRRivens, $"{source}/riven/items", "WMA_Rivens_Zh.json", ZHHeader);
             AddTask(ref Auction.ENRRivens, $"{source}/riven/items", "WMA_Rivens.En.json", ENHeader);
-            AddTask(ref Auction.RItems, $"{source}/items", "WMA_Items.json", ZHHeader);
+            // AddTask(ref Auction.RItems, $"{source}/items", "WMA_Items.json", ZHHeader);
             await Task.WhenAll(tasks.ToArray());
             //// 这几个网络资源每次请求时返回的String都不太一样但是实际上内容一样, 所以用JsonStringCompareUpdater
             // 我没时间写了, 就先不实现比较后刷新了
@@ -292,11 +294,38 @@ namespace WFBot.Features.Resource
 
         }
 
+        private static async Task<WFBotApi> GetWFBotTranslateApi()
+        {
+            var api = new WFBotApi();
+            var tasks = new List<Task>();
+            var source = "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBot_Lexicon@master/";
+
+            AddTask(ref api.RSale, "WFBot_Sale.json");
+
+            if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WFTranslator)))
+            {
+                var name = "TRKS-Team/WFBot_Lexicon";
+
+                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WFBotApi), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+            }
+
+            await Task.WhenAll(tasks.ToArray());
+
+            void AddTask<T>(ref WFResource<T> obj, string name) where T : class
+            {
+                var path = $"{source}{name}";
+                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater);
+                obj = resource;
+                tasks.Add(resource.WaitForInited());
+            }
+
+            return api;
+        }
         private static async Task<WildcardAndSlang> GetWildcardAndSlang()
         {
             var resource =
                 WFResource<WildcardAndSlang>.Create(
-                    "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBotSlang@main/WF_Sale_Wildcard.json",
+                    "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBotSlang@latest/WF_Sale_Wildcard.json",
                     nameof(WildcardAndSlang),
                     "WF_Sale_Wildcard.json",
                     resourceLoader: ResourceLoaders<WildcardAndSlang>.JsonDotNetLoader,

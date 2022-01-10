@@ -23,6 +23,7 @@ namespace WFBot.Features.Utils
         // She is known as riven, riven of a thousand voice, the last known ahamkara.
         private List<string> weapons = new List<string>();// 所有武器的中文
         private WFApi translateApi => WFResources.WFTranslateData;
+        private WFBotApi wfbotApi => WFResources.WFBotTranslateData;
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
         private WMARiven[] rivens => WFResources.WMAuction.ZHRivens;
         private WeaponInfo[] weaponInfos => WFResources.Weaponinfos;
@@ -42,15 +43,13 @@ namespace WFBot.Features.Utils
                 searchwordTranslator.Clear();
             }
 
-            foreach (var sale in translateApi.Sale)
+            foreach (var sale in wfbotApi.Sale)
             {
                 searchwordTranslator.AddEntry(sale.zh.Format(), sale.code);
                 relicrewardTranslator.AddEntry(sale.en.Format(), sale.zh);
             }
             relicrewardTranslator.AddEntry("Forma Blueprint".Format(), "福马 蓝图");
 
-            // ApplySlang(searchwordTranslator);
-            // TODO 找一个更加全面的翻译对照表
             invasionTranslator.Clear();
             foreach (var invasion in translateApi.Invasion)
             {
@@ -150,7 +149,7 @@ namespace WFBot.Features.Utils
             switch (mode)
             {
                 case "wm":
-                    foreach (var sale in translateApi.Sale)
+                    foreach (var sale in wfbotApi.Sale)
                     {
                         if (sale.zh.StartsWith(str))
                         {
