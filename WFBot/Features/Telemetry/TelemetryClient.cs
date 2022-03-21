@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Management;
 
 namespace WFBot.Features.Telemetry
 {
+
     public static class TelemetryClient
     {
         public static void Start()
