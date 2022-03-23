@@ -25,7 +25,6 @@ namespace WFBot.Features.Utils
         static Messenger()
         {
             // 大家都知道你很蠢啦
-
         }
 
         public static void IncreaseCallCounts(string group)
@@ -92,7 +91,7 @@ namespace WFBot.Features.Utils
                     sb.Append("[WFBot通知] ");
                     sb.AppendLine(content);
                     if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
-                    sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                    // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
                     sb.ToString().Trim().SendToGroup(group);
                     count++;
                     Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
