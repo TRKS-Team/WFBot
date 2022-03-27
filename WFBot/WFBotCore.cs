@@ -22,6 +22,7 @@ using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.Utils;
 using WFBot.Windows;
 
@@ -277,6 +278,10 @@ namespace WFBot
 
             Trace.WriteLine("加载 Connector...");
             ConnectorManager.LoadConnector();
+
+            Trace.WriteLine("加载米格尔网络...");
+            MiguelNetwork.InitMiguelNetwork(MessagePlatform.OneBot);
+            // TODO 自定义平台
 
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();

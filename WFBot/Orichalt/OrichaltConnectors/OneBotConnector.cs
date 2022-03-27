@@ -7,7 +7,7 @@ using WFBot.Utils;
 
 namespace WFBot.Orichalt.OrichaltConnectors
 {
-    public class OneBotContext : MessageContextBase
+    public class OneBotContext : PlatformContextBase
     {
         public OneBotContext(string rawMessage, GroupID @group, UserID senderId, MessageType type, DateTimeOffset time)
         {
@@ -43,7 +43,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
         CqHttpWebSocketApiClient client;
         CqHttpWebSocketEvent wsevent;
         public event EventHandler<OneBotContext> OneBotMessageReceived;
-        public void Init()
+        public void InitOneBot()
         {
             var config = OneBotConfig.Instance;
             /*if (config.isfirsttime) 

@@ -1,6 +1,8 @@
-﻿namespace WFBot.Orichalt.OrichaltConnectors
+﻿using System;
+
+namespace WFBot.Orichalt.OrichaltConnectors
 {
-    public class MessageContextBase
+    public class PlatformContextBase
     {
 
     }
@@ -10,6 +12,18 @@
         public Connectors(MessagePlatform platform)
         {
             Platform = platform;
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    InitOneBot();
+                    break;
+                case MessagePlatform.Kaiheila:
+                    throw new NotImplementedException();
+                    break;
+                case MessagePlatform.QQChannel:
+                    throw new NotImplementedException();
+                    break;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Timers;
+using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
 
 namespace WFBot.Orichalt
@@ -14,9 +15,9 @@ namespace WFBot.Orichalt
     }
     public class OrichaltContext
     {
-        public OrichaltContext(string plainCommand, MessagePlatform platform)
+        public OrichaltContext(string plainMessage, MessagePlatform platform)
         {
-            PlainCommand = plainCommand;
+            PlainMessage = plainMessage;
             Platform = platform;
             UUID = Guid.NewGuid().ToString();
             lifeTimer = new Timer(TimeSpan.FromMinutes(10).TotalMilliseconds);
@@ -28,27 +29,49 @@ namespace WFBot.Orichalt
         }
 
         public string UUID { get; set; }
-        public string PlainCommand { get; set; }
+        public string PlainMessage { get; set; }
         public MessagePlatform Platform { get; set; }
         private Timer lifeTimer;
 
         public void Dispose()
         {
-            OrichaltContextManager.OneBotContexts.Remove(UUID);
+            MiguelNetwork.OrichaltContextManager.DisposeOrichaltContext(this);
         }
 
     }
-    public static class OrichaltContextManager
+    public class OrichaltContextManager
     {
-        public static Dictionary<string, OneBotContext> OneBotContexts = new Dictionary<string, OneBotContext>();
+        public Dictionary<string, OneBotContext> OneBotContexts = new Dictionary<string, OneBotContext>();
+        // 往下扩展各个平台
 
-        public static MessageContextBase GetPlatformContext(OrichaltContext context)
+        public PlatformContextBase GetPlatformContext(OrichaltContext context)
         {
             return context.Platform switch
             {
                 MessagePlatform.OneBot => OneBotContexts[context.UUID],
-                _ => new MessageContextBase()
+                _ => new PlatformContextBase()
             };
+        }
+
+        public OrichaltContext PutPlatformContext(OneBotContext context)
+        {
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot);
+            OneBotContexts[o.UUID] = context;
+            return o;
+        }
+        public OrichaltContext PutPlatformContext(KaiheilaContext context)
+        {
+            throw new NotImplementedException();
+        }
+        public OrichaltContext PutPlatformContext(QQChannelContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisposeOrichaltContext(OrichaltContext context)
+        {
+            OneBotContexts.Remove(context.UUID);
+            // 往下扩展各个平台
         }
 
     }
