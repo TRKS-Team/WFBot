@@ -691,7 +691,7 @@ namespace WFBot.Features.Utils
     {
         public string location { get; set; }
         public string type { get; set; }
-        public float chance { get; set; }
+        public float? chance { get; set; }
         public string rarity { get; set; }
     }
 
