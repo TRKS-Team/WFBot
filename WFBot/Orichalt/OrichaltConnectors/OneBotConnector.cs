@@ -40,8 +40,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
     }
     public partial class Connectors
     {
-        CqHttpWebSocketApiClient client;
-        CqHttpWebSocketEvent wsevent;
+        public CqHttpWebSocketApiClient OneBotClient;
+        private CqHttpWebSocketEvent wsevent;
         public event EventHandler<OneBotContext> OneBotMessageReceived;
         public void InitOneBot()
         {
@@ -78,16 +78,15 @@ namespace WFBot.Orichalt.OrichaltConnectors
             }*/
 
             var url = $"ws://{config.host}:{config.port}";
-            client = new CqHttpWebSocketApiClient($"{url}/api", config.accesstoken);
+            OneBotClient = new CqHttpWebSocketApiClient($"{url}/api", config.accesstoken);
             wsevent = new CqHttpWebSocketEvent($"{url}/event", config.accesstoken);
-            wsevent.ApiClient = client;
+            wsevent.ApiClient = OneBotClient;
             wsevent.MessageEvent += (api, message) =>
             {
                 switch (message.MessageType)
                 {
                     case "private":
                         OnOneBotMessage(new OneBotContext(message.RawMessage, "", message.UserId.ToString(), MessageType.Private, message.Time));
-
                         break;
                     case "group":
                         OnOneBotMessage(new OneBotContext(message.RawMessage,((GroupEndpoint)message.Endpoint).GroupId, message.UserId, MessageType.Group, message.Time ));

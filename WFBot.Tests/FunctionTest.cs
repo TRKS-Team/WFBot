@@ -20,7 +20,7 @@ namespace WFBot.Tests
         [TestInitialize]
         public void Init()
         {
-            AsyncContext.SetMessageSender(new MessageSender());
+            AsyncContext.SetOrichaltContext(new MessageSender());
             WFBotCore.UseTestConnector = true;
             core = new WFBotCore();
             core.Init().Wait();

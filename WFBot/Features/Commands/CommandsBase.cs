@@ -6,24 +6,19 @@ using TextCommandCore;
 using WFBot.Events;
 using WFBot.Features.Common;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.Utils;
 using static WFBot.Features.Utils.Messenger;
 
 namespace WFBot.Features.Commands
 {
-    public partial class CommandsHandler : ICommandHandler<CommandsHandler>, ISender
+    public partial class CommandsHandler : ICommandHandler<CommandsHandler>
     {
-        public Action<TargetID, Message> MessageSender { get; }
+        public Action<Message> MessageSender { get; }
         public Action<Message> ErrorMessageSender { get; }
-
-        public UserID Sender { get; }
         public string Message { get; }
-        public GroupID Group { get; }
-
-        private GroupMessageSender MsgSender => new GroupMessageSender(Group);
         public readonly Lazy<StringBuilder> OutputStringBuilder = new Lazy<StringBuilder>(() => new StringBuilder());
-        string ICommandHandler<CommandsHandler>.Sender => Group;
-        
+
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
         private static readonly RMSearcher _rmSearcher = new RMSearcher();
         private static readonly WMASearcher _wmaSearcher = new WMASearcher();
@@ -45,21 +40,12 @@ namespace WFBot.Features.Commands
             OutputStringBuilder.Value.AppendLine();
         }
 
-        public CommandsHandler(UserID sender, GroupID group, string message)
+        public CommandsHandler(string message)
         {
-            Sender = sender;
-            MessageSender = (id, msg) =>
+            MessageSender = (msg) =>
             {
-                if (WFBotCore.UseTestConnector)
-                {
-                    AsyncContext.SendGroupMessage(msg);
-                }
-                else
-                {
-                    new GroupMessageSender(id.ID).SendMessage(msg);
-                }
+                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
             };
-            Group = group;
             Message = message;
 
             ErrorMessageSender = msg => SendDebugInfo(msg);

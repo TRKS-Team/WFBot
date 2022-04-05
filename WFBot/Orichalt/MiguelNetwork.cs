@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
 
 namespace WFBot.Orichalt
@@ -37,6 +38,32 @@ namespace WFBot.Orichalt
         {
             var o = OrichaltContextManager.PutPlatformContext(e);
             OnOrichaltMessageRecived(o);
+        }
+
+
+
+
+
+
+        public static void Reply(OrichaltContext o, string msg)
+        // 响应通用命令应答
+        {
+            switch (o.Platform)
+            {
+                case MessagePlatform.OneBot:
+                    var context = OrichaltContextManager.OneBotContexts[o.UUID];
+                    SendToGroup(context.Group, msg);
+                    break;
+                case MessagePlatform.Kaiheila:
+                    break;
+                case MessagePlatform.QQChannel:
+                    break;
+            }
+        }
+
+        public static void SendToGroup(GroupID group, string msg)
+        {
+            Connector.OneBotClient.SendGroupMessageAsync(group, msg);
         }
     }
 }

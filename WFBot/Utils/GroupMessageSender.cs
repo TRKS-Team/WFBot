@@ -5,7 +5,7 @@ using WFBot.Features.Utils;
 
 namespace WFBot.Utils
 {
-    public class GroupMessageSender : IGroupMessageSender
+    /*public class GroupMessageSender : IGroupMessageSender
     {
         public GroupID GroupID { get; }
 
@@ -24,5 +24,5 @@ namespace WFBot.Utils
     {
         GroupID GroupID { get; }
         void SendMessage(string msg);
-    }
+    }*/
 }

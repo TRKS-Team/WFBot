@@ -213,12 +213,12 @@ namespace WFBot.Utils
 
         public static string AddRemainCallCount(this string str)
         {
-            return AddRemainCallCount(str.TrimEnd(), AsyncContext.GetMessageSender().GroupID);
+            return AddRemainCallCount(str.TrimEnd(), AsyncContext.GetOrichaltContext().GroupID);
         }
 
         public static StringBuilder AddRemainCallCount(this StringBuilder str)
         {
-            AddRemainCallCount(str.TrimEnd(), AsyncContext.GetMessageSender().GroupID);
+            AddRemainCallCount(str.TrimEnd(), AsyncContext.GetOrichaltContext().GroupID);
             return str;
         }
 
