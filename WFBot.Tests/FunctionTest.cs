@@ -20,7 +20,6 @@ namespace WFBot.Tests
         [TestInitialize]
         public void Init()
         {
-            AsyncContext.SetOrichaltContext(new MessageSender());
             WFBotCore.UseTestConnector = true;
             core = new WFBotCore();
             core.Init().Wait();
@@ -67,7 +66,7 @@ namespace WFBot.Tests
 
         private void InputCommand(string msg)
         {
-            GroupMessageRecivedEvent.ProcessGroupMessage("0", "0", msg).Wait();
+            // GroupMessageRecivedEvent.ProcessGroupMessage("0", "0", msg).Wait();
         }
         [TestMethod]
         public void TestWildcards()
@@ -93,7 +92,7 @@ namespace WFBot.Tests
         }
     }
 
-    class MessageSender : IGroupMessageSender
+    class MessageSender
     {
         public GroupID GroupID { get; }
         const string resultPath = "TestResult.log";

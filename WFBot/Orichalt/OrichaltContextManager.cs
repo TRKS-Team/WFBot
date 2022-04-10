@@ -13,12 +13,19 @@ namespace WFBot.Orichalt
         Kaiheila,
         QQChannel
     }
+
+    public enum MessageRange
+    {
+        Public,
+        Private
+    }
     public class OrichaltContext
     {
-        public OrichaltContext(string plainMessage, MessagePlatform platform)
+        public OrichaltContext(string plainMessage, MessagePlatform platform, MessageRange range)
         {
             PlainMessage = plainMessage;
             Platform = platform;
+            Range = range
             UUID = Guid.NewGuid().ToString();
             lifeTimer = new Timer(TimeSpan.FromMinutes(10).TotalMilliseconds);
             lifeTimer.Elapsed += (sender, args) =>
@@ -31,6 +38,7 @@ namespace WFBot.Orichalt
         public string UUID { get; set; }
         public string PlainMessage { get; set; }
         public MessagePlatform Platform { get; set; }
+        public MessageRange Range { get; set; }
         private Timer lifeTimer;
 
         public void Dispose()
@@ -53,9 +61,26 @@ namespace WFBot.Orichalt
             };
         }
 
+        public OneBotContext GetOneBotContext(OrichaltContext o)
+        {
+            return OneBotContexts[o.UUID];
+        }
         public OrichaltContext PutPlatformContext(OneBotContext context)
         {
-            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot);
+            MessageRange range;
+            switch (context.Type)
+            {
+                case MessageType.Group:
+                    range = MessageRange.Public;
+                    break;
+                case MessageType.Private:
+                    range = MessageRange.Private;
+                    break;
+                default:
+                    range = MessageRange.Public;
+                    break;
+            }
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, range);
             OneBotContexts[o.UUID] = context;
             return o;
         }

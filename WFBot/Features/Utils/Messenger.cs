@@ -20,34 +20,10 @@ namespace WFBot.Features.Utils
 
     public static class Messenger
     {
-        public static ConcurrentDictionary<string, int> GroupCallDic = new ConcurrentDictionary<string, int>();
 
         static Messenger()
         {
             // 大家都知道你很蠢啦
-        }
-
-        public static void IncreaseCallCounts(string group)
-        {
-            lock (GroupCallDic)
-            {
-                if (GroupCallDic.ContainsKey(group))
-                {
-                    GroupCallDic[group]++;
-                }
-                else
-                {
-                    GroupCallDic[group] = 1;
-                }
-            }
-
-            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task =>
-            {
-                lock (GroupCallDic)
-                {
-                    GroupCallDic[group]--;
-                }
-            });
         }
 
         public static void SendDebugInfo(string content)

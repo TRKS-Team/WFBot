@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Newtonsoft.Json;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 
 namespace WFBot.Utils
 {
@@ -213,50 +214,65 @@ namespace WFBot.Utils
 
         public static string AddRemainCallCount(this string str)
         {
-            return AddRemainCallCount(str.TrimEnd(), AsyncContext.GetOrichaltContext().GroupID);
+            return AddRemainCallCount(str.TrimEnd(), AsyncContext.GetOrichaltContext());
         }
 
         public static StringBuilder AddRemainCallCount(this StringBuilder str)
         {
-            AddRemainCallCount(str.TrimEnd(), AsyncContext.GetOrichaltContext().GroupID);
+            AddRemainCallCount(str.TrimEnd(), AsyncContext.GetOrichaltContext());
             return str;
         }
 
-        public static string AddRemainCallCount(this string str, GroupID group)
+        public static string AddRemainCallCount(this string str, OrichaltContext o)
         {
-            if (Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[@group.ToString()] < 0)
+            switch (o.Platform)
             {
-                return str;
-            }
+                case MessagePlatform.OneBot:
+                    var context = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    var group = context.Group;
+                    if (Config.Instance.CallperMinute == 0 || MiguelNetwork.OneBotGroupCallDic[group] < 0)
+                    {
+                        return str;
+                    }
 
-            var remainCount = Config.Instance.CallperMinute - Messenger.GroupCallDic[@group.ToString()];
+                    var remainCount = Config.Instance.CallperMinute - MiguelNetwork.OneBotGroupCallDic[group];
 
-            if (remainCount > 0)
-            {
-                return $"{str}\n机器人在本群一分钟内还能发送{remainCount}条消息.";
-            }
-            else
-            {
-                return $"{str}\n机器人在本群一分钟内信息发送配额已经用完.";
+                    if (remainCount > 0)
+                    {
+                        return $"{str}\n机器人在本群一分钟内还能发送{remainCount}条消息.";
+                    }
+                    else
+                    {
+                        return $"{str}\n机器人在本群一分钟内信息发送配额已经用完.";
+                    }
+                default:
+                    return "";
             }
         }
 
-        public static void AddRemainCallCount(this StringBuilder str, GroupID group)
+        public static void AddRemainCallCount(this StringBuilder str, OrichaltContext o)
         {
-            if (Config.Instance.CallperMinute == 0 || Messenger.GroupCallDic[@group.ToString()] < 0)
+            switch (o.Platform)
             {
-                return;
-            }
+                case MessagePlatform.OneBot:
+                    var context = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    var group = context.Group;
+                    if (Config.Instance.CallperMinute == 0 || MiguelNetwork.OneBotGroupCallDic[group] < 0)
+                    {
+                        return;
+                    }
 
-            var remainCount = Config.Instance.CallperMinute - Messenger.GroupCallDic[@group.ToString()];
+                    var remainCount = Config.Instance.CallperMinute - MiguelNetwork.OneBotGroupCallDic[group];
 
-            if (remainCount > 0)
-            {
-                str.Append($"\n机器人在本群一分钟内还能发送{remainCount}条消息.");
-            }
-            else
-            {
-                str.Append($"\n机器人在本群一分钟内信息发送配额已经用完.");
+                    if (remainCount > 0)
+                    {
+                        str.Append($"\n机器人在本群一分钟内还能发送{remainCount}条消息.");
+                    }
+                    else
+                    {
+                        str.Append($"\n机器人在本群一分钟内信息发送配额已经用完.");
+                    }
+                    break;
             }
         }
     }

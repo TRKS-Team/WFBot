@@ -96,28 +96,11 @@ namespace WFBot.Features.Events
         {
             var message = o.PlainMessage.ToLowerInvariant();
             if (Config.Instance.CustomReplies.ContainsKey(message))
-            {
-                Config.Instance.CustomReplies[message].SendToGroup(groupId);
+            { 
+                MiguelNetwork.Reply(o, Config.Instance.CustomReplies[message]);
             }
         }
 
-        private static bool CheckCallPerMin(GroupID groupId)
-        {
-            lock (GroupCallDic)
-            {
-                if (GroupCallDic.ContainsKey(groupId))
-                {
-                    if (GroupCallDic[groupId] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
-                }
-                else
-                {
-                    GroupCallDic[groupId] = 0;
-                }
-
-            }
-
-            return false;
-        }
     }
 
 
