@@ -11,14 +11,12 @@ namespace TextCommandCore
 {
     public interface ICommandHandler<T> where T : ICommandHandler<T>
     {
-        Action<Message> MessageSender { get; }
         Action<Message> ErrorMessageSender { get; }
         string Message { get; }
     }
 
     public abstract class CommandHandlerBase<T> : ICommandHandler<T> where T : ICommandHandler<T>
     {
-        public abstract Action<Message> MessageSender { get; }
         public abstract Action<Message> ErrorMessageSender { get; }
         public abstract string Message { get; }
 

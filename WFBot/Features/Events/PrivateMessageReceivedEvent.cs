@@ -157,12 +157,10 @@ namespace WFBot.Events
 
     public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>, ISender
     {
-        public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendPrivate(id.ID, msg);
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
         public UserID Sender { get; }
         public string Message { get; }
 
-        string ICommandHandler<PrivateMessageHandler>.Sender => Sender;
 
         public PrivateMessageHandler(UserID sender, string message)
         {

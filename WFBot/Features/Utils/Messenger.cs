@@ -50,7 +50,7 @@ namespace WFBot.Features.Utils
 
             ConnectorManager.Connector.SendGroupMessage(g, content);
 
-            IncreaseCallCounts(g);
+            // IncreaseCallCounts(g);
             //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
