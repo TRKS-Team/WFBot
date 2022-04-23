@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using WFBot.Connector;
 using WFBot.MahuaEvents;
+using WFBot.Orichalt;
 using WFBot.Utils;
 using Timer = System.Timers.Timer;
 
@@ -48,8 +49,7 @@ namespace WFBot.Features.Utils
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
             previousMessageDic[qq] = content;
 
-            ConnectorManager.Connector.SendGroupMessage(g, content);
-
+            MiguelNetwork.SendToGroup(g, content);
             // IncreaseCallCounts(g);
             //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
@@ -81,11 +81,6 @@ namespace WFBot.Features.Utils
         public static void SendToGroup(this string content, GroupID qq)
         {
             SendGroup(qq, content);
-        }
-
-        public static void SendTo(this string content, GroupMessageSender sender)
-        {
-            sender.SendMessage(content);
         }
 
         public static void SendToPrivate(this string content, UserID qq)

@@ -10,7 +10,7 @@ using MessageContext = Sisters.WudiLib.Posts.Message;
 
 namespace OneBotConnector
 {
-    public class Connector : WFBotConnectorBase
+    /*public class Connector : WFBotConnectorBase
     {
         CqHttpWebSocketApiClient client;
         CqHttpWebSocketEvent wsevent;
@@ -77,5 +77,5 @@ namespace OneBotConnector
         {
             client.SendPrivateMessageAsync(id, message).Wait();
         }
-    }
+    }*/
 }

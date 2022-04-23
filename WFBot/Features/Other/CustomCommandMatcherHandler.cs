@@ -132,7 +132,7 @@ namespace WFBot.Features.Other
 
         void SaveConfig() => CustomCommandConfig.Save();
 
-        public Action<TargetID, Message> MessageSender { get; } = (id, s) => Console.WriteLine(s);
+        public Action<Message> MessageSender { get; } = (s) => Console.WriteLine(s);
         public Action<Message> ErrorMessageSender { get; } = s => Console.WriteLine(s);
         public string Sender { get; } = "";
         public string Message { get; }

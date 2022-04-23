@@ -16,7 +16,7 @@ using WFBot.Features.Utils;
 
 namespace MiraiHTTPConnector
 {
-    public class Connector : WFBotConnectorBase
+    /*public class Connector : WFBotConnectorBase
     {
         private MiraiHttpSession session;
 
@@ -98,5 +98,5 @@ namespace MiraiHTTPConnector
         {
             session.SendFriendMessageAsync(userID, new PlainMessage(message)).Wait();
         }
-    }
+    }*/
 }

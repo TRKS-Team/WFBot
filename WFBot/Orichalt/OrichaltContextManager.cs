@@ -25,7 +25,7 @@ namespace WFBot.Orichalt
         {
             PlainMessage = plainMessage;
             Platform = platform;
-            Range = range
+            Range = range;
             UUID = Guid.NewGuid().ToString();
             lifeTimer = new Timer(TimeSpan.FromMinutes(10).TotalMilliseconds);
             lifeTimer.Elapsed += (sender, args) =>

@@ -208,20 +208,21 @@ namespace WFBot
             }
         }
 
-        public async Task OnGroupMessage(GroupID groupID, UserID userID, string message)
+        public async Task OnGroupMessage(OrichaltContext o)
         {
             if (!Inited)
             {
-                Trace.WriteLine($"Message ignored due to uninitialized: {groupID} {userID} {message}");
+                Trace.WriteLine($"Message ignored due to uninitialized: {o.GetInfo()}");
+                // 为啥这句要写英文?
                 return;
             }
-            await messageReceivedEvent.ProcessGroupMessage(groupID, userID, message);
+            await messageReceivedEvent.ProcessGroupMessage(o);
         }
 
-        public void OnFriendMessage(UserID userID, string message)
+        public void OnFriendMessage(OrichaltContext o)
         {
             if (!Inited) return;
-            privateMessageReceivedEvent.ProcessPrivateMessage(userID, message);
+            privateMessageReceivedEvent.ProcessPrivateMessage(o);
         }
 
         bool _requestedCtrlCShutdown;

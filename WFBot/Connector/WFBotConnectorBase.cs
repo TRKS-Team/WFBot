@@ -14,13 +14,13 @@ namespace WFBot.Connector
         public abstract void SendPrivateMessage(UserID id, string message);
         public virtual void OnCommandLineInput(string content) { }
 
-        protected void ReportGroupMessage(GroupID groupID, UserID userID, string message)
+        /*protected void ReportGroupMessage(GroupID groupID, UserID userID, string message)
         {
             WFBotCore.Instance.OnGroupMessage(groupID, userID, message);
         }
         protected void ReportFriendMessage(UserID userID, string message)
         {
             WFBotCore.Instance.OnFriendMessage(userID, message);
-        }
+        }*/
     }
 }

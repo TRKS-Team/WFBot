@@ -40,7 +40,7 @@ namespace WFBot.Features.Events
             }
             var message = o.PlainMessage.TrimStart('/', '、', '／');
 
-            var handler = new CommandsHandler(message);
+            var handler = new CommandsHandler(o, message);
             
             // TODO 优化task数量
             // TODO cancellation token
@@ -51,18 +51,7 @@ namespace WFBot.Features.Events
                 AsyncContext.SetCancellationToken(cancelSource.Token);
                 AsyncContext.SetOrichaltContext(o);
                 var commandProcessTask = handler.ProcessCommandInput();
-                var platforminfo = "";
-                switch (o.Platform)
-                {
-                    case MessagePlatform.OneBot:
-                        var context = MiguelNetwork.OrichaltContextManager.OneBotContexts[o.UUID];
-                        platforminfo = $"平台[OneBot] 群[{context.Group}] 用户[{context.SenderID}] 内容[{context.RawMessage}]";
-                        break;
-                    case MessagePlatform.Kaiheila:
-                        break;
-                    case MessagePlatform.QQChannel:
-                        break;
-                }
+                var platforminfo = o.GetInfo();
                 using var locker = WFBotResourceLock.Create($"命令处理 #{Interlocked.Increment(ref commandCount)} {platforminfo}");
                 await Task.WhenAny(commandProcessTask, Task.Delay(TimeSpan.FromSeconds(60)));
                 

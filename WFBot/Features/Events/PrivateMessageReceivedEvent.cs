@@ -7,6 +7,8 @@ using GammaLibrary.Extensions;
 using TextCommandCore;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
+using WFBot.Utils;
 using Number = System.Numerics.BigInteger;
 using static WFBot.Features.Utils.Messenger;
 
@@ -16,10 +18,10 @@ namespace WFBot.Events
     {
 
 
-        public void ProcessPrivateMessage(UserID senderId, string message)
+        public void ProcessPrivateMessage(OrichaltContext o)
         {
 
-            new PrivateMessageHandler(senderId, message).ProcessCommandInput().Wait();
+            new PrivateMessageHandler().ProcessCommandInput().Wait();
             // SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 8 时代变了
 
         }
@@ -155,16 +157,18 @@ namespace WFBot.Events
         }
     }
 
-    public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>, ISender
+    public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>
     {
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
-        public UserID Sender { get; }
-        public string Message { get; }
-
-
-        public PrivateMessageHandler(UserID sender, string message)
+        public Action<Message> MessageSender { get; } = (msg) =>             
         {
-            Sender = sender;
+            MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
+        };
+        public string Message { get; }
+        public OrichaltContext O { get; private set; }
+        public PrivateMessageHandler(OrichaltContext o, string message)
+        {
+            O = o;
             Message = message;
         }
     }

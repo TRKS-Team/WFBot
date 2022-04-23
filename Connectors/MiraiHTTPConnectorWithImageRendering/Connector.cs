@@ -17,7 +17,7 @@ using WFBot.Features.Utils;
 
 namespace MiraiHTTPConnector
 {
-    public class Connector : WFBotConnectorBase
+    /*public class Connector : WFBotConnectorBase
     {
         private MiraiHttpSession session;
 
@@ -119,8 +119,8 @@ namespace MiraiHTTPConnector
             var path = Path.Combine("WFBotImageCaches", $"{Guid.NewGuid():D}.png");
             var metric = testImage.FontTypeMetrics(message, false);
             var margin = (int)(metric.TextHeight / 10.0);
-            using var image = new MagickImage(new MagickColor(42, 43, 48), (int)metric.TextWidth /*+ margin*2*/, (int)metric.TextHeight/*+margin*2*/);
-            image.Settings.TextAntiAlias = true;
+            // using var image = new MagickImage(new MagickColor(42, 43, 48), (int)metric.TextWidth /*+ margin*2*//*, (int)metric.TextHeight/*+margin*2*//*);
+            /*image.Settings.TextAntiAlias = true;
             image.Settings.Density = new Density(72);
             image.Settings.FontPointsize = 36;
             image.Settings.Font = "msyh.ttf";
@@ -136,5 +136,5 @@ namespace MiraiHTTPConnector
         {
             session.SendFriendMessageAsync(userID, new PlainMessage(message)).Wait();
         }
-    }
+    }*/
 }

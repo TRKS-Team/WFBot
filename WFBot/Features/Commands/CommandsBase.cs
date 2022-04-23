@@ -17,6 +17,7 @@ namespace WFBot.Features.Commands
         public Action<Message> MessageSender { get; }
         public Action<Message> ErrorMessageSender { get; }
         public string Message { get; }
+        public OrichaltContext O { get; private set; }
         public readonly Lazy<StringBuilder> OutputStringBuilder = new Lazy<StringBuilder>(() => new StringBuilder());
 
         private static readonly WMSearcher _wmSearcher = new WMSearcher();
@@ -40,14 +41,14 @@ namespace WFBot.Features.Commands
             OutputStringBuilder.Value.AppendLine();
         }
 
-        public CommandsHandler(string message)
+        public CommandsHandler(OrichaltContext o, string message)
         {
             MessageSender = (msg) =>
             {
                 MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
             };
             Message = message;
-
+            O = o;
             ErrorMessageSender = msg => SendDebugInfo(msg);
         }
 

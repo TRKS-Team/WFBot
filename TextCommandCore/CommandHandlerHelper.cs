@@ -82,7 +82,7 @@ namespace TextCommandCore
 
                 await Task.WhenAny(task, waitTask);
                 if (waitTask.IsCompleted && !task.IsCompleted)
-                    handlers.MessageSender(sender, "很抱歉, 这个命令可能需要更长的时间来执行. 请耐心等待.");
+                    handlers.MessageSender("很抱歉, 这个命令可能需要更长的时间来执行. 请耐心等待.");
                 try
                 {
                     result = await task;
@@ -153,7 +153,7 @@ namespace TextCommandCore
                             break;
                         case NullReferenceException _:
                             result = "发生异常: 找不到对象.";
-                            handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
+                            handlers.ErrorMessageSender($"在处理 {} 的命令时发生问题.\n" +
                                                         $"命令内容为 [{message}].\n" +
                                                         $"异常信息:\n" +
                                                         $"{innerException}");
@@ -170,7 +170,7 @@ namespace TextCommandCore
             }
 
             if (!result.IsNullOrWhiteSpace())
-                handlers.MessageSender(sender, result);
+                handlers.MessageSender(result);
             return (true, result);
         }
 
