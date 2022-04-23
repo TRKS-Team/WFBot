@@ -53,7 +53,6 @@
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
-    <ProjectReference Include="..\TextCommandCore\TextCommandCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

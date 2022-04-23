@@ -5,11 +5,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 using Order = WarframeAlertingPrime.SDK.Models.User.Order;
 

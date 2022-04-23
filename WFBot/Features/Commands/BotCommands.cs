@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using TextCommandCore;
 using WFBot.Features.Utils;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 
 namespace WFBot.Features.Commands

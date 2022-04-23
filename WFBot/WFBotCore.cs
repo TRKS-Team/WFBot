@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
 using InternetTime;
-using TextCommandCore;
 using WFBot.Connector;
 using WFBot.Events;
 using WFBot.Features.Events;
@@ -23,6 +22,7 @@ using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 using WFBot.Windows;
 

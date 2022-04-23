@@ -3,12 +3,12 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Humanizer;
-using TextCommandCore;
 using WFBot.Events;
 using WFBot.Features.Commands;
 using WFBot.Features.Common;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 using static WFBot.Features.Utils.Messenger;
 

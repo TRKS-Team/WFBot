@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using GammaLibrary.Extensions;
-using TextCommandCore;
 using WFBot.Features.Commands;
 using WFBot.Features.Events;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 
 namespace WFBot.Features.Other

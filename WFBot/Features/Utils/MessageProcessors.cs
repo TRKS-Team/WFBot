@@ -2,9 +2,9 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using TextCommandCore;
 using WFBot.Events;
 using WFBot.Features.Commands;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 
 namespace WFBot.Features.Utils

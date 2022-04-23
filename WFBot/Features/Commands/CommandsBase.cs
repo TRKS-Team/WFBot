@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using TextCommandCore;
 using WFBot.Events;
 using WFBot.Features.Common;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 using static WFBot.Features.Utils.Messenger;
 

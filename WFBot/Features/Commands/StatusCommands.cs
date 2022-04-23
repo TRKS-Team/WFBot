@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using TextCommandCore;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 
 namespace WFBot.Features.Commands
