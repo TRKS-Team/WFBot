@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GammaLibrary.Extensions;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 
 namespace WFBot.Windows
 {
@@ -167,7 +168,7 @@ namespace WFBot.Windows
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Messenger.Broadcast($"[来自管理者]通知: {textBox3.Text}"); 
+            MiguelNetwork.Broadcast($"[来自管理者]通知: {textBox3.Text}"); 
         }
 
         private void label9_Click(object sender, EventArgs e)

@@ -22,5 +22,22 @@ namespace WFBot.Orichalt
 
             return "";
         }
+
+        public static string GetSenderIdentifier(this OrichaltContext o)
+        {
+            switch (o.Platform)
+            {
+                case MessagePlatform.OneBot:
+                    var context = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    return $"QQ:{context.SenderID}";
+                case MessagePlatform.Kaiheila:
+                    throw new NotImplementedException();
+                case MessagePlatform.QQChannel:
+                    throw new NotImplementedException();
+
+            }
+
+            return "";
+        }
     }
 }

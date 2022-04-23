@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Fody;
 using GammaLibrary.Extensions;
+using WFBot.Orichalt;
 
 [assembly: ConfigureAwait(false)]
 
@@ -42,6 +43,7 @@ namespace WFBot.TextCommandCore
         public static async Task<(bool matched, string result)> ProcessCommandInput<T>(this ICommandHandler<T> handlers) where T : ICommandHandler<T>
         {
             var message = handlers.Message.Trim();
+            var o = handlers.O;
             if (message.IsNullOrEmpty()) return (false, null);
 
             string result;
@@ -94,11 +96,11 @@ namespace WFBot.TextCommandCore
 
                 result = PostProcess(method, message, result, handlers);
             }
-            catch (WFBot.TextCommandCore.CommandMismatchException)
+            catch (CommandMismatchException)
             {
                 return (false, null);
             }
-            catch (WFBot.TextCommandCore.CommandException e)
+            catch (CommandException e)
             {
                 result = e.Message;
             }
@@ -153,14 +155,14 @@ namespace WFBot.TextCommandCore
                             break;
                         case NullReferenceException _:
                             result = "发生异常: 找不到对象.";
-                            handlers.ErrorMessageSender($"在处理 {} 的命令时发生问题.\n" +
+                            handlers.ErrorMessageSender($"在处理 {o.GetInfo()} 的命令时发生问题.\n" +
                                                         $"命令内容为 [{message}].\n" +
                                                         $"异常信息:\n" +
                                                         $"{innerException}");
                             break;
                         default:
                             result = $"发生异常: {innerException?.Message}";
-                            handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
+                            handlers.ErrorMessageSender($"在处理 {o.GetInfo()} 的命令时发生问题.\n" +
                                                         $"命令内容为 [{message}].\n" +
                                                         $"异常信息:\n" +
                                                         $"{innerException}");
@@ -202,7 +204,7 @@ namespace WFBot.TextCommandCore
             var minRequiredParams = requiredParams.Count(info => !info.HasDefaultValue);
             var maxRequiredParams = requiredParams.Length;
 
-            if (providedParams.Length < minRequiredParams) throw new WFBot.TextCommandCore.CommandException("参数过少");
+            if (providedParams.Length < minRequiredParams) throw new CommandException("参数过少");
             var delta = requiredParams.Length - providedParams.Length;
 
             if (method.IsAttributeDefined<CombineStartAttribute>())
@@ -210,7 +212,7 @@ namespace WFBot.TextCommandCore
             if (method.IsAttributeDefined<CombineEndAttribute>())
                 providedParams = CombineEnd(providedParams, requiredParams);
 
-            if (providedParams.Length > maxRequiredParams && maxRequiredParams != 0) throw new WFBot.TextCommandCore.CommandException("参数过多");
+            if (providedParams.Length > maxRequiredParams && maxRequiredParams != 0) throw new CommandException("参数过多");
 
             for (var index = 0; index < requiredParams.Length; index++)
             {
@@ -271,7 +273,7 @@ namespace WFBot.TextCommandCore
             if (param.HasDefaultValue)
                 return param.DefaultValue.AsArray();
 
-            throw new WFBot.TextCommandCore.CommandException("参数过少");
+            throw new CommandException("参数过少");
         }
 
         static object GetParam(string providedParam, Type requiredParamParameterType)
@@ -313,7 +315,7 @@ namespace WFBot.TextCommandCore
 
             void Throw()
             {
-                throw new WFBot.TextCommandCore.CommandException("您参数真牛逼. (不是数字)");
+                throw new CommandException("您参数真牛逼. (不是数字)");
             }
         }
 
@@ -321,7 +323,7 @@ namespace WFBot.TextCommandCore
         {
             var 我不知道该咋命名了 = message.Split(' ')[0];
             var matchInfo = GetCommandInfos<T>().FirstOrDefault(info => info.Matchers.Any(m => m(我不知道该咋命名了)));
-            if (matchInfo is null) throw new WFBot.TextCommandCore.CommandMismatchException();
+            if (matchInfo is null) throw new CommandMismatchException();
 
             return matchInfo.Method;
         }

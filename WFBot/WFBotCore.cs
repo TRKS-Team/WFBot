@@ -155,7 +155,7 @@ namespace WFBot
                     default:
                         if (!(new CustomCommandMatcherHandler(text.TrimStart('/'))).ProcessCommandInput().Result.matched)
                         {
-                            ConnectorManager.Connector.OnCommandLineInput(text);
+                            // ConnectorManager.Connector.OnCommandLineInput(text);
                         }
                         break;
                 }
@@ -276,9 +276,6 @@ namespace WFBot
             Trace.WriteLine("加载配置文件...");
             Config.Update();
             Config.Save();
-
-            Trace.WriteLine("加载 Connector...");
-            ConnectorManager.LoadConnector();
 
             Trace.WriteLine("加载米格尔网络...");
             MiguelNetwork.InitMiguelNetwork(MessagePlatform.OneBot);

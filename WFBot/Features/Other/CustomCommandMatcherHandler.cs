@@ -6,6 +6,7 @@ using System.Text;
 using GammaLibrary.Extensions;
 using WFBot.Features.Commands;
 using WFBot.Features.Events;
+using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
 
@@ -134,7 +135,7 @@ namespace WFBot.Features.Other
 
         public Action<Message> MessageSender { get; } = (s) => Console.WriteLine(s);
         public Action<Message> ErrorMessageSender { get; } = s => Console.WriteLine(s);
-        public string Sender { get; } = "";
+        public OrichaltContext O { get; }
         public string Message { get; }
 
         public CustomCommandMatcherHandler(string message)

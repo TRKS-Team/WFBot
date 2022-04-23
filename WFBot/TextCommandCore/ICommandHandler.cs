@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using WFBot.Orichalt;
 
 namespace WFBot.TextCommandCore
 {
@@ -10,6 +11,7 @@ namespace WFBot.TextCommandCore
         Action<Message> ErrorMessageSender { get; }
         Action<Message> MessageSender { get; }
         string Message { get; }
+        OrichaltContext O { get; }
     }
 
     public abstract class CommandHandlerBase<T> : ICommandHandler<T> where T : ICommandHandler<T>
@@ -17,6 +19,7 @@ namespace WFBot.TextCommandCore
         public abstract Action<Message> MessageSender { get; }
         public abstract Action<Message> ErrorMessageSender { get; }
         public abstract string Message { get; }
+        public abstract OrichaltContext O { get; }
 
         public virtual void OnProcessingMessage() { }
 

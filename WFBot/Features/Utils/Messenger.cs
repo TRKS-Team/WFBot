@@ -30,7 +30,7 @@ namespace WFBot.Features.Utils
         public static void SendDebugInfo(string content)
         {
             if (Config.Instance.QQ.IsNumber())
-                SendPrivate(Config.Instance.QQ, content);
+                MiguelNetwork.SendDebugInfo(content);
             Trace.WriteLine($"{content}", "Message");
         }
 
@@ -54,7 +54,7 @@ namespace WFBot.Features.Utils
             //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
-        public static void Broadcast(string content)
+        /*public static void Broadcast(string content)
         {
             Task.Factory.StartNew(() =>
             {

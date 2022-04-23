@@ -2,7 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
 
@@ -111,7 +113,6 @@ namespace WFBot.Orichalt
 
 
 
-
         public static void Reply(OrichaltContext o, string msg)
         // 响应通用命令应答
         {
@@ -119,7 +120,8 @@ namespace WFBot.Orichalt
             {
                 case MessagePlatform.OneBot:
                     var context = OrichaltContextManager.OneBotContexts[o.UUID];
-                    SendToGroup(context.Group, msg);
+                    OneBotSendToGroup(context.Group, msg);
+                    IncreaseCallCounts(o);
                     break;
                 case MessagePlatform.Kaiheila:
                     break;
@@ -127,10 +129,55 @@ namespace WFBot.Orichalt
                     break;
             }
         }
+        public static void SendDebugInfo(string msg)
+        // 发送通用Debug信息给管理者
+        {
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    OneBotSendToPrivate(Config.Instance.QQ, msg);
+                    break;
+            }
+        }
 
-        public static void SendToGroup(GroupID group, string msg)
+        public static void Broadcast(string content)
+        // 广播通知到所有订阅消息的群体
+        {
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    Task.Factory.StartNew(() =>
+                    {
+                        var count = 0;
+                        foreach (var group in Config.Instance.WFGroupList)
+                        {
+                            var sb = new StringBuilder();
+                            sb.Append("[WFBot通知] ");
+                            sb.AppendLine(content);
+                            if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
+                            // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                            OneBotSendToGroup(group, sb.ToString().Trim());
+                            count++;
+                            Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                        }
+                    }, TaskCreationOptions.LongRunning);
+                    break;
+            }
+        }
+
+        //
+        // 以下的方法不应在本类外调用, 通用功能应该调用通用接口
+        //
+
+        private static void OneBotSendToGroup(GroupID group, string msg)
         {
             Connector.OneBotClient.SendGroupMessageAsync(group, msg);
         }
+
+        private static void OneBotSendToPrivate(UserID qq, string msg)
+        {
+            Connector.OneBotClient.SendPrivateMessageAsync(qq, msg);
+        }
+
     }
 }

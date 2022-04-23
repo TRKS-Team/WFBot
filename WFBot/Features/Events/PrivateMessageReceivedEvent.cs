@@ -21,7 +21,7 @@ namespace WFBot.Events
         public void ProcessPrivateMessage(OrichaltContext o)
         {
 
-            new PrivateMessageHandler().ProcessCommandInput().Wait();
+            new PrivateMessageHandler(o, o.PlainMessage).ProcessCommandInput().Wait();
             // SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 8 时代变了
 
         }
@@ -54,7 +54,7 @@ namespace WFBot.Events
         [RequireAdmin]
         string DumpGroups()
         {
-            SendPrivate(Sender, "正在dump所有群...请稍候...结果将存储于机器人根目录...");
+            MiguelNetwork.SendDebugInfo("正在dump所有群...请稍候...结果将存储于机器人根目录...");
 
             Directory.CreateDirectory("所有群");
             File.WriteAllLines(@"所有群\所有群.txt", GetGroups().Select(info => $"{info.ID} {info.Name}"));
@@ -121,7 +121,7 @@ namespace WFBot.Events
             if (Config.Instance.WFGroupList.Contains(groupStr)) return "群号已经存在";
             Config.Instance.WFGroupList.Add(groupStr);
 
-            SendGroup(groupStr, $"{Sender}已经在私聊启用了此群的新任务通知功能.");
+            MiguelNetwork.Reply(O, $"{O.GetSenderIdentifier()}已经在私聊启用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}启用了通知功能.");
 
             return "完事.";
@@ -135,7 +135,7 @@ namespace WFBot.Events
             var groupStr = group.ToString();
             Config.Instance.WFGroupList.Remove(groupStr);
 
-            SendGroup(groupStr, $"{Sender}已经在私聊禁用了此群的新任务通知功能.");
+            MiguelNetwork.Reply(O, $"{O.GetSenderIdentifier()}已经在私聊禁用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}禁用了通知功能.");
 
             return "完事.";
