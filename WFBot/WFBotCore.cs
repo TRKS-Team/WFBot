@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
 using InternetTime;
-using WFBot.Connector;
 using WFBot.Events;
 using WFBot.Features.Events;
 using WFBot.Features.Other;
