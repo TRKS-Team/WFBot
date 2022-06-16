@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using WFBot.Connector;
 using WFBot.MahuaEvents;
 using WFBot.Orichalt;
 using WFBot.Utils;
