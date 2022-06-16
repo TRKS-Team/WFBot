@@ -29,10 +29,3 @@ jobs:
         run: dotnet publish WFBot -c "Windows Release" -o WindowsPublish --self-contained false
       - name: Linux Build
         run: dotnet publish WFBot -c "Linux Release" -o LinuxPublish --self-contained false
-
-      - name: Mirai Connector Build
-        run: dotnet publish Connectors/MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false
-      - name: Test Connector Build
-        run: dotnet publish Connectors/TestConnector -c "Linux Release" -o TestConnector --self-contained false
-      - name: OneBot Connector Build
-        run: dotnet publish Connectors/OneBotConnector -c "Linux Release" -o OneBotConnector --self-contained false

@@ -95,7 +95,11 @@ namespace WFBot
         {
             Instance = this;
         }
-
+        public WFBotCore(bool istest)
+        {
+            Instance = this;
+            IsTest = istest;
+        }
         public WFNotificationHandler NotificationHandler { get; private set; }
         public static WFBotCore Instance { get; internal set; }
         public MessageReceivedEvent messageReceivedEvent;
@@ -103,6 +107,7 @@ namespace WFBot
         public static string Version { get; }
         public static bool IsOfficial { get; }
         public static bool IsShuttingDown { get; private set; }
+        public static bool IsTest { get; private set; }
 
         static WFBotCore()
         {
@@ -276,7 +281,7 @@ namespace WFBot
             Config.Update();
             Config.Save();
 
-            while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown)
+            while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
                 Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kaiheila 2.QQ频道");
                 var platformstr = Console.ReadLine();
@@ -287,7 +292,7 @@ namespace WFBot
                 }
             }
             Trace.WriteLine("加载米格尔网络...");
-            MiguelNetwork.InitMiguelNetwork(Config.Instance.Miguel_Platform);
+            MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform);
 
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();

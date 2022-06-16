@@ -12,6 +12,7 @@ namespace WFBot.Orichalt
         OneBot,
         Kaiheila,
         QQChannel,
+        Test,
         Unknown
     }
 
@@ -93,7 +94,11 @@ namespace WFBot.Orichalt
         {
             throw new NotImplementedException();
         }
-
+        public static OrichaltContext PutPlatformContext(TestContext context)
+        {
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.Test, MessageRange.Public);
+            return o;
+        }
         public void DisposeOrichaltContext(OrichaltContext context)
         {
             OneBotContexts.Remove(context.UUID);

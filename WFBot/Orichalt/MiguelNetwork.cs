@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,7 +120,11 @@ namespace WFBot.Orichalt
             OnOrichaltMessageRecived(o);
         }
 
-
+        public static async Task ProcessTestInput(string input)
+        {
+            var o = OrichaltContextManager.PutPlatformContext(new TestContext { RawMessage = input });
+            await WFBotCore.Instance.OnGroupMessage(o);
+        }
 
 
 
@@ -134,6 +141,15 @@ namespace WFBot.Orichalt
                 case MessagePlatform.Kaiheila:
                     break;
                 case MessagePlatform.QQChannel:
+                    break;
+                case MessagePlatform.Test:
+                    const string resultPath = "TestResult.log";
+                    Trace.WriteLine(msg);
+                    if (File.Exists(resultPath) && File.ReadLines(resultPath).Last() == "Done.") // 哈哈 Trick.
+                    {
+                        File.Delete(resultPath);
+                    }
+                    File.AppendAllText(resultPath, msg + Environment.NewLine);
                     break;
             }
         }
