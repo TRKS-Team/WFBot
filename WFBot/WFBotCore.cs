@@ -300,7 +300,7 @@ namespace WFBot
             CustomCommandMatcherHandler.InitCustomCommandHandler();
 
             // 检查时间...
-            Task.Run(() => CheckTime());
+            _ = Task.Run(() => CheckTime());
 
             // 初始化定时器
             Trace.WriteLine("初始化定时器...");
@@ -311,7 +311,7 @@ namespace WFBot
             Inited = true;
             if (_requestedCtrlCShutdown)
             {
-                Task.Run(() => Shutdown());
+                _ = Task.Run(() => Shutdown());
             }
 
             _requestedCtrlCShutdown = false;

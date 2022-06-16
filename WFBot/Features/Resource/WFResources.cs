@@ -165,7 +165,7 @@ namespace WFBot.Features.Resource
                 fileName: "ExportRelicArcane_zh.json",
                 requester: async _ =>
                 {
-                    var count = 0;
+                    //var count = 0;
                     List<string> urls;
                     try
                     {

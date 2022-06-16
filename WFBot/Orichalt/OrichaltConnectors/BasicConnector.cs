@@ -19,10 +19,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
                     break;
                 case MessagePlatform.Kaiheila:
                     throw new NotImplementedException();
-                    break;
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
-                    break;
             }
         }
     }
