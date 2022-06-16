@@ -4,6 +4,7 @@ using System.Diagnostics;
 using GammaLibrary.Extensions;
 using Newtonsoft.Json;
 using WFBot.Features.Other;
+using WFBot.Orichalt;
 using WFBot.Utils;
 using WFBot.Windows;
 
@@ -64,6 +65,7 @@ namespace WFBot
         public Dictionary<string, string> CustomReplies = new Dictionary<string, string>();
 
         public bool UseTelemetry = true;
+        public MessagePlatform Miguel_Platform = MessagePlatform.Unknown;
 
         protected override void AfterUpdate()
         {

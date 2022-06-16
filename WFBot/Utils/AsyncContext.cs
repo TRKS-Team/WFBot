@@ -21,11 +21,6 @@ namespace WFBot.Utils
             return CurrentOrichaltContext.Value?.Value ?? throw new Exception("Message Sender not found.");
         }
 
-        public static void SendGroupMessage(string msg)
-        {
-            // GetOrichaltContext().SendMessage(msg);
-        }
-
         public static void SetCancellationToken(CancellationToken token)
         {
             CurrentCancellationToken.Value = new Container<CancellationToken>(token);

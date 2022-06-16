@@ -42,6 +42,7 @@ namespace TextCommandCore
         public static async Task<(bool matched, string result)> ProcessCommandInput<T>(this ICommandHandler<T> handlers) where T : ICommandHandler<T>
         {
             var message = handlers.Message.Trim();
+            var o = handlers.
             if (message.IsNullOrEmpty()) return (false, null);
 
             string result;

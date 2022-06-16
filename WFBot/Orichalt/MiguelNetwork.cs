@@ -98,9 +98,17 @@ namespace WFBot.Orichalt
             Inited = true;
         }
 
-        private static void MiguelNetwork_OrichaltMessageRecived(object sender, OrichaltContext e)
+        private static async void MiguelNetwork_OrichaltMessageRecived(object? sender, OrichaltContext e)
         {
-            
+            switch (e.Range)
+            {
+                case MessageRange.Public:
+                    WFBotCore.Instance.OnGroupMessage(e);
+                    break;
+                case MessageRange.Private:
+                    WFBotCore.Instance.OnFriendMessage(e);
+                    break;
+            }
         }
 
         private static void Connector_OneBotMessageReceived(object sender, OneBotContext e)
@@ -168,16 +176,18 @@ namespace WFBot.Orichalt
         //
         // 以下的方法不应在本类外调用, 通用功能应该调用通用接口
         //
-
+        static readonly Dictionary<GroupID, string> previousMessageDic = new Dictionary<GroupID, string>();
         private static void OneBotSendToGroup(GroupID group, string msg)
         {
+            var qq = group.ID;
+            // 避免重复发送同一条消息
+            if (previousMessageDic.ContainsKey(qq) && msg == previousMessageDic[qq]) return;
+            previousMessageDic[qq] = msg;
             Connector.OneBotClient.SendGroupMessageAsync(group, msg);
         }
-
         private static void OneBotSendToPrivate(UserID qq, string msg)
         {
             Connector.OneBotClient.SendPrivateMessageAsync(qq, msg);
         }
-
     }
 }

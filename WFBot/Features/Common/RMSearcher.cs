@@ -9,6 +9,7 @@ using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
 using Order = WarframeAlertingPrime.SDK.Models.User.Order;
@@ -82,7 +83,7 @@ namespace WFBot.Features.Common
                     {
                         if (Config.Instance.NotifyBeforeResult)
                         {
-                            AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                            MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
                         }
                         var orders = await GetRivenOrders(weaponinfo.First().name);
                         var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();

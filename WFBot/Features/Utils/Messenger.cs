@@ -34,7 +34,7 @@ namespace WFBot.Features.Utils
             Trace.WriteLine($"{content}", "Message");
         }
 
-        public static void SendPrivate(UserID qq, string content)
+        /*public static void SendPrivate(UserID qq, string content)
         {
             ConnectorManager.Connector.SendPrivateMessage(qq, content);
             // todo
@@ -78,7 +78,7 @@ namespace WFBot.Features.Utils
 
         /* 当麻理解不了下面的代码 */
         // 现在可以了
-        public static void SendToGroup(this string content, GroupID qq)
+        /*public static void SendToGroup(this string content, GroupID qq)
         {
             SendGroup(qq, content);
         }

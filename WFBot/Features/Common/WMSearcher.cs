@@ -12,6 +12,7 @@ using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.Others;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.Utils;
 
 namespace WFBot.Features.Common
@@ -291,7 +292,7 @@ namespace WFBot.Features.Common
             var msg = string.Empty;
             if (Config.Instance.NotifyBeforeResult)
             {
-                AsyncContext.SendGroupMessage("好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
             }
 
             var failed = false;
@@ -325,7 +326,7 @@ namespace WFBot.Features.Common
                 }
                 catch (Exception)
                 {
-                    AsyncContext.SendGroupMessage("很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
+                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
                     failed = true;
                 }
             }

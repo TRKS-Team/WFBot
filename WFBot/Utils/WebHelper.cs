@@ -16,6 +16,7 @@ using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Newtonsoft.Json;
 using WFBot.Features.Resource;
+using WFBot.TextCommandCore;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WFBot.Utils

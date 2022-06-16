@@ -277,9 +277,18 @@ namespace WFBot
             Config.Update();
             Config.Save();
 
+            while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown)
+            {
+                Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kaiheila 2.QQ频道");
+                var platformstr = Console.ReadLine();
+                if (platformstr.IsNumber() && platformstr.ToInt() <= 2 && 0 <= platformstr.ToInt())
+                {
+                    Config.Instance.Miguel_Platform = (MessagePlatform)platformstr.ToInt();
+                    Config.Save();
+                }
+            }
             Trace.WriteLine("加载米格尔网络...");
-            MiguelNetwork.InitMiguelNetwork(MessagePlatform.OneBot);
-            // TODO 自定义平台
+            MiguelNetwork.InitMiguelNetwork(Config.Instance.Miguel_Platform);
 
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();

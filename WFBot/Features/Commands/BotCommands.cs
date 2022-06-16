@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
 
@@ -22,7 +23,7 @@ namespace WFBot.Features.Commands
         void HelpDoc()
         {
             // 为了社区的良性发展, 请不要随意修改.
-            AsyncContext.SendGroupMessage($@"欢迎查看机器人唯一指定帮助文档
+            MiguelNetwork.Reply(O, $@"欢迎查看机器人唯一指定帮助文档
 {VersionText}
 在线最新文档: https://github.com/TRKS-Team/WFBot/blob/universal/README.md
 项目地址: https://github.com/TRKS-Team/WFBot
@@ -30,7 +31,7 @@ namespace WFBot.Features.Commands
 您的赞助会成为我们维护本项目的动力.
 本机器人为公益项目, 间断维护中.
 如果你想给你的群也整个机器人, 请在上方项目地址了解");
-            AsyncContext.SendGroupMessage(@"作者: TheRealKamisama
+            MiguelNetwork.Reply(O, @"作者: TheRealKamisama
 参数说明: <>为必填参数, []为选填参数, {}为附加选填参数, ()为补充说明
 如果群里没有自动通知 请务必检查是否启用了通知功能
     /s船 | 当前的Sentient异常事件

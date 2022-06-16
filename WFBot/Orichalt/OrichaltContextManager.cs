@@ -11,7 +11,8 @@ namespace WFBot.Orichalt
     {
         OneBot,
         Kaiheila,
-        QQChannel
+        QQChannel,
+        Unknown
     }
 
     public enum MessageRange
