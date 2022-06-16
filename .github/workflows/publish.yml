@@ -38,18 +38,6 @@ jobs:
         run: dotnet publish WFBot -c "Linux Release" -o LinuxPublish --self-contained false /p:UseAppHost=false
         env:
           OFFICIAL_BUILD: official
-      - name: Mirai Connector Build
-        run: dotnet publish Connectors/MiraiHTTPConnector -c "Linux Release" -o MiraiConnector --self-contained false
-        env:
-          OFFICIAL_BUILD: official
-      - name: Test Connector Build
-        run: dotnet publish Connectors/TestConnector -c "Linux Release" -o TestConnector --self-contained false
-        env:
-          OFFICIAL_BUILD: official
-      - name: OneBot Connector Build
-        run: dotnet publish Connectors/OneBotConnector -c "Linux Release" -o OneBotConnector --self-contained false
-        env:
-          OFFICIAL_BUILD: official
 
 #      - name: Pre Run Windows
 #        run: dotnet WindowsPublish/WFBot.dll --skip-press-any-key --set-current-folder-to-executable --no-logs
@@ -66,21 +54,6 @@ jobs:
         with:
           pathSource: ./LinuxPublish/*
           pathTarget: WFBot-Linux.7z
-      - name: Zip Mirai Connector
-        uses: DuckSoft/create-7z-action@v1.0
-        with:
-          pathTarget: WFBot-Connector-MiraiConnector.7z
-          pathSource: ./MiraiConnector/*
-      - name: Zip Test Connector
-        uses: DuckSoft/create-7z-action@v1.0
-        with:
-          pathTarget: WFBot-Connector-TestConnector.7z
-          pathSource: ./TestConnector/*
-      - name: Zip OneBot Connector
-        uses: DuckSoft/create-7z-action@v1.0
-        with:
-          pathTarget: WFBot-Connector-OneBotConnector.7z
-          pathSource: ./OneBotConnector/*
 
 
       - name: Upload Windows
@@ -94,24 +67,6 @@ jobs:
         with:
           name: WFBot Linux
           path: ./WFBot-Linux.7z
-          retention-days: 30
-      - name: Upload Mirai Connector
-        uses: actions/upload-artifact@v2
-        with:
-          name: WFBot Mirai Connector
-          path: ./WFBot-Connector-MiraiConnector.7z
-          retention-days: 30
-      - name: Upload Test Connector
-        uses: actions/upload-artifact@v2
-        with:
-          name: WFBot Test Connector
-          path: ./WFBot-Connector-TestConnector.7z
-          retention-days: 30
-      - name: Upload OneBot Connector
-        uses: actions/upload-artifact@v2
-        with:
-          name: WFBot OneBot Connector
-          path: ./WFBot-Connector-OneBotConnector.7z
           retention-days: 30
 
       - name: Install GitVersion
@@ -151,33 +106,6 @@ jobs:
           asset_path: ./WFBot-Linux.7z
           asset_name: WFBot-Linux.7z
           asset_content_type: application/x-7z-compressed
-      - name: Upload WFBot Mirai Connector
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WFBot-Connector-MiraiConnector.7z
-          asset_name: WFBot-Connector-MiraiConnector.7z
-          asset_content_type: application/x-7z-compressed
-      - name: Upload WFBot Test Connector
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WFBot-Connector-TestConnector.7z
-          asset_name: WFBot-Connector-TestConnector.7z
-          asset_content_type: application/x-7z-compressed
-      - name: Upload WFBot OneBot Connector
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WFBot-Connector-OneBotConnector.7z
-          asset_name: WFBot-Connector-OneBotConnector.7z
-          asset_content_type: application/x-7z-compressed
   docker-publish:
     
     runs-on: ubuntu-latest
@@ -201,7 +129,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: trksteam/wfbot:latest
+          tags: trksteam/wfbot:orichalt
         env:
           OFFICIAL_BUILD: official
       
