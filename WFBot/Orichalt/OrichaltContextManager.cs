@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
@@ -22,7 +23,7 @@ namespace WFBot.Orichalt
         Public,
         Private
     }
-    public class OrichaltContext
+    public class OrichaltContext : IDisposable
     {
         public OrichaltContext(string plainMessage, MessagePlatform platform, MessageRange range)
         {
@@ -30,22 +31,24 @@ namespace WFBot.Orichalt
             Platform = platform;
             Range = range;
             UUID = Guid.NewGuid().ToString();
-            lifeTimer = new Timer(TimeSpan.FromMinutes(10).TotalMilliseconds);
-            lifeTimer.Elapsed += (sender, args) =>
+            lifeTask = Task.Delay(TimeSpan.FromMinutes(10)).ContinueWith(t =>
             {
                 Dispose();
-            };
-            lifeTimer.Start();
+            });
         }
 
         public string UUID { get; set; }
         public string PlainMessage { get; set; }
         public MessagePlatform Platform { get; set; }
         public MessageRange Range { get; set; }
-        private Timer lifeTimer;
+        private Task lifeTask;
+        bool disposed = false;
 
         public void Dispose()
         {
+            if (disposed) return;
+            disposed = true;
+
             MiguelNetwork.OrichaltContextManager.DisposeOrichaltContext(this);
         }
 

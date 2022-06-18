@@ -143,9 +143,12 @@ namespace WFBot.Orichalt
         }
 
 
-
+        /// <summary>
+        /// 响应通用命令应答
+        /// </summary>
+        /// <param name="o">OrichaltContext</param>
+        /// <param name="msg">消息内容</param>
         public static void Reply(OrichaltContext o, string msg)
-        // 响应通用命令应答
         {
             switch (o.Platform)
             {
@@ -169,8 +172,11 @@ namespace WFBot.Orichalt
                     break;
             }
         }
+        /// <summary>
+        /// 发送通用Debug信息给管理者
+        /// </summary>
+        /// <param name="msg">消息内容</param>
         public static void SendDebugInfo(string msg)
-        // 发送通用Debug信息给管理者
         {
             switch (Platform)
             {
@@ -180,8 +186,11 @@ namespace WFBot.Orichalt
             }
         }
 
+        /// <summary>
+        /// 广播通知到所有订阅消息的群体
+        /// </summary>
+        /// <param name="content">消息内容</param>
         public static void Broadcast(string content)
-        // 广播通知到所有订阅消息的群体
         {
             switch (Platform)
             {
