@@ -102,6 +102,10 @@ namespace WFBot.Orichalt
                     OneBotCore.OneBotMessageReceived += OneBotMessageReceived;
                     OneBotCore.Init();
                     break;
+                case MessagePlatform.MiraiHTTP:
+                    MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
+                    MiraiHTTPCore.Init().Wait();
+                    break;
             }
 
             OrichaltMessageRecived += MiguelNetwork_OrichaltMessageRecived;
@@ -122,6 +126,11 @@ namespace WFBot.Orichalt
         }
 
         private static void OneBotMessageReceived(object sender, OneBotContext e)
+        {
+            var o = OrichaltContextManager.PutPlatformContext(e);
+            OnOrichaltMessageRecived(o);
+        }
+        private static void MiraiHTTPMessageReceived(object sender, MiraiHTTPContext e)
         {
             var o = OrichaltContextManager.PutPlatformContext(e);
             OnOrichaltMessageRecived(o);

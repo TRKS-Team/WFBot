@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using GammaLibrary;
 using Microsoft.Extensions.DependencyInjection;
 using Mirai.CSharp.Builders;
+using Mirai.CSharp.Extensions;
 using Mirai.CSharp.Handlers;
 using Mirai.CSharp.HttpApi.Builder;
 using Mirai.CSharp.HttpApi.Handlers;
 using Mirai.CSharp.HttpApi.Models;
+using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.HttpApi.Models.EventArgs;
 using Mirai.CSharp.HttpApi.Options;
 using Mirai.CSharp.HttpApi.Parsers;
@@ -22,7 +24,22 @@ namespace WFBot.Orichalt.OrichaltConnectors
 {
     public class MiraiHTTPContext : PlatformContextBase
     {
-        IGroupMemberInfo
+        public MiraiHTTPContext(GroupID @group, UserID senderId, string rawMessage, IChatMessage[] chain, MessageType type, DateTimeOffset time)
+        {
+            Group = @group;
+            SenderID = senderId;
+            RawMessage = rawMessage;
+            Chain = chain;
+            Type = type;
+            Time = time;
+        }
+
+        public GroupID Group { get; set; }
+        public UserID SenderID { get; set; }
+        public string RawMessage { get; set; }
+        public IChatMessage[] Chain { get; set; }
+        public MessageType Type { get; set; }
+        public DateTimeOffset Time { get; set; }
     }
     [Configuration("MiraiConfig")]
     public class MiraiConfig : Configuration<MiraiConfig>
@@ -62,25 +79,32 @@ namespace WFBot.Orichalt.OrichaltConnectors
 
         private MiraiConfig config => MiraiConfig.Instance;
 
-        protected virtual async Task OnMiraiHttpMessageReceived(MiraiHTTPContext e)
+        protected virtual void OnMiraiHttpMessage(MiraiHTTPContext e)
         {
             MiraiHTTPMessageReceived?.Invoke(this, e);
         }
-    }
-    [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IGroupMessageEventArgs, GroupMessageEventArgs>))]
-    public partial class WFBotPlugin : IMiraiHttpMessageHandler<IGroupMessageEventArgs>
-    {
-        public Task HandleMessageAsync(IMiraiHttpSession session, IGroupMessageEventArgs e)
+        [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IGroupMessageEventArgs, GroupMessageEventArgs>))]
+        public partial class WFBotPlugin : IMiraiHttpMessageHandler<IGroupMessageEventArgs>
         {
-            e.Sender 
+            public Task HandleMessageAsync(IMiraiHttpSession session, IGroupMessageEventArgs e)
+            {
+                var context = new MiraiHTTPContext(e.Sender.Group.Id, e.Sender.Id, e.Chain.GetPlain(), e.Chain,
+                    MessageType.Group, DateTimeOffset.Now);
+                MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
+                return Task.CompletedTask;
+            }
+        }
+        [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IFriendMessageEventArgs, FriendMessageEventArgs>))]
+        public partial class WFBotPlugin : IMiraiHttpMessageHandler<IFriendMessageEventArgs>
+        {
+            public Task HandleMessageAsync(IMiraiHttpSession session, IFriendMessageEventArgs e)
+            {
+                var context = new MiraiHTTPContext("", e.Sender.Id, e.Chain.GetPlain(), e.Chain,
+                    MessageType.Private, DateTimeOffset.Now);
+                MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
+                return Task.CompletedTask;
+            }
         }
     }
-    [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IFriendMessageEventArgs, FriendMessageEventArgs>))]
-    public partial class WFBotPlugin : IMiraiHttpMessageHandler<IFriendMessageEventArgs>
-    {
-        public Task HandleMessageAsync(IMiraiHttpSession session, IFriendMessageEventArgs e)
-        {
-            
-        }
-    }
+
 }

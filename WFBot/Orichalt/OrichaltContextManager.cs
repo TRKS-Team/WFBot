@@ -12,6 +12,7 @@ namespace WFBot.Orichalt
         OneBot,
         Kaiheila,
         QQChannel,
+        MiraiHTTP,
         Test,
         Unknown
     }
@@ -52,6 +53,8 @@ namespace WFBot.Orichalt
     public class OrichaltContextManager
     {
         public Dictionary<string, OneBotContext> OneBotContexts = new Dictionary<string, OneBotContext>();
+
+        public Dictionary<string, MiraiHTTPContext> MiraiHTTPContexts = new Dictionary<string, MiraiHTTPContext>();
         // 往下扩展各个平台
 
         public PlatformContextBase GetPlatformContext(OrichaltContext context)
@@ -84,6 +87,25 @@ namespace WFBot.Orichalt
             }
             var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, range);
             OneBotContexts[o.UUID] = context;
+            return o;
+        }
+        public OrichaltContext PutPlatformContext(MiraiHTTPContext context)
+        {
+            MessageRange range;
+            switch (context.Type)
+            {
+                case MessageType.Group:
+                    range = MessageRange.Public;
+                    break;
+                case MessageType.Private:
+                    range = MessageRange.Private;
+                    break;
+                default:
+                    range = MessageRange.Public;
+                    break;
+            }
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, range);
+            MiraiHTTPContexts[o.UUID] = context;
             return o;
         }
         public OrichaltContext PutPlatformContext(KaiheilaContext context)
