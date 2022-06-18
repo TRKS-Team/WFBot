@@ -17,7 +17,9 @@ namespace WFBot.Orichalt
     {
         private static MessagePlatform Platform;
 
-        public static Connectors Connector;
+        public static OneBotCore OneBotCore;
+
+        public static MiraiHTTPCore MiraiHTTPCore;
 
         public static OrichaltContextManager OrichaltContextManager;
 
@@ -93,9 +95,14 @@ namespace WFBot.Orichalt
         public static void InitMiguelNetwork(MessagePlatform platform)
         {
             Platform = platform;
-            Connector = new Connectors(platform);
             OrichaltContextManager = new OrichaltContextManager();
-            Connector.OneBotMessageReceived += Connector_OneBotMessageReceived;
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    OneBotCore.OneBotMessageReceived += OneBotMessageReceived;
+                    OneBotCore.Init();
+                    break;
+            }
 
             OrichaltMessageRecived += MiguelNetwork_OrichaltMessageRecived;
             Inited = true;
@@ -114,7 +121,7 @@ namespace WFBot.Orichalt
             }
         }
 
-        private static void Connector_OneBotMessageReceived(object sender, OneBotContext e)
+        private static void OneBotMessageReceived(object sender, OneBotContext e)
         {
             var o = OrichaltContextManager.PutPlatformContext(e);
             OnOrichaltMessageRecived(o);
@@ -199,11 +206,11 @@ namespace WFBot.Orichalt
             // 避免重复发送同一条消息
             if (previousMessageDic.ContainsKey(qq) && msg == previousMessageDic[qq]) return;
             previousMessageDic[qq] = msg;
-            Connector.OneBotClient.SendGroupMessageAsync(group, msg);
+            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg);
         }
         private static void OneBotSendToPrivate(UserID qq, string msg)
         {
-            Connector.OneBotClient.SendPrivateMessageAsync(qq, msg);
+            OneBotCore.OneBotClient.SendPrivateMessageAsync(qq, msg);
         }
     }
 }

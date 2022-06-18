@@ -4,7 +4,9 @@
     {
 
     }
-    public partial class Connectors
+
+    public class KaiheilaCore
     {
+
     }
 }

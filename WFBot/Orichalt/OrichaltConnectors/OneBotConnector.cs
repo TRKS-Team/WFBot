@@ -38,12 +38,13 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public string accesstoken = "123abc";
         // public bool isfirsttime = true;
     }
-    public partial class Connectors
+
+    public class OneBotCore
     {
         public CqHttpWebSocketApiClient OneBotClient;
         private CqHttpWebSocketEvent wsevent;
         public event EventHandler<OneBotContext> OneBotMessageReceived;
-        public void InitOneBot()
+        public void Init()
         {
             var config = OneBotConfig.Instance;
             /*if (config.isfirsttime) 
