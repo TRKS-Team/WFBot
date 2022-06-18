@@ -114,12 +114,12 @@ namespace WFBot.Orichalt
 
         private static void MiguelNetwork_OrichaltMessageRecived(object sender, OrichaltContext e)
         {
-            switch (e.Range)
+            switch (e.Scope)
             {
-                case MessageRange.Public:
+                case MessageScope.Public:
                     _ = WFBotCore.Instance.OnGroupMessage(e);
                     break;
-                case MessageRange.Private:
+                case MessageScope.Private:
                     WFBotCore.Instance.OnFriendMessage(e);
                     break;
             }

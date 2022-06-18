@@ -18,18 +18,18 @@ namespace WFBot.Orichalt
         Unknown
     }
 
-    public enum MessageRange
+    public enum MessageScope
     {
         Public,
         Private
     }
     public class OrichaltContext : IDisposable
     {
-        public OrichaltContext(string plainMessage, MessagePlatform platform, MessageRange range)
+        public OrichaltContext(string plainMessage, MessagePlatform platform, MessageScope scope)
         {
             PlainMessage = plainMessage;
             Platform = platform;
-            Range = range;
+            Scope = scope;
             UUID = Guid.NewGuid().ToString();
             lifeTask = Task.Delay(TimeSpan.FromMinutes(10)).ContinueWith(t =>
             {
@@ -40,7 +40,7 @@ namespace WFBot.Orichalt
         public string UUID { get; set; }
         public string PlainMessage { get; set; }
         public MessagePlatform Platform { get; set; }
-        public MessageRange Range { get; set; }
+        public MessageScope Scope { get; set; }
         private Task lifeTask;
         bool disposed = false;
 
@@ -75,39 +75,39 @@ namespace WFBot.Orichalt
         }
         public OrichaltContext PutPlatformContext(OneBotContext context)
         {
-            MessageRange range;
+            MessageScope scope;
             switch (context.Type)
             {
                 case MessageType.Group:
-                    range = MessageRange.Public;
+                    scope = MessageScope.Public;
                     break;
                 case MessageType.Private:
-                    range = MessageRange.Private;
+                    scope = MessageScope.Private;
                     break;
                 default:
-                    range = MessageRange.Public;
+                    scope = MessageScope.Public;
                     break;
             }
-            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, range);
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, scope);
             OneBotContexts[o.UUID] = context;
             return o;
         }
         public OrichaltContext PutPlatformContext(MiraiHTTPContext context)
         {
-            MessageRange range;
+            MessageScope scope;
             switch (context.Type)
             {
                 case MessageType.Group:
-                    range = MessageRange.Public;
+                    scope = MessageScope.Public;
                     break;
                 case MessageType.Private:
-                    range = MessageRange.Private;
+                    scope = MessageScope.Private;
                     break;
                 default:
-                    range = MessageRange.Public;
+                    scope = MessageScope.Public;
                     break;
             }
-            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, range);
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, scope);
             MiraiHTTPContexts[o.UUID] = context;
             return o;
         }
@@ -121,7 +121,7 @@ namespace WFBot.Orichalt
         }
         public static OrichaltContext PutPlatformContext(TestContext context)
         {
-            var o = new OrichaltContext(context.RawMessage, MessagePlatform.Test, MessageRange.Public);
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.Test, MessageScope.Public);
             return o;
         }
         public void DisposeOrichaltContext(OrichaltContext context)
