@@ -320,7 +320,7 @@ namespace WFBot
             }
 
             _requestedCtrlCShutdown = false;
-            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
+            Messenger.SendDebugInfo($"<<<< WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s. >>>>");
         }
 
         void CheckTime()

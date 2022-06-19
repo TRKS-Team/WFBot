@@ -35,6 +35,11 @@ namespace WFBot
         {
             return source.Replace(" ", "").ToLower().Trim();
         }
+
+        public static string FormatFast(this string source)
+        {
+            return source.Replace(" ", "").ToLower();
+        }
     }
 
     public enum Platform

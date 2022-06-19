@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -167,6 +168,14 @@ namespace WFBot.Utils
 
     public static class SomeExtensions
     {
+        public static T[][] ChunkBy<T>(this IEnumerable<T> source, int chunkSize)
+        {
+            return source
+                .Select((x, i) => new { Index = i, Value = x })
+                .GroupBy(x => x.Index / chunkSize)
+                .Select(x => x.Select(v => v.Value).ToArray())
+                .ToArray();
+        }
         public static StringBuilder TrimEnd(this StringBuilder sb)
         {
             if (sb == null || sb.Length == 0) return sb;

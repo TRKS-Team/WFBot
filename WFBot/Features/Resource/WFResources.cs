@@ -38,11 +38,12 @@ namespace WFBot.Features.Resource
                 Task.Run(async () => WMAuction = await GetWMAResources()),
                 Task.Run(async () => WFTranslateData = await GetTranslateApi()),
                 Task.Run(async () => WFBotTranslateData = await GetWFBotTranslateApi()),
-                Task.Run(async () => WildcardAndSlang = await GetWildcardAndSlang())
+                Task.Run(async () => WildcardAndSlang = await GetWildcardAndSlang()),
+                Task.Run(async () => WildCardSearcher = await WildCardSearcher.Create())
             );
             WFTranslator = new WFTranslator();
             Weaponinfos = GetWeaponInfos();
-            WildCardSearcher = new WildCardSearcher();
+            
             if (ResourceLoadFailed) 
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
@@ -345,6 +346,9 @@ namespace WFBot.Features.Resource
         {
             try
             {
+                // TODO TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO BUGBUGBUGBUG
+                // 如果sales更新了而slang没有更新 是不是slang就永远不会被刷新了 asking toma
+
                 var infos = GitHubInfos.Instance.Infos.Where(i => i.Category == resource.Category).ToList();
 
                 if (!infos.Any()) return false;

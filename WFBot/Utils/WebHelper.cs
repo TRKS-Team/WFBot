@@ -40,7 +40,7 @@ namespace WFBot.Utils
             Value = value;
         }
 
-        public T Value { get; }
+        public T Value { get; set; }
     }
 
     public static class WebHelper
