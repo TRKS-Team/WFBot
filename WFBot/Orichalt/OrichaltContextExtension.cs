@@ -11,12 +11,17 @@ namespace WFBot.Orichalt
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
-                    var context = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
-                    return $"平台[OneBot] 群[{context.Group}] 用户[{context.SenderID}] 内容[{context.RawMessage}]";
+                    var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    return 
+                        $"平台[OneBot] 群[{onebotcontext.Group}] 用户[{onebotcontext.SenderID}] 内容[{onebotcontext.RawMessage}]";
                 case MessagePlatform.Kaiheila:
                     throw new NotImplementedException();
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
+                case MessagePlatform.MiraiHTTP:
+                    var miraihttpcontext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
+                    return
+                        $"平台[MiraiHTTP] 群[{miraihttpcontext.Group}] 用户[{miraihttpcontext.SenderID}] 内容[{miraihttpcontext.RawMessage}]";
 
             }
 

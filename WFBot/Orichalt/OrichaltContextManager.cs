@@ -112,7 +112,7 @@ namespace WFBot.Orichalt
                     scope = MessageScope.Public;
                     break;
             }
-            var o = new OrichaltContext(context.RawMessage, MessagePlatform.OneBot, scope);
+            var o = new OrichaltContext(context.RawMessage, MessagePlatform.MiraiHTTP, scope);
             MiraiHTTPContexts[o.UUID] = context;
             return o;
         }
@@ -131,8 +131,15 @@ namespace WFBot.Orichalt
         }
         public void DisposeOrichaltContext(OrichaltContext context)
         {
-            OneBotContexts.Remove(context.UUID);
-            MiraiHTTPContexts.Remove(context.UUID);
+            switch (context.Platform)
+            {
+                case MessagePlatform.OneBot:
+                    OneBotContexts.Remove(context.UUID);
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    MiraiHTTPContexts.Remove(context.UUID);
+                    break;
+            }
             // 往下扩展各个平台
         }
 

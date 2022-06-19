@@ -33,6 +33,8 @@ namespace WFBot.Features.Common
         }
         public void UpdateSearcher()
         {
+            var sw = new Stopwatch();
+            sw.Start();
             _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
             foreach (var sale in sales)
             {
@@ -89,6 +91,8 @@ namespace WFBot.Features.Common
                     _searcher.Put(item, sale);
                 }
             }
+            sw.Stop();
+            Trace.WriteLine($"黑话辞典穷举耗时 '{sw.Elapsed.TotalSeconds:F1}s'");
         }
     }
     public class WildcardAndSlang

@@ -18,9 +18,9 @@ namespace WFBot.Orichalt
     {
         private static MessagePlatform Platform;
 
-        public static OneBotCore OneBotCore = new OneBotCore();
+        public static OneBotCore OneBotCore;
 
-        public static MiraiHTTPCore MiraiHTTPCore = new MiraiHTTPCore();
+        public static MiraiHTTPCore MiraiHTTPCore;
 
         public static OrichaltContextManager OrichaltContextManager;
 
@@ -100,10 +100,12 @@ namespace WFBot.Orichalt
             switch (Platform)
             {
                 case MessagePlatform.OneBot:
+                    OneBotCore = new OneBotCore();
                     OneBotCore.OneBotMessageReceived += OneBotMessageReceived;
                     OneBotCore.Init();
                     break;
                 case MessagePlatform.MiraiHTTP:
+                    MiraiHTTPCore = new MiraiHTTPCore();
                     MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
                     MiraiHTTPCore.Init().Wait();
                     break;
@@ -179,11 +181,34 @@ namespace WFBot.Orichalt
             }
         }
         /// <summary>
+        /// 响应私聊命令应答
+        /// </summary>
+        /// <param name="o">OrichaltContext</param>
+        /// <param name="msg">消息内容</param>
+        public static void PrivateReply(OrichaltContext o, string msg)
+        {
+            switch (o.Platform)
+            {
+                case MessagePlatform.OneBot:
+                    var onebotcontext = OrichaltContextManager.GetOneBotContext(o);
+                    OneBotSendToPrivate(onebotcontext.SenderID, msg);
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    var miraihttpcontext = OrichaltContextManager.GetMiraiHTTPContext(o);
+                    MiraiHTTPSendToPrivate(miraihttpcontext.SenderID, msg);
+                    break;
+            }
+        }
+        /// <summary>
         /// 发送通用Debug信息给管理者
         /// </summary>
         /// <param name="msg">消息内容</param>
         public static void SendDebugInfo(string msg)
         {
+            if (Config.Instance.QQ.IsNullOrWhiteSpace())
+            {
+                return;
+            }
             switch (Platform)
             {
                 case MessagePlatform.OneBot:

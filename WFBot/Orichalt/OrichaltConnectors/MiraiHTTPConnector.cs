@@ -66,6 +66,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 .AddHandler<WFBotPlugin>()
                 .Services
                 .AddDefaultMiraiHttpFramework()
+                .ResolveParser<DynamicPlugin>()
                 .AddClient<MiraiHttpSession>()
                 .Services
                 .Configure<MiraiHttpSessionOptions>(options =>
@@ -103,7 +104,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
         {
             public Task HandleMessageAsync(IMiraiHttpSession session, IFriendMessageEventArgs e)
             {
-                var context = new MiraiHTTPContext("", e.Sender.Id, e.Chain.GetPlain(), e.Chain,
+
+                var context = new MiraiHTTPContext(new GroupID(), e.Sender.Id, e.Chain.GetPlain(), e.Chain,
                     MessageType.Private, DateTimeOffset.Now);
                 MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
                 e.BlockRemainingHandlers = false;
@@ -134,6 +136,22 @@ namespace WFBot.Orichalt.OrichaltConnectors
                         await Task.Delay(1000);
                     }
                 }
+            }
+        }
+        [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IGroupMessageEventArgs, GroupMessageEventArgs>))]
+        public partial class DynamicPlugin : IMiraiHttpMessageHandler<IGroupMessageEventArgs>
+        {
+            public Task HandleMessageAsync(IMiraiHttpSession session, IGroupMessageEventArgs message)
+            {
+                return Task.CompletedTask;
+            }
+        }
+        [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IFriendMessageEventArgs, FriendMessageEventArgs>))]
+        public partial class DynamicPlugin : IMiraiHttpMessageHandler<IFriendMessageEventArgs>
+        {
+            public Task HandleMessageAsync(IMiraiHttpSession session, IFriendMessageEventArgs message)
+            {
+                return Task.CompletedTask;
             }
         }
     }

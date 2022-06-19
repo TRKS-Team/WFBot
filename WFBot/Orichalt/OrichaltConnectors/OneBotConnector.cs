@@ -87,7 +87,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 switch (message.MessageType)
                 {
                     case "private":
-                        OnOneBotMessage(new OneBotContext(message.RawMessage, "", message.UserId.ToString(), MessageType.Private, message.Time));
+                        OnOneBotMessage(new OneBotContext(message.RawMessage, new GroupID(), message.UserId.ToString(), MessageType.Private, message.Time));
                         break;
                     case "group":
                         OnOneBotMessage(new OneBotContext(message.RawMessage,((GroupEndpoint)message.Endpoint).GroupId, message.UserId, MessageType.Group, message.Time ));

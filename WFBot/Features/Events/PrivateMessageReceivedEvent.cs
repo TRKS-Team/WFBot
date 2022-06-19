@@ -20,7 +20,7 @@ namespace WFBot.Events
 
         public void ProcessPrivateMessage(OrichaltContext o)
         {
-
+            AsyncContext.SetOrichaltContext(o);
             new PrivateMessageHandler(o, o.PlainMessage).ProcessCommandInput().Wait();
             // SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 8 时代变了
 
@@ -162,7 +162,7 @@ namespace WFBot.Events
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
         public Action<Message> MessageSender { get; } = (msg) =>             
         {
-            MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
+            MiguelNetwork.PrivateReply(AsyncContext.GetOrichaltContext(), msg);
         };
         public string Message { get; }
         public OrichaltContext O { get; private set; }
