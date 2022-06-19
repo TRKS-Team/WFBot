@@ -113,7 +113,8 @@ clone 这个库, 运行 `build-wfbot.bat` 和 `build-connector.bat`, 编译的�
 
    以OneBot Mirai插件的配置文件作为例子, 修改这几行配置文件  
    ![](images/QQ截图20211110000226.png)  
-   改好后重启Mirai, 等待那堆绿绿的输出.
+   改好后重启Mirai, 等待那堆绿绿的输出.  
+   ![](images/QQ截图20220619213108.png)
 
 ### 第二步: 配置WFBot
 1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)

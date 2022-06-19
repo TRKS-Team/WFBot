@@ -28,13 +28,15 @@ namespace WFBot.Orichalt
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
-                    var context = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
-                    return $"QQ:{context.SenderID}";
+                    var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    return $"QQ:{onebotcontext.SenderID}";
                 case MessagePlatform.Kaiheila:
                     throw new NotImplementedException();
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
-
+                case MessagePlatform.MiraiHTTP:
+                    var miraihttpcontext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
+                    return $"QQ:{miraihttpcontext.SenderID}";
             }
 
             return "";

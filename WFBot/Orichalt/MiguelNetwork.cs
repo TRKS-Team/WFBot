@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using Mirai.CSharp.HttpApi.Builders;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
 
@@ -17,9 +18,9 @@ namespace WFBot.Orichalt
     {
         private static MessagePlatform Platform;
 
-        public static OneBotCore OneBotCore;
+        public static OneBotCore OneBotCore = new OneBotCore();
 
-        public static MiraiHTTPCore MiraiHTTPCore;
+        public static MiraiHTTPCore MiraiHTTPCore = new MiraiHTTPCore();
 
         public static OrichaltContextManager OrichaltContextManager;
 
@@ -153,14 +154,19 @@ namespace WFBot.Orichalt
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
-                    var context = OrichaltContextManager.OneBotContexts[o.UUID];
-                    OneBotSendToGroup(context.Group, msg);
+                    var onebotcontext = OrichaltContextManager.GetOneBotContext(o);
+                    OneBotSendToGroup(onebotcontext.Group, msg);
                     IncreaseCallCounts(o);
                     break;
                 case MessagePlatform.Kaiheila:
                     break;
                 case MessagePlatform.QQChannel:
                     break;
+                case MessagePlatform.MiraiHTTP:
+                    var miraihttpcontext = OrichaltContextManager.GetMiraiHTTPContext(o);
+                    MiraiHTTPSendToGroup(miraihttpcontext.Group, msg);
+                    break;
+
                 case MessagePlatform.Test:
                     const string resultPath = "TestResult.log";
                     Trace.WriteLine(msg);
@@ -182,6 +188,9 @@ namespace WFBot.Orichalt
             {
                 case MessagePlatform.OneBot:
                     OneBotSendToPrivate(Config.Instance.QQ, msg);
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    MiraiHTTPSendToPrivate(Config.Instance.QQ, msg);
                     break;
             }
         }
@@ -229,6 +238,19 @@ namespace WFBot.Orichalt
         private static void OneBotSendToPrivate(UserID qq, string msg)
         {
             OneBotCore.OneBotClient.SendPrivateMessageAsync(qq, msg);
+        }
+        private static void MiraiHTTPSendToGroup(GroupID qq, string msg)
+        {
+            var builder = new MessageChainBuilder();
+            builder.AddPlainMessage(msg);
+            MiraiHTTPCore.session.SendGroupMessageAsync(qq, builder);
+        }
+
+        private static void MiraiHTTPSendToPrivate(UserID qq, string msg)
+        {
+            var builder = new MessageChainBuilder();
+            builder.AddPlainMessage(msg);
+            MiraiHTTPCore.session.SendFriendMessageAsync(qq, builder);
         }
     }
 }

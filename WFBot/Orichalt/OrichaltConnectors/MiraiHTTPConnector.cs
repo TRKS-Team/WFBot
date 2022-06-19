@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,9 +45,9 @@ namespace WFBot.Orichalt.OrichaltConnectors
     [Configuration("MiraiConfig")]
     public class MiraiConfig : Configuration<MiraiConfig>
     {
-        public string Host = "127.0.0.1";
+        public string Host = "localhost";
         public ushort Port = 8080;
-        public string AuthKey = "";
+        public string AuthKey = "123abc";
 
         public bool AutoRevoke = false;
         public int RevokeTimeInSeconds = 60;
@@ -56,8 +57,10 @@ namespace WFBot.Orichalt.OrichaltConnectors
     public class MiraiHTTPCore
     {
         public event EventHandler<MiraiHTTPContext> MiraiHTTPMessageReceived;
+        public IMiraiHttpSession session;
         public async Task Init()
         {
+            config.BotQQ = 120019349;
             IServiceProvider services = new ServiceCollection()
                 .AddMiraiBaseFramework()
                 .AddHandler<WFBotPlugin>()
@@ -73,7 +76,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 })
                 .AddLogging()
                 .BuildServiceProvider();
-            IMiraiHttpSession session = services.GetRequiredService<IMiraiHttpSession>();
+            session = services.GetRequiredService<IMiraiHttpSession>();
             await session.ConnectAsync(config.BotQQ);
         }
 
@@ -91,6 +94,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 var context = new MiraiHTTPContext(e.Sender.Group.Id, e.Sender.Id, e.Chain.GetPlain(), e.Chain,
                     MessageType.Group, DateTimeOffset.Now);
                 MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
+                e.BlockRemainingHandlers = false;
                 return Task.CompletedTask;
             }
         }
@@ -102,7 +106,34 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 var context = new MiraiHTTPContext("", e.Sender.Id, e.Chain.GetPlain(), e.Chain,
                     MessageType.Private, DateTimeOffset.Now);
                 MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
+                e.BlockRemainingHandlers = false;
                 return Task.CompletedTask;
+            }
+        }
+        public partial class WFBotPlugin : IMiraiHttpMessageHandler<IDisconnectedEventArgs>
+        {
+            public async Task HandleMessageAsync(IMiraiHttpSession session, IDisconnectedEventArgs e)
+            {
+                while (!session.Connected)
+                {
+                    try
+                    {
+                        Trace.WriteLine("MiraiHTTP断开, 重连中···");
+                        await session.ConnectAsync(e.LastConnectedQQNumber);
+                        e.BlockRemainingHandlers = true;
+                        Trace.WriteLine("MiraiHTTP已重连.");
+                        break;
+                    }
+                    catch (ObjectDisposedException) // session 已被释放
+                    {
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        Trace.WriteLine("MiraiHTTP重连失败, 1秒后重试···");
+                        await Task.Delay(1000);
+                    }
+                }
             }
         }
     }

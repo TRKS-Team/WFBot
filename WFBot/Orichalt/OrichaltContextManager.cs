@@ -73,6 +73,11 @@ namespace WFBot.Orichalt
         {
             return OneBotContexts[o.UUID];
         }
+
+        public MiraiHTTPContext GetMiraiHTTPContext(OrichaltContext o)
+        {
+            return MiraiHTTPContexts[o.UUID];
+        }
         public OrichaltContext PutPlatformContext(OneBotContext context)
         {
             MessageScope scope;
@@ -127,6 +132,7 @@ namespace WFBot.Orichalt
         public void DisposeOrichaltContext(OrichaltContext context)
         {
             OneBotContexts.Remove(context.UUID);
+            MiraiHTTPContexts.Remove(context.UUID);
             // 往下扩展各个平台
         }
 
