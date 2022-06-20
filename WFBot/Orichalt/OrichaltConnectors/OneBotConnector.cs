@@ -35,7 +35,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
     {
         public string host = "127.0.0.1";
         public string port = "6700";
-        public string accesstoken = "123abc";
+        public string accesstoken = "";
         // public bool isfirsttime = true;
     }
 

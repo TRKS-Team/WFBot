@@ -71,7 +71,7 @@ namespace WFBot.Features.Events
                 {
                     MiguelNetwork.Reply(o, handler.OutputStringBuilder.ToString().Trim());
                 }
-#if !DEBUG
+#if DEBUG
                 if (commandProcessTask.Result.matched)
                 {
                     Trace.WriteLine($"命令 {platforminfo} 处理完成: {sw.Elapsed.Seconds:N1}s.");

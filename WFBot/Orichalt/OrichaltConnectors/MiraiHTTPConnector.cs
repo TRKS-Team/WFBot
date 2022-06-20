@@ -45,9 +45,9 @@ namespace WFBot.Orichalt.OrichaltConnectors
     [Configuration("MiraiConfig")]
     public class MiraiConfig : Configuration<MiraiConfig>
     {
-        public string Host = "localhost";
+        public string Host = "127.0.0.1";
         public ushort Port = 8080;
-        public string AuthKey = "123abc";
+        public string AuthKey = "";
 
         public bool AutoRevoke = false;
         public int RevokeTimeInSeconds = 60;
@@ -60,7 +60,17 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public IMiraiHttpSession session;
         public async Task Init()
         {
-            config.BotQQ = 120019349;
+            if (config.BotQQ == default)
+            {
+                Console.WriteLine("请在MiraiConfig.json里填入机器人的QQ号.");
+                WFBotCore.Instance.Shutdown();
+            }
+
+            if (config.AuthKey == default)
+            {
+                Console.WriteLine("请在MiraiConfig.json将mirai控制台内生成的verifyKey填入AuthKey内.");
+                WFBotCore.Instance.Shutdown();
+            }
             IServiceProvider services = new ServiceCollection()
                 .AddMiraiBaseFramework()
                 .AddHandler<WFBotPlugin>()

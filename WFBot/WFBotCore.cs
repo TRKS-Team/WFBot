@@ -280,17 +280,21 @@ namespace WFBot
             Trace.WriteLine("加载配置文件...");
             Config.Update();
             Config.Save();
-
-            while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
+            if (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
+            {
+                Console.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Shutdown();
+            }
+            /*while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
                 Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
-                var platformstr = Console.ReadLine();
+                /*var platformstr = Console.ReadLine();
                 if (platformstr.IsNumber() && platformstr.ToInt() <= 3 && 0 <= platformstr.ToInt())
                 {
                     Config.Instance.Miguel_Platform = (MessagePlatform)platformstr.ToInt();
                     Config.Save();
                 }
-            }
+            }*/
             Trace.WriteLine("加载米格尔网络...");
             MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform);
 
@@ -351,7 +355,6 @@ namespace WFBot
         }
 
         public bool Inited { get; private set; }
-        public static bool UseTestConnector { get; set; }
 
         private void InitLogger()
         {
