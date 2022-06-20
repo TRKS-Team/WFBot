@@ -40,7 +40,7 @@ namespace WFBot.Features.Common
                 var weapon = weapons.First();
                 if (Config.Instance.NotifyBeforeResult)
                 {
-                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), $"正在查询: {weapon.zhname}");
                 }
 
                 var auctions = await GetRivenAuctions(weapon.urlname);

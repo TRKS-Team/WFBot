@@ -83,7 +83,7 @@ namespace WFBot.Features.Common
                     {
                         if (Config.Instance.NotifyBeforeResult)
                         {
-                            MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                            MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), $"正在查询: {weapon}");
                         }
                         var orders = await GetRivenOrders(weaponinfo.First().name);
                         var msg = orders.Any() ? WFFormatter.ToString(orders.Take(Config.Instance.WFASearchCount).ToList(), weaponinfo.First()) : $"抱歉, 目前紫卡市场没有任何出售: {weapon} 紫卡的用户.".AddRemainCallCount();

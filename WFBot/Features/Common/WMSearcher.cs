@@ -292,7 +292,7 @@ namespace WFBot.Features.Common
             var msg = string.Empty;
             if (Config.Instance.NotifyBeforeResult)
             {
-                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "好嘞, 等着, 着啥急啊, 这不帮你查呢.");
+                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), $"正在查询: {word}");
             }
 
             var failed = false;
