@@ -56,7 +56,7 @@ namespace WFBot.Features.Common
             sw.Start();
             _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
             
-            var cacheToken = JsonSerializer.Serialize(sales, new JsonSerializerOptions() {WriteIndented = false }).SHA2().ToHexString() +
+            var cacheToken = JsonSerializer.Serialize(sales, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString() +
                              JsonSerializer.Serialize(was, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString();
 
             var cachePath = "WFCaches/WildCardSearcherCache.json";
@@ -105,6 +105,7 @@ namespace WFBot.Features.Common
             // 总是不相信 Parallel.Foreach 所以自己手写一个分区
             var parts = sales.ChunkBy(sales.Length / Environment.ProcessorCount);
             var tasks = new List<Task>(Environment.ProcessorCount);
+            var copy = was.Slang.ToList();
             for (var index = 0; index < was.Slang.Count; index++)
             {
                 was.Slang[index] = new KeyValuePair<string, List<string>>(was.Slang[index].Key.FormatFast(), was.Slang[index].Value.Select(v => v.FormatFast()).ToList());
@@ -186,9 +187,11 @@ namespace WFBot.Features.Common
             }));
 
             Task.WaitAll(tasks.ToArray());
+            was.Slang = copy;
+            
             try
             {
-                File.WriteAllText(cachePath, JsonSerializer.Serialize(cache, new JsonSerializerOptions() { WriteIndented = false, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+                File.WriteAllText(cachePath, JsonSerializer.Serialize(cache, new JsonSerializerOptions { WriteIndented = false, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
             }
             catch (Exception e)
             {
