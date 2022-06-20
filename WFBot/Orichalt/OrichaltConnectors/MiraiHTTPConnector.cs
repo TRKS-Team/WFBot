@@ -42,7 +42,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public MessageType Type { get; set; }
         public DateTimeOffset Time { get; set; }
     }
-    [Configuration("MiraiConfig")]
+    [Configuration("Miraiv2Config")]
     public class MiraiConfig : Configuration<MiraiConfig>
     {
         public string Host = "127.0.0.1";
@@ -62,13 +62,13 @@ namespace WFBot.Orichalt.OrichaltConnectors
         {
             if (config.BotQQ == default)
             {
-                Console.WriteLine("请在MiraiConfig.json里填入机器人的QQ号.");
+                Console.WriteLine("请在Miraiv2Config.json里填入机器人的QQ号.");
                 WFBotCore.Instance.Shutdown();
             }
 
             if (config.AuthKey == default)
             {
-                Console.WriteLine("请在MiraiConfig.json将mirai控制台内生成的verifyKey填入AuthKey内.");
+                Console.WriteLine("请在Miraiv2Config.json将mirai控制台内生成的verifyKey填入AuthKey内.");
                 WFBotCore.Instance.Shutdown();
             }
             IServiceProvider services = new ServiceCollection()
