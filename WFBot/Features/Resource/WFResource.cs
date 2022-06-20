@@ -62,7 +62,7 @@ namespace WFBot.Features.Resource
     public delegate Task<T> WFResourceLoader<T>(Stream data);
     public delegate Task<Stream> WFResourceRequester(string url);
     public delegate Task<bool> WFResourceUpdater<T>(WFResource<T> resource) where T : class;
-
+    public delegate void WFResourceFinisher();
     public static class WFResourceUpdaters<T> where T : class
     {
         public static async Task<bool> StringCompareUpdater(WFResource<T> resource)
