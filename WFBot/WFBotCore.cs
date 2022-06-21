@@ -295,6 +295,24 @@ namespace WFBot
                     Config.Save();
                 }
             }*/
+            switch (Config.Instance.Miguel_Platform)
+            {
+                case MessagePlatform.OneBot:
+                    Console.WriteLine("服务协议: Onebot");
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    Console.WriteLine("服务协议: MiraiHTTPv2");
+                    break;
+                case MessagePlatform.Kaiheila:
+                    Console.WriteLine("服务协议: 开黑啦");
+                    break;
+                case MessagePlatform.QQChannel:
+                    Console.WriteLine("服务协议: QQ频道");
+                    break;
+                case MessagePlatform.Test:
+                    Console.WriteLine("服务协议: 测试模式");
+                    break;
+            }
             Trace.WriteLine("加载米格尔网络...");
             MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform);
 
