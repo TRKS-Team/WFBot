@@ -315,7 +315,7 @@ namespace WFBot.Features.Resource
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class
             {
                 var path = $"{source}{name}";
-                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater);
+                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater, WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -330,7 +330,8 @@ namespace WFBot.Features.Resource
                     nameof(WildcardAndSlang),
                     "WF_Sale_Wildcard.json",
                     resourceLoader: ResourceLoaders<WildcardAndSlang>.JsonDotNetLoader,
-                    updater: Updater);
+                    updater: WFResourceUpdaters<WildcardAndSlang>.GitHubSHAUpdater,
+                    finisher: WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
             if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WildcardAndSlang)))
             {
                 var name = "TRKS-Team/WFBotSlang";
@@ -341,13 +342,11 @@ namespace WFBot.Features.Resource
             await resource.WaitForInited();
             return resource.Value;
         }
-
         private static async Task<bool> Updater(WFResource<WildcardAndSlang> resource)
         {
             try
             {
-                // TODO TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO BUGBUGBUGBUG
-                // 如果sales更新了而slang没有更新 是不是slang就永远不会被刷新了 asking toma
+                // I already fixed it, and you are not coming back.
 
                 var infos = GitHubInfos.Instance.Infos.Where(i => i.Category == resource.Category).ToList();
 

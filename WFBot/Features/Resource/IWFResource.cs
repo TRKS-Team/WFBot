@@ -4,7 +4,7 @@ namespace WFBot.Features.Resource
 {
     public interface IWFResource
     {
-        Task<bool> Update();
+        Task Update();
         Task Reload(bool isFirstTime);
     }
 }
