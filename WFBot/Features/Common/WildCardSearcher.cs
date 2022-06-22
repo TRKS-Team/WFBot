@@ -60,7 +60,17 @@ namespace WFBot.Features.Common
                              JsonSerializer.Serialize(was, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString();
 
             var cachePath = "WFCaches/WildCardSearcherCache.json";
-            var cache = File.Exists(cachePath) ? JsonSerializer.Deserialize<WildCardSearcherCache>(File.ReadAllText(cachePath)) : new WildCardSearcherCache();
+            WildCardSearcherCache cache;
+            try
+            {
+                cache = File.Exists(cachePath) ? JsonSerializer.Deserialize<WildCardSearcherCache>(File.ReadAllText(cachePath)) : new WildCardSearcherCache();
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine($"读取黑话辞典缓存时遇到问题：{e}");
+                cache = new WildCardSearcherCache();
+            }
+
             if (cache.CacheToken == cacheToken)
             {
                 foreach (var item in cache.SearchPairs)

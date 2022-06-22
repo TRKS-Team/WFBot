@@ -10,12 +10,12 @@ namespace WFBot.Orichalt
 {
     public enum MessagePlatform
     {
-        OneBot,
-        Kaiheila,
-        QQChannel,
-        MiraiHTTP,
-        Test,
-        Unknown
+        OneBot = 0,
+        Kaiheila = 1,
+        QQChannel = 2,
+        MiraiHTTP = 3,
+        Test = 4,
+        Unknown = 5
     }
 
     public enum MessageScope

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary;
+using GammaLibrary.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Mirai.CSharp.Builders;
 using Mirai.CSharp.Extensions;
@@ -66,7 +67,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 WFBotCore.Instance.Shutdown();
             }
 
-            if (config.AuthKey == default)
+            if (config.AuthKey.IsNullOrWhiteSpace())
             {
                 Console.WriteLine("请在Miraiv2Config.json将mirai控制台内生成的verifyKey填入AuthKey内.");
                 WFBotCore.Instance.Shutdown();
