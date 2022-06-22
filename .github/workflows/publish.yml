@@ -1,6 +1,12 @@
 name: Master Publish
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      changelogs:
+        description: 'changelogs'
+        required: true 
+        type: string
 
 jobs:
   build:
@@ -85,8 +91,7 @@ jobs:
         with:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: ${{ steps.gitversion.outputs.informationalVersion }}
-          body: ${{ steps.tag_version.outputs.changelog }}
-          draft: true
+          body: ${{ inputs.changelogs }}
 
       - name: Upload WFBot Windows Release
         uses: actions/upload-release-asset@v1
