@@ -43,8 +43,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public MessageType Type { get; set; }
         public DateTimeOffset Time { get; set; }
     }
-    [Configuration("Miraiv2Config")]
-    public class MiraiConfig : Configuration<MiraiConfig>
+    [Utils.Configuration("Miraiv2Config")]
+    public class MiraiConfig : Utils.Configuration<MiraiConfig>
     {
         public string Host = "127.0.0.1";
         public ushort Port = 8080;
