@@ -6,7 +6,6 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS publish
 WORKDIR /src
 COPY ["WFBot/WFBot.csproj", "WFBot/"]
-COPY ["TextCommandCore/TextCommandCore.csproj", "TextCommandCore/"]
 RUN dotnet restore "WFBot/WFBot.csproj"
 COPY . .
 #WORKDIR "/src/WFBot"
