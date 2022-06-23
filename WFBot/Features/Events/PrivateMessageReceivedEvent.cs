@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using TextCommandCore;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
+using WFBot.TextCommandCore;
+using WFBot.Utils;
 using Number = System.Numerics.BigInteger;
 using static WFBot.Features.Utils.Messenger;
 
@@ -16,10 +18,10 @@ namespace WFBot.Events
     {
 
 
-        public void ProcessPrivateMessage(UserID senderId, string message)
+        public void ProcessPrivateMessage(OrichaltContext o)
         {
-
-            new PrivateMessageHandler(senderId, message).ProcessCommandInput().Wait();
+            AsyncContext.SetOrichaltContext(o);
+            new PrivateMessageHandler(o, o.PlainMessage).ProcessCommandInput().Wait();
             // SendPrivate(context.FromQq, "您群号真牛逼."); // 看一次笑一次 8 时代变了
 
         }
@@ -52,7 +54,7 @@ namespace WFBot.Events
         [RequireAdmin]
         string DumpGroups()
         {
-            SendPrivate(Sender, "正在dump所有群...请稍候...结果将存储于机器人根目录...");
+            MiguelNetwork.SendDebugInfo("正在dump所有群...请稍候...结果将存储于机器人根目录...");
 
             Directory.CreateDirectory("所有群");
             File.WriteAllLines(@"所有群\所有群.txt", GetGroups().Select(info => $"{info.ID} {info.Name}"));
@@ -119,7 +121,7 @@ namespace WFBot.Events
             if (Config.Instance.WFGroupList.Contains(groupStr)) return "群号已经存在";
             Config.Instance.WFGroupList.Add(groupStr);
 
-            SendGroup(groupStr, $"{Sender}已经在私聊启用了此群的新任务通知功能.");
+            MiguelNetwork.Reply(O, $"{O.GetSenderIdentifier()}已经在私聊启用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}启用了通知功能.");
 
             return "完事.";
@@ -133,7 +135,7 @@ namespace WFBot.Events
             var groupStr = group.ToString();
             Config.Instance.WFGroupList.Remove(groupStr);
 
-            SendGroup(groupStr, $"{Sender}已经在私聊禁用了此群的新任务通知功能.");
+            MiguelNetwork.Reply(O, $"{O.GetSenderIdentifier()}已经在私聊禁用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}禁用了通知功能.");
 
             return "完事.";
@@ -155,18 +157,18 @@ namespace WFBot.Events
         }
     }
 
-    public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>, ISender
+    public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>
     {
-        public Action<TargetID, Message> MessageSender { get; } = (id, msg) => SendPrivate(id.ID, msg);
         public Action<Message> ErrorMessageSender { get; } = msg => SendDebugInfo(msg);
-        public UserID Sender { get; }
-        public string Message { get; }
-
-        string ICommandHandler<PrivateMessageHandler>.Sender => Sender;
-
-        public PrivateMessageHandler(UserID sender, string message)
+        public Action<Message> MessageSender { get; } = (msg) =>             
         {
-            Sender = sender;
+            MiguelNetwork.PrivateReply(AsyncContext.GetOrichaltContext(), msg);
+        };
+        public string Message { get; }
+        public OrichaltContext O { get; private set; }
+        public PrivateMessageHandler(OrichaltContext o, string message)
+        {
+            O = o;
             Message = message;
         }
     }

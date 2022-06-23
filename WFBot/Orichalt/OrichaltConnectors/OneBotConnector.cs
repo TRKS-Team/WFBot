@@ -1,23 +1,53 @@
 ﻿using System;
-using Sisters.WudiLib.WebSocket;
-using WFBot.Connector;
-using WFBot.Features.Utils;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Sisters.WudiLib.Posts;
-using Message = Sisters.WudiLib.SendingMessage;
-using MessageContext = Sisters.WudiLib.Posts.Message;
+using Sisters.WudiLib.WebSocket;
+using WFBot.Features.Events;
+using WFBot.Features.Utils;
+using WFBot.Utils;
 
-namespace OneBotConnector
+namespace WFBot.Orichalt.OrichaltConnectors
 {
-    public class Connector : WFBotConnectorBase
+    public class OneBotContext : PlatformContextBase
     {
-        CqHttpWebSocketApiClient client;
-        CqHttpWebSocketEvent wsevent;
-        public override void Init()
+        public OneBotContext(string rawMessage, GroupID @group, UserID senderId, MessageType type, DateTimeOffset time)
+        {
+            RawMessage = rawMessage;
+            Group = @group;
+            SenderID = senderId;
+            Type = type;
+            Time = time;
+        }
+
+        public string RawMessage { get; set; }
+        public GroupID Group { get; set; }
+        public UserID SenderID { get; set; }
+        public MessageType Type { get; set; }
+        public DateTimeOffset Time { get; set; }
+    }
+
+    public enum MessageType
+    {
+        Private,
+        Group
+    }
+    [Configuration("OneBotConfig")]
+    class OneBotConfig : Configuration<OneBotConfig>
+    {
+        public string host = "127.0.0.1";
+        public string port = "6700";
+        public string accesstoken = "";
+        // public bool isfirsttime = true;
+    }
+
+    public class OneBotCore
+    {
+        public CqHttpWebSocketApiClient OneBotClient;
+        private CqHttpWebSocketEvent wsevent;
+        public event EventHandler<OneBotContext> OneBotMessageReceived;
+        public void Init()
         {
             var config = OneBotConfig.Instance;
-            if (config.isfirsttime) 
+            /*if (config.isfirsttime) 
             {
                 Console.WriteLine("看起来你是第一次使用OneBotConnector, 配置文件位于OneBotConfig.json, 是否在控制台快速修改?(Y/N)");
                 config.isfirsttime = false;
@@ -46,36 +76,30 @@ namespace OneBotConnector
                     }
                 }
 
-            }
+            }*/
 
             var url = $"ws://{config.host}:{config.port}";
-            client = new CqHttpWebSocketApiClient($"{url}/api", config.accesstoken);
+            OneBotClient = new CqHttpWebSocketApiClient($"{url}/api", config.accesstoken);
             wsevent = new CqHttpWebSocketEvent($"{url}/event", config.accesstoken);
-            wsevent.ApiClient = client;
+            wsevent.ApiClient = OneBotClient;
             wsevent.MessageEvent += (api, message) =>
             {
                 switch (message.MessageType)
                 {
                     case "private":
-                        ReportFriendMessage(message.Source.UserId, message.Content.Raw);
+                        OnOneBotMessage(new OneBotContext(message.RawMessage, new GroupID(), message.UserId.ToString(), MessageType.Private, message.Time));
                         break;
                     case "group":
-                        ReportGroupMessage(((GroupEndpoint)message.Endpoint).GroupId, message.Source.UserId,
-                            message.Content.Raw);
+                        OnOneBotMessage(new OneBotContext(message.RawMessage,((GroupEndpoint)message.Endpoint).GroupId, message.UserId, MessageType.Group, message.Time ));
                         break;
                 }
             };
             wsevent.StartListen();
         }
 
-        public override void SendGroupMessage(GroupID id, string message)
+        protected virtual void OnOneBotMessage(OneBotContext e)
         {
-            client.SendGroupMessageAsync(id, message).Wait();
-        }
-
-        public override void SendPrivateMessage(UserID id, string message)
-        {
-            client.SendPrivateMessageAsync(id, message).Wait();
+            OneBotMessageReceived?.Invoke(this, e);
         }
     }
 }

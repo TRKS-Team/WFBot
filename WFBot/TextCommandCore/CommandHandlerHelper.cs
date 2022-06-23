@@ -8,11 +8,12 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
 using Fody;
-using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
+using WFBot.Orichalt;
+
 [assembly: ConfigureAwait(false)]
 
-namespace TextCommandCore
+namespace WFBot.TextCommandCore
 {
     public static class CommandHandlerHelper
     {
@@ -42,7 +43,7 @@ namespace TextCommandCore
         public static async Task<(bool matched, string result)> ProcessCommandInput<T>(this ICommandHandler<T> handlers) where T : ICommandHandler<T>
         {
             var message = handlers.Message.Trim();
-            var sender = handlers.Sender;
+            var o = handlers.O;
             if (message.IsNullOrEmpty()) return (false, null);
 
             string result;
@@ -83,7 +84,7 @@ namespace TextCommandCore
 
                 await Task.WhenAny(task, waitTask);
                 if (waitTask.IsCompleted && !task.IsCompleted)
-                    handlers.MessageSender(sender, "很抱歉, 这个命令可能需要更长的时间来执行. 请耐心等待.");
+                    handlers.MessageSender("很抱歉, 这个命令可能需要更长的时间来执行. 请耐心等待.");
                 try
                 {
                     result = await task;
@@ -154,14 +155,14 @@ namespace TextCommandCore
                             break;
                         case NullReferenceException _:
                             result = "发生异常: 找不到对象.";
-                            handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
+                            handlers.ErrorMessageSender($"在处理 {o.GetInfo()} 的命令时发生问题.\n" +
                                                         $"命令内容为 [{message}].\n" +
                                                         $"异常信息:\n" +
                                                         $"{innerException}");
                             break;
                         default:
                             result = $"发生异常: {innerException?.Message}";
-                            handlers.ErrorMessageSender($"在处理来自 [{sender}] 的命令时发生问题.\n" +
+                            handlers.ErrorMessageSender($"在处理 {o.GetInfo()} 的命令时发生问题.\n" +
                                                         $"命令内容为 [{message}].\n" +
                                                         $"异常信息:\n" +
                                                         $"{innerException}");
@@ -171,7 +172,7 @@ namespace TextCommandCore
             }
 
             if (!result.IsNullOrWhiteSpace())
-                handlers.MessageSender(sender, result);
+                handlers.MessageSender(result);
             return (true, result);
         }
 

@@ -15,6 +15,7 @@ using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Humanizer;
 using Newtonsoft.Json;
+using WFBot.Features.Common;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -62,7 +63,26 @@ namespace WFBot.Features.Resource
     public delegate Task<T> WFResourceLoader<T>(Stream data);
     public delegate Task<Stream> WFResourceRequester(string url);
     public delegate Task<bool> WFResourceUpdater<T>(WFResource<T> resource) where T : class;
+    public delegate Task WFResourceFinisher();
 
+    public static class WFResourceFinishers
+    {
+        public static async Task UpdateWFTranslator()
+        {
+            WFResources.UpdateWFTranslator();
+        }
+
+        public static async Task UpdateWildcardSearcher()
+        {
+            WFResources.WildCardSearcher.UpdateSearcher();;
+        }
+
+        public static async Task UpdateTranslatorAndWildcardSearcher()
+        {
+            UpdateWFTranslator();
+            UpdateWildcardSearcher();
+        }
+    }
     public static class WFResourceUpdaters<T> where T : class
     {
         public static async Task<bool> StringCompareUpdater(WFResource<T> resource)
@@ -76,9 +96,7 @@ namespace WFBot.Features.Resource
             }
             await resource.Reload();
             Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
-            WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
             return true;
-
         }
 
         public static async Task<bool> JsonStringCompareUpdater(WFResource<T> resource)
@@ -95,14 +113,12 @@ namespace WFBot.Features.Resource
             }
             await resource.Reload();
             Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
-            WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
             return true;
         }
         public static async Task<bool> JustUpdateUpdater(WFResource<T> resource)
         {
             await resource.Reload();
             Trace.WriteLine($"正在刷新资源: {resource.FileName}");
-            WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
             return true;
         }
         // todo 旁边某个类还有 GetSHA 重复了
@@ -132,7 +148,6 @@ namespace WFBot.Features.Resource
                 if (sha == info.SHA) return false;
                 Messenger.SendDebugInfo($"发现{info.Category}有更新,正在更新···");
                 await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
-                WFResources.UpdateWFTranslator();/*可能有些地方用不上, 但是保险起见*/
 
                 GitHubInfos.Instance.Infos.Where(i => i.Category == info.Category).ForEach(i =>
                 {
@@ -178,7 +193,7 @@ namespace WFBot.Features.Resource
 
         protected WFResource(string url = null, string category = null, string fileName = null,
             WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
-            WFResourceRequester wfResourceRequester = null, WFResourceUpdater<T> updater = null)
+            WFResourceRequester wfResourceRequester = null, WFResourceUpdater<T> updater = null, WFResourceFinisher finisher = null)
         {
             resourceLoader ??= ResourceLoaders<T>.JsonDotNetLoader;
             // 这写的太屎了
@@ -192,6 +207,7 @@ namespace WFBot.Features.Resource
             Category = category;
             requester = wfResourceRequester ?? RequestResourceFromTheWideWorldOfWeb;
             this.updater = updater ?? WFResourceUpdaters<T>.StringCompareUpdater;
+            this.finisher = finisher ?? WFResourceFinishers.UpdateWFTranslator;
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;
@@ -201,9 +217,9 @@ namespace WFBot.Features.Resource
 
         public static WFResource<T> Create(string url = null, string category = null, string fileName = null,
             WebHeaderCollection header = null, WFResourceLoader<T> resourceLoader = null,
-            WFResourceRequester requester = null, WFResourceUpdater<T> updater = null)
+            WFResourceRequester requester = null, WFResourceUpdater<T> updater = null, WFResourceFinisher finisher = null)
         {
-            var result = new WFResource<T>(url, category, fileName, header, resourceLoader, requester, updater);
+            var result = new WFResource<T>(url, category, fileName, header, resourceLoader, requester, updater, finisher);
             Interlocked.Increment(ref WFResourceStatic.ResourceCount);
             result.initTask = result.Reload(true);
             if (WFResourcesManager.WFResourceDic.ContainsKey(result.Category ?? ""))
@@ -255,11 +271,17 @@ namespace WFBot.Features.Resource
         public bool Reloading => _locker.CurrentCount == 0;
         public WFResourceRequester requester { get; set; }
         WFResourceUpdater<T> updater;
+        WFResourceFinisher finisher;
 
-        public async Task<bool> Update()
-        {
-            return await updater(this);
-        }
+        public async Task Update() =>
+            await Task.Run(async () =>
+            {
+                if (await updater(this))
+                {
+                    await finisher();
+                }
+            });
+
         public async Task Reload(bool isFirstTime = false)
         {
             using var resourceLock = WFBotResourceLock.Create($"资源刷新 {FileName}");

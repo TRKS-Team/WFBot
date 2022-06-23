@@ -14,6 +14,7 @@ using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.Utils;
 using Timer = System.Timers.Timer;
 // ReSharper disable FieldCanBeMadeReadOnly.Global
@@ -109,7 +110,7 @@ namespace WFBot.Features.Other
             if (!sendedUpdateSet.Contains(updates.First()))
             {
                 var msg = WFFormatter.ToString(updates.First());
-                Messenger.Broadcast(msg);
+                MiguelNetwork.Broadcast(msg);
                 sendedUpdateSet.Add(updates.First());
             }
         }   
@@ -119,7 +120,7 @@ namespace WFBot.Features.Other
         //     var outpost = await api.GetSentientOutpost();
         //     sb.AppendLine("侦测到在途的Sentient异常事件: ");
         //     sb.AppendLine(WFFormatter.ToString(outpost));
-        //     Messenger.Broadcast(sb.ToString().Trim());
+        //     MiguelNetwork.Broadcast(sb.ToString().Trim());
         // }
         
         // public async Task CheckSentientOutpost()
@@ -148,7 +149,7 @@ namespace WFBot.Features.Other
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
             }
 
-            Messenger.Broadcast(sb.ToString().Trim());
+            MiguelNetwork.Broadcast(sb.ToString().Trim());
         }
 
         /*
@@ -193,7 +194,7 @@ namespace WFBot.Features.Other
                         var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
                                          $"{WFFormatter.ToString(inv)}";
 
-                        Messenger.Broadcast(notifyText.AddPlatformInfo());
+                        MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
                         sendedInvSet.Add(inv.id);
                     }
                 }
@@ -250,7 +251,7 @@ namespace WFBot.Features.Other
         {
             var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
-            Messenger.Broadcast(result);
+            MiguelNetwork.Broadcast(result);
             sendedAlertsSet.Add(alert.Id);
         }
 

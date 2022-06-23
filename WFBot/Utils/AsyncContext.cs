@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using WFBot.Orichalt;
 
 namespace WFBot.Utils
 {
@@ -7,22 +8,17 @@ namespace WFBot.Utils
     {
         internal static readonly AsyncLocal<Container<CancellationToken>> CurrentCancellationToken =
             new AsyncLocal<Container<CancellationToken>>();
-        internal static readonly AsyncLocal<Container<IGroupMessageSender>> CurrentMessageSender =
-            new AsyncLocal<Container<IGroupMessageSender>>();
+        internal static readonly AsyncLocal<Container<OrichaltContext>> CurrentOrichaltContext =
+            new AsyncLocal<Container<OrichaltContext>>();
 
-        public static void SetMessageSender(IGroupMessageSender sender)
+        public static void SetOrichaltContext(OrichaltContext context)
         {
-            CurrentMessageSender.Value = new Container<IGroupMessageSender>(sender);
+            CurrentOrichaltContext.Value = new Container<OrichaltContext>(context);
         }
 
-        public static IGroupMessageSender GetMessageSender()
+        public static OrichaltContext GetOrichaltContext()
         {
-            return CurrentMessageSender.Value?.Value ?? throw new Exception("Message Sender not found.");
-        }
-
-        public static void SendGroupMessage(string msg)
-        {
-            GetMessageSender().SendMessage(msg);
+            return CurrentOrichaltContext.Value?.Value ?? throw new Exception("Message Sender not found.");
         }
 
         public static void SetCancellationToken(CancellationToken token)

@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Timers;
 using GammaLibrary.Extensions;
-using TextCommandCore;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
+using WFBot.TextCommandCore;
 using WFBot.Windows;
 
 namespace WFBot.Features.Utils

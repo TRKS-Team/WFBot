@@ -46,13 +46,14 @@
     <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Lib.Harmony" Version="2.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
-    <PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Mirai-CSharp" Version="2.1.7" />
+    <PackageReference Include="Mirai-CSharp.HttpApi" Version="2.1.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
+    <PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
-    <ProjectReference Include="..\TextCommandCore\TextCommandCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TextCommandCore;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 
 namespace WFBot.Features.Commands

@@ -10,8 +10,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using WFBot.Connector;
 using WFBot.MahuaEvents;
+using WFBot.Orichalt;
 using WFBot.Utils;
 using Timer = System.Timers.Timer;
 
@@ -20,44 +20,20 @@ namespace WFBot.Features.Utils
 
     public static class Messenger
     {
-        public static ConcurrentDictionary<string, int> GroupCallDic = new ConcurrentDictionary<string, int>();
 
         static Messenger()
         {
             // 大家都知道你很蠢啦
         }
 
-        public static void IncreaseCallCounts(string group)
-        {
-            lock (GroupCallDic)
-            {
-                if (GroupCallDic.ContainsKey(group))
-                {
-                    GroupCallDic[group]++;
-                }
-                else
-                {
-                    GroupCallDic[group] = 1;
-                }
-            }
-
-            Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task =>
-            {
-                lock (GroupCallDic)
-                {
-                    GroupCallDic[group]--;
-                }
-            });
-        }
-
         public static void SendDebugInfo(string content)
         {
             if (Config.Instance.QQ.IsNumber())
-                SendPrivate(Config.Instance.QQ, content);
+                MiguelNetwork.SendDebugInfo(content);
             Trace.WriteLine($"{content}", "Message");
         }
 
-        public static void SendPrivate(UserID qq, string content)
+        /*public static void SendPrivate(UserID qq, string content)
         {
             ConnectorManager.Connector.SendPrivateMessage(qq, content);
             // todo
@@ -72,13 +48,12 @@ namespace WFBot.Features.Utils
             if (previousMessageDic.ContainsKey(qq) && content == previousMessageDic[qq]) return;
             previousMessageDic[qq] = content;
 
-            ConnectorManager.Connector.SendGroupMessage(g, content);
-
-            IncreaseCallCounts(g);
+            MiguelNetwork.SendToGroup(g, content);
+            // IncreaseCallCounts(g);
             //Thread.Sleep(1000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
         }
 
-        public static void Broadcast(string content)
+        /*public static void Broadcast(string content)
         {
             Task.Factory.StartNew(() =>
             {
@@ -102,14 +77,9 @@ namespace WFBot.Features.Utils
 
         /* 当麻理解不了下面的代码 */
         // 现在可以了
-        public static void SendToGroup(this string content, GroupID qq)
+        /*public static void SendToGroup(this string content, GroupID qq)
         {
             SendGroup(qq, content);
-        }
-
-        public static void SendTo(this string content, GroupMessageSender sender)
-        {
-            sender.SendMessage(content);
         }
 
         public static void SendToPrivate(this string content, UserID qq)

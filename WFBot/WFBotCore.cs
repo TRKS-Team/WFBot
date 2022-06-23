@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
 using InternetTime;
-using TextCommandCore;
-using WFBot.Connector;
 using WFBot.Events;
 using WFBot.Features.Events;
 using WFBot.Features.Other;
@@ -22,6 +20,8 @@ using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 using WFBot.Windows;
 
@@ -95,7 +95,11 @@ namespace WFBot
         {
             Instance = this;
         }
-
+        public WFBotCore(bool istest)
+        {
+            Instance = this;
+            IsTest = istest;
+        }
         public WFNotificationHandler NotificationHandler { get; private set; }
         public static WFBotCore Instance { get; internal set; }
         public MessageReceivedEvent messageReceivedEvent;
@@ -103,6 +107,7 @@ namespace WFBot
         public static string Version { get; }
         public static bool IsOfficial { get; }
         public static bool IsShuttingDown { get; private set; }
+        public static bool IsTest { get; private set; }
 
         static WFBotCore()
         {
@@ -154,7 +159,7 @@ namespace WFBot
                     default:
                         if (!(new CustomCommandMatcherHandler(text.TrimStart('/'))).ProcessCommandInput().Result.matched)
                         {
-                            ConnectorManager.Connector.OnCommandLineInput(text);
+                            // ConnectorManager.Connector.OnCommandLineInput(text);
                         }
                         break;
                 }
@@ -207,20 +212,21 @@ namespace WFBot
             }
         }
 
-        public async Task OnGroupMessage(GroupID groupID, UserID userID, string message)
+        public async Task OnGroupMessage(OrichaltContext o)
         {
             if (!Inited)
             {
-                Trace.WriteLine($"Message ignored due to uninitialized: {groupID} {userID} {message}");
+                Trace.WriteLine($"Message ignored due to uninitialized: {o.GetInfo()}");
+                // 为啥这句要写英文?
                 return;
             }
-            await messageReceivedEvent.ProcessGroupMessage(groupID, userID, message);
+            await messageReceivedEvent.ProcessGroupMessage(o);
         }
 
-        public void OnFriendMessage(UserID userID, string message)
+        public void OnFriendMessage(OrichaltContext o)
         {
             if (!Inited) return;
-            privateMessageReceivedEvent.ProcessPrivateMessage(userID, message);
+            privateMessageReceivedEvent.ProcessPrivateMessage(o);
         }
 
         bool _requestedCtrlCShutdown;
@@ -274,9 +280,41 @@ namespace WFBot
             Trace.WriteLine("加载配置文件...");
             Config.Update();
             Config.Save();
-
-            Trace.WriteLine("加载 Connector...");
-            ConnectorManager.LoadConnector();
+            if (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
+            {
+                Console.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Shutdown();
+            }
+            /*while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
+            {
+                Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                /*var platformstr = Console.ReadLine();
+                if (platformstr.IsNumber() && platformstr.ToInt() <= 3 && 0 <= platformstr.ToInt())
+                {
+                    Config.Instance.Miguel_Platform = (MessagePlatform)platformstr.ToInt();
+                    Config.Save();
+                }
+            }*/
+            switch (Config.Instance.Miguel_Platform)
+            {
+                case MessagePlatform.OneBot:
+                    Console.WriteLine("服务协议: Onebot");
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    Console.WriteLine("服务协议: MiraiHTTPv2");
+                    break;
+                case MessagePlatform.Kaiheila:
+                    Console.WriteLine("服务协议: 开黑啦");
+                    break;
+                case MessagePlatform.QQChannel:
+                    Console.WriteLine("服务协议: QQ频道");
+                    break;
+                case MessagePlatform.Test:
+                    Console.WriteLine("服务协议: 测试模式");
+                    break;
+            }
+            Trace.WriteLine("加载米格尔网络...");
+            MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform);
 
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();
@@ -289,7 +327,7 @@ namespace WFBot
             CustomCommandMatcherHandler.InitCustomCommandHandler();
 
             // 检查时间...
-            Task.Run(() => CheckTime());
+            _ = Task.Run(() => CheckTime());
 
             // 初始化定时器
             Trace.WriteLine("初始化定时器...");
@@ -300,11 +338,11 @@ namespace WFBot
             Inited = true;
             if (_requestedCtrlCShutdown)
             {
-                Task.Run(() => Shutdown());
+                _ = Task.Run(() => Shutdown());
             }
 
             _requestedCtrlCShutdown = false;
-            Messenger.SendDebugInfo($"WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.");
+            Messenger.SendDebugInfo($"<<<< WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s. >>>>");
         }
 
         void CheckTime()
@@ -335,7 +373,6 @@ namespace WFBot
         }
 
         public bool Inited { get; private set; }
-        public static bool UseTestConnector { get; set; }
 
         private void InitLogger()
         {

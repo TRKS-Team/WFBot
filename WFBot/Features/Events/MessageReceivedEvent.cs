@@ -3,11 +3,12 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Humanizer;
-using TextCommandCore;
 using WFBot.Events;
 using WFBot.Features.Commands;
 using WFBot.Features.Common;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
+using WFBot.TextCommandCore;
 using WFBot.Utils;
 using static WFBot.Features.Utils.Messenger;
 
@@ -21,14 +22,14 @@ namespace WFBot.Features.Events
         int commandCount;
         bool showedSlashTip = false;
 
-        public Task ProcessGroupMessage(GroupID groupId, UserID senderId, string message)
+        public Task ProcessGroupMessage(OrichaltContext o)
         {
             // 检查每分钟最大调用
-            if (CheckCallPerMin(groupId)) return Task.CompletedTask;
+            // if (CheckCallPerMin(groupId)) return Task.CompletedTask;
 
             // 处理以 '/' 开头的消息
-            RunAutoReply(groupId, message);
-            if (Config.Instance.IsSlashRequired && !message.StartsWith('/'))
+            RunAutoReply(o);
+            if (Config.Instance.IsSlashRequired && !o.PlainMessage.StartsWith('/'))
             {
                 if (!showedSlashTip)
                 {
@@ -37,9 +38,9 @@ namespace WFBot.Features.Events
                 }
                 return Task.CompletedTask;
             }
-            message = message.TrimStart('/', '、', '／');
+            var message = o.PlainMessage.TrimStart('/', '、', '／');
 
-            var handler = new CommandsHandler(senderId, groupId, message);
+            var handler = new CommandsHandler(o, message);
             
             // TODO 优化task数量
             // TODO cancellation token
@@ -48,21 +49,10 @@ namespace WFBot.Features.Events
                 var sw = Stopwatch.StartNew();
                 var cancelSource = new CancellationTokenSource();
                 AsyncContext.SetCancellationToken(cancelSource.Token);
-                IGroupMessageSender sender;
-                if (WFBotCore.UseTestConnector)
-                {
-                    sender = AsyncContext.GetMessageSender();
-                }
-                else
-                {                 
-                    sender = new GroupMessageSender(groupId);
-                    AsyncContext.SetMessageSender(sender);
-                    
-                }
+                AsyncContext.SetOrichaltContext(o);
                 var commandProcessTask = handler.ProcessCommandInput();
-
-                using var locker = WFBotResourceLock.Create(
-                    $"命令处理 #{Interlocked.Increment(ref commandCount)} 群[{groupId}] 用户[{senderId}] 内容[{message}]");
+                var platforminfo = o.GetInfo();
+                using var locker = WFBotResourceLock.Create($"命令处理 #{Interlocked.Increment(ref commandCount)} {platforminfo}");
                 await Task.WhenAny(commandProcessTask, Task.Delay(TimeSpan.FromSeconds(60)));
                 
                 if (!commandProcessTask.IsCompleted)
@@ -71,52 +61,35 @@ namespace WFBot.Features.Events
                     await Task.Delay(10.Seconds());
                     if (!commandProcessTask.IsCompleted)
                     {
-                        sender.SendMessage($"命令 [{message}] 处理超时.");
+                        MiguelNetwork.Reply(o, $"命令 [{message}] 处理超时.");
                     }
-                    Trace.WriteLine($"命令 群[{groupId}] 用户[{senderId}] 内容[{message}] 处理超时.");
+                    Trace.WriteLine($"命令 {platforminfo} 处理超时.");
                     return;
                 }
 
                 if (handler.OutputStringBuilder.IsValueCreated)
                 {
-                    sender.SendMessage(handler.OutputStringBuilder.ToString().Trim());
+                    MiguelNetwork.Reply(o, handler.OutputStringBuilder.ToString().Trim());
                 }
-#if !DEBUG
+#if DEBUG
                 if (commandProcessTask.Result.matched)
                 {
-                    Trace.WriteLine($"命令 群 [{groupId}] 用户 [{senderId}] 内容 [{message}] 处理完成: {sw.Elapsed.Seconds:N1}s.");
+                    Trace.WriteLine($"命令 {platforminfo} 处理完成: {sw.Elapsed.Seconds:N1}s.");
                 }
 #endif
 
             });
         }
 
-        void RunAutoReply(GroupID groupId, string message)
+        void RunAutoReply(OrichaltContext o)
         {
-            message = message.ToLowerInvariant();
+            var message = o.PlainMessage.ToLowerInvariant();
             if (Config.Instance.CustomReplies.ContainsKey(message))
-            {
-                Config.Instance.CustomReplies[message].SendToGroup(groupId);
+            { 
+                MiguelNetwork.Reply(o, Config.Instance.CustomReplies[message]);
             }
         }
 
-        private static bool CheckCallPerMin(GroupID groupId)
-        {
-            lock (GroupCallDic)
-            {
-                if (GroupCallDic.ContainsKey(groupId))
-                {
-                    if (GroupCallDic[groupId] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return true;
-                }
-                else
-                {
-                    GroupCallDic[groupId] = 0;
-                }
-
-            }
-
-            return false;
-        }
     }
 
 

@@ -4,7 +4,6 @@ services:
   wfbot:
     image: trksteam/wfbot
     volumes: 
-        - ./WFBotConnector:/app/WFBotConnector
         - ./WFBotPlugins:/app/WFBotPlugins
         - ./WFBotLogs:/app/WFBotLogs
         - ./WFOfflineResource:/app/WFOfflineResource

@@ -4,13 +4,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using Humanizer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WFBot.Features.Common;
 using WFBot.Features.Events;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.Utils;
+using TestContext = WFBot.Orichalt.OrichaltConnectors.TestContext;
 
 namespace WFBot.Tests
 {
@@ -20,14 +23,10 @@ namespace WFBot.Tests
         [TestInitialize]
         public void Init()
         {
-            AsyncContext.SetMessageSender(new MessageSender());
-            WFBotCore.UseTestConnector = true;
-            core = new WFBotCore();
+            core = new WFBotCore(true);
             core.Init().Wait();
         }
         WFBotCore core;
-        public MessageReceivedEvent GroupMessageRecivedEvent => core.messageReceivedEvent;
-
         [TestMethod]
         public void TestFunctions()
         {
@@ -66,8 +65,9 @@ namespace WFBot.Tests
         }
 
         private void InputCommand(string msg)
-        {
-            GroupMessageRecivedEvent.ProcessGroupMessage("0", "0", msg).Wait();
+        { 
+            var o = OrichaltContextManager.PutPlatformContext(new TestContext { RawMessage = msg});
+            core.messageReceivedEvent.ProcessGroupMessage(o).Wait();
         }
         [TestMethod]
         public void TestWildcards()
@@ -93,7 +93,7 @@ namespace WFBot.Tests
         }
     }
 
-    class MessageSender : IGroupMessageSender
+    /*class MessageSender
     {
         public GroupID GroupID { get; }
         const string resultPath = "TestResult.log";
@@ -107,5 +107,5 @@ namespace WFBot.Tests
             }
             File.AppendAllText(resultPath, msg + Environment.NewLine);
         }
-    }
+    }*/
 }

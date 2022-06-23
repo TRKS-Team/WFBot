@@ -1,28 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using WFBot.Orichalt;
 
-namespace TextCommandCore
+namespace WFBot.TextCommandCore
 {
     public interface ICommandHandler<T> where T : ICommandHandler<T>
     {
-        Action<TargetID, Message> MessageSender { get; }
         Action<Message> ErrorMessageSender { get; }
-        string Sender { get; }
+        Action<Message> MessageSender { get; }
         string Message { get; }
+        OrichaltContext O { get; }
     }
 
     public abstract class CommandHandlerBase<T> : ICommandHandler<T> where T : ICommandHandler<T>
     {
-        public abstract Action<TargetID, Message> MessageSender { get; }
+        public abstract Action<Message> MessageSender { get; }
         public abstract Action<Message> ErrorMessageSender { get; }
-        public abstract string Sender { get; }
         public abstract string Message { get; }
+        public abstract OrichaltContext O { get; }
 
         public virtual void OnProcessingMessage() { }
 

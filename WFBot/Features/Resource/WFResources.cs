@@ -38,11 +38,12 @@ namespace WFBot.Features.Resource
                 Task.Run(async () => WMAuction = await GetWMAResources()),
                 Task.Run(async () => WFTranslateData = await GetTranslateApi()),
                 Task.Run(async () => WFBotTranslateData = await GetWFBotTranslateApi()),
-                Task.Run(async () => WildcardAndSlang = await GetWildcardAndSlang())
+                Task.Run(async () => WildcardAndSlang = await GetWildcardAndSlang()),
+                Task.Run(async () => WildCardSearcher = await WildCardSearcher.Create())
             );
             WFTranslator = new WFTranslator();
             Weaponinfos = GetWeaponInfos();
-            WildCardSearcher = new WildCardSearcher();
+            
             if (ResourceLoadFailed) 
                 throw new Exception("WFBot 资源初始化失败, 请查看上面的 log.");
             /*
@@ -165,7 +166,7 @@ namespace WFBot.Features.Resource
                 fileName: "ExportRelicArcane_zh.json",
                 requester: async _ =>
                 {
-                    var count = 0;
+                    //var count = 0;
                     List<string> urls;
                     try
                     {
@@ -314,7 +315,7 @@ namespace WFBot.Features.Resource
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class
             {
                 var path = $"{source}{name}";
-                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater);
+                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater, WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -329,7 +330,8 @@ namespace WFBot.Features.Resource
                     nameof(WildcardAndSlang),
                     "WF_Sale_Wildcard.json",
                     resourceLoader: ResourceLoaders<WildcardAndSlang>.JsonDotNetLoader,
-                    updater: Updater);
+                    updater: WFResourceUpdaters<WildcardAndSlang>.GitHubSHAUpdater,
+                    finisher: WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
             if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WildcardAndSlang)))
             {
                 var name = "TRKS-Team/WFBotSlang";
@@ -340,11 +342,12 @@ namespace WFBot.Features.Resource
             await resource.WaitForInited();
             return resource.Value;
         }
-
         private static async Task<bool> Updater(WFResource<WildcardAndSlang> resource)
         {
             try
             {
+                // I already fixed it, and you are not coming back.
+
                 var infos = GitHubInfos.Instance.Infos.Where(i => i.Category == resource.Category).ToList();
 
                 if (!infos.Any()) return false;

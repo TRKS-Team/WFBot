@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Newtonsoft.Json;
-using TextCommandCore;
 using WFBot.Features.Resource;
+using WFBot.TextCommandCore;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WFBot.Utils
@@ -40,7 +40,7 @@ namespace WFBot.Utils
             Value = value;
         }
 
-        public T Value { get; }
+        public T Value { get; set; }
     }
 
     public static class WebHelper
