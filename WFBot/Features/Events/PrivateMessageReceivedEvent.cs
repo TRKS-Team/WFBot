@@ -121,7 +121,6 @@ namespace WFBot.Events
             if (Config.Instance.WFGroupList.Contains(groupStr)) return "群号已经存在";
             Config.Instance.WFGroupList.Add(groupStr);
 
-            MiguelNetwork.Reply(O, $"{O.GetSenderIdentifier()}已经在私聊启用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}启用了通知功能.");
 
             return "完事.";
@@ -135,7 +134,6 @@ namespace WFBot.Events
             var groupStr = group.ToString();
             Config.Instance.WFGroupList.Remove(groupStr);
 
-            MiguelNetwork.Reply(O, $"{O.GetSenderIdentifier()}已经在私聊禁用了此群的新任务通知功能.");
             SendDebugInfo($"{groupStr}禁用了通知功能.");
 
             return "完事.";
