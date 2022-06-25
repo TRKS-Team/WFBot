@@ -8,7 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
-using Mirai.CSharp.HttpApi.Builders;
+using Mirai.Net.Data.Messages;
+using Mirai.Net.Sessions.Http.Managers;
+using Mirai.Net.Utils.Scaffolds;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
 
@@ -267,15 +269,15 @@ namespace WFBot.Orichalt
         private static void MiraiHTTPSendToGroup(GroupID qq, string msg)
         {
             var builder = new MessageChainBuilder();
-            builder.AddPlainMessage(msg);
-            MiraiHTTPCore.session.SendGroupMessageAsync(qq, builder);
+            builder.Plain(msg);
+            MessageManager.SendGroupMessageAsync(qq, builder.Build());
         }
 
         private static void MiraiHTTPSendToPrivate(UserID qq, string msg)
         {
             var builder = new MessageChainBuilder();
-            builder.AddPlainMessage(msg);
-            MiraiHTTPCore.session.SendFriendMessageAsync(qq, builder);
+            builder.Plain(msg);
+            MessageManager.SendFriendMessageAsync(qq, builder.Build());
         }
     }
 }
