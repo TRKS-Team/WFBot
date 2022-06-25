@@ -142,6 +142,12 @@ namespace WFBot
 
         public async Task Run()
         {
+            if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
+            {
+                Console.WriteLine("检测到运行在 docker 下, 将不监听标准输入.");
+                Thread.CurrentThread.Join();
+            }
+
             while (true)
             {
                 var text = await Console.In.ReadLineAsync();

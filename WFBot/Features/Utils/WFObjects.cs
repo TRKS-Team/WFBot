@@ -430,7 +430,7 @@ namespace WFBot.Features.Utils
         public bool tradable { get; set; }
         public bool excludeFromCodex { get; set; }
         public string rarity { get; set; }
-        public WFCD_Levelstat[] levelStats { get; set; }
+        //public WFCD_Levelstat[] levelStats { get; set; }
         public bool showInInventory { get; set; }
         public int systemIndex { get; set; }
         public string systemName { get; set; }
