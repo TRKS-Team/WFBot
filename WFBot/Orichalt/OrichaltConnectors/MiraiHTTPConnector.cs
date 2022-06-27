@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flurl.Http;
 using GammaLibrary;
 using GammaLibrary.Extensions;
 using Mirai.Net.Data.Messages;
@@ -68,7 +71,22 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 QQ = config.BotQQ.ToString(),
                 VerifyKey = config.AuthKey
             };
-            await Bot.LaunchAsync();
+
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("尝试连接MiraiHTTPv2···");
+                    await Bot.LaunchAsync();
+                    break;
+                }
+                catch (FlurlHttpException)
+                {
+                    Console.WriteLine("MiraiHTTPv2连接失败, 重试中···");
+                }
+            }
+            Console.WriteLine("MiraiHTTPv2已连接.");
+                
             Bot.MessageReceived
                 .OfType<GroupMessageReceiver>()
                 .Subscribe(GroupMessageReceived);
