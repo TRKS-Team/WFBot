@@ -1,11 +1,20 @@
-version: '3.7'
+version: '3.9'
 
 services:
+  mirai:
+    restart: unless-stopped
+    image: trksteam/mirai-docker:latest
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./bots:/app/bots      
   wfbot:
+    restart: unless-stopped
     image: trksteam/wfbot
     volumes: 
         - ./WFBotPlugins:/app/WFBotPlugins
         - ./WFBotLogs:/app/WFBotLogs
         - ./WFOfflineResource:/app/WFOfflineResource
         - ./WFBotConfigs:/app/WFBotConfigs
-    network_mode: host
+
