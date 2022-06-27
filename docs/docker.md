@@ -48,12 +48,12 @@ adapterSettings:
 > 请顺便确认机器人也已经自动登录  
 7. 运行 `sudo docker-compose up -d mirai` 此时 mirai 已经在docker容器内运行
 8. 运行 `sudo docker-compose run --rm wfbot` 观察到以下输出  
-![](images/QQ%E6%88%AA%E5%9B%BE20220627214621.png)
-打开 `mirai/WFBotConfigs/WFConfig.json` 修改此处内容     
+![](images/QQ%E6%88%AA%E5%9B%BE20220627214621.png)  
+打开 `mirai/WFBotConfigs/WFConfig.json` 修改此处内容   
 ![](images/QQ%E6%88%AA%E5%9B%BE20220627214806.png)  
 再次运行 `sudo docker-compose run --rm wfbot` 观察到以下输出  
 ![](images/QQ%E6%88%AA%E5%9B%BE20220627214916.png)  
-打开`mirai/WFBotConfigs/MiraiHTTPv2.json` 修改为以下内容
+打开`mirai/WFBotConfigs/MiraiHTTPv2.json` 修改为以下内容  
 ![](images/QQ%E6%88%AA%E5%9B%BE20220627215234.png)  
 最后再次运行 `sudo docker-compose run --rm wfbot` 可以尝试与机器人进行消息互动确保运行正常  
 确保正常后摁下 Ctrl+C 退出 wfbot
