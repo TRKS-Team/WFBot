@@ -82,7 +82,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 }
                 catch (FlurlHttpException)
                 {
-                    Console.WriteLine("MiraiHTTPv2连接失败, 重试中···");
+                    Console.WriteLine("MiraiHTTPv2连接失败, 1秒后重试···");
+                    await Task.Delay(1000);
                 }
             }
             Console.WriteLine("MiraiHTTPv2已连接.");
