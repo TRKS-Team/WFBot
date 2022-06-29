@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: windows-latest
-    environment: production
+    environment: github-publish
     steps:
       - uses: actions/checkout@v2
         with:
@@ -116,8 +116,8 @@ jobs:
           asset_name: WFBot-Linux.7z
           asset_content_type: application/x-7z-compressed
   docker-publish:
-    
     runs-on: ubuntu-latest
+    environment: docker-publish
     needs: build
     steps:
       
