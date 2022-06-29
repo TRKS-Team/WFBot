@@ -1,4 +1,4 @@
-name: Master Publish
+name: Arkangel Dispatch
 
 on:
   workflow_dispatch:
