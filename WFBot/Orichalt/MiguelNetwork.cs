@@ -45,7 +45,7 @@ namespace WFBot.Orichalt
                     {
                         if (OneBotGroupCallDic.ContainsKey(oneBotContext.Group))
                         {
-                            if (OneBotGroupCallDic[oneBotContext.Group] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return false;
+                            if (OneBotGroupCallDic[oneBotContext.Group] > Config.Instance.CallperMinute - 1 && Config.Instance.CallperMinute != 0) return false;
                         }
                         else
                         {
@@ -61,7 +61,7 @@ namespace WFBot.Orichalt
                     {
                         if (MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
                         {
-                            if (MiraiHTTPGroupCallDic[miraiHTTPContext.Group] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return false;
+                            if (MiraiHTTPGroupCallDic[miraiHTTPContext.Group] > Config.Instance.CallperMinute - 1 && Config.Instance.CallperMinute != 0) return false;
                         }
                         else
                         {
@@ -197,17 +197,24 @@ namespace WFBot.Orichalt
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
-                    var onebotcontext = OrichaltContextManager.GetOneBotContext(o);
-                    OneBotSendToGroup(onebotcontext.Group, msg);
-                    IncreaseCallCounts(o);
+                    if (CheckCallPerMin(o))
+                    {
+                        var oneBotContext = OrichaltContextManager.GetOneBotContext(o);
+                        OneBotSendToGroup(oneBotContext.Group, msg);
+                        IncreaseCallCounts(o);
+                    }
                     break;
                 case MessagePlatform.Kaiheila:
                     break;
                 case MessagePlatform.QQChannel:
                     break;
                 case MessagePlatform.MiraiHTTP:
-                    var miraihttpcontext = OrichaltContextManager.GetMiraiHTTPContext(o);
-                    MiraiHTTPSendToGroup(miraihttpcontext.Group, msg);
+                    if (CheckCallPerMin(o))
+                    {
+                        var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
+                        MiraiHTTPSendToGroup(miraiHTTPContext.Group, msg);
+                        IncreaseCallCounts(o);
+                    }
                     break;
 
                 case MessagePlatform.Test:

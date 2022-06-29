@@ -234,68 +234,58 @@ namespace WFBot.Utils
 
         public static string AddRemainCallCount(this string msg, OrichaltContext o)
         {
-            switch (o.Platform)
-            {
-                case MessagePlatform.OneBot:
-                    var oneBotContext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
-                    if (Config.Instance.CallperMinute == 0 || MiguelNetwork.OneBotGroupCallDic[oneBotContext.Group] < 0)
-                    {
-                        return msg;
-                    }
-
-                    var remainCount = Config.Instance.CallperMinute - MiguelNetwork.OneBotGroupCallDic[oneBotContext.Group];
-
-                    if (remainCount > 0)
-                    {
-                        return $"{msg}\n机器人在本群一分钟内还能发送{remainCount}条消息.";
-                    }
-                    else
-                    {
-                        return $"{msg}\n机器人在本群一分钟内信息发送配额已经用完.";
-                    }
-                case MessagePlatform.MiraiHTTP:
-                    var miraiHTTPContext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
-                    if (Config.Instance.CallperMinute == 0 || MiguelNetwork.MiraiHTTPGroupCallDic[miraiHTTPContext.Group] < 0)
-                    {
-                        return msg;
-                    }
-                    remainCount = Config.Instance.CallperMinute - MiguelNetwork.MiraiHTTPGroupCallDic[miraiHTTPContext.Group];
-                    if (remainCount > 0)
-                    {
-                        return $"{msg}\n机器人在本群一分钟内还能发送{remainCount}条消息.";
-                    }
-                    else
-                    {
-                        return $"{msg}\n机器人在本群一分钟内信息发送配额已经用完.";
-                    }
-                default:
-                    return msg;
-            }
+            return msg + GetRemainCallCount(o);
         }
-
         public static void AddRemainCallCount(this StringBuilder str, OrichaltContext o)
+        {
+            str.Append(GetRemainCallCount(o));
+        }
+        public static string GetRemainCallCount(OrichaltContext o)
         {
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
-                    var context = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
-                    var group = context.Group;
-                    if (Config.Instance.CallperMinute == 0 || MiguelNetwork.OneBotGroupCallDic[group] < 0)
+                    var oneBotContext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    if (!MiguelNetwork.OneBotGroupCallDic.ContainsKey(oneBotContext.Group))
                     {
-                        return;
+                        return $"\n机器人在本群一分钟内还能发送{Config.Instance.CallperMinute - 1}条消息.";
+                    }
+                    if (Config.Instance.CallperMinute == 0 || !MiguelNetwork.OneBotGroupCallDic.ContainsKey(oneBotContext.Group) || MiguelNetwork.OneBotGroupCallDic[oneBotContext.Group] < 0)
+                    {
+                        return "";
                     }
 
-                    var remainCount = Config.Instance.CallperMinute - MiguelNetwork.OneBotGroupCallDic[group];
+                    var remainCount = Config.Instance.CallperMinute - MiguelNetwork.OneBotGroupCallDic[oneBotContext.Group];
 
-                    if (remainCount > 0)
+                    if (remainCount > 0 && remainCount - 1 != 0)
                     {
-                        str.Append($"\n机器人在本群一分钟内还能发送{remainCount}条消息.");
+                        return $"\n机器人在本群一分钟内还能发送{remainCount - 1}条消息.";
                     }
                     else
                     {
-                        str.Append($"\n机器人在本群一分钟内信息发送配额已经用完.");
+                        return $"\n机器人在本群一分钟内信息发送配额已经用完.";
                     }
-                    break;
+                case MessagePlatform.MiraiHTTP:
+                    var miraiHTTPContext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
+                    if (!MiguelNetwork.MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
+                    {
+                        return $"\n机器人在本群一分钟内还能发送{Config.Instance.CallperMinute - 1}条消息.";
+                    }
+                    if (Config.Instance.CallperMinute == 0 || !MiguelNetwork.MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group)|| MiguelNetwork.MiraiHTTPGroupCallDic[miraiHTTPContext.Group] < 0)
+                    {
+                        return "";
+                    }
+                    remainCount = Config.Instance.CallperMinute - MiguelNetwork.MiraiHTTPGroupCallDic[miraiHTTPContext.Group];
+                    if (remainCount > 0 && remainCount - 1 != 0)
+                    {
+                        return $"\n机器人在本群一分钟内还能发送{remainCount - 1}条消息.";
+                    }
+                    else
+                    {
+                        return $"\n机器人在本群一分钟内信息发送配额已经用完.";
+                    }
+                default:
+                    return "";
             }
         }
     }
