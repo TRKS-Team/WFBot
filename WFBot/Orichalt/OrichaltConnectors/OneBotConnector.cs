@@ -101,10 +101,18 @@ namespace WFBot.Orichalt.OrichaltConnectors
             await Task.Delay(1000);
             if (!wsevent.IsAvailable)
             {
-                Console.WriteLine("OneBot连接失败, 将在5秒后重试···");
-                InitializationTimer = new Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
-                InitializationTimer.Elapsed += TryInitOneBot;
-                InitializationTimer.Start();
+                while (true)
+                {
+                    Console.WriteLine("OneBot连接失败, 将在5秒后重试···");
+                    await Task.Delay(5000);
+                    wsevent.StartListen();
+                    if (!wsevent.IsAvailable)
+                    {
+                        continue;
+                    }
+                    Console.WriteLine("OneBot已连接.");
+                    break;
+                }
             }
             else
             {
@@ -126,19 +134,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
             }
             Console.WriteLine("OneBot已连接.");*/
         }
-
-        private void TryInitOneBot(object sender, ElapsedEventArgs e)
-        {
-            wsevent.StartListen();
-            if (!wsevent.IsAvailable)
-            {
-                Console.WriteLine("OneBot连接失败, 将在5秒后重试···");
-                return;
-            }
-            Console.WriteLine("OneBot已连接.");
-            InitializationTimer.Stop();
-        }
-
+        
         protected virtual void OnOneBotMessage(OneBotContext e)
         {
             OneBotMessageReceived?.Invoke(this, e);
