@@ -7,11 +7,15 @@ on:
         description: 'changelogs'
         required: true 
         type: string
-
+        
+concurrency: 
+  group: production
+  cancel-in-progress: true
+  
 jobs:
   build:
     runs-on: windows-latest
-
+    environment: production
     steps:
       - uses: actions/checkout@v2
         with:
