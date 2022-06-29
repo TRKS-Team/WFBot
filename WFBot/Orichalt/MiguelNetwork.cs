@@ -32,24 +32,41 @@ namespace WFBot.Orichalt
 
 
         public static ConcurrentDictionary<GroupID, int> OneBotGroupCallDic = new ConcurrentDictionary<GroupID, int>();
+        public static ConcurrentDictionary<GroupID, int> MiraiHTTPGroupCallDic = new ConcurrentDictionary<GroupID, int>();
+        
 
         public static bool CheckCallPerMin(OrichaltContext o)
         {
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
-                    var context = OrichaltContextManager.GetOneBotContext(o);
+                    var oneBotContext = OrichaltContextManager.GetOneBotContext(o);
                     lock (OneBotGroupCallDic)
                     {
-                        if (OneBotGroupCallDic.ContainsKey(context.Group))
+                        if (OneBotGroupCallDic.ContainsKey(oneBotContext.Group))
                         {
-                            if (OneBotGroupCallDic[context.Group] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return false;
+                            if (OneBotGroupCallDic[oneBotContext.Group] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return false;
                         }
                         else
                         {
-                            OneBotGroupCallDic[context.Group] = 0;
+                            OneBotGroupCallDic[oneBotContext.Group] = 0;
                         }
 
+                    }
+
+                    return true;
+                case MessagePlatform.MiraiHTTP:
+                    var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
+                    lock (OneBotGroupCallDic)
+                    {
+                        if (MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
+                        {
+                            if (MiraiHTTPGroupCallDic[miraiHTTPContext.Group] > Config.Instance.CallperMinute && Config.Instance.CallperMinute != 0) return false;
+                        }
+                        else
+                        {
+                            MiraiHTTPGroupCallDic[miraiHTTPContext.Group] = 0;
+                        }
                     }
 
                     return true;
@@ -65,15 +82,14 @@ namespace WFBot.Orichalt
                 case MessagePlatform.OneBot:
                     lock (OneBotGroupCallDic)
                     {
-                        var context = OrichaltContextManager.GetOneBotContext(o);
-                        var group = context.Group;
-                        if (OneBotGroupCallDic.ContainsKey(group))
+                        var oneBotContext = OrichaltContextManager.GetOneBotContext(o);
+                        if (OneBotGroupCallDic.ContainsKey(oneBotContext.Group))
                         {
-                            OneBotGroupCallDic[group]++;
+                            OneBotGroupCallDic[oneBotContext.Group]++;
                         }
                         else
                         {
-                            OneBotGroupCallDic[group] = 1;
+                            OneBotGroupCallDic[oneBotContext.Group] = 1;
                         }
                     }
 
@@ -84,6 +100,29 @@ namespace WFBot.Orichalt
                             var context = OrichaltContextManager.GetOneBotContext(o);
                             var group = context.Group;
                             OneBotGroupCallDic[group]--;
+                        }
+                    });
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    lock (MiraiHTTPGroupCallDic)
+                    {
+                        var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
+                        if (MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
+                        {
+                            MiraiHTTPGroupCallDic[miraiHTTPContext.Group]++;
+                        }
+                        else
+                        {
+                            MiraiHTTPGroupCallDic[miraiHTTPContext.Group] = 1;
+                        }
+                    }
+                    Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task =>
+                    {
+                        lock (MiraiHTTPGroupCallDic)
+                        {                
+                            var context = OrichaltContextManager.GetMiraiHTTPContext(o);
+                            var group = context.Group;
+                            MiraiHTTPGroupCallDic[group]--;
                         }
                     });
                     break;
