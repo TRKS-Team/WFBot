@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Timers;
 using Sisters.WudiLib.Posts;
 using Sisters.WudiLib.WebSocket;
 using WFBot.Features.Events;
@@ -44,7 +46,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public CqHttpWebSocketApiClient OneBotClient;
         private CqHttpWebSocketEvent wsevent;
         public event EventHandler<OneBotContext> OneBotMessageReceived;
-        public void Init()
+        public Timer InitializationTimer;
+        public async Task Init()
         {
             var config = OneBotConfig.Instance;
             /*if (config.isfirsttime) 
@@ -95,6 +98,45 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 }
             };
             wsevent.StartListen();
+            await Task.Delay(1000);
+            if (!wsevent.IsAvailable)
+            {
+                Console.WriteLine("OneBot连接失败, 将在5秒后重试···");
+                InitializationTimer = new Timer(TimeSpan.FromSeconds(5).TotalMilliseconds);
+                InitializationTimer.Elapsed += TryInitOneBot;
+                InitializationTimer.Start();
+            }
+            else
+            {
+                Console.WriteLine("OneBot已连接.");
+            }
+            /*while (true)
+            {
+                try
+                {
+                    Console.WriteLine("尝试连接OneBot···");
+                    wsevent.StartListen();
+                    break;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("OneBot连接失败, 1秒后重试···");
+                    await Task.Delay(1000);
+                }
+            }
+            Console.WriteLine("OneBot已连接.");*/
+        }
+
+        private void TryInitOneBot(object sender, ElapsedEventArgs e)
+        {
+            wsevent.StartListen();
+            if (!wsevent.IsAvailable)
+            {
+                Console.WriteLine("OneBot连接失败, 将在5秒后重试···");
+                return;
+            }
+            Console.WriteLine("OneBot已连接.");
+            InitializationTimer.Stop();
         }
 
         protected virtual void OnOneBotMessage(OneBotContext e)

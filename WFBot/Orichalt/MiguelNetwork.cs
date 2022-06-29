@@ -104,7 +104,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.OneBot:
                     OneBotCore = new OneBotCore();
                     OneBotCore.OneBotMessageReceived += OneBotMessageReceived;
-                    OneBotCore.Init();
+                    OneBotCore.Init().Wait();
                     break;
                 case MessagePlatform.MiraiHTTP:
                     MiraiHTTPCore = new MiraiHTTPCore();
