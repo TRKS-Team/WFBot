@@ -123,6 +123,9 @@ namespace WFBot.Features.Resource
             const string source = "http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
             const string cdn =
                 "http://wfbot.cdn.kraber.top/http://origin.warframe.com/origin/00000000/PublicExport/index_zh.txt.lzma";
+            const string cycdn =
+                "https://wfbot.cyan.cafe/api/WFOrigin"; // hk server
+
             // 似乎是Warframe服务器ban掉了阿里云的IP, 走一层cdn先
             var name = source.Split('/').Last();    
             var path = Path.Combine("WFCaches", name);
@@ -141,7 +144,16 @@ namespace WFBot.Features.Resource
             {
                 response = await hc.GetAsync(cdn);
             }
+            if (!response.IsSuccessStatusCode)
+            {
+                response = await hc.GetAsync(cycdn);
+            }
 
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("从 CDN 获取 WFOrigin 均失败.");
+            }
+            
             // File.OpenWrite 的话第一次写入的如果比第二次长 copy过去就会导致有无效数据
             // 覆盖文件不能这么写
             await using (var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
