@@ -142,7 +142,9 @@ namespace WFBot.Features.Resource
                 response = await hc.GetAsync(cdn);
             }
 
-            await using (var stream = File.OpenWrite(path))
+            // File.OpenWrite 的话第一次写入的如果比第二次长 copy过去就会导致有无效数据
+            // 覆盖文件不能这么写
+            await using (var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 await response.Content.CopyToAsync(stream);
             }
