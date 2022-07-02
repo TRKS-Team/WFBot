@@ -40,7 +40,7 @@ namespace WFBot
         https://github.com/TRKS-Team/WFBot
             var skipPressKey = false;
             var setCurrentFolder = false;
-
+            
             foreach (var s in args)
             {
                 switch (s)
@@ -142,16 +142,14 @@ namespace WFBot
 
         public async Task Run()
         {
-            if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
-            {
-                Console.WriteLine("检测到运行在 docker 下, 将不监听标准输入.");
-                Thread.CurrentThread.Join();
-            }
-
             while (true)
             {
-                var text = await Console.In.ReadLineAsync();
-                if (text == null) continue;
+                var text = Console.ReadLine();
+                if (text == null)
+                {
+                    Console.WriteLine("WORKAROUND: 检测到量空控制台输入，将不再读取控制台输入。这可能是因为 WFBot 运行在 Docker 下。如果你在正常情况下看到这个错误，请汇报它。");
+                    Thread.CurrentThread.Join();
+                }
 
                 switch (text.ToLower())
                 {
