@@ -246,13 +246,13 @@ namespace WFBot.Utils
             {
                 case MessagePlatform.OneBot:
                     var oneBotContext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    if (Config.Instance.CallperMinute == 0)
+                    {
+                        return "";
+                    }
                     if (!MiguelNetwork.OneBotGroupCallDic.ContainsKey(oneBotContext.Group))
                     {
                         return $"\n机器人在本群一分钟内还能发送{Config.Instance.CallperMinute - 1}条消息.";
-                    }
-                    if (Config.Instance.CallperMinute == 0 || !MiguelNetwork.OneBotGroupCallDic.ContainsKey(oneBotContext.Group) || MiguelNetwork.OneBotGroupCallDic[oneBotContext.Group] < 0)
-                    {
-                        return "";
                     }
 
                     var remainCount = Config.Instance.CallperMinute - MiguelNetwork.OneBotGroupCallDic[oneBotContext.Group];
@@ -267,14 +267,15 @@ namespace WFBot.Utils
                     }
                 case MessagePlatform.MiraiHTTP:
                     var miraiHTTPContext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
+                    if (Config.Instance.CallperMinute == 0 )
+                    {
+                        return "";
+                    }
                     if (!MiguelNetwork.MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
                     {
                         return $"\n机器人在本群一分钟内还能发送{Config.Instance.CallperMinute - 1}条消息.";
                     }
-                    if (Config.Instance.CallperMinute == 0 || !MiguelNetwork.MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group)|| MiguelNetwork.MiraiHTTPGroupCallDic[miraiHTTPContext.Group] < 0)
-                    {
-                        return "";
-                    }
+
                     remainCount = Config.Instance.CallperMinute - MiguelNetwork.MiraiHTTPGroupCallDic[miraiHTTPContext.Group];
                     if (remainCount > 0 && remainCount - 1 != 0)
                     {

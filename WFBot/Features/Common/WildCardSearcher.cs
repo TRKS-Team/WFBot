@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using PininSharp;
 using PininSharp.Searchers;
+using SuffixTreeSharp;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Utils;
@@ -30,6 +31,7 @@ namespace WFBot.Features.Common
         private WildcardAndSlang was => WFResources.WildcardAndSlang;
         private Sale[] sales => WFResources.WFBotTranslateData.Sale;
         private TreeSearcher<Sale> _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
+        private GeneralizedSuffixTree _tree = new GeneralizedSuffixTree();
 
 
         public static async Task<WildCardSearcher> Create()
@@ -189,6 +191,7 @@ namespace WFBot.Features.Common
                         lock (locker)
                         {
                             _searcher.Put(item, sale);
+                            
                             cache.SearchPairs.Add(new KeyValuePair<string, Sale>(item, sale));
                         }
                     }
@@ -210,6 +213,7 @@ namespace WFBot.Features.Common
             sw.Stop();
             Trace.WriteLine($"黑话辞典穷举耗时 '{sw.Elapsed.TotalSeconds:F1}s'");
         }
+
     }
     public class WildcardAndSlang
     {
