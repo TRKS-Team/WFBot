@@ -32,6 +32,7 @@ namespace WFBot.Features.Common
         private Sale[] sales => WFResources.WFBotTranslateData.Sale;
         private TreeSearcher<Sale> _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
         private GeneralizedSuffixTree _tree = new GeneralizedSuffixTree();
+        private Dictionary<int, Sale> TreeSalesDic = new Dictionary<int, Sale>();
 
 
         public static async Task<WildCardSearcher> Create()
@@ -47,7 +48,11 @@ namespace WFBot.Features.Common
             return obj;
         }
 
-        public List<Sale> Search(string text)
+        public List<Sale> SuffixSearch(string text)
+        {
+            return _tree.Search(text.Format()).Select(t => TreeSalesDic[t]).Distinct().ToList();
+        }
+        public List<Sale> PininSearch(string text)
         {
             return _searcher.Search(text.Format()).Distinct().ToList();
         }
@@ -77,13 +82,20 @@ namespace WFBot.Features.Common
             {
                 foreach (var item in cache.SearchPairs)
                 {
-                    _searcher.Put(item.Key, item.Value);
+                    PutSearchers(item.Key, item.Value);
                 }
                 
                 Trace.WriteLine($"黑话辞典穷举耗时（从缓存载入） '{sw.Elapsed.TotalSeconds:F3}s'");
                 return;
             }
 
+            void PutSearchers(string word, Sale item)
+            {
+                _searcher.Put(word, item);
+                var index = _tree.HighestIndex + 1;
+                _tree.Put(word, index);
+                TreeSalesDic[index] = item;
+            }
             cache.SearchPairs = new List<KeyValuePair<string, Sale>>();
             cache.CacheToken = cacheToken;
 
@@ -186,13 +198,12 @@ namespace WFBot.Features.Common
                     }
 
 
-                    foreach (var item in list)
+                    foreach (var word in list)
                     {
                         lock (locker)
                         {
-                            _searcher.Put(item, sale);
-                            
-                            cache.SearchPairs.Add(new KeyValuePair<string, Sale>(item, sale));
+                            PutSearchers(word, sale);
+                            cache.SearchPairs.Add(new KeyValuePair<string, Sale>(word, sale));
                         }
                     }
                     list.Clear();

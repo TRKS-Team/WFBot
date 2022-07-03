@@ -116,7 +116,22 @@ namespace WFBot.Features.Common
                 formatted += option.Suffixes.Connect("");
             }
 
-            var result = searcher.Search(formatted);
+            var result = searcher.SuffixSearch(formatted);
+            var exactmatch = result.Where(r => r.zh == formatted);
+            if (exactmatch.Any())
+            {
+                return exactmatch.ToList();
+            }
+            if (result.Any())
+            {
+                return result;
+            }
+            result = searcher.PininSearch(formatted);
+            if (exactmatch.Any())
+            {
+                return exactmatch.ToList();
+            }
+            return result;
             /*if (neuroptics)
             {
                 var heads = new[] { "头部神经光", "头部神经", "头部神", "头部", "头" };
@@ -128,7 +143,7 @@ namespace WFBot.Features.Common
                 }
             }*/
             // 到时候把SWWCO改好一点, 把上面这段也装进去
-            return result;
+            // 已经装进新的黑话词典里了
         }
 
     }
@@ -231,9 +246,9 @@ namespace WFBot.Features.Common
             }
 
             return Check(item.TrySearch((none)), items) ||
+                   Check(item.TrySearch((p, 一套)), items) ||
                    Check(item.TrySearch((一套)), items) ||
-                   Check(item.TrySearch((p)), items) ||
-                   Check(item.TrySearch((p, 一套)), items);
+                   Check(item.TrySearch((p)), items);
 
             /*// 详细逻辑图在我笔记本上有手稿
             // 不建议重构
