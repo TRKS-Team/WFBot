@@ -379,6 +379,7 @@ namespace WFBot.Features.Resource
                 }
             }
         }
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(5);
 
         public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string url)
         {
@@ -392,8 +393,16 @@ namespace WFBot.Features.Resource
                 }
             }
 
-            var dataString = await httpClient.GetStreamAsync(url);
-            return dataString;
+            try
+            {
+                await semaphoreSlim.WaitAsync();
+                var dataString = await httpClient.GetStreamAsync(url);
+                return dataString;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
 
         void LoadFromTheWideWorldOfWebNonBlocking()
