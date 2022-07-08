@@ -147,7 +147,7 @@ namespace WFBot
                 var text = Console.ReadLine();
                 if (text == null)
                 {
-                    Console.WriteLine("WORKAROUND: 检测到量空控制台输入，将不再读取控制台输入。这可能是因为 WFBot 运行在 Docker 下。如果你在正常情况下看到这个错误，请汇报它。");
+                    Console.WriteLine("WORKAROUND: 检测到空控制台输入，将不再读取控制台输入。这可能是因为 WFBot 运行在 Docker 下。如果你在正常情况下看到这个错误，请汇报它。");
                     Thread.CurrentThread.Join();
                 }
 
