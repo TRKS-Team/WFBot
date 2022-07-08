@@ -118,7 +118,7 @@ jobs:
   docker-publish:
     runs-on: ubuntu-latest
     environment: docker-publish
-    needs: build
+    needs: publish
     steps:
       
       - uses: actions/checkout@v2
