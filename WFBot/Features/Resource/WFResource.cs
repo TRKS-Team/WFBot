@@ -11,14 +11,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Humanizer;
+using Manganese.Array;
 using Newtonsoft.Json;
 using WFBot.Features.Common;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using Timer = System.Timers.Timer;
 
 namespace WFBot.Features.Resource
 {
@@ -127,6 +130,16 @@ namespace WFBot.Features.Resource
             var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
             return commits?.FirstOrDefault()?.sha;
         }
+
+        private static string GetSHAFromCDN(string url)
+        {
+            var hc = new HttpClient();
+            var strs = url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources")
+                .Split('/').ToList();
+            strs.RemoveAt(strs.Count - 1);
+            var location = strs.Connect("/") + "/sha";
+            return hc.GetStringAsync(location).Result;
+        }
         public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
         {
             try
@@ -137,7 +150,7 @@ namespace WFBot.Features.Resource
                 var info = infos.First();
                 if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
                 // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
-                var sha = GetSHA(info.Name);
+                var sha = WFResources.IsJsDelivrFailed ? GetSHAFromCDN(resource.url) : GetSHA(info.Name);
                 if (sha == null) return false;
                 if (info.SHA.IsNullOrEmpty())
                 {
@@ -211,6 +224,11 @@ namespace WFBot.Features.Resource
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;
+            }
+
+            if (url != null && url.Contains("https://cdn.jsdelivr.net/gh"))
+            {
+                requester = JsDelivrWideWorldOfWebRequester;
             }
             Version = 0;
         }
@@ -379,7 +397,6 @@ namespace WFBot.Features.Resource
                 }
             }
         }
-        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(5);
 
         public async Task<Stream> RequestResourceFromTheWideWorldOfWeb(string url)
         {
@@ -393,10 +410,48 @@ namespace WFBot.Features.Resource
                 }
             }
 
+            var dataString = await httpClient.GetStreamAsync(url);
+            return dataString;
+        }
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(5);
+        public async Task<Stream> JsDelivrWideWorldOfWebRequester(string url)
+        {
+            var httpClient = new HttpClient(new RetryHandler(new HttpClientHandler{AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Brotli}));
+            httpClient.Timeout = Timeout.InfiniteTimeSpan;
+            if (header != null)
+            {
+                foreach (string key in header)
+                {
+                    httpClient.DefaultRequestHeaders.Add(key, header[key]);
+                }
+            }
+
+            Stream dataString;
             try
             {
                 await semaphoreSlim.WaitAsync();
-                var dataString = await httpClient.GetStreamAsync(url);
+                if (WFResources.IsJsDelivrFailed)
+                {
+                    dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources"));
+                    return dataString;
+                }
+                var task = Task.Delay(TimeSpan.FromMinutes(1)).ContinueWith(async _ =>
+                {
+                    Console.WriteLine("有一个或多个Jsdelivr资源请求超时, 将会更换全局下载源为WFBot镜像.");
+                    WFResources.IsJsDelivrFailed = true;
+                    dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources"));
+                    return dataString;
+                });
+                // TODO cY 帮我 改改 我 去睡大觉了
+                dataString = await httpClient.GetStreamAsync(url);
+                return dataString;
+            }
+            catch
+            {
+                Console.WriteLine("有一个或多个Jsdelivr资源请求错误, 将会更换全局下载源为WFBot镜像.");
+                WFResources.IsJsDelivrFailed = true;
+                dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh",
+                    "https://wfbot.kraber.top:8888/Resources"));
                 return dataString;
             }
             finally
@@ -404,7 +459,6 @@ namespace WFBot.Features.Resource
                 semaphoreSlim.Release();
             }
         }
-
         void LoadFromTheWideWorldOfWebNonBlocking()
         {
 #pragma warning disable 4014

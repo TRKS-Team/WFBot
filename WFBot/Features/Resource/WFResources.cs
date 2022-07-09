@@ -69,6 +69,7 @@ namespace WFBot.Features.Resource
         static WFTranslator _wfTranslator;
         static readonly object translatorLock = new object();
         static volatile int translatorVersion;
+        public static bool IsJsDelivrFailed = false;
         public static WFTranslator WFTranslator
         {
             get
