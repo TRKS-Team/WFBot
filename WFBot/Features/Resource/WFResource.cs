@@ -197,6 +197,8 @@ namespace WFBot.Features.Resource
         readonly WebHeaderCollection header;
         public const string OfflineDir = "WFOfflineResource";
         public const string CacheDir = "WFCaches";
+        public bool UseAlternativeRequester { get; }
+        bool RequestedRerequest { get; set; } = false;
 
         static WFResource()
         {
@@ -229,6 +231,7 @@ namespace WFBot.Features.Resource
             if (url != null && url.Contains("https://cdn.jsdelivr.net/gh"))
             {
                 requester = JsDelivrWideWorldOfWebRequester;
+                UseAlternativeRequester = true;
             }
             Version = 0;
         }
@@ -344,18 +347,28 @@ namespace WFBot.Features.Resource
             {
                 await using var stream = await requester(url);
                 var fileStream = File.Open(CachePath + ".tmp", FileMode.Create, FileAccess.Write, FileShare.Read);
-                
+                var cts = new CancellationTokenSource();
+                if (!RequestedRerequest)
+                {
+                    cts.CancelAfter(TimeSpan.FromSeconds(60));
+                }
+
                 try
                 {
                     // 尝试将资源保存到缓存再读取...
-                    var copyTask = stream.CopyToAsync(fileStream);
+                    var copyTask = stream.CopyToAsync(fileStream, cts.Token);
                     while (true)
                     {
                         var waitTask = Task.Delay(3.Seconds());
                         await Task.WhenAny(copyTask, waitTask);
+                        if (copyTask.IsCanceled)
+                        {
+                            throw new TaskCanceledException();
+                        }
                         if (copyTask.IsCompleted) break;
                         Console.WriteLine($"资源 {FileName} 还没有下载完. 下载了 {fileStream.Length.Bytes().Megabytes:F2} MB.");
                     }
+
                     fileStream.Dispose();
 
                     if (File.Exists(CachePath)) File.Delete(CachePath);
@@ -364,6 +377,13 @@ namespace WFBot.Features.Resource
                 catch (Exception e)
                 {
                     fileStream.Dispose();
+                    if (e is TaskCanceledException)
+                    {
+                        RequestedRerequest = true;
+                        await LoadFromTheWideWorldOfWeb();
+                        RequestedRerequest = false;
+                        return;
+                    }
                     Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
                     Trace.WriteLine(e);
                     sw.Restart();
@@ -430,21 +450,89 @@ namespace WFBot.Features.Resource
             try
             {
                 await semaphoreSlim.WaitAsync();
-                if (WFResources.IsJsDelivrFailed)
+                if (WFResources.IsJsDelivrFailed || RequestedRerequest)
                 {
                     dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources"));
                     return dataString;
                 }
-                var task = Task.Delay(TimeSpan.FromMinutes(1)).ContinueWith(async _ =>
-                {
-                    Console.WriteLine("有一个或多个Jsdelivr资源请求超时, 将会更换全局下载源为WFBot镜像.");
-                    WFResources.IsJsDelivrFailed = true;
-                    dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources"));
-                    return dataString;
-                });
-                // TODO cY 帮我 改改 我 去睡大觉了
+
+                // 写下载超时的话
+                // 1. 操作 HttpClient 实例的 TimeOut 并捕获 TaskCanceledException
+
+                /*
+                 *  var httpClient = new HttpClient();
+                 *  httpClient.Timeout = TimeSpan.FromMilliseconds(1);
+                 *  try
+                 *  {
+                 *      await httpClient.GetStringAsync("https://baidu.com");
+                 *  }
+                 *  catch (TaskCanceledException e)
+                 *  {
+                 *      Console.WriteLine(e);
+                 *  }
+                 *
+                 */
+
+                // 2. 使用 CancellationTokenSource, 传递 CancellationToken, 并捕获 TaskCanceledException
+
+                /*
+                 *  var httpClient = new HttpClient();
+                 *  var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(1));
+                 *  try
+                 *  {
+                 *      await httpClient.GetStringAsync("https://baidu.com", cts.Token);
+                 *  }
+                 *  catch (TaskCanceledException e)
+                 *  {
+                 *      Console.WriteLine(e);
+                 *  }
+                 *
+                 */
+
+                // 3. 使用 CancellationTokenSource, 在一段时间后检查任务是否完成, 若没有完成则手动调用其 Cancel 方法
+                // 在这种情况下不会抛出异常, 但是在使用 `await task` 会抛出 TaskCanceledException 在调用 `task.Result` 时会抛出 AggregateException 
+                // 同时也可以通过调用 task.Exception 来获取里面的异常
+
+                /*
+                 *  var httpClient = new HttpClient();
+                 *  var cts = new CancellationTokenSource();
+                 *
+                 *  var task = httpClient.GetStringAsync("https://baidu.com", cts.Token);
+                 *  await Task.Delay(TimeSpan.FromMilliseconds(1));
+                 *  if (!task.IsCompleted)
+                 *  {
+                 *      // 这里 Cancel 不 Cancel 对结果没有影响, 但是调用会结束数据传输
+                 *      cts.Cancel();
+                 *      // do sth
+                 *  }
+                 *  else
+                 *  {
+                 *      // do sth
+                 *  }
+                 *
+                 */
+
+                // 另外其实理论上有一个小问题, 最好是一个程序只用一个 HttpClient, 在请求量较大时 new 很多的 HttpClient 会导致系统可用端口减少 (port exhaustion) 即 (TIME_WAIT)
+                // 但是我们请求量比较小就懒得改了
+                // 见 https://github.com/CurseForgeCommunity/.NET-APIClient/issues/1
+                
+                // ~~T-O-D-O~~ cY 帮我 改改 我 去睡大觉了
+                // 我也去睡大觉咯
+
+
+                // 但是我们这玩意写的是 GetStream。。 不能从这块下手 也就是上面写的都是无效的 得从调用 requester 那下手
+                // try
+                // {
                 dataString = await httpClient.GetStreamAsync(url);
                 return dataString;
+                // }
+                // catch (TaskCanceledException)
+                // {
+                //     Console.WriteLine("有一个或多个Jsdelivr资源请求超时, 将会更换全局下载源为WFBot镜像.");
+                //     WFResources.IsJsDelivrFailed = true;
+                //     dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources"));
+                //     return dataString;
+                // }
             }
             catch
             {
