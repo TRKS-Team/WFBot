@@ -74,8 +74,45 @@ namespace WFBot.Utils
             hc.Timeout = TimeSpan.FromSeconds(30);
             return hc;
         });
-        
 
+        public static async Task<string> DownloadStringAsync(string url, List<KeyValuePair<string, string>> header = null)
+        {
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                var hc = SharedHttpClient.Value;
+                var msg = new HttpRequestMessage(HttpMethod.Get, url);
+
+                if (header != null)
+                {
+                    foreach (var (key, value) in header)
+                    {
+                        msg.Headers.Add(key, value);
+                    }
+                }
+
+                try
+                {
+                    var data = await hc.SendAsync(msg, AsyncContext.GetCancellationToken());
+                    data.EnsureSuccessStatusCode();
+
+                    return await data.Content.ReadAsStringAsync();
+                }
+                catch (WebException e)
+                {
+                    if (e.Status == WebExceptionStatus.Timeout)
+                    {
+                        throw new CommandException($"请求超时.");
+                    }
+
+                    throw new CommandException($"数据下载出错: {e.Message}.");
+                }
+            }
+            finally
+            {
+                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.");
+            }
+        } 
         public static async Task<T> DownloadJsonAsync<T>(string url, List<KeyValuePair<string, string>> header = null)
         {
             var sw = Stopwatch.StartNew();

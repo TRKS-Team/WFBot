@@ -25,9 +25,16 @@ namespace WFBot.Features.Resource
     public static class WFResources
     {
         internal static bool ResourceLoadFailed = false;
+
+        private static bool IsKraber = false;
         // 这里其实应该加锁
         internal static async Task InitWFResource()
         {
+            if (WebHelper.TryGet("https://wfbot.kraber.top:8888/Resources/").Result.IsOnline)
+            {
+                IsKraber = true;
+                Trace.WriteLine("已核实CDN链接正常, WFBot将会使用自建CDN下载资源.");
+            }
             WFChineseApi = new WFChineseAPI();
             ThreadPool.SetMinThreads(64, 64);
 
@@ -69,7 +76,6 @@ namespace WFBot.Features.Resource
         static WFTranslator _wfTranslator;
         static readonly object translatorLock = new object();
         static volatile int translatorVersion;
-        public static bool IsJsDelivrFailed = false;
         public static WFTranslator WFTranslator
         {
             get
@@ -212,9 +218,13 @@ namespace WFBot.Features.Resource
             WFContent = result;
             await resource.WaitForInited();
         }
-        private static string GetSHA(string name)
+        public static string GetSHA(GitHubInfo info)
         {
-            var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
+            if (info.IsKraber)
+            {
+                return WebHelper.DownloadStringAsync(info.Kraber).Result;
+            }
+            var commits = CommitsGetter.Get($"https://api.github.com/repos/{info.Name}/commits");
             return commits?.FirstOrDefault()?.sha;
         }
         private static async Task<WMAuction> GetWMAResources()
@@ -264,7 +274,8 @@ namespace WFBot.Features.Resource
             if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WFCD_All)))
             {
                 var name = "WFCD/warframe-items";
-                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WFCD_All), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+
+                WFResourcesManager.AddInfo(name, "", nameof(WFCD_All), false);
             }
 
 
@@ -275,7 +286,7 @@ namespace WFBot.Features.Resource
         {
             var api = new WFApi();
             // var source = "https://raw.githubusercontent.com/Richasy/WFA_Lexicon/WFA5/";
-            var source = "https://cdn.jsdelivr.net/gh/Richasy/WFA_Lexicon@WFA5/";
+            var source = IsKraber ? "https://wfbot.kraber.top:8888/Resources/Richasy/WFA_Lexicon@WFA5/" : "https://cdn.jsdelivr.net/gh/Richasy/WFA_Lexicon@WFA5/";
             var tasks = new List<Task>();
 
             AddTask(ref api.RDict, "WF_Dict.json");
@@ -289,7 +300,7 @@ namespace WFBot.Features.Resource
             {
                 var name = "Richasy/WFA_Lexicon";
 
-                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WFTranslator), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+                WFResourcesManager.AddInfo(name, "https://wfbot.kraber.top:8888/Resources/Richasy/WFA_Lexicon@WFA5/sha", nameof(WFTranslator), IsKraber);
             }
             await Task.WhenAll(tasks.ToArray());
 
@@ -314,7 +325,7 @@ namespace WFBot.Features.Resource
         {
             var api = new WFBotApi();
             var tasks = new List<Task>();
-            var source = "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBot_Lexicon@master/";
+            var source = IsKraber? "https://wfbot.kraber.top:8888/Resources/TRKS-Team/WFBot_Lexicon@master/" : "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBot_Lexicon@master/";
 
             AddTask(ref api.RSale, "WFBot_Sale.json");
 
@@ -322,7 +333,7 @@ namespace WFBot.Features.Resource
             {
                 var name = "TRKS-Team/WFBot_Lexicon";
 
-                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WFBotApi), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+                WFResourcesManager.AddInfo(name, "https://wfbot.kraber.top:8888/Resources/TRKS-Team/WFBot_Lexicon@master/sha", nameof(WFBotApi), IsKraber);
             }
 
             await Task.WhenAll(tasks.ToArray());
@@ -341,7 +352,7 @@ namespace WFBot.Features.Resource
         {
             var resource =
                 WFResource<WildcardAndSlang>.Create(
-                    "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBotSlang@latest/WF_Sale_Wildcard.json",
+                     IsKraber?"https://wfbot.kraber.top:8888/Resources/TRKS-Team/WFBotSlang@latest/WF_Sale_Wildcard.json":"https://cdn.jsdelivr.net/gh/TRKS-Team/WFBotSlang@latest/WF_Sale_Wildcard.json",
                     nameof(WildcardAndSlang),
                     "WF_Sale_Wildcard.json",
                     resourceLoader: ResourceLoaders<WildcardAndSlang>.JsonDotNetLoader,
@@ -351,7 +362,7 @@ namespace WFBot.Features.Resource
             {
                 var name = "TRKS-Team/WFBotSlang";
 
-                WFResourcesManager.WFResourceGitHubInfos.Add(new GitHubInfo { Name = name, Category = nameof(WildcardAndSlang), LastUpdated = DateTime.Now, SHA = GetSHA(name)});
+                WFResourcesManager.AddInfo(name, "https://wfbot.kraber.top:8888/Resources/TRKS-Team/WFBotSlang@latest/sha", nameof(WildcardAndSlang), IsKraber);
             }
 
             await resource.WaitForInited();
@@ -369,7 +380,7 @@ namespace WFBot.Features.Resource
                 var info = infos.First();
                 if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
                 // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
-                var sha = GetSHA(info.Name);
+                var sha = GetSHA(info);
                 if (sha == null) return false;
                 if (info.SHA.IsNullOrEmpty())
                 {

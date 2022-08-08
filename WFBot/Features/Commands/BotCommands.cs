@@ -69,6 +69,7 @@ namespace WFBot.Features.Commands
             var sb = new StringBuilder();
             var q1 = WebHelper.TryGet("https://warframestat.us");
             var q2 = WebHelper.TryGet("https://api.warframe.market/v1/items/valkyr_prime_set/orders?include=item");
+            var q3 = WebHelper.TryGet("https://wfbot.kraber.top:8888/Resources/");
             var commitTask = Task.Run(() =>
                 CommitsGetter.Get("https://api.github.com/repos/TRKS-Team/WFBot/commits?per_page=5"));
             // var q3 = Task.Run(() => WebHelper.TryGet("https://api.richasy.cn/wfa/rm/riven"));
@@ -76,9 +77,10 @@ namespace WFBot.Features.Commands
             
             var apistat = await q1;
             var wmstat = await q2;
+            var cdnstat = await q3;
             // var wfastat = await q3;
             // var kuvastat = await q4;
-            if (apistat.IsOnline && wmstat.IsOnline /*&& wfastat.IsOnline && kuvastat.IsOnline*/)
+            if (apistat.IsOnline && wmstat.IsOnline && cdnstat.IsOnline/*&& wfastat.IsOnline && kuvastat.IsOnline*/)
             {
                 sb.AppendLine("机器人状态: 一切正常");
             }
@@ -91,6 +93,7 @@ namespace WFBot.Features.Commands
 
             sb.AppendLine($"    任务API:  {(apistat.IsOnline ? $"{apistat.Latency}ms [在线]" : "[离线]")}");
             sb.AppendLine($"    WarframeMarket: {(wmstat.IsOnline ? $"{wmstat.Latency}ms [在线]" : "[离线]")}");
+            sb.AppendLine($"    WFBotCDN: {(cdnstat.IsOnline ? $"{cdnstat.Latency}ms [在线]" : "[离线]")}");
             // sb.AppendLine($"    WFA紫卡市场: {wfastat.Latency}ms [{(wfastat.IsOnline ? "在线" : "离线")}]");
             // sb.AppendLine($"    赤毒/仲裁API: {kuvastat.Latency}ms [{(kuvastat.IsOnline ? "在线" : "离线")}]");
             var commit = (await commitTask)?.Format() ?? "GitHub Commit 获取异常, 可能是请求次数过多, 如果你是机器人主人, 解决方案请查看 FAQ.";

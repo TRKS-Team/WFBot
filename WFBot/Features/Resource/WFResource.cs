@@ -124,22 +124,7 @@ namespace WFBot.Features.Resource
             Trace.WriteLine($"正在刷新资源: {resource.FileName}");
             return true;
         }
-        // todo 旁边某个类还有 GetSHA 重复了
-        private static string GetSHA(string name)
-        {
-            var commits = CommitsGetter.Get($"https://api.github.com/repos/{name}/commits");
-            return commits?.FirstOrDefault()?.sha;
-        }
 
-        private static string GetSHAFromCDN(string url)
-        {
-            var hc = new HttpClient();
-            var strs = url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources")
-                .Split('/').ToList();
-            strs.RemoveAt(strs.Count - 1);
-            var location = strs.Connect("/") + "/sha";
-            return hc.GetStringAsync(location).Result;
-        }
         public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
         {
             try
@@ -149,8 +134,8 @@ namespace WFBot.Features.Resource
                 if (!infos.Any()) return false;
                 var info = infos.First();
                 if (DateTime.Now - info.LastUpdated <= TimeSpan.FromMinutes(10)) return false;
-                // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的造GitHub的服务器了
-                var sha = WFResources.IsJsDelivrFailed ? GetSHAFromCDN(resource.url) : GetSHA(info.Name);
+                // 关于API的限制 有Token的话5000次/hr 无Token的话60次/hr 咱就不狠狠的撅GitHub的服务器了
+                var sha = WFResources.GetSHA(info);
                 if (sha == null) return false;
                 if (info.SHA.IsNullOrEmpty())
                 {
@@ -159,7 +144,7 @@ namespace WFBot.Features.Resource
                     return false;
                 }
                 if (sha == info.SHA) return false;
-                Messenger.SendDebugInfo($"发现{info.Category}有更新,正在更新···");
+                Messenger.SendDebugInfo($"发现{info.Name}有更新,正在更新···");
                 await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
 
                 GitHubInfos.Instance.Infos.Where(i => i.Category == info.Category).ForEach(i =>
@@ -226,12 +211,6 @@ namespace WFBot.Features.Resource
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
                 WFResourceStatic.CategoryVersionDictionary[category] = 0;
-            }
-
-            if (url != null && url.Contains("https://cdn.jsdelivr.net/gh"))
-            {
-                requester = JsDelivrWideWorldOfWebRequester;
-                UseAlternativeRequester = true;
             }
             Version = 0;
         }
@@ -450,7 +429,7 @@ namespace WFBot.Features.Resource
             try
             {
                 await semaphoreSlim.WaitAsync();
-                if (WFResources.IsJsDelivrFailed || RequestedRerequest)
+                if (RequestedRerequest)
                 {
                     dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh", "https://wfbot.kraber.top:8888/Resources"));
                     return dataString;
@@ -537,7 +516,6 @@ namespace WFBot.Features.Resource
             catch
             {
                 Console.WriteLine("有一个或多个Jsdelivr资源请求错误, 将会更换全局下载源为WFBot镜像.");
-                WFResources.IsJsDelivrFailed = true;
                 dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh",
                     "https://wfbot.kraber.top:8888/Resources"));
                 return dataString;
