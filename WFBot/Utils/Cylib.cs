@@ -36,7 +36,6 @@ namespace WFBot.Utils
                 if (FileSystem.Exists(savePath))
                 {
                     _instance = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
-                    Debugger.Break();
                 }
                 else
                 {

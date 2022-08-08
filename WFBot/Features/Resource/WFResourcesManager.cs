@@ -43,14 +43,11 @@ namespace WFBot.Features.Resource
     public class GitHubInfos : Configuration<GitHubInfos>
     {
         public List<GitHubInfo> Infos = new List<GitHubInfo>();
-
-        public GitHubInfos()
+        protected override void AfterUpdate()
         {
-
             if (Infos.Select(i => i.Name).Except(WFResourcesManager.WFResourceGitHubInfos.Select(i => i.Name)).Any() || Infos.All(i => i.Kraber.IsNullOrEmpty()))
             {
                 Infos = WFResourcesManager.WFResourceGitHubInfos;
-                Save();
             }
         }
     }
