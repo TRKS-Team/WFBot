@@ -96,7 +96,7 @@ namespace WFBot.Features.Other
             var result = new List<WarframeUpdate>();
             var web = new HtmlWeb();
             var doc = await web.LoadFromWebAsync("https://forums.warframe.com/forum/3-pc-update-notes/");
-            var nodes = doc.DocumentNode.SelectNodes("/html/body/main/div/div/div/div[4]/div/ol/li/div/h4/span/a"/*/html/body/main/div/div/div/div[3]/div/ol/li/div/h4/span/a*/);
+            var nodes = doc.DocumentNode.SelectNodes("/html/body/main/div/div/div/div[3]/div/ol/li/div/h4/span/a");
             foreach (var node in nodes)
             {
                 result.Add(new WarframeUpdate {title = node.InnerText.Trim(), url = node.GetAttributeValue("href", "")});
