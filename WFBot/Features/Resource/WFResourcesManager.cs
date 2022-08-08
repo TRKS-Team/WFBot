@@ -48,6 +48,7 @@ namespace WFBot.Features.Resource
             if (Infos.Select(i => i.Name).Except(WFResourcesManager.WFResourceGitHubInfos.Select(i => i.Name)).Any() || Infos.All(i => i.Kraber.IsNullOrEmpty()))
             {
                 Infos = WFResourcesManager.WFResourceGitHubInfos;
+                Save();
             }
         }
     }
