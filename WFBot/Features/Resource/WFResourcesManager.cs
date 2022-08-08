@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GammaLibrary.Extensions;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 
@@ -45,9 +46,11 @@ namespace WFBot.Features.Resource
 
         public GitHubInfos()
         {
-            if (Infos.Select(i => i.Name).Except(WFResourcesManager.WFResourceGitHubInfos.Select(i => i.Name)).Any())
+
+            if (Infos.Select(i => i.Name).Except(WFResourcesManager.WFResourceGitHubInfos.Select(i => i.Name)).Any() || Infos.All(i => i.Kraber.IsNullOrEmpty()))
             {
                 Infos = WFResourcesManager.WFResourceGitHubInfos;
+                Save();
             }
         }
     }
