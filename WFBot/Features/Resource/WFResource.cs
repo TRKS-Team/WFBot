@@ -88,7 +88,9 @@ namespace WFBot.Features.Resource
     }
     public static class WFResourceUpdaters<T> where T : class
     {
-        public static async Task<bool> StringCompareUpdater(WFResource<T> resource)
+        public static WFResourceUpdater<T> StringCompareDelegate = StringCompareUpdater;
+
+        private static async Task<bool> StringCompareUpdater(WFResource<T> resource)
         {
             await using (var file = File.OpenRead(resource.CachePath))
             {
@@ -102,7 +104,9 @@ namespace WFBot.Features.Resource
             return true;
         }
 
-        public static async Task<bool> JsonStringCompareUpdater(WFResource<T> resource)
+        public static WFResourceUpdater<T> JsonStringCompareDelegate = JsonStringCompareUpdater;
+
+        private static async Task<bool> JsonStringCompareUpdater(WFResource<T> resource)
         {
             await using (var file = File.OpenRead(resource.CachePath))
             {
@@ -118,14 +122,19 @@ namespace WFBot.Features.Resource
             Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
             return true;
         }
-        public static async Task<bool> JustUpdateUpdater(WFResource<T> resource)
+
+        public static WFResourceUpdater<T> JustUpdateDelegate = JustUpdateUpdater;
+
+        private static async Task<bool> JustUpdateUpdater(WFResource<T> resource)
         {
             await resource.Reload();
             Trace.WriteLine($"正在刷新资源: {resource.FileName}");
             return true;
         }
 
-        public static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
+        public static WFResourceUpdater<T> GitHubShaDelegate = GitHubSHAUpdater;
+
+        private static async Task<bool> GitHubSHAUpdater(WFResource<T> resource)
         {
             try
             {
@@ -206,7 +215,7 @@ namespace WFBot.Features.Resource
             this.header = header;
             Category = category;
             requester = wfResourceRequester ?? RequestResourceFromTheWideWorldOfWeb;
-            this.updater = updater ?? WFResourceUpdaters<T>.StringCompareUpdater;
+            this.updater = updater ?? WFResourceUpdaters<T>.StringCompareDelegate;
             this.finisher = finisher ?? WFResourceFinishers.UpdateWFTranslator;
             if (category != null && !WFResourceStatic.CategoryVersionDictionary.ContainsKey(category))
             {
@@ -272,6 +281,10 @@ namespace WFBot.Features.Resource
         public WFResourceRequester requester { get; set; }
         WFResourceUpdater<T> updater;
         WFResourceFinisher finisher;
+        public bool IsGitHub
+        {
+            get => updater.Equals(WFResourceUpdaters<T>.GitHubShaDelegate);
+        }
 
         public async Task Update() =>
             await Task.Run(async () =>

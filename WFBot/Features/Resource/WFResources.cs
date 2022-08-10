@@ -249,7 +249,7 @@ namespace WFBot.Features.Resource
             // 我没时间写了, 就先不实现比较后刷新了
             void AddTask<T>(ref WFResource<T> obj, string url, string name, WebHeaderCollection header = default) where T : class
             {
-                var resource = WFResource<T>.Create(url, fileName: name, category: nameof(WMASearcher), header: header, updater: WFResourceUpdaters<T>.JustUpdateUpdater);
+                var resource = WFResource<T>.Create(url, fileName: name, category: nameof(WMASearcher), header: header, updater: WFResourceUpdaters<T>.JustUpdateDelegate);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -270,7 +270,7 @@ namespace WFBot.Features.Resource
                 header, 
                 ResourceLoaders<WFCD_All[]>.JsonDotNetLoader,
                 null,
-                WFResourceUpdaters<WFCD_All[]>.GitHubSHAUpdater);
+                WFResourceUpdaters<WFCD_All[]>.GitHubShaDelegate);
             if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WFCD_All)))
             {
                 var name = "WFCD/warframe-items";
@@ -307,7 +307,7 @@ namespace WFBot.Features.Resource
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class
             {
                 var path = $"{source}{name}";
-                var resource = WFResource<T>.Create(path, category: nameof(WFTranslator), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater);
+                var resource = WFResource<T>.Create(path, category: nameof(WFTranslator), null, null, null, null, WFResourceUpdaters<T>.GitHubShaDelegate);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -341,7 +341,7 @@ namespace WFBot.Features.Resource
             void AddTask<T>(ref WFResource<T> obj, string name) where T : class
             {
                 var path = $"{source}{name}";
-                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubSHAUpdater, WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
+                var resource = WFResource<T>.Create(path, category: nameof(WFBotApi), null, null, null, null, WFResourceUpdaters<T>.GitHubShaDelegate, WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
                 obj = resource;
                 tasks.Add(resource.WaitForInited());
             }
@@ -356,7 +356,7 @@ namespace WFBot.Features.Resource
                     nameof(WildcardAndSlang),
                     "WF_Sale_Wildcard.json",
                     resourceLoader: ResourceLoaders<WildcardAndSlang>.JsonDotNetLoader,
-                    updater: WFResourceUpdaters<WildcardAndSlang>.GitHubSHAUpdater,
+                    updater: WFResourceUpdaters<WildcardAndSlang>.GitHubShaDelegate,
                     finisher: WFResourceFinishers.UpdateTranslatorAndWildcardSearcher);
             if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WildcardAndSlang)))
             {

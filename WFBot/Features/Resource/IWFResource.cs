@@ -6,5 +6,8 @@ namespace WFBot.Features.Resource
     {
         Task Update();
         Task Reload(bool isFirstTime);
+        public string Category { get; }
+        public bool IsGitHub { get; }
+
     }
 }
