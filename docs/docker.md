@@ -60,5 +60,6 @@ adapterSettings:
 9. 运行 `sudo docker-compose up -d wfbot` 此时WFBot也将在docker容器内运行
 
 ## 如何启动和更新  
+**本教程顺便部署了一个 [Watchtower](https://github.com/containrrr/watchtower/) 实例, 将会每半个小时自动检查 mirai 和 WFBot的更新, 如果有更新将会自动重启容器完成自动更新.**  
 想要再次启动, 就直接输入 `sudo docker-compose up -d` , WFBot 将会在 mirai 启动后自动连接.  
-想要一键更新 WFBot, 直接输入 `sudo docker-compose pull wfbot && sudo docker-compose up -d`
+想要手动更新 WFBot, 直接输入 `sudo docker-compose pull wfbot && sudo docker-compose up -d`

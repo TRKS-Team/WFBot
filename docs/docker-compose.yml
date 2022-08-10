@@ -8,7 +8,10 @@ services:
       - ./config:/app/config
       - ./data:/app/data
       - ./logs:/app/logs
-      - ./bots:/app/bots      
+      - ./bots:/app/bots
+    deploy:
+      labels:
+        com.centurylinklabs.watchtower.enable: true
   wfbot:
     restart: unless-stopped
     image: trksteam/wfbot
@@ -17,4 +20,15 @@ services:
         - ./WFBotLogs:/app/WFBotLogs
         - ./WFOfflineResource:/app/WFOfflineResource
         - ./WFBotConfigs:/app/WFBotConfigs
+    deploy:
+      labels:
+        com.centurylinklabs.watchtower.enable: true
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_POLL_INTERVAL: 1800
+      WATCHTOWER_CLEANUP:  true
 
