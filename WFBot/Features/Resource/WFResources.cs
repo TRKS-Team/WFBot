@@ -111,7 +111,7 @@ namespace WFBot.Features.Resource
         public static WFContentApi WFContent { get; private set; }
 
         public static WeaponInfo[] Weaponinfos { get; private set; }
-        public static WildcardAndSlang WildcardAndSlang => RWildcardAndSlang.Value;
+        public static WildcardAndSlang WildcardAndSlang => RWildcardAndSlang?.Value;
         public static WFResource<WildcardAndSlang> RWildcardAndSlang { get; private set; }
         public static WildCardSearcher WildCardSearcher { get; private set; }
         private static WeaponInfo[] GetWeaponInfos()

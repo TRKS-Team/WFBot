@@ -24,7 +24,8 @@ namespace WFBot.Features.Common
     public class WildCardSearcherCache
     {
         public string CacheToken { get; set; } = "";
-        public List<KeyValuePair<string, Sale>> SearchPairs { get; set; } = new List<KeyValuePair<string, Sale>>();
+        //public List<KeyValuePair<string, Sale>> SearchPairs { get; set; } = new List<KeyValuePair<string, Sale>>();
+        public List<KeyValuePair<string, int>> SearchPairsV2 { get; set; } = new List<KeyValuePair<string, int>>();
     }
 
     public class WildCardSearcher
@@ -85,11 +86,13 @@ namespace WFBot.Features.Common
                 cache = new WildCardSearcherCache();
             }
 
-            if (cache.CacheToken == cacheToken)
+            var ids = sales.ToDictionary(s => s.id);
+
+            if (cache.CacheToken == cacheToken && cache.SearchPairsV2.Count != 0)
             {
-                foreach (var item in cache.SearchPairs)
+                foreach (var item in cache.SearchPairsV2)
                 {
-                    PutSearchers(item.Key, item.Value);
+                    PutSearchers(item.Key, ids[item.Value]);
                 }
                 
                 Trace.WriteLine($"黑话辞典穷举耗时（从缓存载入） '{sw.Elapsed.TotalSeconds:F3}s'");
@@ -103,7 +106,7 @@ namespace WFBot.Features.Common
                 _tree.Put(word, index);
                 TreeSalesDic[index] = item;
             }
-            cache.SearchPairs = new List<KeyValuePair<string, Sale>>();
+            cache.SearchPairsV2 = new List<KeyValuePair<string, int>>();
             cache.CacheToken = cacheToken;
 
             var conbinationslangs = Enumerable.Range(0, was.CombinationSlang.Count)
@@ -210,7 +213,7 @@ namespace WFBot.Features.Common
                         lock (locker)
                         {
                             PutSearchers(word, sale);
-                            cache.SearchPairs.Add(new KeyValuePair<string, Sale>(word, sale));
+                            cache.SearchPairsV2.Add(new KeyValuePair<string, int>(word, sale.id));
                         }
                     }
                     list.Clear();
