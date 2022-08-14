@@ -63,7 +63,7 @@ namespace WFBot.Features.Common
             sw.Start();
             _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
             _tree = new GeneralizedSuffixTree();
-            
+
             var cacheToken = JsonSerializer.Serialize(sales, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString() +
                              JsonSerializer.Serialize(was, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString();
 
@@ -220,7 +220,7 @@ namespace WFBot.Features.Common
             }
             catch (Exception e)
             {
-                Trace.WriteLine($"写入黑化辞典缓存失败：{e}");
+                Trace.WriteLine($"写入黑话辞典缓存失败：{e}");
             }
             sw.Stop();
             Trace.WriteLine($"黑话辞典穷举耗时 '{sw.Elapsed.TotalSeconds:F1}s'");
@@ -229,16 +229,16 @@ namespace WFBot.Features.Common
     }
     public class WildcardAndSlang
     {
-        public List<KeyValuePair<string, List<string>>> Slang = new List<KeyValuePair<string, List<string>>>();
-        public List<SlangWithParams> CombinationSlang = new List<SlangWithParams>();
-        public List<string> Suffixes = new List<string>();
+        public List<KeyValuePair<string, List<string>>> Slang { get; set; } = new List<KeyValuePair<string, List<string>>>();
+        public List<SlangWithParams> CombinationSlang { get; set; } = new List<SlangWithParams>();
+        public List<string> Suffixes { get; set; } = new List<string>();
     }
     public class SlangWithParams
     {
-        public KeyValuePair<string, string> Pair = new KeyValuePair<string, string>();
-        public bool Reverse = false;
-        public int Times = Int32.MaxValue;
-        public MatchCondition Condition = new MatchCondition();
+        public KeyValuePair<string, string> Pair { get; set; } = new KeyValuePair<string, string>();
+        public bool Reverse { get; set; } = false;
+        public int Times { get; set; } = Int32.MaxValue;
+        public MatchCondition Condition { get; set; } = new MatchCondition();
     }
 
     public class MatchCondition
