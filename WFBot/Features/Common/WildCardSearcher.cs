@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -48,14 +49,19 @@ namespace WFBot.Features.Common
             return obj;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public List<Sale> SuffixSearch(string text)
         {
             return _tree.Search(text.Format()).Select(t => TreeSalesDic[t]).Distinct().ToList();
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public List<Sale> PininSearch(string text)
         {
             return _searcher.Search(text.Format()).Distinct().ToList();
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void UpdateSearcher()
         {
             var sw = new Stopwatch();
@@ -243,8 +249,8 @@ namespace WFBot.Features.Common
 
     public class MatchCondition
     {
-        public List<string> Target;
-        public Case Case = Case.None;
+        public List<string> Target { get; set; }
+        public Case Case { get; set; } = Case.None;
     }
 
     public enum Case
