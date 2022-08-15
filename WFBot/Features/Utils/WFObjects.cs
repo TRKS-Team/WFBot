@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using WFBot.Features.Resource;
+using WFBot.Utils;
 
 namespace WFBot.Features.Utils
 {
@@ -390,14 +391,16 @@ namespace WFBot.Features.Utils
 
    public partial class ExportRelicArcane
    {
-       public string UniqueName { get; set; }
        public string Name { get; set; }
+       public RelicReward[] RelicRewards { get; set; }
+#if DEBUG
+       public string UniqueName { get; set; }
        public bool CodexSecret { get; set; }
        public string Description { get; set; }
-       public RelicReward[] RelicRewards { get; set; }
        public bool? ExcludeFromCodex { get; set; }
        public string Rarity { get; set; }
        public LevelStat[] LevelStats { get; set; }
+#endif
    }
 
    public partial class LevelStat
@@ -412,8 +415,7 @@ namespace WFBot.Features.Utils
        public long Tier { get; set; }
        public long ItemCount { get; set; }
    }
-
-
+    
     public class WFCD_All
     {
         public string name { get; set; }
@@ -699,13 +701,12 @@ namespace WFBot.Features.Utils
     {
         public string uniqueName { get; set; }
         public string name { get; set; }
+#if DEBUG
         public string description { get; set; }
         public int itemCount { get; set; }
         public string imageName { get; set; }
         public bool tradable { get; set; }
-#if DEBUG
         public WFCD_Drop1[] drops { get; set; }
-#endif
         public bool excludeFromCodex { get; set; }
         public float[] damagePerShot { get; set; }
         public float totalDamage { get; set; }
@@ -757,6 +758,7 @@ namespace WFBot.Features.Utils
         public string stancePolarity { get; set; }
         public bool vaulted { get; set; }
         public float statusChance { get; set; }
+#endif
     }
 
     public class Damagetypes1

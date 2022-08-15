@@ -6,6 +6,7 @@ using Sisters.WudiLib.WebSocket;
 using WFBot.Features.Events;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using Timer = System.Threading.Timer;
 
 namespace WFBot.Orichalt.OrichaltConnectors
 {
