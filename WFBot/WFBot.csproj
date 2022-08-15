@@ -1,14 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
   </ItemGroup>
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <SatelliteResourceLanguages>zh-CN;zh-Hans</SatelliteResourceLanguages>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+      <ServerGarbageCollection>false</ServerGarbageCollection>
+	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;MSB3042</NoWarn>
@@ -61,6 +63,8 @@
 
   <ItemGroup>
     <Folder Include="Dll\" />
+    <Folder Include="WebUI\wwwroot\" />
+    <Folder Include="WebUI\" />
   </ItemGroup>
 
   <ItemGroup>
