@@ -1,0 +1,56 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">WFBot @PureVersionString</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> 主页
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="settings">
+                <span class="oi oi-cog" aria-hidden="true"></span> 设置
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="feature">
+                <span class="oi oi-puzzle-piece" aria-hidden="true"></span> 功能
+            </NavLink>
+        </div>
+
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="miraisettings">
+                <span class="oi oi-cog" aria-hidden="true"></span> Mirai 设置
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="onebotsettings">
+                <span class="oi oi-cog" aria-hidden="true"></span> Onebot 设置
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+        
+    }
+    
+    private static string PureVersionString = WFBotCore.Version.Split('+').First();
+    
+
+}
