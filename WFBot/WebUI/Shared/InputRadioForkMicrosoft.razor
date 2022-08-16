@@ -1,0 +1,28 @@
+﻿@using System.Globalization
+@typeparam TValue
+
+<input class="form-check-input" id="@id" type="radio" value="@SelectedValue" 
+       checked="@(SelectedValue.Equals(TrueValue))" @onchange="OnChange"/>
+       
+
+<!--又写了一个小时 https://stackoverflow.com/questions/64365100/how-to-bind-radio-buttons-in-blazor-->
+@code {
+    [Parameter]
+    public string id { get; set; }
+    [Parameter]
+    public TValue SelectedValue { get; set; }
+    [Parameter]
+    public TValue TrueValue { get; set; }
+
+    private void OnChange(ChangeEventArgs args)
+    {
+
+        TrueValueChanged.InvokeAsync(SelectedValue);
+    }
+    
+
+    [Parameter]
+    public EventCallback<TValue> TrueValueChanged { get; set; }
+    
+    
+}

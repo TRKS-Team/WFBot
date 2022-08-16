@@ -1,0 +1,54 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Server.Circuits
+@using System.Diagnostics
+@implements IDisposable
+<PageTitle>主页</PageTitle>
+<h1>WFBot Dashboard</h1>
+<h2>状态</h2>
+<p>已经运行了 @((DateTime.Now - WFBotCore.StartTime).ToString("d' 天 'hh\\:mm\\:ss")).</p>
+<p>当前内存占用 @((Environment.WorkingSet / 1024.0 / 1024.0).ToString("F2")) MB.</p>
+<!--TODO 写一个检测是否最新版-->
+<br>
+<h2>日志</h2>
+
+<div class="card">
+    <div class="card-body " >
+        <div class="" style="">
+            <pre style="max-height: 400px; display: flex; flex-direction: column-reverse; /*这个玩意找了我两个小时*/ white-space:pre-wrap; word-break: break-word">
+            <code>
+                @foreach (var c in WebLogTraceListener.Lines)
+                {
+                    @c
+                }
+            </code>
+        </pre>
+        </div>
+    </div>
+</div>
+
+
+@code
+{
+    Timer updateTimer;
+    protected override void OnInitialized()
+    {
+        WFBotWebUIServer.DataChanged += HandleDataChanged;
+        updateTimer = new Timer(Tick, null, 0, 1000); 
+    }
+
+    void Tick(object state)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        WFBotWebUIServer.DataChanged -= HandleDataChanged;
+        updateTimer?.Dispose();
+    }
+
+    public void HandleDataChanged(object sender, EventArgs args)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}

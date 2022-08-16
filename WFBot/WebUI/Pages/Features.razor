@@ -1,0 +1,51 @@
+﻿@page "/feature"
+@using WFBot.Orichalt
+<PageTitle>一些功能</PageTitle>
+
+<div>
+    <h2>超级广播</h2>
+    <input type="text" class="form-control my-3" @bind="broadcastContent"/>
+    <button class="btn btn-danger" @onclick="() => ModalShow()">发送！</button>
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">确定？</h4>
+                    <button type="button" class="btn-close" @onclick="@ModalCancel" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <p>你确定要发送超级广播？</p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>Delete</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // 抄代码 https://gist.github.com/conficient/ba98d1662c659e170ec16650acea05c8
+    string broadcastContent;  
+    bool showModal = false;
+
+    void ModalShow() => showModal = true;
+    void ModalCancel() => showModal = false;
+    void ModalOk()
+    {
+        Console.WriteLine(broadcastContent);
+        showModal = false;
+    }
+}

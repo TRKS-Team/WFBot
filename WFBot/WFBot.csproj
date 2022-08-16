@@ -11,6 +11,7 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
       <ServerGarbageCollection>false</ServerGarbageCollection>
 	  <ImplicitUsings>enable</ImplicitUsings>
+	  <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1701;1702;MSB3042</NoWarn>
@@ -47,6 +48,7 @@
     <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
     <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Lib.Harmony" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
     <PackageReference Include="Mirai.Net" Version="2.4.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -57,14 +59,18 @@
     <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
   </ItemGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Include="wwwroot\**" />
+		<Content Remove="wwwroot\css\site.css" />
+		<EmbeddedResource Update="Windows/Settings.resx" ExcludeFromManifest="true" />
+	</ItemGroup>
+
   <ItemGroup>
     <Compile Update="Windows\Settings.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Dll\" />
-    <Folder Include="WebUI\wwwroot\" />
-    <Folder Include="WebUI\" />
   </ItemGroup>
 
   <ItemGroup>

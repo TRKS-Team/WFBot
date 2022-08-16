@@ -30,14 +30,16 @@ namespace WFBot.Features.Resource
         // 这里其实应该加锁
         internal static async Task InitWFResource()
         {
+#if !DEBUG
             if (WebHelper.TryGet("https://wfbot.kraber.top:8888/Resources/").Result.IsOnline)
             {
                 IsKraber = true;
                 Trace.WriteLine("已核实CDN链接正常, WFBot将会使用自建CDN下载资源.");
             }
+#endif
             WFChineseApi = new WFChineseAPI();
             ThreadPool.SetMinThreads(64, 64);
-
+                
             await Task.WhenAll(
                 Task.Run(SetWFCDResources),
                 Task.Run(SetWFContentApi),

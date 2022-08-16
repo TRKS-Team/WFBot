@@ -23,6 +23,7 @@ using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
+using WFBot.WebUI;
 using WFBot.Windows;
 
 #pragma warning disable 164
@@ -40,7 +41,7 @@ namespace WFBot
         https://github.com/TRKS-Team/WFBot
             var skipPressKey = false;
             var setCurrentFolder = false;
-            
+
             foreach (var s in args)
             {
                 switch (s)
@@ -108,6 +109,8 @@ namespace WFBot
         public static bool IsOfficial { get; }
         public static bool IsShuttingDown { get; private set; }
         public static bool IsTest { get; private set; }
+        public static WFBotWebUIServer WebUIServer { get; private set; }
+        public static DateTime StartTime { get; } = DateTime.Now;
 
         static WFBotCore()
         {
@@ -163,7 +166,7 @@ namespace WFBot
                     default:
                         if (!(new CustomCommandMatcherHandler(text.TrimStart('/'))).ProcessCommandInput().Result.matched)
                         {
-                            // ConnectorManager.Connector.OnCommandLineInput(text);
+                            // todo ConnectorManager.Connector.OnCommandLineInput(text);
                         }
                         break;
                 }
@@ -284,9 +287,19 @@ namespace WFBot
             Trace.WriteLine("加载配置文件...");
             Config.Update();
             Config.Save();
+
+            // 初始化 WebUI
+            WebUIServer = new WFBotWebUIServer();
+            WebUIServer.Run();
+
             if (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
                 Console.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Console.WriteLine("你也可以使用 WebUI 来进行设置，详情请查看文档.");
+                Console.WriteLine("设置完后请重启 WFBot.");
+                Thread.CurrentThread.Join();
+
+
                 Shutdown();
             }
             /*while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
@@ -389,6 +402,7 @@ namespace WFBot
                 Trace.Listeners.Add(fileListener);
             }
             Trace.Listeners.Add(new ConsoleTraceListener());
+            Trace.Listeners.Add(new WebLogTraceListener());
             Trace.AutoFlush = true;
         }
 

@@ -1,0 +1,193 @@
+﻿@page "/settings"
+@using WFBot.Orichalt
+<PageTitle>设置</PageTitle>
+
+<h1>设置</h1>
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="() => Config.Save()">保存</button>
+</div>
+
+
+<div class="card mb-3">
+    <div class="card-body "  >
+            <div style="max-height: 600px; overflow-y: auto; overflow-x: hidden;">
+                <fieldset style="margin-right: 20px">
+
+                    <div class="mb-2">
+                        <div class="form-check form-switch">
+                            <input @bind="IsSlashRequired" class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                是否需要在命令前加/
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <div class="form-check form-switch">
+                            <input @bind="NotifyBeforeResult" class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                长时间查询前通知
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="form-check form-switch">
+                            <input @bind="UpdateLexion" class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                是否需要更新词库
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="form-check form-switch">
+                            <input @bind="IsAlertRequiredRareItem" class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                是否需要提醒稀有物品
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="form-check form-switch">
+                            <input @bind="IsThirdPartyWM" class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                使用中转WM
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">用于修改机器人的口令</label>
+                        <div class="col-sm-10">
+                            <input @bind="code" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">接收所有提示和报错的私聊QQ号</label>
+                        <div class="col-sm-10">
+                            <input @bind="qq" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">GitHub Token</label>
+                        <div class="col-sm-10">
+                            <input @bind="githubToken" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">ClientID</label>
+                        <div class="col-sm-10">
+                            <input @bind="clientId" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">ClientSecret</label>
+                        <div class="col-sm-10">
+                            <input @bind="clientSecret" type="text" class="form-control">
+                        </div>
+                    </div>
+                   
+
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">每分钟每个群调用次数上限(0为无限制)</label>
+                        <div class="col-sm-10">
+                            <input @bind="CallperMinute" type="number" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">紫卡发送次数</label>
+                        <div class="col-sm-10">
+                            <input @bind="WFACount" type="number" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">每次发送的WM数量</label>
+                        <div class="col-sm-10">
+                            <input @bind="wmCount" type="number" class="form-control">
+                        </div>
+                    </div>
+
+
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2">连接器</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="MessagePlatform.Unknown" @bind-TrueValue="platform" id="mahRadio3"/>
+                                <label class="form-check-label" style="color: darkgray" for="mahRadio3">未选择</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="MessagePlatform.Test" @bind-TrueValue="platform" id="mahRadio2"/>
+                                <label class="form-check-label" style="color: darkgrey" for="mahRadio2">测试模式</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="MessagePlatform.Kaiheila" @bind-TrueValue="platform" id="kaiheilaRadio"/>
+                                <label class="form-check-label" for="kaiheilaRadio">开黑啦/KOOK</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="MessagePlatform.MiraiHTTP" @bind-TrueValue="platform" id="mahRadio"/>
+                                <label class="form-check-label" for="mahRadio">Mirai-API-Http v2</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="MessagePlatform.OneBot" @bind-TrueValue="platform" id="mahRadio1"/>
+                                <label class="form-check-label" for="mahRadio1">Onebot</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2">平台</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="Platform.PC" @bind-TrueValue="wfplatform" id="pradio1"/>
+                                <label class="form-check-label" for="pradio1">PC</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="Platform.NS" @bind-TrueValue="wfplatform" id="pradio2"/>
+                                <label class="form-check-label" for="pradio2">NS</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="Platform.PS4" @bind-TrueValue="wfplatform" id="pradio3"/>
+                                <label class="form-check-label" for="pradio3">PS4</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <InputRadioForkMicrosoft SelectedValue="Platform.XBOX" @bind-TrueValue="wfplatform" id="pradio4"/>
+                                <label class="form-check-label" for="pradio4">Xbox</label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                
+                
+                
+
+            </div>
+    </div>
+</div>
+
+@code
+{
+    Config config => Config.Instance;
+    MessagePlatform platform { get => config.Miguel_Platform; set => config.Miguel_Platform = value; }
+    Platform wfplatform
+    {
+        get => config.Platform;
+        set => config.Miguel_Platform = platform;
+    }
+    string code { get => config.Code; set => config.Code = value; }
+    string qq { get => config.QQ; set => config.QQ = value; }
+    bool IsSlashRequired { get => config.IsSlashRequired; set => config.IsSlashRequired = value; }
+    int CallperMinute { get => config.CallperMinute; set => config.CallperMinute = value; }
+    bool IsThirdPartyWM { get => config.IsThirdPartyWM; set => config.IsThirdPartyWM = value; }
+    bool IsAlertRequiredRareItem { get => config.IsAlertRequiredRareItem; set => config.IsAlertRequiredRareItem = value; }
+    bool UpdateLexion { get => config.UpdateLexion; set => config.UpdateLexion = value; }
+    string githubToken { get => config.GitHubOAuthKey; set => config.GitHubOAuthKey = value; }
+    int wmCount { get => config.WMSearchCount; set => config.WMSearchCount = value; }
+    int WFACount { get => config.WFASearchCount; set => config.WFASearchCount = value; }
+    string clientId { get => config.ClientId; set => config.ClientId = value; }
+    string clientSecret { get => config.ClientSecret; set => config.ClientSecret = value; }
+    bool NotifyBeforeResult { get => config.NotifyBeforeResult; set => config.NotifyBeforeResult = value; }
+}

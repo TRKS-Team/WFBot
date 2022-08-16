@@ -42,10 +42,10 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public string Host = "127.0.0.1";
         public ushort Port = 8080;
         public string AuthKey = "";
+        public long BotQQ = default;
 
         public bool AutoRevoke = false;
         public int RevokeTimeInSeconds = 60;
-        public long BotQQ = default;
     }
 
     public class MiraiHTTPCore
