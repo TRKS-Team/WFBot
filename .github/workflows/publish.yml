@@ -29,7 +29,7 @@ jobs:
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.CYBOT_GITHUB_TOKEN }}
       - name: Reset Tags
         run: git fetch --tags
 
