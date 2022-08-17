@@ -166,7 +166,7 @@ namespace WFBot.Orichalt
                     MiraiHTTPContexts.Remove(context.UUID);
                     break;
                 case MessagePlatform.MiraiHTTPV1:
-                    MiraiHTTPContexts.Remove(context.UUID);
+                    MiraiHTTPV1Contexts.Remove(context.UUID);
                     break;
             }
             // 往下扩展各个平台

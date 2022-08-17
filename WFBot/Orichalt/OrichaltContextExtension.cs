@@ -26,7 +26,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.MiraiHTTPV1:
                     var miraihttpcontext1 = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPV1Context(o);
                     return
-                        $"平台[MiraiHTTP] 群[{miraihttpcontext1.Group}] 用户[{miraihttpcontext1.SenderID}] 内容[{miraihttpcontext1.RawMessage}]";
+                        $"平台[MiraiHTTPV1] 群[{miraihttpcontext1.Group}] 用户[{miraihttpcontext1.SenderID}] 内容[{miraihttpcontext1.RawMessage}]";
             }
 
             return "";
