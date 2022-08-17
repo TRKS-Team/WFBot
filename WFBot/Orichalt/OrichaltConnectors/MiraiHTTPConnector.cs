@@ -57,7 +57,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
             if (config.BotQQ == default)
             {
                 Console.WriteLine("请在Miraiv2Config.json里填入机器人的QQ号.");
-                Console.WriteLine("按任意键继续");
+                Console.WriteLine("注: 也可以使用WebUI来配置捏.");
+                Console.WriteLine("按任意键关闭");
                 Console.ReadKey();
                 WFBotCore.Instance.Shutdown();
             }
@@ -65,7 +66,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
             if (config.AuthKey.IsNullOrWhiteSpace())
             {
                 Console.WriteLine("请在Miraiv2Config.json将mirai控制台内生成的verifyKey填入AuthKey内.");
-                Console.WriteLine("按任意键继续");
+                Console.WriteLine("注: 也可以使用WebUI来配置捏.");
+                Console.WriteLine("按任意键关闭");
                 Console.ReadKey();
                 WFBotCore.Instance.Shutdown();
             }

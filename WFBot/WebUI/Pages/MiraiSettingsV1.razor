@@ -52,6 +52,22 @@ else
                             <input @bind="config.BotQQ" type="number" class="form-control">
                         </div>
                     </div>
+                    <div class="mb-2">
+                        <div class="form-check form-switch">
+                            <input @bind="config.AutoRevoke" class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                是否自动撤回
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">自动撤回的时间(单位: 秒)</label>
+                        <div class="col-sm-10">
+                            <input @bind="config.RevokeTimeInSeconds" type="number" class="form-control">
+
+                        </div>
+                    </div>
+
 
                     
                 </fieldset>
