@@ -30,7 +30,7 @@ namespace WFBot.Features.Utils
         {
             if (Config.Instance.QQ.IsNumber())
                 MiguelNetwork.SendDebugInfo(content);
-            Trace.WriteLine($"{content}", "Message");
+            Trace.WriteLine($"{content}");
         }
 
         /*public static void SendPrivate(UserID qq, string content)
