@@ -45,7 +45,7 @@
     void ModalCancel() => showModal = false;
     void ModalOk()
     {
-        Console.WriteLine(broadcastContent);
+        MiguelNetwork.Broadcast(broadcastContent);
         showModal = false;
     }
 }
