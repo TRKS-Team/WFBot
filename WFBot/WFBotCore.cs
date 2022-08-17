@@ -320,6 +320,9 @@ namespace WFBot
                 case MessagePlatform.MiraiHTTP:
                     Console.WriteLine("服务协议: MiraiHTTPv2");
                     break;
+                case MessagePlatform.MiraiHTTPV1:
+                    Console.WriteLine("服务协议: MiraiHTTPv1");
+                    break;
                 case MessagePlatform.Kaiheila:
                     Console.WriteLine("服务协议: 开黑啦");
                     break;

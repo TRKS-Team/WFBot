@@ -23,6 +23,10 @@ namespace WFBot.Orichalt
                     return
                         $"平台[MiraiHTTP] 群[{miraihttpcontext.Group}] 用户[{miraihttpcontext.SenderID}] 内容[{miraihttpcontext.RawMessage}]";
 
+                case MessagePlatform.MiraiHTTPV1:
+                    var miraihttpcontext1 = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPV1Context(o);
+                    return
+                        $"平台[MiraiHTTP] 群[{miraihttpcontext1.Group}] 用户[{miraihttpcontext1.SenderID}] 内容[{miraihttpcontext1.RawMessage}]";
             }
 
             return "";
@@ -42,6 +46,10 @@ namespace WFBot.Orichalt
                 case MessagePlatform.MiraiHTTP:
                     var miraihttpcontext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
                     return $"QQ:{miraihttpcontext.SenderID}";
+
+                case MessagePlatform.MiraiHTTPV1:
+                    var miraihttpcontext1 = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPV1Context(o);
+                    return $"QQ:{miraihttpcontext1.SenderID}";
             }
 
             return "";

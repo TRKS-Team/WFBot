@@ -1,0 +1,72 @@
+﻿@page "/miraisettingsv1"
+@using WFBot.Orichalt
+@using WFBot.Orichalt.OrichaltConnectors
+@using Microsoft.AspNetCore.Components
+<PageTitle>设置</PageTitle>
+
+<h1>设置</h1>
+
+@if (Config.Instance.Miguel_Platform != MessagePlatform.MiraiHTTPV1)
+{
+    <div class="alert alert-danger mb-3" role="alert">
+        请先将连接器切换到 Mirai v1
+    </div>
+    <button class="btn btn-primary" @onclick="() => { Config.Instance.Miguel_Platform = MessagePlatform.MiraiHTTPV1; Config.Save(); }">点这里来将连接器切换到 Mirai v1</button>
+}
+else
+{
+    
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="() => MiraiV1Config.Save()">保存</button>
+    </div>
+
+
+    <div class="card mb-3">
+        <div class="card-body " >
+            <div style="max-height: 600px; overflow-y: auto; ">
+                <fieldset>
+                    
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">Host</label>
+                        <div class="col-sm-10">
+                            <input @bind="config.Host" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">Port</label>
+                        <div class="col-sm-10">
+                            <input @bind="config.Port" type="number" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">AuthKey</label>
+                        <div class="col-sm-10">
+                            <input @bind="config.AuthKey" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-2 row">
+                        <label class="col-sm-2 col-form-label">机器人的QQ号</label>
+                        <div class="col-sm-10">
+                            <input @bind="config.BotQQ" type="number" class="form-control">
+                        </div>
+                    </div>
+
+                    
+                </fieldset>
+                
+                
+                
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@code
+{
+    MiraiV1Config config => MiraiV1Config.Instance;
+}
