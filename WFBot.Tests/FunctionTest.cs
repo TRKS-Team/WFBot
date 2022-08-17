@@ -90,6 +90,8 @@ namespace WFBot.Tests
             Assert.IsTrue(WMSearcher.Search("hlesptbsjgy", ref test)); // 头部替换成头部神经光元
             test.Clear();
             Assert.IsTrue(WMSearcher.Search("电男p", ref test)); // 黑话
+            test.Clear();
+            Assert.IsTrue(WMSearcher.Search("瓦尔基里蓝图", ref test)); // 部件去p
         }
     }
 

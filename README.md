@@ -31,7 +31,7 @@
 
 ## 🚧 如何部署
 
-[**🐳Docker 部署**](docs/docker.md)  
+[**🐳Docker 部署(支持自动更新)**](docs/docker.md)  
 
 [**🖥️普通部署指南**](docs/install.md)   
 [**🐧来自社区的 Linux 部署指南**](https://github.com/Wapriaily/WFBot/blob/wapriaily/docs/Liunx-install.md)
