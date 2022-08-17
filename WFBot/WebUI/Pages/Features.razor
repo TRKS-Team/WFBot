@@ -1,7 +1,7 @@
 ﻿@page "/feature"
 @using WFBot.Orichalt
 <PageTitle>一些功能</PageTitle>
-
+<h1>功能</h1>
 <div>
     <h2>超级广播</h2>
     <input type="text" class="form-control my-3" @bind="broadcastContent"/>
@@ -27,8 +27,8 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn" @onclick="@ModalCancel" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>Delete</button>
+                    <button type="button" class="btn" @onclick="@ModalCancel" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>发送</button>
                 </div>
 
             </div>

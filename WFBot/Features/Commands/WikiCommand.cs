@@ -33,7 +33,10 @@ namespace WFBot.Features.Commands
             var words = wiki.query.search.Select(s => s.title).Where(w => w.Format() == word.Format()).ToArray();
             if (words.Any())
             {
+                // it's not stupid if it works https://stackoverflow.com/questions/4396598/whats-the-difference-between-escapeuristring-and-escapedatastring/34189188#34189188
+#pragma warning disable SYSLIB0013
                 return $"为指挥官献上[{word}]的链接: {wikilink + Uri.EscapeUriString(words.First()).Replace("'", "%27")}";
+#pragma warning restore SYSLIB0013
             }
             var sb = new StringBuilder();
             sb.AppendLine($"Wiki页面 {word} 不存在.");

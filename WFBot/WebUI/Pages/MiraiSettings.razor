@@ -5,13 +5,24 @@
 <PageTitle>设置</PageTitle>
 
 <h1>设置</h1>
-<div class="mb-3">
-    <button class="btn btn-primary" @onclick="() => MiraiConfig.Save()">保存</button>
-</div>
+
+@if (Config.Instance.Miguel_Platform != MessagePlatform.MiraiHTTP)
+{
+    <div class="alert alert-danger mb-3" role="alert">
+        请先将连接器切换到 Mirai
+    </div>
+    <button class="btn btn-primary" @onclick="() => { Config.Instance.Miguel_Platform = MessagePlatform.MiraiHTTP; Config.Save(); }">点这里来将连接器切换到 Mirai</button>
+}
+else
+{
+    
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="() => MiraiConfig.Save()">保存</button>
+    </div>
 
 
-<div class="card mb-3">
-    <div class="card-body " >
+    <div class="card mb-3">
+        <div class="card-body " >
             <div style="max-height: 600px; overflow-y: auto; ">
                 <fieldset>
                     
@@ -19,26 +30,26 @@
                     <div class="mb-2 row">
                         <label class="col-sm-2 col-form-label">Host</label>
                         <div class="col-sm-10">
-                            <input @bind="Host" type="text" class="form-control">
+                            <input @bind="config.Host" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="mb-2 row">
                         <label class="col-sm-2 col-form-label">Port</label>
                         <div class="col-sm-10">
-                            <input @bind="Port" type="number" class="form-control">
+                            <input @bind="config.Port" type="number" class="form-control">
                         </div>
                     </div>
                     <div class="mb-2 row">
                         <label class="col-sm-2 col-form-label">AuthKey</label>
                         <div class="col-sm-10">
-                            <input @bind="AuthKey" type="text" class="form-control">
+                            <input @bind="config.AuthKey" type="text" class="form-control">
                         </div>
                     </div>
 
                     <div class="mb-2 row">
                         <label class="col-sm-2 col-form-label">机器人的QQ号</label>
                         <div class="col-sm-10">
-                            <input @bind="BotQQ" type="number" class="form-control">
+                            <input @bind="config.BotQQ" type="number" class="form-control">
                         </div>
                     </div>
 
@@ -49,14 +60,13 @@
                 
 
             </div>
+        </div>
     </div>
-</div>
+}
+
+
 
 @code
 {
     MiraiConfig config => MiraiConfig.Instance;
-    string Host { get => config.Host; set => config.Host = value; }
-    ushort Port { get => config.Port; set => config.Port = value; }
-    string AuthKey { get => config.AuthKey; set => config.AuthKey = value; }
-    long BotQQ { get => config.BotQQ; set => config.BotQQ = value; }
 }

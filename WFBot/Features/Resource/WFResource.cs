@@ -70,20 +70,23 @@ namespace WFBot.Features.Resource
 
     public static class WFResourceFinishers
     {
-        public static async Task UpdateWFTranslator()
+        public static Task UpdateWFTranslator()
         {
             WFResources.UpdateWFTranslator();
+            return Task.CompletedTask;
         }
 
-        public static async Task UpdateWildcardSearcher()
+        public static Task UpdateWildcardSearcher()
         {
             WFResources.WildCardSearcher.UpdateSearcher();;
+            return Task.CompletedTask;
         }
 
-        public static async Task UpdateTranslatorAndWildcardSearcher()
+        public static Task UpdateTranslatorAndWildcardSearcher()
         {
             UpdateWFTranslator();
             UpdateWildcardSearcher();
+            return Task.CompletedTask;
         }
     }
     public static class WFResourceUpdaters<T> where T : class
