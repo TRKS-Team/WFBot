@@ -255,8 +255,8 @@ namespace WFBot.Orichalt
                 case MessagePlatform.OneBot:
                     if (CheckCallPerMin(o))
                     {
-                        var oneBotContext = OrichaltContextManager.GetOneBotContext(o);
-                        OneBotSendToGroup(oneBotContext.Group, msg);
+                        var oneBotContext = OrichaltContextManager.GetOneBotContext(o); 
+                        _ = OneBotSendToGroupWithAutoRevoke(oneBotContext.Group, msg);
                         IncreaseCallCounts(o);
                     }
                     break;
@@ -268,7 +268,7 @@ namespace WFBot.Orichalt
                     if (CheckCallPerMin(o))
                     {
                         var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
-                        MiraiHTTPSendToGroup(miraiHTTPContext.Group, msg);
+                        MiraiHTTPSendToGroupWithAutoRevoke(miraiHTTPContext.Group, msg);
                         IncreaseCallCounts(o);
                     }
                     break;
@@ -346,26 +346,40 @@ namespace WFBot.Orichalt
         /// <param name="content">消息内容</param>
         public static void Broadcast(string content)
         {
-            switch (Platform)
+            Task.Factory.StartNew(() =>
             {
-                case MessagePlatform.OneBot:
-                    Task.Factory.StartNew(() =>
+                var count = 0;
+                foreach (var group in Config.Instance.WFGroupList)
+                {
+                    var sb = new StringBuilder();
+                    sb.Append("[WFBot通知] ");
+                    sb.AppendLine(content);
+                    if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
+                    // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                    switch (Platform)
                     {
-                        var count = 0;
-                        foreach (var group in Config.Instance.WFGroupList)
-                        {
-                            var sb = new StringBuilder();
-                            sb.Append("[WFBot通知] ");
-                            sb.AppendLine(content);
-                            if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
-                            // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                        case MessagePlatform.OneBot:
                             OneBotSendToGroup(group, sb.ToString().Trim());
-                            count++;
-                            Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
-                        }
-                    }, TaskCreationOptions.LongRunning);
-                    break;
-            }
+                            break;
+                        case MessagePlatform.MiraiHTTP:
+                            MiraiHTTPSendToGroup(group, sb.ToString().Trim());
+                            break;
+                        case MessagePlatform.Kaiheila:
+                            break;
+                        case MessagePlatform.QQChannel:
+                            break;
+                        case MessagePlatform.Test:
+                            break;
+                        case MessagePlatform.Unknown:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    count++;
+                    Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                }
+            }, TaskCreationOptions.LongRunning);
+
         }
 
         //
@@ -379,6 +393,19 @@ namespace WFBot.Orichalt
             if (previousMessageDic.ContainsKey(qq) && msg == previousMessageDic[qq]) return;
             previousMessageDic[qq] = msg;
             OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg);
+        }        
+        private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, string msg)
+        {
+            var qq = group.ID;
+            // 避免重复发送同一条消息
+            if (previousMessageDic.ContainsKey(qq) && msg == previousMessageDic[qq]) return;
+            previousMessageDic[qq] = msg;
+            var response = await OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg);
+            if (OneBotConfig.Instance.AutoRevoke)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(OneBotConfig.Instance.RevokeTimeInSeconds))
+                   .ContinueWith(t => { OneBotCore.OneBotClient.RecallMessageAsync(response); });
+            }
         }
         private static void OneBotSendToPrivate(UserID qq, string msg)
         {
@@ -390,7 +417,18 @@ namespace WFBot.Orichalt
             builder.Plain(msg);
             MessageManager.SendGroupMessageAsync(qq, builder.Build());
         }
-
+        private static void MiraiHTTPSendToGroupWithAutoRevoke(GroupID qq, string msg)
+        {
+            var builder = new MessageChainBuilder();
+            builder.Plain(msg);
+            if (MiraiConfig.Instance.AutoRevoke)
+            {
+                MessageManager.SendGroupMessageAsync(qq, builder.Build())
+                    .RecallAfter(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds));
+                return;
+            } 
+            MessageManager.SendGroupMessageAsync(qq, builder.Build());
+        }
         private static void MiraiHTTPSendToPrivate(UserID qq, string msg)
         {
             var builder = new MessageChainBuilder();

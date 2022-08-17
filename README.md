@@ -127,6 +127,7 @@
 | [WudiLib](https://github.com/int-and-his-friends/Sisters.WudiLib) | MIT | OntBot C# 连接 |
 | [GitVersion](https://github.com/GitTools/GitVersion) | MIT | 提供版本号支持 |
 | [Magick.NET](https://github.com/dlemstra/Magick.NET) | Apache-2.0 | 临时图片渲染 |
+| [Mirai.Net](https://github.com/SinoAHpx/Mirai.Net) | AGPL-3.0 | 新版 Mirai C# 连接 |
 ---
 
 Warframe 是 Digital Extremes Ltd. 的商标.

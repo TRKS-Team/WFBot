@@ -64,7 +64,9 @@ namespace WFBot
                         break;
                 }
             }
-
+#if DEBUG
+            setCurrentFolder = true;
+#endif
             if (setCurrentFolder)
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
