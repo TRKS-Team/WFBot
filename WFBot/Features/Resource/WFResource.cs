@@ -531,7 +531,7 @@ namespace WFBot.Features.Resource
             }
             catch
             {
-                Console.WriteLine("有一个或多个Jsdelivr资源请求错误, 将会更换全局下载源为WFBot镜像.");
+                Trace.WriteLine("有一个或多个Jsdelivr资源请求错误, 将会更换全局下载源为WFBot镜像.");
                 dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh",
                     "https://wfbot.kraber.top:8888/Resources"));
                 return dataString;

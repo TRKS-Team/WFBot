@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using Sisters.WudiLib.Posts;
@@ -106,20 +107,20 @@ namespace WFBot.Orichalt.OrichaltConnectors
             {
                 while (true)
                 {
-                    Console.WriteLine("OneBot连接失败, 将在5秒后重试···");
+                    Trace.WriteLine("OneBot连接失败, 将在5秒后重试···");
                     await Task.Delay(5000);
                     wsevent.StartListen();
                     if (!wsevent.IsAvailable)
                     {
                         continue;
                     }
-                    Console.WriteLine("OneBot已连接.");
+                    Trace.WriteLine("OneBot已连接.");
                     break;
                 }
             }
             else
             {
-                Console.WriteLine("OneBot已连接.");
+                Trace.WriteLine("OneBot已连接.");
             }
             /*while (true)
             {

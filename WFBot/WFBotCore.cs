@@ -152,7 +152,7 @@ namespace WFBot
                 var text = Console.ReadLine();
                 if (text == null)
                 {
-                    Console.WriteLine("WORKAROUND: 检测到空控制台输入，将不再读取控制台输入。这可能是因为 WFBot 运行在 Docker 下。如果你在正常情况下看到这个错误，请汇报它。");
+                    Trace.WriteLine("WORKAROUND: 检测到空控制台输入，将不再读取控制台输入。这可能是因为 WFBot 运行在 Docker 下。如果你在正常情况下看到这个错误，请汇报它。");
                     Thread.CurrentThread.Join();
                 }
 
@@ -296,11 +296,15 @@ namespace WFBot
 
             if (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
-                Console.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
-                Console.WriteLine("你也可以使用 WebUI 来进行设置，详情请查看文档.");
-                Console.WriteLine("设置完后请重启 WFBot.");
+                Trace.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Trace.WriteLine("你也可以使用 WebUI 来进行设置，详情请查看文档.");
+                Trace.WriteLine("设置完后请重启 WFBot.");
+                if (OperatingSystem.IsWindows())
+                {
+                    Process.Start(new ProcessStartInfo($"http://localhost:{WFBotWebUIServer.GetServerPort()}")
+                        {UseShellExecute = true});
+                }
                 Thread.CurrentThread.Join();
-
 
                 Shutdown();
             }
@@ -317,22 +321,22 @@ namespace WFBot
             switch (Config.Instance.Miguel_Platform)
             {
                 case MessagePlatform.OneBot:
-                    Console.WriteLine("服务协议: Onebot");
+                    Trace.WriteLine("服务协议: Onebot");
                     break;
                 case MessagePlatform.MiraiHTTP:
-                    Console.WriteLine("服务协议: MiraiHTTPv2");
+                    Trace.WriteLine("服务协议: MiraiHTTPv2");
                     break;
                 case MessagePlatform.MiraiHTTPV1:
-                    Console.WriteLine("服务协议: MiraiHTTPv1");
+                    Trace.WriteLine("服务协议: MiraiHTTPv1");
                     break;
                 case MessagePlatform.Kaiheila:
-                    Console.WriteLine("服务协议: 开黑啦");
+                    Trace.WriteLine("服务协议: 开黑啦");
                     break;
                 case MessagePlatform.QQChannel:
-                    Console.WriteLine("服务协议: QQ频道");
+                    Trace.WriteLine("服务协议: QQ频道");
                     break;
                 case MessagePlatform.Test:
-                    Console.WriteLine("服务协议: 测试模式");
+                    Trace.WriteLine("服务协议: 测试模式");
                     break;
             }
             Trace.WriteLine("加载米格尔网络...");
@@ -383,13 +387,13 @@ namespace WFBot
                 {
                     var msg = $"*************警告: 你的系统时间与世界时间相差了1分钟以上, 具体来说是{timeSpan.TotalMinutes}分钟, 请调整系统时间, 否则可能会造成通知不精确.";
                     Messenger.SendDebugInfo(msg);
-                    Console.WriteLine(msg);
+                    Trace.WriteLine(msg);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("时间检查出错:");
-                Console.WriteLine(e);
+                Trace.WriteLine("时间检查出错:");
+                Trace.WriteLine(e);
             }
 
         }

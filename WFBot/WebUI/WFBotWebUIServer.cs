@@ -16,12 +16,7 @@ namespace WFBot.WebUI
             var builder = WebApplication.CreateBuilder();
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
-            var serverPort = 9331;
-            var port = Environment.GetEnvironmentVariable("WFBOT_WEBUI_PORT");
-            if (!string.IsNullOrWhiteSpace(port) && ushort.TryParse(port, out var portNum))
-            {
-                serverPort = portNum;
-            }
+            var serverPort = GetServerPort();
             builder.WebHost.ConfigureKestrel((context, serverOptions) =>
             {
                 serverOptions.Listen(IPAddress.Any, serverPort);
@@ -54,9 +49,28 @@ namespace WFBot.WebUI
 
         }
 
+        public static int GetServerPort()
+        {
+            var serverPort = 9331;
+            var port = Environment.GetEnvironmentVariable("WFBOT_WEBUI_PORT");
+            if (!string.IsNullOrWhiteSpace(port) && ushort.TryParse(port, out var portNum))
+            {
+                serverPort = portNum;
+            }
+
+            return serverPort;
+        }
+
         public static void NotifyDataChanged()
         {
-            DataChanged?.Invoke(null, null);
+            try
+            {
+                DataChanged?.Invoke(null, null);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine($"WebUI 通知UI更新出错: {e}");
+            }
         }
     }
 }
