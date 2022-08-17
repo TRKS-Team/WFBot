@@ -1,63 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-  <ItemGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
-    <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
-  </ItemGroup>
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <SatelliteResourceLanguages>zh-CN;zh-Hans</SatelliteResourceLanguages>
-    <OutputType>Exe</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-      <ServerGarbageCollection>false</ServerGarbageCollection>
-	  <ImplicitUsings>enable</ImplicitUsings>
-	  <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>1701;1702;MSB3042</NoWarn>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
-    <DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
+		<FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
+	</ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<SatelliteResourceLanguages>zh-CN;zh-Hans</SatelliteResourceLanguages>
+		<OutputType>Exe</OutputType>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Configurations>Debug;Release;Windows Release;Linux Release</Configurations>
+		<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+		<ServerGarbageCollection>false</ServerGarbageCollection>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+	</PropertyGroup>
+	<PropertyGroup>
+		<NoWarn>1701;1702;MSB3042</NoWarn>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
+		<DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
+	</PropertyGroup>
 
-    <Choose>
-      <When Condition="('$(NoGitVersion)' == 'hso' ) or $([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
-        <!-- When DEFINED_CONSTANT is defined. -->
-      </When>
-      <Otherwise>
-        <ItemGroup>
-          <PackageReference Include="GitVersion.MsBuild" Version="5.6.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-          </PackageReference>
-        </ItemGroup>
-      </Otherwise>
-      <!-- other conditions -->
-    </Choose>
+	<Choose>
+		<When Condition="('$(NoGitVersion)' == 'hso' ) or $([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
+			<!-- When DEFINED_CONSTANT is defined. -->
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="GitVersion.MsBuild" Version="5.6.3">
+					<PrivateAssets>all</PrivateAssets>
+					<IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+				</PackageReference>
+			</ItemGroup>
+		</Otherwise>
+		<!-- other conditions -->
+	</Choose>
 
-  <ItemGroup>
-    <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
-    <PackageReference Include="ConfigureAwait.Fody" Version="3.3.1">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Fody" Version="6.1.0" />
-    <PackageReference Include="GammaLibrary" Version="1.2.0" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
-    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
-    <PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
-    <PackageReference Include="IdentityModel" Version="4.1.1" />
-    <PackageReference Include="Lib.Harmony" Version="2.0.2" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
-    <PackageReference Include="Mirai.Net" Version="2.4.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
-    <PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
-    <PackageReference Include="System.Management" Version="6.0.0" />
-    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
-    <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BlazorStrap" Version="5.0.106" />
+		<PackageReference Include="Fastenshtein" Version="1.0.0.5" />
+		<PackageReference Include="GammaLibrary" Version="1.2.0" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
+		<PackageReference Include="Humanizer.Core" Version="2.8.26" />
+		<PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
+		<PackageReference Include="IdentityModel" Version="4.1.1" />
+		<PackageReference Include="Lib.Harmony" Version="2.0.2" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+		<PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.4" />
+		<PackageReference Include="Mirai.Net" Version="2.4.4" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
+		<PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
+		<PackageReference Include="System.Management" Version="6.0.0" />
+		<PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
+		<PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Include="wwwroot\**" />
@@ -65,24 +63,24 @@
 		<EmbeddedResource Update="Windows/Settings.resx" ExcludeFromManifest="true" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Windows\Settings.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Windows\Settings.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dll\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Dll\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="PininSharp">
-      <HintPath>Dll\PininSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="SuffixTreeSharp">
-      <HintPath>Dll\SuffixTreeSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="PininSharp">
+			<HintPath>Dll\PininSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="SuffixTreeSharp">
+			<HintPath>Dll\SuffixTreeSharp.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
-  <!--
+	<!--
   <ItemGroup>
     <None Include="Localization/Source/**/*" Link="WFBotLocalization\Source\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

@@ -136,6 +136,10 @@ namespace WFBot.Orichalt
 
         public static void InitMiguelNetwork(MessagePlatform platform)
         {
+            if (Inited)
+            {
+                return;
+            }
             Platform = platform;
             OrichaltContextManager = new OrichaltContextManager();
             switch (Platform)

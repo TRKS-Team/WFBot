@@ -6,7 +6,7 @@ namespace WFBot.WebUI
 {
     public class WebLogTraceListener : TraceListener
     {
-        public static FixedSizedQueue<string> Lines = new(100);
+        public static FixedSizedQueue<string> Lines = new(1000);
         StringBuilder tempStringBuilder = new();
 
         public override void Write(string message)

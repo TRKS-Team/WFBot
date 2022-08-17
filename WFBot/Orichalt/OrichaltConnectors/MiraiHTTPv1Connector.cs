@@ -17,9 +17,9 @@ using WFBot.Features.Utils;
 
 namespace WFBot.Orichalt.OrichaltConnectors
 {
-    public class MiraiHTTPContext : PlatformContextBase
+    public class MiraiHTTPV1Context : PlatformContextBase
     {
-        public MiraiHTTPContext(GroupID @group, UserID senderId, string rawMessage, MessageChain chain, MessageType type, DateTimeOffset time)
+        public MiraiHTTPV1Context(GroupID @group, UserID senderId, string rawMessage, MessageChain chain, MessageType type, DateTimeOffset time)
         {
             Group = @group;
             SenderID = senderId;
@@ -36,8 +36,8 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public MessageType Type { get; set; }
         public DateTimeOffset Time { get; set; }
     }
-    [Utils.Configuration("Miraiv2Config")]
-    public class MiraiConfig : Utils.Configuration<MiraiConfig>
+    [Utils.Configuration("Miraiv1Config")]
+    public class MiraiV1Config : Utils.Configuration<MiraiV1Config>
     {
         public string Host = "127.0.0.1";
         public ushort Port = 8080;
@@ -48,9 +48,9 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public int RevokeTimeInSeconds = 60;
     }
 
-    public class MiraiHTTPCore
+    public class MiraiHTTPV1Core
     {
-        public event EventHandler<MiraiHTTPContext> MiraiHTTPMessageReceived;
+        public event EventHandler<MiraiHTTPV1Context> MiraiHTTPMessageReceived;
         public MiraiBot Bot;
         public async Task Init()
         {
@@ -91,7 +91,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 }
             }
             Console.WriteLine("MiraiHTTPv2已连接.");
-                
+
             Bot.MessageReceived
                 .OfType<GroupMessageReceiver>()
                 .Subscribe(GroupMessageReceived);
@@ -101,22 +101,22 @@ namespace WFBot.Orichalt.OrichaltConnectors
 
         }
 
-        private MiraiConfig config => MiraiConfig.Instance;
+        private MiraiV1Config config => MiraiV1Config.Instance;
 
         private void GroupMessageReceived(GroupMessageReceiver e)
         {
-            var context = new MiraiHTTPContext(e.Sender.Group.Id, e.Sender.Id, e.MessageChain.GetPlainMessage(), e.MessageChain,
+            var context = new MiraiHTTPV1Context(e.Sender.Group.Id, e.Sender.Id, e.MessageChain.GetPlainMessage(), e.MessageChain,
                 MessageType.Group, DateTimeOffset.Now);
-            MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
+            MiguelNetwork.MiraiHTTPCore.OnMiraiHttpV1Message(context);
         }
 
         private void FriendMessageReceived(FriendMessageReceiver e)
         {
-            var context = new MiraiHTTPContext(new GroupID(), e.Sender.Id, e.MessageChain.GetPlainMessage(), e.MessageChain,
+            var context = new MiraiHTTPV1Context(new GroupID(), e.Sender.Id, e.MessageChain.GetPlainMessage(), e.MessageChain,
                 MessageType.Private, DateTimeOffset.Now);
-            MiguelNetwork.MiraiHTTPCore.OnMiraiHttpMessage(context);
+            MiguelNetwork.MiraiHTTPCore.OnMiraiHttpV1Message(context);
         }
-        protected virtual void OnMiraiHttpMessage(MiraiHTTPContext e)
+        protected virtual void OnMiraiHttpMessage(MiraiHTTPV1Context e)
         {
             MiraiHTTPMessageReceived?.Invoke(this, e);
         }

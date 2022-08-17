@@ -37,7 +37,7 @@ namespace WFBot.Features.Common
         private Dictionary<int, Sale> TreeSalesDic = new Dictionary<int, Sale>();
 
 
-        public static async Task<WildCardSearcher> Create()
+        public static WildCardSearcher Create()
         {
             var obj = new WildCardSearcher();
             SpinWait.SpinUntil(() => WFResources.WildcardAndSlang != null && WFResources.WFBotTranslateData != null);

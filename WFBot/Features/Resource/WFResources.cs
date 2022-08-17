@@ -46,7 +46,7 @@ namespace WFBot.Features.Resource
                 Task.Run(async () => WFTranslateData = await GetTranslateApi()),
                 Task.Run(async () => WFBotTranslateData = await GetWFBotTranslateApi()),
                 Task.Run(async () => RWildcardAndSlang = await GetWildcardAndSlang()),
-                Task.Run(async () => WildCardSearcher = await WildCardSearcher.Create())
+                Task.Run(() => WildCardSearcher = WildCardSearcher.Create())
             );
             WFTranslator = new WFTranslator();
             Weaponinfos = GetWeaponInfos();

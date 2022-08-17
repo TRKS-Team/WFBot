@@ -62,7 +62,9 @@ namespace WFBot.Features.Common
 
         public async Task<List<Order>> GetRivenOrders(string weapon)
         {
+#pragma warning disable SYSLIB0013
             var option = new SearchRivenOrderOption { Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon) };
+#pragma warning restore SYSLIB0013
             var orders = (await wfaClient.QueryRivenOrdersAsync(option) ?? throw new CommandException("由于未知原因, 返回的数据为空.")).Items;
             translator.TranslateRivenOrders(orders);
             return orders;

@@ -7,11 +7,9 @@ using System.Net.Http;
 using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
-using Fody;
 using GammaLibrary.Extensions;
 using WFBot.Orichalt;
 
-[assembly: ConfigureAwait(false)]
 
 namespace WFBot.TextCommandCore
 {

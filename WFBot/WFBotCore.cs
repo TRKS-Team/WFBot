@@ -87,7 +87,7 @@ namespace WFBot
                 return;
             }
 
-            await wfbot.Run();
+            wfbot.Run();
         }
     }
     public sealed class WFBotCore
@@ -143,7 +143,7 @@ namespace WFBot
 
         }
 
-        public async Task Run()
+        public void Run()
         {
             while (true)
             {
