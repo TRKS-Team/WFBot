@@ -13,7 +13,6 @@ namespace WFBot.Features.Timers
 {
     class WFResourcesTimer : WFBotTimer
     {
-        // TEST
         public WFResourcesTimer() : base(10.Minutes())
         {
         }
