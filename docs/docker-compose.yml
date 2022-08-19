@@ -26,6 +26,7 @@ services:
       labels:
         com.centurylinklabs.watchtower.enable: true
   watchtower:
+    restart: unless-stopped
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
