@@ -92,6 +92,18 @@ namespace WFBot.Orichalt.OrichaltConnectors
             };
             Mirai = mirai;
 
+            mirai.GroupMessageEvt += (sender, args) =>
+            {
+                GroupMessageReceived(args);
+                return Task.FromResult(true);
+            };
+
+
+            mirai.FriendMessageEvt += (sender, args) =>
+            {
+                FriendMessageReceived(args);
+                return Task.FromResult(true);
+            };
         }
 
         private MiraiV1Config config => MiraiV1Config.Instance;
