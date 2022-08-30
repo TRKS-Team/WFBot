@@ -41,7 +41,7 @@ namespace WFBot.Features.Resource
             await Task.WhenAll(
                 Task.Run(SetWFCDResources),
                 Task.Run(SetWFContentApi),
-                Task.Run(() => { WFAApi = new WFAApi(); }),
+                // Task.Run(() => { WFAApi = new WFAApi(); }),
                 Task.Run(async () => WMAuction = await GetWMAResources()),
                 Task.Run(async () => WFTranslateData = await GetTranslateApi()),
                 Task.Run(async () => WFBotTranslateData = await GetWFBotTranslateApi()),
@@ -102,7 +102,7 @@ namespace WFBot.Features.Resource
             }
         }
 
-        public static WFAApi WFAApi { get; private set; }
+        // public static WFAApi WFAApi { get; private set; }
 
         public static WFCD_All[] WFCDAll => RWFCDAll.Value;
         public static WMAuction WMAuction { get; private set; }

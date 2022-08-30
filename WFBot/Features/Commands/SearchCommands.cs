@@ -38,7 +38,7 @@ namespace WFBot.Features.Commands
             word = word.Format();
             return _wmaSearcher.SendRivenAuctions(word);
         }
-
+        /*
         [Matchers("WFA紫卡", "wfa紫卡")]
         [CombineParams]
         [DoNotMeasureTime]
@@ -46,6 +46,6 @@ namespace WFBot.Features.Commands
         {
             word = word.Format();
             return _rmSearcher.SendRivenInfos(word);
-        }
+        }*/
     }
 }

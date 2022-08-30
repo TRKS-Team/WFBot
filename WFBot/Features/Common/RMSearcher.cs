@@ -18,8 +18,8 @@ namespace WFBot.Features.Common
 {
     public class RMSearcher
     {
-        private Client wfaClient => WFResources.WFAApi.WfaClient;
-        private bool isWFA => WFResources.WFAApi.isWFA;
+        // private Client wfaClient => WFResources.WFAApi.WfaClient;
+        // private bool isWFA => WFResources.WFAApi.isWFA;
         private WFTranslator translator => WFResources.WFTranslator;
 
         /*public string GetAccessToken()
@@ -60,7 +60,7 @@ namespace WFBot.Features.Common
             return WebHelper.DownloadJson<List<RivenInfo>>($"https://api.richasy.cn/wfa/rm/riven", header).Where(info => info.isSell == 1).Take(count).ToList(); // 操 云之幻好蠢 为什么不能在请求里限制是买还是卖
         }*/
 
-        public async Task<List<Order>> GetRivenOrders(string weapon)
+        /*public async Task<List<Order>> GetRivenOrders(string weapon)
         {
 #pragma warning disable SYSLIB0013
             var option = new SearchRivenOrderOption { Category = "", IsVeiled = false, OrderType = "sell", Page = 1, PageSize = 20, Weapon = Uri.EscapeUriString(weapon) };
@@ -116,7 +116,7 @@ namespace WFBot.Features.Common
                 sb.AppendLine("经过我们的多次尝试, 依然无法访问紫卡市场. 如果你不能谅解, 有本事顺着网线来打我呀.");
             }
             return sb.ToString().Trim();
-        }
+        }*/
 
     }
 }

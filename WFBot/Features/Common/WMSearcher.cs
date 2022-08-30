@@ -156,8 +156,8 @@ namespace WFBot.Features.Common
     {
         private static WFTranslator translator => WFResources.WFTranslator;
         private WFBotApi wfbotapi => WFResources.WFBotTranslateData;
-        private Client wfaClient => WFResources.WFAApi.WfaClient;
-        private bool isWFA => WFResources.WFAApi.isWFA;
+        // private Client wfaClient => WFResources.WFAApi.WfaClient;
+        // private bool isWFA => WFResources.WFAApi.isWFA;
 
         private string platform => Config.Instance.Platform.ToString();
         public async Task<WMInfo> GetWMInfo(string searchword)
@@ -167,7 +167,7 @@ namespace WFBot.Features.Common
             {
                 platform = "switch";
             }
-            var header = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("platform", platform) };
+            var header = new List<KeyValuePair<string, string>> { new ("platform", platform) };
 
             var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
 
@@ -175,9 +175,9 @@ namespace WFBot.Features.Common
             return info;
         }
 
-        public async Task<WMInfoEx> GetWMINfoEx(string searchword)
+        /*public async Task<WMInfoEx> GetWMINfoEx(string searchword)
         {
-            /*var header = new WebHeaderCollection();
+            var header = new WebHeaderCollection();
             header.Add("Authorization", $"Bearer {Config.Instance.AccessToken}");
             var platform = Config.Instance.Platform.GetSymbols().First();
             if (Config.Instance.Platform == Platform.NS)
@@ -185,12 +185,12 @@ namespace WFBot.Features.Common
                 platform = "ns";
             }
             var info = WebHelper.DownloadJson<WMInfoEx>($"https://api.richasy.cn/wfa/basic/{platform}/wm/{searchword}", header);*/
-            var option = new WarframeMarketOrderQueryOption
+            /*var option = new WarframeMarketOrderQueryOption
             { Code = searchword, OrderStatus = new List<WMOrderStatus> { WMOrderStatus.InGame, WMOrderStatus.Online } };
             var orders = await wfaClient.GetWarframeMarketOrdersAsync(option);
             var result = new WMInfoEx { orders = orders, sale = wfbotapi.Sale.First(s => s.code == searchword) };
             return result;
-        }
+        }*/
 
         public void OrderWMInfo(WMInfo info, bool isbuyer)
         {
@@ -310,8 +310,7 @@ namespace WFBot.Features.Common
                 MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), $"正在查询: {word}");
             }
 
-            var failed = false;
-            if (Config.Instance.IsThirdPartyWM)
+            /*if (Config.Instance.IsThirdPartyWM)
             {
 
                 try
@@ -344,23 +343,21 @@ namespace WFBot.Features.Common
                     MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "很抱歉, 在使用第三方 API 时遇到了网络问题. 正在为您转官方 API.");
                     failed = true;
                 }
-            }
+            }*/
 
-            if (!Config.Instance.IsThirdPartyWM || failed)
+            var info = GetWMInfo(searchword).Result;
+            if (info.payload.orders.Any())
             {
-                var info = GetWMInfo(searchword).Result;
-                if (info.payload.orders.Any())
-                {
-                    OrderWMInfo(info, isbuyer);
-                    translator.TranslateWMOrder(info, searchword);
-                    msg = WFFormatter.ToString(info, quickReply, isbuyer);
-                }
-                else
-                {
-                    msg = $"抱歉, WarframeMarket 上目前还没有售卖 {word} 的用户";
-                }
-
+                OrderWMInfo(info, isbuyer);
+                translator.TranslateWMOrder(info, searchword);
+                msg = WFFormatter.ToString(info, quickReply, isbuyer);
             }
+            else
+            {
+                msg = $"抱歉, WarframeMarket 上目前还没有售卖 {word} 的用户";
+            }
+
+            
 
             if (!quickReply)
             {

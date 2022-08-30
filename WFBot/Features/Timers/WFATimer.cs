@@ -15,14 +15,14 @@ namespace WFBot.Features.Timers
         }
         protected override void Tick()
         {
-            try
+            /*try
             {
                 WFResources.WFAApi.UpdateClient();
             }
             catch (Exception e)
             {
                 Trace.WriteLine(e);
-            }
+            }*/
         }
     }
 }
