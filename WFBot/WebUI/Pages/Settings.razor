@@ -47,14 +47,6 @@
                             </label>
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <div class="form-check form-switch">
-                        <input @bind="config.IsThirdPartyWM" class="form-check-input" type="checkbox">
-                            <label class="form-check-label">
-                                使用中转WM
-                            </label>
-                        </div>
-                    </div>
 
 
                     <div class="mb-2 row">
@@ -76,18 +68,6 @@
                         </div>
                     </div>
 
-                    <div class="mb-2 row">
-                        <label class="col-sm-2 col-form-label">ClientID</label>
-                        <div class="col-sm-10">
-                            <input @bind="config.ClientId" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="mb-2 row">
-                        <label class="col-sm-2 col-form-label">ClientSecret</label>
-                        <div class="col-sm-10">
-                            <input @bind="config.ClientSecret" type="text" class="form-control">
-                        </div>
-                    </div>
                    
 
 
@@ -98,13 +78,13 @@
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-sm-2 col-form-label">每次发送的紫卡次数</label>
+                        <label class="col-sm-2 col-form-label">每次发送的紫卡条目数</label>
                         <div class="col-sm-10">
                         <input @bind="config.WFASearchCount" type="number" class="form-control">
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label class="col-sm-2 col-form-label">每次发送的WM数量</label>
+                        <label class="col-sm-2 col-form-label">每次发送的条目数</label>
                         <div class="col-sm-10">
                         <input @bind="config.WMSearchCount" type="number" class="form-control">
                         </div>
