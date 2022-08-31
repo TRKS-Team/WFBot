@@ -22,10 +22,9 @@ namespace WFBot.Orichalt
         private static MessagePlatform Platform;
 
         public static OneBotCore OneBotCore;
-
         public static MiraiHTTPCore MiraiHTTPCore;
-
         public static MiraiHTTPV1Core MiraiHTTPV1Core;
+
         public static OrichaltContextManager OrichaltContextManager;
 
         private static bool Inited;
@@ -191,7 +190,7 @@ namespace WFBot.Orichalt
                     break;
                 case MessagePlatform.MiraiHTTP:
                     MiraiHTTPCore = new MiraiHTTPCore();
-                    MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
+                       MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
                     MiraiHTTPCore.Init().Wait();
                     break;
                 case MessagePlatform.MiraiHTTPV1:
@@ -371,6 +370,9 @@ namespace WFBot.Orichalt
                         case MessagePlatform.Test:
                             break;
                         case MessagePlatform.Unknown:
+                            break;
+                        case MessagePlatform.MiraiHTTPV1:
+                            MiraiHTTPV1SendToGroup(group, sb.ToString().Trim());
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

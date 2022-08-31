@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,10 +57,10 @@ namespace WFBot.Orichalt
     }
     public class OrichaltContextManager
     {
-        public Dictionary<string, OneBotContext> OneBotContexts = new Dictionary<string, OneBotContext>();
+        public ConcurrentDictionary<string, OneBotContext> OneBotContexts = new();
 
-        public Dictionary<string, MiraiHTTPContext> MiraiHTTPContexts = new Dictionary<string, MiraiHTTPContext>();
-        public Dictionary<string, MiraiHTTPV1Context> MiraiHTTPV1Contexts = new Dictionary<string, MiraiHTTPV1Context>();
+        public ConcurrentDictionary<string, MiraiHTTPContext> MiraiHTTPContexts = new();
+        public ConcurrentDictionary<string, MiraiHTTPV1Context> MiraiHTTPV1Contexts = new();
         // 往下扩展各个平台
 
         public PlatformContextBase GetPlatformContext(OrichaltContext context)
@@ -160,13 +161,13 @@ namespace WFBot.Orichalt
             switch (context.Platform)
             {
                 case MessagePlatform.OneBot:
-                    OneBotContexts.Remove(context.UUID);
+                    OneBotContexts.Remove(context.UUID, out _);
                     break;
                 case MessagePlatform.MiraiHTTP:
-                    MiraiHTTPContexts.Remove(context.UUID);
+                    MiraiHTTPContexts.Remove(context.UUID, out _);
                     break;
                 case MessagePlatform.MiraiHTTPV1:
-                    MiraiHTTPV1Contexts.Remove(context.UUID);
+                    MiraiHTTPV1Contexts.Remove(context.UUID, out _);
                     break;
             }
             // 往下扩展各个平台

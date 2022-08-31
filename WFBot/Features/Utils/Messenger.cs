@@ -128,12 +128,12 @@ namespace WFBot.Features.Utils
 
         public static implicit operator GroupID(long id)
         {
-            return new GroupID((uint) id);
+            return new GroupID(id);
         }
 
         public static implicit operator GroupID(string id)
         {
-            return new GroupID(id.ToUInt());
+            return new GroupID(id.ToLong());
         }
 
         public override string ToString()
@@ -163,12 +163,12 @@ namespace WFBot.Features.Utils
 
         public static implicit operator UserID(long id)
         {
-            return new UserID((uint)id);
+            return new UserID(id);
         }
 
         public static implicit operator UserID(string id)
         {
-            return new UserID(id.ToUInt());
+            return new UserID(id.ToLong());
         }
 
         public override string ToString()
