@@ -13,7 +13,10 @@ namespace WFBot.WebUI
 
         public void Run()
         {
-            var builder = WebApplication.CreateBuilder();
+            var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+            {
+                WebRootPath = "wwwroot"
+            });
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
             var serverPort = GetServerPort();
