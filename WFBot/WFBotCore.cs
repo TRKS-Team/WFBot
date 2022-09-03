@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
@@ -161,6 +162,9 @@ namespace WFBot
                     case "ui":
                         OpenWFBotSettingsWindow();
                         break;
+                    case "webui":
+                        OpenWebUI();
+                        break;
                     case "exit":
                     case "stop":
                         Shutdown();
@@ -172,6 +176,19 @@ namespace WFBot
                         }
                         break;
                 }
+            }
+        }
+
+        void OpenWebUI()
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                Process.Start(new ProcessStartInfo($"http://localhost:{WFBotWebUIServer.GetServerPort()}")
+                    { UseShellExecute = true });
+            }
+            else
+            {
+                Console.WriteLine("你使用的不是 Windows, 请手动打开 " + $"http://localhost:{WFBotWebUIServer.GetServerPort()}");
             }
         }
 
@@ -368,7 +385,10 @@ namespace WFBot
             }
 
             _requestedCtrlCShutdown = false;
-            Messenger.SendDebugInfo($"<<<< WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s. >>>>");
+            Trace.WriteLine("");
+            Messenger.SendDebugInfo($"<<<<   WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.   >>>>");
+            Trace.WriteLine("WebUI 在 "+ $"http://localhost:{WFBotWebUIServer.GetServerPort()}" +" 启用.");
+            Trace.WriteLine("");
         }
 
         void CheckTime()
@@ -377,7 +397,7 @@ namespace WFBot
             {
                 if (TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).Hours != 8)
                 {
-                    var msg = "**************警告: 你的系统时区不为 UTC+8, 会造成任务通知不精确.";
+                    var msg = "**************警告: 你的系统时区不为 UTC+8, 会造成任务通知不精确.**************";
                     Messenger.SendDebugInfo(msg);
                 }
                 var sntpClient = new SNTPClient("ntp.aliyun.com");
@@ -385,7 +405,7 @@ namespace WFBot
                 var timeSpan = TimeSpan.FromMilliseconds(sntpClient.LocalClockOffset);
                 if (timeSpan.TotalMinutes > 1)
                 {
-                    var msg = $"*************警告: 你的系统时间与世界时间相差了1分钟以上, 具体来说是{timeSpan.TotalMinutes}分钟, 请调整系统时间, 否则可能会造成通知不精确.";
+                    var msg = $"*************警告: 你的系统时间与世界时间相差了1分钟以上, 具体来说是{timeSpan.TotalMinutes}分钟, 请调整系统时间, 否则可能会造成通知不精确.**************";
                     Messenger.SendDebugInfo(msg);
                     Trace.WriteLine(msg);
                 }

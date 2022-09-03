@@ -110,7 +110,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.");
+                Trace.WriteLine($"数据下载完成: URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
             }
         } 
         public static async Task<T> DownloadJsonAsync<T>(string url, List<KeyValuePair<string, string>> header = null)
@@ -148,7 +148,7 @@ namespace WFBot.Utils
             }
             finally
             {
-                Trace.WriteLine($"数据下载完成: URL '{url}', 用时 '{sw.Elapsed.TotalSeconds:F1}s'.");
+                Trace.WriteLine($"数据下载完成: URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
             }
         }
     }

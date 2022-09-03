@@ -20,6 +20,7 @@ namespace WFBot.WebUI
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
             var serverPort = GetServerPort();
+
             builder.WebHost.ConfigureKestrel((context, serverOptions) =>
             {
                 serverOptions.Listen(IPAddress.Any, serverPort);
@@ -49,7 +50,6 @@ namespace WFBot.WebUI
             app.MapFallbackToPage("/_Host");
 
             app.RunAsync();
-
         }
 
         public static int GetServerPort()

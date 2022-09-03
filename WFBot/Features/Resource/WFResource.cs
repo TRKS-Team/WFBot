@@ -103,7 +103,7 @@ namespace WFBot.Features.Resource
                 }
             }
             await resource.Reload();
-            Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
+            Messenger.SendDebugInfo($"资源系统: 正在刷新资源: {resource.FileName}");
             return true;
         }
 
@@ -122,7 +122,7 @@ namespace WFBot.Features.Resource
                 }
             }
             await resource.Reload();
-            Messenger.SendDebugInfo($"正在刷新资源: {resource.FileName}");
+            Messenger.SendDebugInfo($"资源系统: 正在刷新资源: {resource.FileName}");
             return true;
         }
 
@@ -131,7 +131,7 @@ namespace WFBot.Features.Resource
         private static async Task<bool> JustUpdateUpdater(WFResource<T> resource)
         {
             await resource.Reload();
-            Trace.WriteLine($"正在刷新资源: {resource.FileName}");
+            Trace.WriteLine($"资源系统: 正在刷新资源: {resource.FileName}");
             return true;
         }
 
@@ -156,7 +156,7 @@ namespace WFBot.Features.Resource
                     return false;
                 }
                 if (sha == info.SHA) return false;
-                Messenger.SendDebugInfo($"发现{info.Name}有更新,正在更新···");
+                Messenger.SendDebugInfo($"资源系统: 发现 {info.Name} 有更新,正在更新···");
                 await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
 
                 GitHubInfos.Instance.Infos.Where(i => i.Category == info.Category).ForEach(i =>
@@ -170,7 +170,7 @@ namespace WFBot.Features.Resource
             }
             catch (Exception)
             {
-                Trace.WriteLine("用于刷新资源文件的GitHub Commits获取失败, 这可能和网络有关系, 可以尝试阅读https://github.com/TRKS-Team/WFBot/blob/universal/docs/token.md");
+                Trace.WriteLine("资源系统: 用于刷新资源文件的 GitHub Commits 获取失败, 这可能和网络有关系, 可以尝试阅读 https://github.com/TRKS-Team/WFBot/blob/universal/docs/token.md");
                 return false;
             }
         }   
@@ -306,13 +306,13 @@ namespace WFBot.Features.Resource
                 await _locker.WaitAsync();
                 if (await LoadFromLocal())
                 {
-                    if (isFirstTime) Trace.WriteLine($"WFResource: 资源 {FileName} 从本地载入.");
+                    if (isFirstTime) Trace.WriteLine($"资源系统: 资源 {FileName} 从本地载入.");
                     return;
                 }
 
                 if (isFirstTime && await LoadCache())
                 {
-                    Trace.WriteLine($"WFResource: 资源 {FileName} 从缓存载入.");
+                    Trace.WriteLine($"资源系统: 资源 {FileName} 从缓存载入.");
                     LoadFromTheWideWorldOfWebNonBlocking();
                     return;
                 }
@@ -331,7 +331,7 @@ namespace WFBot.Features.Resource
                 {
                     initTask = null;
                     Interlocked.Increment(ref WFResourceStatic.FinishedResourceCount);
-                    Console.WriteLine($">>>> 资源加载进程: {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount} <<<<");
+                    Console.WriteLine($"> 资源系统: 加载进程 {WFResourceStatic.FinishedResourceCount} / {WFResourceStatic.ResourceCount}.");
                 }
             }
         }
@@ -361,7 +361,7 @@ namespace WFBot.Features.Resource
                             throw new TaskCanceledException();
                         }
                         if (copyTask.IsCompleted) break;
-                        Console.WriteLine($"资源 {FileName} 还没有下载完. 下载了 {fileStream.Length.Bytes().Megabytes:F2} MB.");
+                        Console.WriteLine($"- 资源 {FileName} 还没有下载完. 下载了 {fileStream.Length.Bytes().Megabytes:F2} MB.");
                     }
 
                     fileStream.Dispose();
@@ -379,29 +379,29 @@ namespace WFBot.Features.Resource
                         RequestedRerequest = false;
                         return;
                     }
-                    Trace.WriteLine($"网络错误或资源 {FileName} 缓存写入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
+                    Trace.WriteLine($"资源系统: 网络错误或资源 {FileName} 缓存写入失败. URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
                     Trace.WriteLine(e);
                     sw.Restart();
 
                     // 如果保存失败 可能是网络错误 或者文件无法写入 就直接再请求一次
                     await using var stream2 = await requester(url);
                     Value = await resourceLoader(stream2);
-                    Trace.WriteLine($"资源 {FileName} 获取完成. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
+                    Trace.WriteLine($"资源系统: 资源 {FileName} 获取完成. URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
                     return;
                 }
 
                 // 这里保存到了缓存里 从缓存里读入
                 await using var file = File.OpenRead(CachePath);
                 Value = await resourceLoader(file);
-                Trace.WriteLine($"资源 {FileName} 获取完成. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
+                Trace.WriteLine($"资源系统: 资源 {FileName} 获取完成. URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
             }
             catch (Exception e)
             {
-                Trace.WriteLine($"资源 {FileName} 载入失败. URL {url} 用时 {sw.Elapsed.TotalSeconds:F1}s", "WFResource");
+                Trace.WriteLine($"资源系统: 资源 {FileName} 载入失败. URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
                 Trace.WriteLine(e);
                 if (initTask == null)
                 {
-                    Trace.WriteLine("这个资源已经从缓存读入, 所以不会对运行造成影响, 但是这个资源可能不是最新.");
+                    Trace.WriteLine("资源系统: 这个资源已经从缓存读入, 所以不会对运行造成影响, 但是这个资源可能不是最新.");
                 }
                 else
                 {
@@ -531,7 +531,7 @@ namespace WFBot.Features.Resource
             }
             catch
             {
-                Trace.WriteLine("有一个或多个Jsdelivr资源请求错误, 将会更换全局下载源为WFBot镜像.");
+                Trace.WriteLine("资源系统: 有一个或多个Jsdelivr资源请求错误, 将会更换全局下载源为WFBot镜像.");
                 dataString = await httpClient.GetStreamAsync(url.Replace("https://cdn.jsdelivr.net/gh",
                     "https://wfbot.kraber.top:8888/Resources"));
                 return dataString;
@@ -559,7 +559,7 @@ namespace WFBot.Features.Resource
             }
             catch (Exception e)
             {
-                Trace.WriteLine($"资源 {FileName} 从缓存载入失败.", "WFResource");
+                Trace.WriteLine($"资源系统: 资源 {FileName} 从缓存载入失败.");
                 Trace.WriteLine(e);
                 if (File.GetAttributes(CachePath).HasFlag(FileAttributes.ReadOnly))
                 {
@@ -580,7 +580,7 @@ namespace WFBot.Features.Resource
             }
             catch (Exception)
             {
-                Trace.WriteLine($"资源 {FileName} 从本地载入失败.", "WFResource");
+                Trace.WriteLine($"资源系统: 资源 {FileName} 从本地载入失败.");
                 throw;
             }
         }

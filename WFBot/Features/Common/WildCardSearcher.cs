@@ -66,7 +66,7 @@ namespace WFBot.Features.Common
         public void UpdateSearcher()
         {
             var sw = new Stopwatch();
-            Console.WriteLine("开始黑话辞典刷新");
+            Console.WriteLine("开始黑话辞典刷新...");
             sw.Start();
             _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
             _tree = new GeneralizedSuffixTree();
