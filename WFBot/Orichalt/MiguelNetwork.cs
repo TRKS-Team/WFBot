@@ -7,10 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Chaldene.Utils.Scaffolds;
 using GammaLibrary.Extensions;
-using Mirai.Net.Data.Messages;
-using Mirai.Net.Sessions.Http.Managers;
-using Mirai.Net.Utils.Scaffolds;
 using Mirai_CSharp.Models;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
@@ -417,7 +415,7 @@ namespace WFBot.Orichalt
         {
             var builder = new MessageChainBuilder();
             builder.Plain(msg);
-            MessageManager.SendGroupMessageAsync(qq, builder.Build());
+            MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
         }
         private static void MiraiHTTPSendToGroupWithAutoRevoke(GroupID qq, string msg)
         {
@@ -425,17 +423,21 @@ namespace WFBot.Orichalt
             builder.Plain(msg);
             if (MiraiConfig.Instance.AutoRevoke)
             {
-                MessageManager.SendGroupMessageAsync(qq, builder.Build())
-                    .RecallAfter(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds));
+                var message = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
+                Task.Delay(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds)).ContinueWith(t =>
+                {
+                    MiraiHTTPCore.Bot.RecallAsync(message, qq.ID.ToString());
+                });
+
                 return;
-            } 
-            MessageManager.SendGroupMessageAsync(qq, builder.Build());
+            }
+            MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
         }
         private static void MiraiHTTPSendToPrivate(UserID qq, string msg)
         {
             var builder = new MessageChainBuilder();
             builder.Plain(msg);
-            MessageManager.SendFriendMessageAsync(qq, builder.Build());
+            MiraiHTTPCore.Bot.SendFriendMessageAsync(qq.ID, builder.Build());
         }
 
 

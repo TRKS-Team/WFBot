@@ -7,12 +7,12 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chaldene.Data.Messages;
+using Chaldene.Data.Messages.Receivers;
+using Chaldene.Sessions;
 using Flurl.Http;
 using GammaLibrary;
 using GammaLibrary.Extensions;
-using Mirai.Net.Data.Messages;
-using Mirai.Net.Data.Messages.Receivers;
-using Mirai.Net.Sessions;
 using WFBot.Features.Utils;
 
 namespace WFBot.Orichalt.OrichaltConnectors
@@ -93,14 +93,10 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 }
             }
             Trace.WriteLine("MiraiHTTPv2已连接.");
-                
-            Bot.MessageReceived
-                .OfType<GroupMessageReceiver>()
-                .Subscribe(GroupMessageReceived);
-            Bot.MessageReceived
-                .OfType<FriendMessageReceiver>()
-                .Subscribe(FriendMessageReceived);
-
+            
+            
+            Bot.GroupMessageReceived += (s, e) => GroupMessageReceived(e);
+            Bot.FriendMessageReceived += (s, e) => FriendMessageReceived(e);
         }
 
         private MiraiConfig config => MiraiConfig.Instance;

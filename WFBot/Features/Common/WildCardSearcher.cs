@@ -71,8 +71,8 @@ namespace WFBot.Features.Common
             _searcher = new TreeSearcher<Sale>(SearcherLogic.Contain, PinIn.CreateDefault());
             _tree = new GeneralizedSuffixTree();
 
-            var cacheToken = JsonSerializer.Serialize(sales, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString() +
-                             JsonSerializer.Serialize(was, new JsonSerializerOptions() { WriteIndented = false }).SHA2().ToHexString();
+            var cacheToken = JsonSerializer.Serialize(sales, new JsonSerializerOptions() { WriteIndented = false }).SHA256().ToHexString() +
+                             JsonSerializer.Serialize(was, new JsonSerializerOptions() { WriteIndented = false }).SHA256().ToHexString();
 
             var cachePath = "WFCaches/WildCardSearcherCache.json";
             WildCardSearcherCache cache;

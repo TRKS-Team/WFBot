@@ -38,8 +38,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="BlazorStrap" Version="5.0.106" />
+		<PackageReference Include="Chaldene" Version="0.1.0" />
 		<PackageReference Include="Fastenshtein" Version="1.0.0.5" />
-		<PackageReference Include="GammaLibrary" Version="1.2.0" />
+		<PackageReference Include="GammaLibrary" Version="3.0.0-pre1" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
 		<PackageReference Include="Humanizer.Core" Version="2.8.26" />
 		<PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
@@ -48,7 +49,6 @@
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
 		<PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.4" />
-		<PackageReference Include="Mirai.Net" Version="2.4.4" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
 		<PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
