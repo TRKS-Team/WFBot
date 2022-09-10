@@ -1,11 +1,17 @@
 ﻿@page "/feature"
 @using WFBot.Orichalt
+@using System.Diagnostics
 <PageTitle>一些功能</PageTitle>
 <h1>功能</h1>
 <div>
     <h2>超级广播</h2>
-    <input type="text" class="form-control my-3" @bind="broadcastContent"/>
+    <p>向所有开启了通知功能的群发送一条广播</p>
+    <input type="text" class="form-control my-3" @bind="broadcastContent" />
     <button class="btn btn-danger" @onclick="() => ModalShow()">发送！</button>
+    <h2 class="mt-4">删除所有缓存</h2>
+    <p>如果因为缓存原因不能载入机器人, 可以在这里删除</p>
+    <button class="btn btn-danger" @onclick="() => DeleteCache()">删除</button>
+
 </div>
 
 @if (showModal)
@@ -38,7 +44,7 @@
 
 @code {
     // 抄代码 https://gist.github.com/conficient/ba98d1662c659e170ec16650acea05c8
-    string broadcastContent;  
+    string broadcastContent;
     bool showModal = false;
 
     void ModalShow() => showModal = true;
@@ -47,5 +53,20 @@
     {
         MiguelNetwork.Broadcast(broadcastContent);
         showModal = false;
+    }
+
+    void DeleteCache()
+    {
+        foreach (var file in Directory.GetFiles("WFCaches"))
+        {
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine($"缓存 {file} 删除失败: {e}");
+            }
+        }
     }
 }

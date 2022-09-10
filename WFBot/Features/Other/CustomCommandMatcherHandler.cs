@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -49,17 +50,17 @@ namespace WFBot.Features.Other
             foreach (var info in _commandInfos.Value)
             {
                 var commandID = info.Method.Name;
-                Console.WriteLine($"ID: {commandID}");
+                Trace.WriteLine($"ID: {commandID}");
                 if (ContainsCustomCommand(commandID))
                 {
-                    Console.WriteLine($"    自定义匹配器: [{GetCustomCommandList(commandID).Connect()}]\n");
+                    Trace.WriteLine($"    自定义匹配器: [{GetCustomCommandList(commandID).Connect()}]\n");
                     found = true;
                 }
             }
 
             if (!found)
             {
-                Console.WriteLine("没有一个命令有自定义匹配器.");
+                Trace.WriteLine("没有一个命令有自定义匹配器.");
             }
         }
 
@@ -69,19 +70,19 @@ namespace WFBot.Features.Other
             foreach (var info in _commandInfos.Value)
             {
                 var commandID = info.Method.Name;
-                Console.WriteLine($"ID: {commandID}");
+                Trace.WriteLine($"ID: {commandID}");
                 if (info.Method.IsAttributeDefined<MatchersAttribute>())
                 {
-                    Console.WriteLine($"    预定义匹配器: [{info.Method.GetCustomAttribute<MatchersAttribute>().Matchers.Connect()}]");
+                    Trace.WriteLine($"    预定义匹配器: [{info.Method.GetCustomAttribute<MatchersAttribute>().Matchers.Connect()}]");
                 }
                 if (info.Method.IsAttributeDefined<MatchersIgnoreCaseAttribute>())
                 {
-                    Console.WriteLine($"    预定义匹配器(不区分大小写): [{info.Method.GetCustomAttribute<MatchersIgnoreCaseAttribute>().Matchers.Connect()}]");
+                    Trace.WriteLine($"    预定义匹配器(不区分大小写): [{info.Method.GetCustomAttribute<MatchersIgnoreCaseAttribute>().Matchers.Connect()}]");
                 }
 
                 if (ContainsCustomCommand(commandID))
                 {
-                    Console.WriteLine($"    自定义匹配器: [{GetCustomCommandList(commandID).Connect()}]\n");
+                    Trace.WriteLine($"    自定义匹配器: [{GetCustomCommandList(commandID).Connect()}]\n");
                 }
             }
         }
@@ -133,8 +134,11 @@ namespace WFBot.Features.Other
 
         void SaveConfig() => CustomCommandConfig.Save();
 
-        public Action<Message> MessageSender { get; } = (s) => Console.WriteLine(s);
-        public Action<Message> ErrorMessageSender { get; } = s => Console.WriteLine(s);
+        public Action<Message> MessageSender { get; } = (s) =>
+        {
+            Trace.WriteLine(s);
+        };
+        public Action<Message> ErrorMessageSender { get; } = s => Trace.WriteLine(s);
         public OrichaltContext O { get; }
         public string Message { get; }
 

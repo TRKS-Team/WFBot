@@ -38,7 +38,7 @@ namespace WFBot.Features.Resource
             WFChineseApi = new WFChineseAPI();
             ThreadPool.SetMinThreads(64, 64);
                 
-            await Task.WhenAll(
+            var task = new List<Task> {
                 Task.Run(SetWFCDResources),
                 Task.Run(SetWFContentApi),
                 // Task.Run(() => { WFAApi = new WFAApi(); }),
@@ -47,7 +47,11 @@ namespace WFBot.Features.Resource
                 Task.Run(async () => WFBotTranslateData = await GetWFBotTranslateApi()),
                 Task.Run(async () => RWildcardAndSlang = await GetWildcardAndSlang()),
                 Task.Run(() => WildCardSearcher = WildCardSearcher.Create())
-            );
+            };
+            foreach (var task1 in task)
+            {
+                await task1;
+            }
             WFTranslator = new WFTranslator();
             Weaponinfos = GetWeaponInfos();
             

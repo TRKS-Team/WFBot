@@ -32,6 +32,7 @@ namespace WFBot.WebUI
             builder.Services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/WebUI/Pages");
             builder.WebHost.UseStaticWebAssets();
             builder.Logging.ClearProviders();
+            builder.Logging.AddProvider(new WFBotLoggingProvider());
             var app = builder.Build();
             
             app.UseExceptionHandler("/Error");
@@ -74,6 +75,50 @@ namespace WFBot.WebUI
             {
                 Trace.WriteLine($"WebUI 通知UI更新出错: {e}");
             }
+        }
+    }
+
+    public class WFBotLoggingProvider : ILoggerProvider
+    {
+        
+        public ILogger CreateLogger(string categoryName)
+        {
+            return new WFBotWebUILogger(categoryName);
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
+    public class WFBotWebUILogger : ILogger
+    {
+        string _categoryName;
+
+        public WFBotWebUILogger(string categoryName)
+        {
+            _categoryName = categoryName;
+        }
+
+        class What : IDisposable
+        {
+            public void Dispose()
+            {
+            }
+        }
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            return new What();
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            return logLevel is LogLevel.Error or LogLevel.Critical;
+        }
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            Console.WriteLine($"WebUI [{logLevel}]: {formatter(state, exception)} {exception}");
         }
     }
 }
