@@ -57,16 +57,19 @@
 
     void DeleteCache()
     {
-        foreach (var file in Directory.GetFiles("WFCaches"))
+        Task.Run(() =>
         {
-            try
+            foreach (var file in Directory.GetFiles("WFCaches"))
             {
-                File.Delete(file);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine($"缓存 {file} 删除失败: {e}");
+                }
             }
-            catch (Exception e)
-            {
-                Trace.WriteLine($"缓存 {file} 删除失败: {e}");
-            }
-        }
+        });
     }
 }
