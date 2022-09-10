@@ -118,7 +118,10 @@ namespace WFBot.WebUI
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            Console.WriteLine($"WebUI [{logLevel}]: {formatter(state, exception)} {exception}");
+            if (logLevel is LogLevel.Error or LogLevel.Critical)
+            {
+                Trace.WriteLine($"WebUI [{logLevel}]: {formatter(state, exception)} {exception}");
+            }
         }
     }
 }

@@ -84,6 +84,7 @@ namespace WFBot
                 Trace.WriteLine("WFBot 在初始化中遇到了问题.");
                 Trace.WriteLine($"你现在可以在 WebUI http://localhost:{WFBotWebUIServer.GetServerPort()} 中修改设置.");
                 Trace.WriteLine(e);
+                Panic = true;
                 var sw = Stopwatch.StartNew();
                 if (!skipPressKey)
                 {
@@ -102,7 +103,7 @@ namespace WFBot
             wfbot.Run();
         }
 
-        public static bool Panic { get; private set; }
+        public static bool Panic { get; private set; } = false;
     }
     public sealed class WFBotCore
     {
@@ -259,7 +260,14 @@ namespace WFBot
         {
             if (!Inited)
             {
-                Trace.WriteLine($"Message ignored due to uninitialized: {o.GetInfo()}");
+                if (Program.Panic)
+                {
+                    Trace.WriteLine($"接收到消息{o.GetInfo()}, 但是WFBot在初始化中遇到了问题, 请向上翻.");   
+                }
+                else
+                {
+                    Trace.WriteLine($"由于 WFBot 未初始化完, 接收到的消息无法处理: {o.GetInfo()}");
+                }
                 // 为啥这句要写英文?
                 return;
             }
