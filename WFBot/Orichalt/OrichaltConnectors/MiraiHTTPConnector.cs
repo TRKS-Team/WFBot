@@ -46,6 +46,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
 
         public bool AutoRevoke = false;
         public int RevokeTimeInSeconds = 60;
+        public bool UseHttps = false;
     }
 
     public class MiraiHTTPCore
@@ -75,9 +76,10 @@ namespace WFBot.Orichalt.OrichaltConnectors
             {
                 Address = $"{config.Host}:{config.Port}",
                 QQ = config.BotQQ.ToString(),
-                VerifyKey = config.AuthKey
+                VerifyKey = config.AuthKey,
+                UseHttps = config.UseHttps
             };
-
+            var i = true;
             while (true)
             {
                 try
@@ -86,9 +88,14 @@ namespace WFBot.Orichalt.OrichaltConnectors
                     await Bot.LaunchAsync();
                     break;
                 }
-                catch (FlurlHttpException)
+                catch (FlurlHttpException e)
                 {
                     Trace.WriteLine("MiraiHTTPv2连接失败, 1秒后重试···");
+                    if (i)
+                    {
+                        Trace.WriteLine(e.ToString());
+                    }
+                    i = false;
                     await Task.Delay(1000);
                 }
             }
