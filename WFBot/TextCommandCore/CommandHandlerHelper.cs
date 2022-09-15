@@ -48,14 +48,15 @@ namespace WFBot.TextCommandCore
             string result;
             try
             {
+                Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
+                TelemetryClient.AddMessageCount();
+
                 var method = GetCommandHandler<T>(message);
                 message = PreProcess(method, message, handlers);
 
                 var param = BuildParams(message, method);
                 var needMeasureTime = !method.IsAttributeDefined<DoNotMeasureTimeAttribute>();
 
-                Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
-                TelemetryClient.AddMessageCount();
                 Trace.WriteLine($"命令 {handlers.Message} 开始处理..");
                 Task<string> task;
                 if (method.ReturnType == typeof(Task))
