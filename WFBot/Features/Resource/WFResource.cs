@@ -171,7 +171,7 @@ namespace WFBot.Features.Resource
                 {
                     i.LastUpdated = DateTime.Now;
                     i.SHA = sha;
-                });
+                }).ToArray();
                 GitHubInfos.Save();
 
                 return true;
