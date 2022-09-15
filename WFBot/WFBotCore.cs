@@ -382,7 +382,8 @@ namespace WFBot
                     break;
             }
             Trace.WriteLine("加载米格尔网络...");
-            MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform);
+            _ = Task.Run(() =>
+                MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform));
 
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();

@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using WFBot.Features.Telemetry;
 using WFBot.Orichalt;
 
 
@@ -54,6 +55,7 @@ namespace WFBot.TextCommandCore
                 var needMeasureTime = !method.IsAttributeDefined<DoNotMeasureTimeAttribute>();
 
                 Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
+                TelemetryClient.AddMessageCount();
                 Trace.WriteLine($"命令 {handlers.Message} 开始处理..");
                 Task<string> task;
                 if (method.ReturnType == typeof(Task))

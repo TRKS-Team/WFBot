@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Management;
@@ -115,7 +116,8 @@ namespace WFBot.Features.Telemetry
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Trace.WriteLine("Telemetry 上报发生问题.");
+                    Trace.WriteLine(e);
                 }
             });
             try
@@ -126,8 +128,8 @@ namespace WFBot.Features.Telemetry
             }
             catch (Exception e)
             {
-                Console.WriteLine("Telemetry 启动失败.");
-                Console.WriteLine(e);
+                Trace.WriteLine("Telemetry 启动失败.");
+
                 _ = Task.Run(async () =>
                 {
                     while (true)
@@ -165,8 +167,14 @@ namespace WFBot.Features.Telemetry
                 connection.SendCoreAsync("ReportStarted", new object[] { new StartedReport(ClientID, startTime) });
 #endif                
             }
+        }
 
-
+        public static void AddMessageCount()
+        {
+            if (connected)
+            {
+                connection.SendCoreAsync("AddMessageCount", new object[] { });
+            }
         }
     }
 
@@ -190,7 +198,7 @@ namespace WFBot.Features.Telemetry
 
     }
 
-    public record CommandReport(string GroupID, string UserID, string Command, string Result, string EndTime, string ProcessingTime, string ClientID);
+    public record CommandReport(string GroupID, string UserID, string Command, string Result, DateTime EndTime, string ProcessingTime, string ClientID);
 
     public static class TelemetryExtensions
     {

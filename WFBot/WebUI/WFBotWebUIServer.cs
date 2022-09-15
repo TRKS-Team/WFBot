@@ -57,7 +57,7 @@ namespace WFBot.WebUI
                     x.Response.Cookies.Delete("auth");
 
                 }
-                x.Response.Cookies.Append("auth" ,x.Request.Query["password"]);
+                x.Response.Cookies.Append("auth" ,x.Request.Query["password"], new CookieOptions(){MaxAge = TimeSpan.FromDays(3), HttpOnly = true});
                 x.Response.Redirect("/");
             });
             app.RunAsync();
