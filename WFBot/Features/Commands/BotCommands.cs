@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WFBot.Features.Telemetry;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
@@ -90,6 +91,7 @@ namespace WFBot.Features.Commands
             }
 
             sb.AppendLine($"WFBot 版本: {VersionText}");
+            sb.AppendLine($"WFBot 客户端ID: {TelemetryClient.ClientID}");
 
             sb.AppendLine($"    任务API:  {(apistat.IsOnline ? $"{apistat.Latency}ms [在线]" : "[离线]")}");
             sb.AppendLine($"    WarframeMarket: {(wmstat.IsOnline ? $"{wmstat.Latency}ms [在线]" : "[离线]")}");

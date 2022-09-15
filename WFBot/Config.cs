@@ -13,6 +13,7 @@ namespace WFBot
     [Configuration("WFConfig")]
     public class Config : Configuration<Config>
     {
+        public string ClientGUID = Guid.NewGuid().ToString("D");
         public List<string> WFGroupList = new List<string>();
 
         public List<string> InvationRewardList = new List<string>();

@@ -31,7 +31,28 @@ namespace WFBot.Orichalt
 
             return "";
         }
+        public static string GetGroupIdentifier(this OrichaltContext o)
+        {
+            switch (o.Platform)
+            {
+                case MessagePlatform.OneBot:
+                    var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
+                    return $"QQ:{onebotcontext.Group}";
+                case MessagePlatform.Kaiheila:
+                    throw new NotImplementedException();
+                case MessagePlatform.QQChannel:
+                    throw new NotImplementedException();
+                case MessagePlatform.MiraiHTTP:
+                    var miraihttpcontext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
+                    return $"QQ:{miraihttpcontext.Group}";
 
+                case MessagePlatform.MiraiHTTPV1:
+                    var miraihttpcontext1 = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPV1Context(o);
+                    return $"QQ:{miraihttpcontext1.Group}";
+            }
+
+            return "";
+        }
         public static string GetSenderIdentifier(this OrichaltContext o)
         {
             switch (o.Platform)

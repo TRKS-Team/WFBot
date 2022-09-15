@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using Humanizer;
 using WFBot.Events;
 using WFBot.Features.Commands;
 using WFBot.Features.Common;
+using WFBot.Features.Telemetry;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
@@ -67,13 +69,23 @@ namespace WFBot.Features.Events
                     return;
                 }
 
+                var result = "";
                 if (handler.OutputStringBuilder.IsValueCreated)
                 {
-                    MiguelNetwork.Reply(o, handler.OutputStringBuilder.ToString().Trim());
+                    var s = handler.OutputStringBuilder.ToString().Trim();
+                    result = s;
+                    MiguelNetwork.Reply(o, s);
+                }
+
+                if (!commandProcessTask.Result.result.IsNullOrWhiteSpace())
+                {
+                    result = commandProcessTask.Result.result;
                 }
 #if DEBUG
                 if (commandProcessTask.Result.matched)
                 {
+                    Interlocked.Increment(ref WFBotCore.InstanceCommandsProcessed);
+                    TelemetryClient.ReportCommand(new CommandReport(o.GetGroupIdentifier().AnonymizeString(),o.GetSenderIdentifier().AnonymizeString() ,o.PlainMessage, result, DateTime.Now.ToString("u"), sw.Elapsed.TotalSeconds.ToString("F1")+"s", TelemetryClient.ClientID));
                     Trace.WriteLine($"命令 {platforminfo} 处理完成: {sw.Elapsed.Seconds:N1}s.");
                 }
 #endif

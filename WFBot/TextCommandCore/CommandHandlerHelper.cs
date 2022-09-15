@@ -53,6 +53,7 @@ namespace WFBot.TextCommandCore
                 var param = BuildParams(message, method);
                 var needMeasureTime = !method.IsAttributeDefined<DoNotMeasureTimeAttribute>();
 
+                Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
                 Trace.WriteLine($"命令 {handlers.Message} 开始处理..");
                 Task<string> task;
                 if (method.ReturnType == typeof(Task))
