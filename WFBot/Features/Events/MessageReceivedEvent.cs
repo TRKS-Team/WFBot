@@ -81,14 +81,14 @@ namespace WFBot.Features.Events
                 {
                     result = commandProcessTask.Result.result;
                 }
-#if DEBUG
+
                 if (commandProcessTask.Result.matched)
                 {
                     Interlocked.Increment(ref WFBotCore.InstanceCommandsProcessed);
                     TelemetryClient.ReportCommand(new CommandReport(o.GetGroupIdentifier().AnonymizeString(),o.GetSenderIdentifier().AnonymizeString() ,o.PlainMessage, result, DateTime.Now.ToString("u"), sw.Elapsed.TotalSeconds.ToString("F1")+"s", TelemetryClient.ClientID));
                     Trace.WriteLine($"命令 {platforminfo} 处理完成: {sw.Elapsed.Seconds:N1}s.");
                 }
-#endif
+
 
             });
         }

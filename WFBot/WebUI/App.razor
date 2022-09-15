@@ -1,7 +1,20 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using GammaLibrary.Extensions
+@inject IHttpContextAccessor context
+@inject NavigationManager _navigationManager
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        @if (!verified)
+        {
+            <h2 class="m-4">访问需要验证</h2>
+                <input class="form-control my-2 mx-4" style="width: 400px" @onkeydown="Callback" @bind="password" @bind:event="oninput" type="password"/>
+                <button class="btn btn-primary my-2 mx-4" @onclick="VerifyPassword">确认</button>
+            }
+        else
+        {
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+        }
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
@@ -11,3 +24,23 @@
     </NotFound>
 </Router>
     
+@code
+{
+    bool verified => Config.Instance.WebUIPassword.IsNullOrWhiteSpace() || context.HttpContext.Request.Cookies.TryGetValue("auth", out var pwd) && pwd == InternalPassword;
+    string password;
+    string InternalPassword => (Config.Instance.WebUIPassword + "5UPER_StR0NG_S1LT").SHA256().ToHexString();
+
+
+    void VerifyPassword()
+    {
+        _navigationManager.NavigateTo($"/auth?password={(password + "5UPER_StR0NG_S1LT").SHA256().ToHexString()}", true);
+    }
+
+    void Callback(KeyboardEventArgs obj)
+    {
+        if (obj.Key == "Enter")
+        {
+            VerifyPassword();
+        }
+    }
+}

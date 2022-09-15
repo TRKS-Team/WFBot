@@ -77,7 +77,7 @@ namespace WFBot.Features.Telemetry
                             {
                                 var file = File.ReadAllText("/etc/lsb-release").Split('\n')
                                     .First(l => l.Contains("DISTRIB_DESCRIPTION")).Split('=')[1].Trim('\"');
-                                arch += " "+ file;
+                                arch = file;
                             }
                             catch (Exception)
                             {
@@ -109,7 +109,8 @@ namespace WFBot.Features.Telemetry
                         InstanceMessagesProcessed = WFBotCore.InstanceMessagesProcessed,
                         StartupTime = WFBotCore.StartUpTime,
                         TimeDifferenceFromRealTime = WFBotCore.TimeDelayFromRealTime.TotalMinutes.ToString("F1") + "min",
-                        Arch = arch
+                        Arch = arch,
+                        WFBotStorageSize = (new DirectoryInfo(".").EnumerateFiles("*.*", SearchOption.AllDirectories).Select(f => f.Length).Sum() / 1024.0 / 1024.0).ToString("F1") + "MB"
                     }});
                 }
                 catch (Exception e)
@@ -150,16 +151,21 @@ namespace WFBot.Features.Telemetry
 
         public static void ReportCommand(CommandReport commandReport)
         {
-            connection.SendCoreAsync("ReportCommand", new Object[] { commandReport});
+            if (connected)
+                connection.SendCoreAsync("ReportCommand", new Object[] { commandReport});
 
         }
 
         
         public static void ReportStarted(double startTime)
         {
+            if (connected)
+            {
 #if !DEBUG
-            connection.SendCoreAsync("ReportStarted", new object[]{new StartedReport(ClientID, startTime)});
-#endif
+                connection.SendCoreAsync("ReportStarted", new object[] { new StartedReport(ClientID, startTime) });
+#endif                
+            }
+
 
         }
     }
@@ -180,6 +186,8 @@ namespace WFBot.Features.Telemetry
         public string TimeDifferenceFromRealTime { get; set; }
         public string Arch { get; set; }
         public TimeSpan TimeDelay { get; set; }
+        public string WFBotStorageSize { get; set; }
+
     }
 
     public record CommandReport(string GroupID, string UserID, string Command, string Result, string EndTime, string ProcessingTime, string ClientID);
