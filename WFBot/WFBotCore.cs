@@ -448,7 +448,7 @@ namespace WFBot
                 }
                 var sntpClient = new SNTPClient("ntp.aliyun.com");
                 sntpClient.Connect(false);
-                var timeSpan = TimeSpan.FromMilliseconds(sntpClient.LocalClockOffset);
+                var timeSpan = TimeSpan.FromMilliseconds(sntpClient.LocalClockOffset) + TimeSpan.FromHours(8);
                 TimeDelayFromRealTime = timeSpan;
                 if (timeSpan.TotalMinutes > 1)
                 {
