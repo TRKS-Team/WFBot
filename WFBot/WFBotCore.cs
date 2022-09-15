@@ -450,7 +450,7 @@ namespace WFBot
                 sntpClient.Connect(false);
                 var timeSpan = TimeSpan.FromMilliseconds(sntpClient.LocalClockOffset) + TimeSpan.FromHours(8);
                 TimeDelayFromRealTime = timeSpan;
-                if (timeSpan.TotalMinutes > 1)
+                if (timeSpan.TotalMinutes is > 1 or < 1)
                 {
                     var msg = $"*************警告: 你的系统时间与世界时间相差了1分钟以上, 具体来说是{timeSpan.TotalMinutes}分钟, 请调整系统时间, 否则可能会造成通知不精确.**************";
                     Messenger.SendDebugInfo(msg);

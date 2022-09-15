@@ -68,6 +68,7 @@ namespace WFBot
         public Dictionary<string, string> CustomReplies = new Dictionary<string, string>();
 
         public bool UseTelemetry = true;
+        public bool SendResourceUpdateNotification = true;
         public MessagePlatform Miguel_Platform = MessagePlatform.Unknown;
 
         protected override void AfterUpdate()
