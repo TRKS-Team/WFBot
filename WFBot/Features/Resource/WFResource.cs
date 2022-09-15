@@ -156,7 +156,15 @@ namespace WFBot.Features.Resource
                     return false;
                 }
                 if (sha == info.SHA) return false;
-                Messenger.SendDebugInfo($"资源系统: 发现 {info.Name} 有更新,正在更新···");
+                var s = $"发现{info.Name}有更新,正在更新···";
+                if (Config.Instance.SendResourceUpdateNotification)
+                {
+                    Messenger.SendDebugInfo(s);
+                }
+                else
+                {
+                    Trace.WriteLine(s);
+                }
                 await Task.WhenAll(WFResourcesManager.WFResourceDic[info.Category].Select(r => r.Reload(false)));
 
                 GitHubInfos.Instance.Infos.Where(i => i.Category == info.Category).ForEach(i =>
