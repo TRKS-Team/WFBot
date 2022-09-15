@@ -2,7 +2,9 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 ENV TZ=Asia/Shanghai
+RUN printf "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye main contrib non-free\ndeb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-updates main contrib non-free\ndeb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-backports main contrib non-free\ndeb https://mirrors.tuna.tsinghua.edu.cn/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt update && apt install -y procps && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
