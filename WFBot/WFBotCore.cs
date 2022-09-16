@@ -15,6 +15,7 @@ using System.Timers;
 using GammaLibrary.Extensions;
 using InternetTime;
 using WFBot.Events;
+using WFBot.Features.CustomCommandContent;
 using WFBot.Features.Events;
 using WFBot.Features.Other;
 using WFBot.Features.Resource;
@@ -74,6 +75,9 @@ namespace WFBot
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             }
+
+
+            //return;
 
             var wfbot = new WFBotCore();
             try
@@ -171,7 +175,6 @@ namespace WFBot
                 }
 
                 OnConsoleCommand(text);
-
             }
         }
 
@@ -395,6 +398,15 @@ namespace WFBot
             Trace.WriteLine("加载自定义命令处理器...");
             CustomCommandMatcherHandler.InitCustomCommandHandler();
 
+            Trace.WriteLine("加载自定义命令内容处理器...");
+            try
+            {
+                CustomCommandContentHandler.Load();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             // 检查时间...
             _ = Task.Run(() => CheckTime());
 

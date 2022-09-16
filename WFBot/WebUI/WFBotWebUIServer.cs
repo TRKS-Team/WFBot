@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
+using BlazorStrap;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,10 +31,15 @@ namespace WFBot.WebUI
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+            builder.Services.AddBlazorStrap();
+            builder.Services.AddSignalR(e => {
+                e.MaximumReceiveMessageSize = 102400000;
+            });
             builder.Services.AddHttpContextAccessor();
             builder.Services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/WebUI/Pages");
             builder.WebHost.UseStaticWebAssets();
             builder.Logging.ClearProviders();
+            
             builder.Logging.AddProvider(new WFBotLoggingProvider());
             var app = builder.Build();
             
@@ -61,6 +68,7 @@ namespace WFBot.WebUI
                 x.Response.Redirect("/");
             });
             app.RunAsync();
+            
         }
 
         public static int GetServerPort()

@@ -85,7 +85,9 @@ namespace WFBot.Features.Events
                 if (commandProcessTask.Result.matched)
                 {
                     Interlocked.Increment(ref WFBotCore.InstanceCommandsProcessed);
+#if !DEBUG
                     TelemetryClient.ReportCommand(new CommandReport(o.GetGroupIdentifier().AnonymizeString(),o.GetSenderIdentifier().AnonymizeString() ,o.PlainMessage, result, DateTime.Now, sw.Elapsed.TotalSeconds.ToString("F1")+"s", TelemetryClient.ClientID));
+#endif
                     Trace.WriteLine($"命令 {platforminfo} 处理完成: {sw.Elapsed.Seconds:N1}s.");
                 }
 

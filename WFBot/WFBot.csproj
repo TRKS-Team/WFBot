@@ -16,6 +16,7 @@
 	<PropertyGroup>
 		<NoWarn>1701;1702;MSB3042</NoWarn>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
 		<DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
@@ -47,6 +48,7 @@
 		<PackageReference Include="IdentityModel" Version="4.1.1" />
 		<PackageReference Include="Lib.Harmony" Version="2.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.9" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0-1.final" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
 		<PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.4" />
@@ -61,15 +63,19 @@
 	<ItemGroup>
 		<EmbeddedResource Include="wwwroot\**" />
 		<Content Remove="wwwroot\css\site.css" />
+		<Content Remove="wwwroot\js\editor.js" />
+		<EmbeddedResource Include="Features\Utils\WFFormatter.cs" />
 		<EmbeddedResource Update="Windows/Settings.resx" ExcludeFromManifest="true" />
 	</ItemGroup>
 
 	<ItemGroup>
+		
 		<Compile Update="Windows\Settings.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Dll\" />
+		<Folder Include="Features\NewFolder\" />
 	</ItemGroup>
 
 	<ItemGroup>

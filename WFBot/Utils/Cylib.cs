@@ -149,6 +149,7 @@ namespace WFBot.Utils
 
     public static class DictionaryExtensions
     {
+
         public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> directory, TKey key, Func<TValue> creator = null) where TValue : new()
         {
             if (!directory.ContainsKey(key)) directory[key] = creator == null ? new TValue() : creator();
@@ -168,6 +169,13 @@ namespace WFBot.Utils
 
     public static class SomeExtensions
     {
+        // 从WFFormatter 移动而来
+        public static string RemoveEnds(this string str)
+            // 这个写的不错
+            // 还符合我的意思
+        {
+            return str.Replace("Component", "").Replace("Blueprint", "");
+        }
         public static T[][] ChunkBy<T>(this IEnumerable<T> source, int chunkSize)
         {
             return source
