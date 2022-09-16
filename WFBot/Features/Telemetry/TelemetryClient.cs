@@ -20,7 +20,15 @@ namespace WFBot.Features.Telemetry
 
         static string GetClientID()
         {
-            var mem = new MemoryMetricsClient().GetMetrics().Total;
+            double mem = 0;
+            try
+            {
+                mem = new MemoryMetricsClient().GetMetrics().Total;
+            }
+            catch (Exception)
+            {
+            }
+
             var cpu = Environment.ProcessorCount;
             var path = Environment.CurrentDirectory;
             var guid = Config.Instance.ClientGUID;
@@ -32,7 +40,7 @@ namespace WFBot.Features.Telemetry
         {
             if (!Config.Instance.UseTelemetry) return;
             
-            Console.WriteLine("此版本 WFBot 带有数据收集来改进用户体验. 收集的内容包括基本系统信息、启动时间、命令处理异常、是否在线等, 并且已经匿名化处理. "
+            Console.WriteLine("此版本 WFBot 带有数据收集来改进用户体验. 收集的内容包括基本系统信息、启动时间、命令处理内容、是否在线等, 并且已经匿名化处理. "
                               //"如果你不喜欢, 可以在 Config.json 中关闭."
                               );
 
@@ -63,8 +71,16 @@ namespace WFBot.Features.Telemetry
             {
                 try
                 {
-                    var memory = new MemoryMetricsClient().GetMetrics();
+                    MemoryMetrics memory = new MemoryMetrics();
+                    try
+                    {
+                        memory = new MemoryMetricsClient().GetMetrics();
+                    }
+                    catch (Exception)
+                    {
+                    }
                     string arch;
+
                     if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
                     {
                         arch = "Docker";
@@ -111,6 +127,7 @@ namespace WFBot.Features.Telemetry
                         StartupTime = WFBotCore.StartUpTime,
                         TimeDifferenceFromRealTime = WFBotCore.TimeDelayFromRealTime.TotalMinutes.ToString("F1") + "min",
                         Arch = arch,
+                        InstanceRunningTime = (DateTime.Now - WFBotCore.StartTime).TotalHours.ToString("F1") + "h",
                         WFBotStorageSize = (new DirectoryInfo(".").EnumerateFiles("*.*", SearchOption.AllDirectories).Select(f => f.Length).Sum() / 1024.0 / 1024.0).ToString("F1") + "MB"
                     }});
                 }
@@ -195,6 +212,8 @@ namespace WFBot.Features.Telemetry
         public string Arch { get; set; }
         public TimeSpan TimeDelay { get; set; }
         public string WFBotStorageSize { get; set; }
+        public string InstanceRunningTime { get; set; }
+        public int ReportVersion { get; set; } = 1;
 
     }
 
