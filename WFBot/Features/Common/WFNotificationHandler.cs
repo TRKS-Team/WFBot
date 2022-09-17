@@ -191,7 +191,7 @@ namespace WFBot.Features.Other
 
                     if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
                     {
-                        var notifyText = $"指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n" +
+                        var notifyText = $"" +
                                          $"{WFFormatter.ToString(inv)}";
 
                         MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
@@ -249,7 +249,7 @@ namespace WFBot.Features.Other
         
         private void SendWFAlert(WFAlert alert)
         {
-            var result = "指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
+            var result = "" +
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
             MiguelNetwork.Broadcast(result);
             sendedAlertsSet.Add(alert.Id);

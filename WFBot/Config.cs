@@ -70,7 +70,8 @@ namespace WFBot
         public bool UseTelemetry = true;
         public bool SendResourceUpdateNotification = true;
         public MessagePlatform Miguel_Platform = MessagePlatform.Unknown;
-
+        public bool EnableCustomCommandContent = false;
+        
         protected override void AfterUpdate()
         {
             // 这里我写的好丑

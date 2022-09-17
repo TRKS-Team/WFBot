@@ -1,0 +1,94 @@
+﻿@page "/customcommandcontent"
+@using WFBot.Features.CustomCommandContent
+@using GammaLibrary.Extensions
+@using GammaLibrary.Common
+@inject IJSRuntime js
+@inject IBlazorStrap _blazorStrap
+
+<PageTitle>设置</PageTitle>
+<BSToaster/>
+<h1>自定义消息内容</h1>
+<p>
+    警告: 这是一个极限测试版的功能, 非常不稳定, 使用需要在设置中开启. 如果遇到什么问题, 请刷新这个页面或重启 WFBot. 随着 WFBot 的更新, 里面的内容还会保持旧版, 所以你可能需要定期更新这个文件.
+</p>
+
+<p>当前状态: @(Config.Instance.EnableCustomCommandContent ? "启用" : "**禁用**")</p>
+<p>
+    上次保存时的 WFBot 版本: @(CustomCommandContentConfig.Instance.LastSaveVersion.IsNullOrWhiteSpace() ? "从来没有保存过" : CustomCommandContentConfig.Instance.LastSaveVersion) &nbsp;&nbsp;&nbsp;
+    @if (CustomCommandContentConfig.Instance.LastSaveVersion != WFBotCore.Version)
+    {
+        <a href=@($"https://github.com/TRKS-Team/WFBot/compare/v1.0.{CustomCommandContentConfig.Instance.LastSaveVersion.Split('.').Last().Split('+').First()}-universal.0...v1.0.{WFBotCore.Version.Split('.').Last().Split('+').First()}-universal.0?diff=unified")>对比和上次更改的源文件修改内容, 请转到 WFFormatter.cs</a>
+    }
+</p>
+
+<div class="btn-group my-2">
+    <button class="btn btn-primary" @onclick="Apply">保存并应用</button>
+    <button class="btn btn-primary" @onclick="ResetToCurrent">重置编辑器为当前保存内容</button>
+    <button class="btn btn-warning" @onclick="ResetToDefault">重置编辑器为当前版本默认内容</button>
+</div>
+
+<div id="container" style="width:100%;height:700px;border:1px solid grey"></div>
+
+@code {
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        { 
+            await js.InvokeAsync<object>("load_editor");
+            var content = CustomCommandContentConfig.Instance.Content;
+            await js.InvokeAsync<object>("set_editor_content", content.IsNullOrWhiteSpace() ? GetDefaultContent() : content);
+        }
+    }
+
+    string GetDefaultContent()
+    {
+        return GammaLibrary.Resource.FromManifestResource("WFBot.Features.Utils.WFFormatter.cs").String.Replace("WFFormatter", "WFFormatterCustom");
+    }
+
+    
+
+
+    async void ResetToDefault()
+    {
+        await js.InvokeAsync<object>("set_editor_content", GetDefaultContent());
+    }
+
+    async void ResetToCurrent()
+    {
+        var content = CustomCommandContentConfig.Instance.Content;
+        await js.InvokeAsync<object>("set_editor_content", content);
+    }
+
+    AsyncLock locker = new AsyncLock();
+
+    async void Apply()
+    {
+        await locker.WaitAsync();
+        try
+        {
+            var content = await js.InvokeAsync<string>("get_editor_content");
+            var s = await Task.Run(() =>
+            {
+                try
+                {
+                    CustomCommandContentConfig.Instance.Content = content;
+                    CustomCommandContentConfig.Save();
+                    CustomCommandContentHandler.Load(true);
+                    return "成功!";
+                }
+                catch (Exception e)
+                {
+                    return e.ToString();
+                }
+            });
+            Console.WriteLine(s);
+            _blazorStrap.Toaster.Add("提示" ,s);
+        }
+        finally
+        {
+            locker.Dispose();
+        }
+    }
+
+}

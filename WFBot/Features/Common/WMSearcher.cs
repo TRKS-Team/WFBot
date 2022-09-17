@@ -279,35 +279,15 @@ namespace WFBot.Features.Common
             var items = new List<Sale>();
             if (!Search(word, ref items) || items.IsEmpty())
             {
-                var sb = new StringBuilder();
-                // var similarlist = translator.GetSimilarItem(item.Format(), "wm");
-                sb.AppendLine($"物品 {word} 不存在或格式错误.");
-                /*if (similarlist.Any())
-                {
-                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
-                    foreach (var similarresult in similarlist)
-                    {
-                        sb.AppendLine($"    {similarresult}");
-                    }
-                }*/
-                if (items.Any())
-                {
-                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
-                    foreach (var item in items.Take(5).Select(i => i.zh))
-                    {
-                        sb.AppendLine($"    {item}");
-                    }
-                }
-                sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
-
-                return sb.ToString().Trim().AddRemainCallCount();
+                return WFFormatter.FormatWMInfo(word, items);
             }
+
 
             var searchword = items.First().code;
             var msg = string.Empty;
             if (Config.Instance.NotifyBeforeResult)
             {
-                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), $"正在查询: {word}");
+                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), WFFormatter.Searching(word));
             }
 
             /*if (Config.Instance.IsThirdPartyWM)
@@ -371,5 +351,7 @@ namespace WFBot.Features.Common
 
             return msg.AddPlatformInfo().AddRemainCallCount();
         }
+
+ 
     }
 }
