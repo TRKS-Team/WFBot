@@ -13,8 +13,11 @@ namespace WFBot
     [Configuration("WFConfig")]
     public class Config : Configuration<Config>
     {
-        public List<string> WFGroupList = new List<string>();
+        public string ClientGUID = Guid.NewGuid().ToString("D");
+        public string WebUIPassword = "";
 
+        public List<string> WFGroupList = new List<string>();
+        
         public List<string> InvationRewardList = new List<string>();
 
         public string Code = "*******";

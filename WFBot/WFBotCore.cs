@@ -18,6 +18,7 @@ using WFBot.Events;
 using WFBot.Features.Events;
 using WFBot.Features.Other;
 using WFBot.Features.Resource;
+using WFBot.Features.Telemetry;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
@@ -332,6 +333,7 @@ namespace WFBot
             Config.Update();
             Config.Save();
 
+            TelemetryClient.Start();
             // 初始化 WebUI
             WebUIServer = new WFBotWebUIServer();
             WebUIServer.Run();
@@ -380,7 +382,8 @@ namespace WFBot
                     break;
             }
             Trace.WriteLine("加载米格尔网络...");
-            MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform);
+            _ = Task.Run(() =>
+                MiguelNetwork.InitMiguelNetwork(IsTest ? MessagePlatform.Test : Config.Instance.Miguel_Platform));
 
             Trace.WriteLine("加载资源...");
             await WFResources.InitWFResource();
@@ -409,11 +412,31 @@ namespace WFBot
 
             _requestedCtrlCShutdown = false;
             Trace.WriteLine("");
-            Messenger.SendDebugInfo($"<<<<   WFBot 加载完成. 用时 {sw.Elapsed.TotalSeconds:F1}s.   >>>>");
+            var startTime = sw.Elapsed.TotalSeconds;
+            StartUpTime = startTime.ToString("F1")+"s";
+            string t = "";
+            try
+            {
+                var hc = new HttpClient();
+                var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}");
+                t = s;
+            }
+            catch (Exception)
+            {
+            }
+            Messenger.SendDebugInfo($"<<<<   WFBot 加载完成. 用时 {startTime:F1}s. {t}  >>>>");
             Trace.WriteLine("WebUI 在 "+ $"http://localhost:{WFBotWebUIServer.GetServerPort()}" +" 启用.");
             Trace.WriteLine("");
+            if (TelemetryClient.connected)
+            {
+                TelemetryClient.ReportStarted(startTime);
+            }
         }
 
+        public static string StartUpTime { get; private set; }
+        public static TimeSpan TimeDelayFromRealTime { get; private set; }
+        public volatile static int InstanceMessagesProcessed = 0;
+        public volatile static int InstanceCommandsProcessed = 0;
         void CheckTime()
         {
             try
@@ -426,7 +449,8 @@ namespace WFBot
                 var sntpClient = new SNTPClient("ntp.aliyun.com");
                 sntpClient.Connect(false);
                 var timeSpan = TimeSpan.FromMilliseconds(sntpClient.LocalClockOffset) + TimeSpan.FromHours(8);
-                if (timeSpan.TotalMinutes is > 1 or < 1)
+                TimeDelayFromRealTime = timeSpan;
+                if (timeSpan.TotalMinutes is > 1 or < -1)
                 {
                     var msg = $"*************警告: 你的系统时间与世界时间相差了1分钟以上, 具体来说是{timeSpan.TotalMinutes}分钟, 请调整系统时间, 否则可能会造成通知不精确.**************";
                     Messenger.SendDebugInfo(msg);

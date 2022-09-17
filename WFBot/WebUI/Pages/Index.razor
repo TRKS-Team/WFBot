@@ -1,12 +1,15 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Server.Circuits
 @using System.Diagnostics
+@using WFBot.Features.Telemetry
 @implements IDisposable
 <PageTitle>主页</PageTitle>
 <h1>WFBot Dashboard</h1>
 <h2>状态</h2>
+<p>客户端 ID @(TelemetryClient.ClientID)</p>
 <p>已经运行了 @((DateTime.Now - WFBotCore.StartTime).ToString("d' 天 'hh\\:mm\\:ss")).</p>
 <p>当前内存占用 @((Environment.WorkingSet / 1024.0 / 1024.0).ToString("F2")) MB.</p>
+<p>当前存储占用 @((new DirectoryInfo(".").EnumerateFiles("*.*", SearchOption.AllDirectories).Select(f => f.Length).Sum() / 1024.0 / 1024.0).ToString("F1") + " MB").</p>
 <!--TODO 写一个检测是否最新版-->
 <br>
 <h2>日志</h2>

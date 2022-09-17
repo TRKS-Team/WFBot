@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using WFBot.Features.Telemetry;
 using WFBot.Orichalt;
 
 
@@ -47,6 +48,9 @@ namespace WFBot.TextCommandCore
             string result;
             try
             {
+                Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
+                TelemetryClient.AddMessageCount();
+
                 var method = GetCommandHandler<T>(message);
                 message = PreProcess(method, message, handlers);
 

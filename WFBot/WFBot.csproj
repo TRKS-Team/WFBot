@@ -46,6 +46,7 @@
 		<PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
 		<PackageReference Include="IdentityModel" Version="4.1.1" />
 		<PackageReference Include="Lib.Harmony" Version="2.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.9" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
 		<PackageReference Include="Mirai-CSharp" Version="1.0.2.2-preview.4" />

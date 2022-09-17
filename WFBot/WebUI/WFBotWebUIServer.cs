@@ -29,6 +29,7 @@ namespace WFBot.WebUI
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+            builder.Services.AddHttpContextAccessor();
             builder.Services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/WebUI/Pages");
             builder.WebHost.UseStaticWebAssets();
             builder.Logging.ClearProviders();
@@ -49,7 +50,16 @@ namespace WFBot.WebUI
 
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
+            app.MapGet("/auth", async (x) =>
+            {
+                if (x.Request.Cookies.Any(c => c.Key == "auth"))
+                {
+                    x.Response.Cookies.Delete("auth");
 
+                }
+                x.Response.Cookies.Append("auth" ,x.Request.Query["password"], new CookieOptions(){MaxAge = TimeSpan.FromDays(3), HttpOnly = true});
+                x.Response.Redirect("/");
+            });
             app.RunAsync();
         }
 

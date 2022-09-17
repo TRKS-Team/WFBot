@@ -323,6 +323,11 @@ namespace WFBot.Orichalt
             {
                 return;
             }
+            if (!Inited)
+            {
+                Console.WriteLine("正在等待 Miguel Network 初始化完成...");
+                SpinWait.SpinUntil(() => Inited);
+            }
             switch (Platform)
             {
                 case MessagePlatform.OneBot:
@@ -343,6 +348,11 @@ namespace WFBot.Orichalt
         /// <param name="content">消息内容</param>
         public static void Broadcast(string content)
         {
+            if (!Inited)
+            {
+                Trace.WriteLine("由于 Miguel Network 未初始化完成, 广播无法发送.");
+                return;
+            }
             Task.Factory.StartNew(() =>
             {
                 var count = 0;
