@@ -18,47 +18,21 @@ namespace WFBot.Features.Commands
         {
             if (word == "wiki")
             {
-                return $"为指挥官献上wiki的链接: {wikilink}";
+                return WFFormatter.GetWikiLink();
             }
 
             var wiki = await GetWiki(word);
-            if (!string.IsNullOrEmpty(wiki?.error?.code))
-            {
-                var sb1 = new StringBuilder();
-                sb1.AppendLine("灰机wikiApi出错");
-                sb1.AppendLine($"错误代码: {wiki?.error?.code}");
-                sb1.AppendLine($"错误描述: {wiki?.error?.info}");
-                return sb1.ToString().Trim();
-            }
-            var words = wiki.query.search.Select(s => s.title).Where(w => w.Format() == word.Format()).ToArray();
-            if (words.Any())
-            {
-                // it's not stupid if it works https://stackoverflow.com/questions/4396598/whats-the-difference-between-escapeuristring-and-escapedatastring/34189188#34189188
-#pragma warning disable SYSLIB0013
-                return $"为指挥官献上[{word}]的链接: {wikilink + Uri.EscapeUriString(words.First()).Replace("'", "%27")}";
-#pragma warning restore SYSLIB0013
-            }
-            var sb = new StringBuilder();
-            sb.AppendLine($"Wiki页面 {word} 不存在.");
-            var similarlist = wiki.query.search.Select(s => s.title).Take(3).ToArray();
-            if (similarlist.Any())
-            {
-                sb.AppendLine("相似内容:（可复制下面来搜索)");
-                foreach (var item in similarlist)
-                {
-                    sb.AppendLine($"    {item}");
-                }
-            }
-
-            return sb.ToString().Trim();
+            return WFFormatter.FormatWikiCommand(word, wiki);
             /*return
                 "灰机wiki的warframe分区由于不规范爬虫导致暂时隔离, warframe区全站不可访问, 具体信息请看: https://www.huijiwiki.com/wiki/Warframe%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA:403";*/
             // 这简直就是官方吞mod最形象的解释
         }
 
+
+
         private const string wikilink = "https://warframe.huijiwiki.com/wiki/";
 
-        
+
         Task<Wiki> GetWiki(string word)
         {
             return WebHelper.DownloadJsonAsync<Wiki>(

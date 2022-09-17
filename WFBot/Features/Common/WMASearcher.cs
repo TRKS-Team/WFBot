@@ -40,7 +40,7 @@ namespace WFBot.Features.Common
                 var weapon = weapons.First();
                 if (Config.Instance.NotifyBeforeResult)
                 {
-                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), $"正在查询: {weapon.zhname}");
+                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), WFFormatter.Searching(weapon.zhname));
                 }
 
                 var auctions = await GetRivenAuctions(weapon.urlname);
@@ -50,20 +50,13 @@ namespace WFBot.Features.Common
             }
             else
             {
-                sb.AppendLine($"武器 {name} 不存在");
                 var similarlist = translator.GetSimilarItem(name, "wma");
-                if (similarlist.Any())
-                {
-                    sb.AppendLine("请问这下面有没有你要找的武器呢?（可尝试复制下面的名称来进行搜索)");
-                    foreach (var item in similarlist)
-                    {
-                        sb.AppendLine($"    {item}");
-                    }
-                }
+                WFFormatter.WeaponNotExists(name, sb, similarlist);
             }
 
             return sb.ToString().Trim();
         }
 
+        
     }
 }

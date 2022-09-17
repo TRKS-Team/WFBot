@@ -97,6 +97,93 @@ namespace WFBot.Features.Utils
             return sb.ToString();
         }
 
+        private const string wikilink = "https://warframe.huijiwiki.com/wiki/";
+
+
+        public static string GetWikiLink()
+        {
+            return $"为指挥官献上wiki的链接: {wikilink}";
+        }
+
+        public static void WeaponNotExists(string name, StringBuilder sb, List<string> similarlist)
+        {
+            sb.AppendLine($"武器 {name} 不存在");
+            if (similarlist.Any())
+            {
+                sb.AppendLine("请问这下面有没有你要找的武器呢?（可尝试复制下面的名称来进行搜索)");
+                foreach (var item in similarlist)
+                {
+                    sb.AppendLine($"    {item}");
+                }
+            }
+        }
+
+        public static string Searching(string weapon)
+        {
+            return $"正在查询: {weapon}";
+        }
+
+        public static string FormatWMInfo(string word, List<Sale> items)
+        {
+            var sb = new StringBuilder();
+            // var similarlist = translator.GetSimilarItem(item.Format(), "wm");
+            sb.AppendLine($"物品 {word} 不存在或格式错误.");
+            /*if (similarlist.Any())
+                {
+                    sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                    foreach (var similarresult in similarlist)
+                    {
+                        sb.AppendLine($"    {similarresult}");
+                    }
+                }*/
+            if (items.Any())
+            {
+                sb.AppendLine($"请问这下面有没有你要找的物品呢?（可尝试复制下面的名称来进行搜索)");
+                foreach (var item in items.Take(5).Select(i => i.zh))
+                {
+                    sb.AppendLine($"    {item}");
+                }
+            }
+
+            sb.AppendLine("注: 这个命令是用来查询 WarframeMarket 上面的物品的, 不是其他什么东西.");
+
+            return sb.ToString().Trim().AddRemainCallCount();
+        }
+
+        public static string FormatWikiCommand(string word, Wiki wiki)
+        {
+            if (!string.IsNullOrEmpty(wiki?.error?.code))
+            {
+                var sb1 = new StringBuilder();
+                sb1.AppendLine("灰机wikiApi出错");
+                sb1.AppendLine($"错误代码: {wiki?.error?.code}");
+                sb1.AppendLine($"错误描述: {wiki?.error?.info}");
+                return sb1.ToString().Trim();
+            }
+
+            var words = wiki.query.search.Select(s => s.title).Where(w => w.Format() == word.Format()).ToArray();
+            if (words.Any())
+            {
+                // it's not stupid if it works https://stackoverflow.com/questions/4396598/whats-the-difference-between-escapeuristring-and-escapedatastring/34189188#34189188
+#pragma warning disable SYSLIB0013
+                return $"为指挥官献上[{word}]的链接: {wikilink + Uri.EscapeUriString(words.First()).Replace("'", "%27")}";
+#pragma warning restore SYSLIB0013
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Wiki页面 {word} 不存在.");
+            var similarlist = wiki.query.search.Select(s => s.title).Take(3).ToArray();
+            if (similarlist.Any())
+            {
+                sb.AppendLine("相似内容:（可复制下面来搜索)");
+                foreach (var item in similarlist)
+                {
+                    sb.AppendLine($"    {item}");
+                }
+            }
+
+            return sb.ToString().Trim();
+        }
 
 
 
@@ -331,7 +418,8 @@ namespace WFBot.Features.Utils
             var reward = mission.Reward;
             var time = (alert.Expiry - DateTime.Now).Humanize(int.MaxValue, CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Minute, " ");
 
-            return $"[{mission.Node}] 等级{mission.MinEnemyLevel}~{mission.MaxEnemyLevel}:\r\n" +
+            return $"指挥官, Ordis拦截到了一条警报, 您要开始另一项光荣的打砸抢任务了吗?\r\n" +
+                $"[{mission.Node}] 等级{mission.MinEnemyLevel}~{mission.MaxEnemyLevel}:\r\n" +
                    $"- 类型:     {mission.Type} - {mission.Faction}\r\n" +
                    $"- 奖励:     {ToString(reward)}\r\n" +
                    //$"-过期时间: {alert.Expiry}({time} 后)" +
@@ -596,7 +684,7 @@ namespace WFBot.Features.Utils
         {
             var sb = new StringBuilder();
             var completion = Math.Floor(inv.completion);
-
+            sb.Append("指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n");
             sb.AppendLine($"地点: [{inv.node}]");
 
             sb.AppendLine($"> 进攻方: {inv.attackingFaction}");
