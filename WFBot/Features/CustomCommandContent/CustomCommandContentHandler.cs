@@ -8,9 +8,11 @@ using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using GammaLibrary.Extensions;
+using HarmonyLib;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 
@@ -26,12 +28,16 @@ namespace WFBot.Features.CustomCommandContent
 
     public class CustomCommandContentHandler
     {
-
+        static bool FirstLoad = true;
 
         public static unsafe void Load(bool forceCreate = false)
         {
             if (!Config.Instance.EnableCustomCommandContent || CustomCommandContentConfig.Instance.Content.IsNullOrWhiteSpace()) return;
-
+            if (FirstLoad)
+            {
+                FirstLoad = false;
+                new Harmony("what").PatchAll(Assembly.GetCallingAssembly());
+            }
             var syntaxTree = CSharpSyntaxTree.ParseText(CustomCommandContentConfig.Instance.Content);
             var dir = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
@@ -95,25 +101,30 @@ namespace WFBot.Features.CustomCommandContent
             CustomCommandContentConfig.Save();
             var type = Assembly.Load(bytes).GetType("WFBot.Features.Utils.WFFormatterCustom").GetMethods(BindingFlags.Public | BindingFlags.Static);
             var originType = typeof(WFFormatter).GetMethods(BindingFlags.Public | BindingFlags.Static);
-
-            foreach (var info in originType)
+            
+            // foreach (var info in originType)
+            // {
+            //     var handleValue = (int*)info.MethodHandle.Value;
+            //     var method = type.FirstOrDefault(x => x.ToString().Replace("WFFormatterCustom", "WFFormatter") == info.ToString());
+            //     var m1 = new DynamicMethod("", info.ReturnType, info.GetParameters().Select(x=> x.ParameterType).ToArray());
+            //     
+            //     if (method != null)
+            //     {
+            //         //Console.WriteLine($"Replacing {method.ToString()}");
+            //         if (Environment.Is64BitProcess)
+            //         {
+            //             Unsafe.Write(handleValue + 4, method.MethodHandle.GetFunctionPointer().ToInt64());
+            //         }
+            //         else
+            //         {
+            //             Unsafe.Write(handleValue + 2, method.MethodHandle.GetFunctionPointer().ToInt32());
+            //         }
+            //     }
+            // }
+            foreach (var info in type)
             {
-                var handleValue = (int*)info.MethodHandle.Value;
-                var method = type.FirstOrDefault(x => x.ToString().Replace("WFFormatterCustom", "WFFormatter") == info.ToString());
-                if (method != null)
-                {
-                    //Console.WriteLine($"Replacing {method.ToString()}");
-                    if (Environment.Is64BitProcess)
-                    {
-                        Unsafe.Write(handleValue + 4, method.MethodHandle.GetFunctionPointer().ToInt64());
-                    }
-                    else
-                    {
-                        Unsafe.Write(handleValue + 2, method.MethodHandle.GetFunctionPointer().ToInt32());
-                    }
-                }
+                proxyMethods[info.ToString().Replace("WFFormatterCustom", "WFFormatter")] = info;
             }
-
 
 
         }
@@ -123,6 +134,43 @@ namespace WFBot.Features.CustomCommandContent
             return CustomCommandContentConfig.Instance.LastCompileHash !=
                    CustomCommandContentConfig.Instance.Content.SHA256().ToHexString();
 
+        }
+
+        static Dictionary<string, MethodBase> proxyMethods = new Dictionary<string, MethodBase>();
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static object InvokeInternal(string methodInfoName, object[] arguments)
+        {
+            if (proxyMethods.ContainsKey(methodInfoName))
+            {
+                return proxyMethods[methodInfoName].Invoke(null, arguments);
+            }
+
+            return null;
+        }
+    }
+
+    [HarmonyPatch()]
+    public class CustomCommandContentCreator
+    {
+        [HarmonyTargetMethods]
+        static IEnumerable<MethodBase> TargetMethods()
+        {
+            var s = AccessTools.GetTypesFromAssembly(typeof(WFBotCore).Assembly).Where(t => t.Name == "WFFormatter")
+                .SelectMany(type => type.GetMethods())
+                .Where(m => m.Name != "GetType" && m.Name != "Equals" && m.Name != "GetHashCode")
+                .Where(m => !(m.Name == "ToString" && m.GetParameters().Length == 0))
+                .Cast<MethodBase>().ToArray();
+           
+
+            return s;
+        }
+
+        [HarmonyPrefix]
+        static bool Prefix(object __instance, MethodBase __originalMethod, object[] __args, ref object __result)
+        {
+            var s = __originalMethod.ToString();
+            __result = CustomCommandContentHandler.InvokeInternal(s, __args);
+            return __result == null;
         }
     }
 }

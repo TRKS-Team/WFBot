@@ -9,10 +9,10 @@
 <BSToaster/>
 <h1>自定义消息内容</h1>
 <p>
-    警告: 这是一个极限测试版的功能, 非常不稳定, 使用需要在设置中开启, 如果遇到什么问题, 请刷新这个页面. 随着 WFBot 的更新, 里面的内容还会保持旧版, 所以你可能需要定期更新这个文件
+    警告: 这是一个极限测试版的功能, 非常不稳定, 使用需要在设置中开启. 如果遇到什么问题, 请刷新这个页面或重启 WFBot. 随着 WFBot 的更新, 里面的内容还会保持旧版, 所以你可能需要定期更新这个文件.
 </p>
 
-<p>当前状态: @(Config.Instance.EnableCustomCommandContent ? "启用" : "禁用")</p>
+<p>当前状态: @(Config.Instance.EnableCustomCommandContent ? "启用" : "**禁用**")</p>
 <p>
     上次保存时的 WFBot 版本: @(CustomCommandContentConfig.Instance.LastSaveVersion.IsNullOrWhiteSpace() ? "从来没有保存过" : CustomCommandContentConfig.Instance.LastSaveVersion) &nbsp;&nbsp;&nbsp;
     @if (CustomCommandContentConfig.Instance.LastSaveVersion != WFBotCore.Version)
