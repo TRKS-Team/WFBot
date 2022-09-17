@@ -120,7 +120,27 @@ namespace WFBot.Features.Commands
         async Task<string> Fissures(int tier = 0)
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
-            var fissures = (await api.GetFissures()).Where(fissure => fissure.active).ToList();
+            var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
+            return WFFormatter.ToString(fissures, tier);
+            // _fissures = api.GetFissures();
+        }
+
+        [Matchers("虚空风暴", "虚空裂缝", "虚空裂隙")]
+        [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
+        async Task<string> FissuresStorm(int tier = 0)
+        {
+            // var fissures = _fissures.Where(fissure => fissure.active).ToList();
+            var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
+            return WFFormatter.ToString(fissures, tier);
+            // _fissures = api.GetFissures();
+        }
+
+        [Matchers("钢铁裂缝", "钢铁裂缝", "钢铁裂隙")]
+        [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
+        async Task<string> FissuresHard(int tier = 0)
+        {
+            // var fissures = _fissures.Where(fissure => fissure.active).ToList();
+            var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
             return WFFormatter.ToString(fissures, tier);
             // _fissures = api.GetFissures();
         }

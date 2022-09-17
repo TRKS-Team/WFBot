@@ -634,7 +634,20 @@ namespace WFBot.Features.Utils
             foreach (var fissure in fissures.OrderBy(f => f.tierNum))
             {
                 sb.AppendLine($"[{fissure.node}]");
-                sb.AppendLine($"类型:    {fissure.missionType}-{fissure.enemy}");
+                sb.Append("类型:    ");
+                if (fissure.isHard)
+                {
+                    sb.Append("钢铁裂缝");
+                }
+                else if (fissure.isStorm)
+                {
+                    sb.Append("虚空风暴");
+                }
+                else
+                {
+                    sb.Append("普通裂缝");
+                }
+                sb.AppendLine($"-{fissure.missionType}-{fissure.enemy}");
                 sb.AppendLine($"纪元:    {fissure.tier}(T{fissure.tierNum})");
                 sb.AppendLine($"{fissure.eta} 后过期");
                 sb.AppendLine();
