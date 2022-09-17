@@ -1324,6 +1324,8 @@ namespace WFBot.Features.Utils
         public int tierNum { get; set; }
         public bool expired { get; set; }
         public string eta { get; set; }
+        public bool isStorm { get; set; }
+        public bool isHard { get; set; }
     }
 
 
