@@ -61,6 +61,8 @@ namespace WFBot.Tests
             InputCommand("/查询 瓦尔基里");
             InputCommand("/查询 电男");
             InputCommand("/查询 致残");
+            InputCommand("/虚空风暴 1");
+            InputCommand("/钢铁裂缝 1");
             File.AppendAllText("TestResult.log", Environment.NewLine + "Done.");
         }
 
