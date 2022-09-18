@@ -14,7 +14,7 @@ namespace WFBot.Orichalt
                     var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
                     return 
                         $"平台[OneBot] 群[{onebotcontext.Group}] 用户[{onebotcontext.SenderID}] 内容[{onebotcontext.RawMessage}]";
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     throw new NotImplementedException();
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
@@ -38,7 +38,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.OneBot:
                     var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
                     return $"QQ:{onebotcontext.Group}";
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     throw new NotImplementedException();
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
@@ -60,7 +60,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.OneBot:
                     var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
                     return $"QQ:{onebotcontext.SenderID}";
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     throw new NotImplementedException();
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();

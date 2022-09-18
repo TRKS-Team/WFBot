@@ -12,7 +12,7 @@ namespace WFBot.Orichalt
     public enum MessagePlatform
     {
         OneBot = 0,
-        Kaiheila = 1,
+        Kook = 1,
         QQChannel = 2,
         MiraiHTTP = 3,
         Test = 4,
@@ -143,7 +143,7 @@ namespace WFBot.Orichalt
             MiraiHTTPV1Contexts[o.UUID] = context;
             return o;
         }
-        public OrichaltContext PutPlatformContext(KaiheilaContext context)
+        public OrichaltContext PutPlatformContext(KookContext context)
         {
             throw new NotImplementedException();
         }

@@ -22,6 +22,7 @@ namespace WFBot.Orichalt
         public static OneBotCore OneBotCore;
         public static MiraiHTTPCore MiraiHTTPCore;
         public static MiraiHTTPV1Core MiraiHTTPV1Core;
+        public static KookCore KookCore;
 
         public static OrichaltContextManager OrichaltContextManager;
 
@@ -196,6 +197,15 @@ namespace WFBot.Orichalt
                     MiraiHTTPV1Core.MiraiHTTPMessageReceived += MiraiHTTPV1MessageReceived;
                     MiraiHTTPV1Core.Init().Wait();
                     break;
+                case MessagePlatform.Kook:
+                    KookCore = new KookCore();
+                    break;
+                case MessagePlatform.QQChannel:
+                    break;
+                case MessagePlatform.Test:
+                    break;
+                case MessagePlatform.Unknown:
+                    break;
             }
 
             OrichaltMessageRecived += MiguelNetwork_OrichaltMessageRecived;
@@ -257,7 +267,7 @@ namespace WFBot.Orichalt
                         IncreaseCallCounts(o);
                     }
                     break;
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     break;
                 case MessagePlatform.QQChannel:
                     break;
@@ -371,7 +381,7 @@ namespace WFBot.Orichalt
                         case MessagePlatform.MiraiHTTP:
                             MiraiHTTPSendToGroup(group, sb.ToString().Trim());
                             break;
-                        case MessagePlatform.Kaiheila:
+                        case MessagePlatform.Kook:
                             break;
                         case MessagePlatform.QQChannel:
                             break;
