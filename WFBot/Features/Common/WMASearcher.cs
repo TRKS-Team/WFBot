@@ -28,6 +28,7 @@ namespace WFBot.Features.Common
                 {new KeyValuePair<string, string>("Platform", platform)};
             var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(
                 $"https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name={urlname}&sort_by=price_desc", header);
+            
             return auctions.Payload.Auctions;
         }
         public async Task<string> SendRivenAuctions(string name)

@@ -274,6 +274,7 @@ namespace WFBot.Features.Common
                    item == (searchword = item.TrySearch(none, neuroptics: true));*/
         }
 
+
         public async Task<string> SendWMInfo(string word, bool quickReply, bool isbuyer)
         {
             var items = new List<Sale>();
@@ -289,6 +290,7 @@ namespace WFBot.Features.Common
             {
                 MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), WFFormatter.Searching(word));
             }
+            
 
             /*if (Config.Instance.IsThirdPartyWM)
             {
@@ -341,12 +343,12 @@ namespace WFBot.Features.Common
 
             if (!quickReply)
             {
-                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {word} -QR>";
+                msg = $"{msg}\n\n快捷回复请使用指令 <查询 {word} -QR> 或者直接发送<qr>来使用这次查询.";
             }
 
             if (!isbuyer)
             {
-                msg = $"{msg}\n\n查询买家请使用指令 <查询 {word} -B>";
+                msg = $"{msg}\n\n查询买家请使用指令 <查询 {word} -B> 或者直接发送<buyer>来使用这次查询.";
             }
 
             return msg.AddPlatformInfo().AddRemainCallCount();
