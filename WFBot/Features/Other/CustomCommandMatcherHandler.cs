@@ -15,7 +15,7 @@ namespace WFBot.Features.Other
 {
     public class CustomCommandMatcherHandler : ICommandHandler<CustomCommandMatcherHandler>
     {
-        static Lazy<CommandInfo[]> _commandInfos =
+        internal static Lazy<CommandInfo[]> _commandInfos =
             new Lazy<CommandInfo[]>(CommandHandlerHelper.GetCommandInfos<CommandsHandler>());
 
         static Dictionary<string, List<string>> CustomCommandsRegistry => CustomCommandConfig.Instance.CustomCommands;

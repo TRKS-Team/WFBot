@@ -1,0 +1,32 @@
+﻿@page "/commandalias"
+@using WFBot.Features.Other
+@using WFBot.TextCommandCore
+@using System.Reflection
+@using GammaLibrary.Extensions
+<PageTitle>命令别名</PageTitle>
+<h1>命令别名</h1>
+<p>配置命令的别名, 按行分割</p>
+<BSButton class="btn-primary mb-4" @onclick="CustomCommandConfig.Save">保存</BSButton>
+@foreach (var info in CustomCommandMatcherHandler._commandInfos.Value)
+{
+    var id = info.Method.Name;
+    <h2>@id</h2>
+    if (info.Method.IsAttributeDefined<MatchersAttribute>())
+    {
+        <p>默认匹配器: @(info.Method.GetCustomAttribute<MatchersAttribute>().Matchers.Connect())</p>
+    }
+    if (info.Method.IsAttributeDefined<MatchersIgnoreCaseAttribute>())
+    {
+        <p>默认匹配器(不区分大小写): @(info.Method.GetCustomAttribute<MatchersIgnoreCaseAttribute>().Matchers.Connect())</p>
+    }
+    <p>自定义匹配器</p>
+    <textarea type="text" value="@(CustomCommandsRegistry.ContainsKey(id) ? CustomCommandsRegistry[id].Connect("\n") : "")" @onchange="args => CustomCommandsRegistry[id] = args.Value.ToString().Split('\n').Where(l => !l.IsNullOrWhiteSpace()).ToList()" class="form-control my-3" style="min-height: 200px">
+
+</textarea>
+}
+
+
+@code {
+    internal static Dictionary<string, List<string>> CustomCommandsRegistry => CustomCommandConfig.Instance.CustomCommands;
+
+}
