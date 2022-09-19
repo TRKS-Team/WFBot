@@ -8,6 +8,7 @@ using GammaLibrary.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
 using WFBot.Orichalt;
 using InternetTime;
+using WFBot.Features.CustomCommandContent;
 
 namespace WFBot.Features.Telemetry
 {
@@ -128,7 +129,10 @@ namespace WFBot.Features.Telemetry
                         TimeDifferenceFromRealTime = WFBotCore.TimeDelayFromRealTime.TotalMinutes.ToString("F1") + "min",
                         Arch = arch,
                         InstanceRunningTime = (DateTime.Now - WFBotCore.StartTime).TotalHours.ToString("F1") + "h",
-                        WFBotStorageSize = (new DirectoryInfo(".").EnumerateFiles("*.*", SearchOption.AllDirectories).Select(f => f.Length).Sum() / 1024.0 / 1024.0).ToString("F1") + "MB"
+                        WFBotStorageSize = (new DirectoryInfo(".").EnumerateFiles("*.*", SearchOption.AllDirectories).Select(f => f.Length).Sum() / 1024.0 / 1024.0).ToString("F1") + "MB",
+                        WFBotMemory = (Environment.WorkingSet / 1024.0 / 1024.0).ToString("F1")+"MB",
+                        CustomCommandContentStatus = Config.Instance.EnableCustomCommandContent ? "启用 上次保存版本: " + CustomCommandContentConfig.Instance.LastSaveVersion : "禁用"
+
                     }});
                 }
                 catch (Exception e)
@@ -204,6 +208,8 @@ namespace WFBot.Features.Telemetry
         public string Version { get; set; }
         public string CPUCores { set; get; }
         public string Memory { get; set; }
+        public string WFBotMemory { get; set; }
+        public string CustomCommandContentStatus { get; set; }
         public string Connector { get; set; }
         public string Build { get; set; }
         public int InstanceMessagesProcessed { get; set; }
