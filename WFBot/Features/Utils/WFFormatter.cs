@@ -107,7 +107,7 @@ namespace WFBot.Features.Utils
             return $"为指挥官献上wiki的链接: {wikilink}";
         }
 
-        public static void WeaponNotExists(string name, StringBuilder sb, List<string> similarlist)
+        public static bool WeaponNotExists(string name, StringBuilder sb, List<string> similarlist)
         {
             sb.AppendLine($"武器 {name} 不存在");
             if (similarlist.Any())
@@ -118,6 +118,8 @@ namespace WFBot.Features.Utils
                     sb.AppendLine($"    {item}");
                 }
             }
+
+            return true;
         }
 
         public static string Searching(string weapon)
