@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Chaldene.Utils.Scaffolds;
 using GammaLibrary.Extensions;
+using Kook;
 using Mirai_CSharp.Models;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
@@ -189,7 +190,7 @@ namespace WFBot.Orichalt
                     break;
                 case MessagePlatform.MiraiHTTP:
                     MiraiHTTPCore = new MiraiHTTPCore();
-                       MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
+                    MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
                     MiraiHTTPCore.Init().Wait();
                     break;
                 case MessagePlatform.MiraiHTTPV1:
@@ -199,6 +200,7 @@ namespace WFBot.Orichalt
                     break;
                 case MessagePlatform.Kook:
                     KookCore = new KookCore();
+                    KookCore.KookMessageReceived += KookMessageReceived;
                     break;
                 case MessagePlatform.QQChannel:
                     break;
@@ -210,6 +212,12 @@ namespace WFBot.Orichalt
 
             OrichaltMessageRecived += MiguelNetwork_OrichaltMessageRecived;
             Inited = true;
+        }
+
+        private static void KookMessageReceived(object sender, KookContext e)
+        {
+            var o = OrichaltContextManager.PutPlatformContext(e);
+            OnOrichaltMessageRecived(o);
         }
 
         private static void MiguelNetwork_OrichaltMessageRecived(object sender, OrichaltContext e)
@@ -268,6 +276,8 @@ namespace WFBot.Orichalt
                     }
                     break;
                 case MessagePlatform.Kook:
+                    var kookcontext = OrichaltContextManager.GetKookContext(o);
+                    ReplyKookChannelUser(msg, kookcontext);
                     break;
                 case MessagePlatform.QQChannel:
                     break;
@@ -321,6 +331,9 @@ namespace WFBot.Orichalt
                     var miraihttpcontext1 = OrichaltContextManager.GetMiraiHTTPV1Context(o);
                     MiraiHTTPV1SendToPrivate(miraihttpcontext1.SenderID, msg);
                     break;
+                case MessagePlatform.Kook:
+                    break;
+
             }
         }
         /// <summary>
@@ -468,6 +481,18 @@ namespace WFBot.Orichalt
         private static void MiraiHTTPV1SendToPrivate(UserID qq, string msg)
         {
             MiraiHTTPV1Core.Mirai.SendFriendMessageAsync(qq, new PlainMessage(msg));
+        }
+
+
+        public static void ReplyKookChannelUser(string msg, KookContext context)
+        {
+            var cb = new CardBuilder();
+            var sb = new SectionModuleBuilder
+            {
+                Text = new PlainTextElementBuilder().WithContent(msg)
+            };
+            cb.AddModule(sb);
+            context.Channel.SendCardAsync(cb.Build(), ephemeralUser: context.Author);
         }
     }
 }

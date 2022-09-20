@@ -15,7 +15,9 @@ namespace WFBot.Orichalt
                     return 
                         $"平台[OneBot] 群[{onebotcontext.Group}] 用户[{onebotcontext.SenderID}] 内容[{onebotcontext.RawMessage}]";
                 case MessagePlatform.Kook:
-                    throw new NotImplementedException();
+                    var kookcontext = MiguelNetwork.OrichaltContextManager.GetKookContext(o);
+                    return
+                        $"平台[Kook] 服务器[{kookcontext.Guild.Name}({kookcontext.Guild.Id})] 用户[{kookcontext.Author.Username}#{kookcontext.Author.IdentifyNumber}] 内容[{kookcontext.CleanContent}]";
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
                 case MessagePlatform.MiraiHTTP:
@@ -39,7 +41,8 @@ namespace WFBot.Orichalt
                     var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
                     return $"QQ:{onebotcontext.Group}";
                 case MessagePlatform.Kook:
-                    throw new NotImplementedException();
+                    var kookcontext = MiguelNetwork.OrichaltContextManager.GetKookContext(o);
+                    return $"频道ID:{kookcontext.Channel.Id}";
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
                 case MessagePlatform.MiraiHTTP:

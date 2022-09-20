@@ -10,50 +10,52 @@ namespace WFBot.Orichalt.OrichaltConnectors
     }
     public class KookContext : PlatformContextBase
     {
-        public KookContext(SocketUser author, Kook.MessageType type, ISocketMessageChannel channel, string cleanContent, SocketGuild guild)
+        public KookContext(SocketUser author, MessageType type, ISocketMessageChannel channel, string cleanContent, SocketGuild guild, Orichalt.MessageScope scope)
         {
             Author = author;
             Type = type;
             Channel = channel;
             CleanContent = cleanContent;
             Guild = guild;
+            Scope = scope;
         }
 
         public SocketUser Author { get; set; }
-        public Kook.MessageType Type { get; set; }
+        public MessageType Type { get; set; }
         public ISocketMessageChannel Channel { get; set; }
         public string CleanContent { get; set; }
         public SocketGuild Guild { get; set; }
+        public Orichalt.MessageScope Scope { get; set; }
     }
 
     public class KookCore
     {
         public KookSocketClient KookClient;
+        public event EventHandler<KookContext> KookMessageReceived;
         public string Token => KookConfig.Instance.Token;
 
         public KookCore()
         {
             KookClient = new KookSocketClient();
             KookClient.LoginAsync(TokenType.Bot, Token);
-            KookClient.MessageReceived += KookClient_MessageReceived;
+            KookClient.MessageReceived += ChannelMessageReceived;
             KookClient.StartAsync().Wait();
         }
 
-        public void SendToChannel(string msg, KookContext context)
-        {
-            var cb = new CardBuilder();
-            var sb = new SectionModuleBuilder
-            {
-                Text = new PlainTextElementBuilder().WithContent(msg)
-            };
-            cb.AddModule(sb);
-            context.Channel.SendCardAsync(cb.Build());
-        }
-        private Task KookClient_MessageReceived(SocketMessage arg)
+        private Task ChannelMessageReceived(SocketMessage arg)
         {
             var message = arg as SocketUserMessage;
-            var context = new KookContext(message.Author, message.Type, message.Channel, message.CleanContent, message.Guild);
+            var context = new KookContext(message.Author, message.Type, message.Channel, message.CleanContent, message.Guild, Orichalt.MessageScope.Public);
+            if (message.Author.IsBot != true)
+            {
+                OnKookMessage(context);
+            }
             return Task.CompletedTask;
+        }
+
+        protected virtual void OnKookMessage(KookContext e)
+        {
+            KookMessageReceived?.Invoke(this, e);
         }
     }
 }

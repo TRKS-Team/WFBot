@@ -61,6 +61,7 @@ namespace WFBot.Orichalt
 
         public ConcurrentDictionary<string, MiraiHTTPContext> MiraiHTTPContexts = new();
         public ConcurrentDictionary<string, MiraiHTTPV1Context> MiraiHTTPV1Contexts = new();
+        public ConcurrentDictionary<string, KookContext> KookContexts = new();
         // 往下扩展各个平台
 
         public PlatformContextBase GetPlatformContext(OrichaltContext context)
@@ -85,15 +86,20 @@ namespace WFBot.Orichalt
         {
             return MiraiHTTPV1Contexts[o.UUID];
         }
+
+        public KookContext GetKookContext(OrichaltContext o)
+        {
+            return KookContexts[o.UUID];
+        }
         public OrichaltContext PutPlatformContext(OneBotContext context)
         {
             MessageScope scope;
-            switch (context.Type)
+            switch (context.Scope)
             {
-                case MessageType.Group:
+                case OrichaltConnectors.MessageScope.Group:
                     scope = MessageScope.Public;
                     break;
-                case MessageType.Private:
+                case OrichaltConnectors.MessageScope.Private:
                     scope = MessageScope.Private;
                     break;
                 default:
@@ -107,12 +113,12 @@ namespace WFBot.Orichalt
         public OrichaltContext PutPlatformContext(MiraiHTTPContext context)
         {
             MessageScope scope;
-            switch (context.Type)
+            switch (context.Scope)
             {
-                case MessageType.Group:
+                case OrichaltConnectors.MessageScope.Group:
                     scope = MessageScope.Public;
                     break;
-                case MessageType.Private:
+                case OrichaltConnectors.MessageScope.Private:
                     scope = MessageScope.Private;
                     break;
                 default:
@@ -127,12 +133,12 @@ namespace WFBot.Orichalt
         public OrichaltContext PutPlatformContext(MiraiHTTPV1Context context)
         {
             MessageScope scope;
-            switch (context.Type)
+            switch (context.Scope)
             {
-                case MessageType.Group:
+                case OrichaltConnectors.MessageScope.Group:
                     scope = MessageScope.Public;
                     break;
-                case MessageType.Private:
+                case OrichaltConnectors.MessageScope.Private:
                     scope = MessageScope.Private;
                     break;
                 default:
@@ -145,7 +151,9 @@ namespace WFBot.Orichalt
         }
         public OrichaltContext PutPlatformContext(KookContext context)
         {
-            throw new NotImplementedException();
+            var o = new OrichaltContext(context.CleanContent, MessagePlatform.Kook, context.Scope);
+            KookContexts[o.UUID] = context;
+            return o;
         }
         public OrichaltContext PutPlatformContext(QQChannelContext context)
         {

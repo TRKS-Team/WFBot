@@ -19,13 +19,13 @@ namespace WFBot.Orichalt.OrichaltConnectors
 {
     public class MiraiHTTPV1Context : PlatformContextBase
     {
-        public MiraiHTTPV1Context(GroupID @group, UserID senderId, string rawMessage, IMessageBase[] chain, MessageType type, DateTimeOffset time)
+        public MiraiHTTPV1Context(GroupID @group, UserID senderId, string rawMessage, IMessageBase[] chain, MessageScope scope, DateTimeOffset time)
         {
             Group = @group;
             SenderID = senderId;
             RawMessage = rawMessage;
             Chain = chain;
-            Type = type;
+            Scope = scope;
             Time = time;
         }
 
@@ -33,7 +33,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public UserID SenderID { get; set; }
         public string RawMessage { get; set; }
         public IMessageBase[] Chain { get; set; }
-        public MessageType Type { get; set; }
+        public MessageScope Scope { get; set; }
         public DateTimeOffset Time { get; set; }
     }
     [Utils.Configuration("Miraiv1Config")]
@@ -111,14 +111,14 @@ namespace WFBot.Orichalt.OrichaltConnectors
         private void GroupMessageReceived(IGroupMessageEventArgs e)
         {
             var context = new MiraiHTTPV1Context(e.Sender.Group.Id, e.Sender.Id, e.Chain.GetPlain(), e.Chain,
-                MessageType.Group, DateTimeOffset.Now);
+                MessageScope.Group, DateTimeOffset.Now);
             MiguelNetwork.MiraiHTTPV1Core.OnMiraiHttpV1Message(context);
         }
 
         private void FriendMessageReceived(IFriendMessageEventArgs e)
         {
             var context = new MiraiHTTPV1Context(new GroupID(), e.Sender.Id, e.Chain.GetPlain(), e.Chain,
-                MessageType.Private, DateTimeOffset.Now);
+                MessageScope.Private, DateTimeOffset.Now);
             MiguelNetwork.MiraiHTTPV1Core.OnMiraiHttpV1Message(context);
         }
 
