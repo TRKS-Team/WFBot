@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
@@ -120,8 +121,9 @@ namespace WFBot.Features.Commands
 
                 if (AsyncContext.GetUseImageRendering())
                 {
-                    var image = ImageRenderHelper.RivenAuction(auctions.Take(Config.Instance.WFASearchCount).ToList(), weapon);
-                    SendImage(image);
+                    var rivens = auctions.Take(Config.Instance.WFASearchCount).ToList();
+                    var image = ImageRenderHelper.RivenAuction(rivens, weapon);
+                    SendImageAndText(image, rivens.Select(x => x.Owner.IngameName).Connect(", "));
                     return null;
                 }
                 else
