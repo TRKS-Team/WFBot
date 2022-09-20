@@ -45,12 +45,13 @@ clone 这个库, 运行 `build-wfbot.bat`, 编译的结果在 out 文件夹内.
    > 如果你使用其他平台, 直接跳过这一步  
 
    [Mirai 配置教程](#附加教程-配置-mirai)  
-   在[https://github.com/yyuueexxiinngg/onebot-kotlin/releases](https://github.com/yyuueexxiinngg/onebot-kotlin/releases)下载最新的 OneBot Mirai 插件  
+
+2. 在[https://github.com/yyuueexxiinngg/onebot-kotlin/releases](https://github.com/yyuueexxiinngg/onebot-kotlin/releases)下载最新的 OneBot Mirai 插件  
    拖入 ./plugins 文件夹下  
    双击 mirai.cmd 等待输出
    ![](images/2021-01-20-22-41-51.png)
 
-2. 配置 OneBot 正向 WebSocket  
+3. 配置 OneBot 正向 WebSocket  
    > OneBotConnector 基于的是 [OneBot](https://github.com/botuniverse/onebot-11) 协议给出的正向 WebSocket 通讯方案  
    > 你需要配置三样东西: AccessToken, 地址, 端口  
    > AccessToken 类似密码, 是你的 OneBot 机器人和 WFBot 通信时鉴权需要, 可随意选取.  
@@ -62,11 +63,11 @@ clone 这个库, 运行 `build-wfbot.bat`, 编译的结果在 out 文件夹内.
    ![](images/QQ截图20211110000226.png)  
    改好后重启 Mirai, 等待那堆绿绿的输出.  
    ![](images/QQ截图20220619213108.png)
-3. 配置 WFBot 的配置文件  
+4. 配置 WFBot 的配置文件  
    打开 <http://localhost:9331/>  
    更改以下内容:  
    ![image](https://user-images.githubusercontent.com/14993992/191171395-a9e6f3c6-5243-4d87-a730-a70ab6c58f41.png)
-4. 自定义 WFBot 的功能  
+5. 自定义 WFBot 的功能  
    - [自定义](#第三步可选-自定义)
 ---
 ## 第二步: 配置 MiraiHTTPv2 协议  
