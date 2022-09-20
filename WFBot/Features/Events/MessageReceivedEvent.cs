@@ -24,7 +24,7 @@ namespace WFBot.Features.Events
         int commandCount;
         bool showedSlashTip = false;
 
-        public Task ProcessGroupMessage(OrichaltContext o)
+        public Task<string> ProcessGroupMessage(OrichaltContext o)
         {
             // 检查每分钟最大调用
             // if (CheckCallPerMin(groupId)) return Task.CompletedTask;
@@ -38,7 +38,7 @@ namespace WFBot.Features.Events
                     Trace.WriteLine("提示: 设置中要求命令必须以 / 开头. ");
                     showedSlashTip = true;
                 }
-                return Task.CompletedTask;
+                return Task.FromResult("");
             }
             var message = o.PlainMessage.TrimStart('/', '、', '／');
 
@@ -66,7 +66,7 @@ namespace WFBot.Features.Events
                         MiguelNetwork.Reply(o, $"命令 [{message}] 处理超时.");
                     }
                     Trace.WriteLine($"命令 {platforminfo} 处理超时.");
-                    return;
+                    return "超时";
                 }
 
                 var result = "";
@@ -92,6 +92,7 @@ namespace WFBot.Features.Events
                 }
 
 
+                return result;
             });
         }
 

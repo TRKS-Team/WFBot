@@ -1,0 +1,71 @@
+﻿@page "/debug"
+@using WFBot.Features.Events
+@using WFBot.Features.Commands
+@using WFBot.Orichalt
+@using WFBot.TextCommandCore
+@using WFBot.Utils
+<h1>Debug</h1>
+
+<h2>命令测试</h2>
+
+@foreach (var c in commands)
+{
+    <h2 class="my-3">@c</h2>
+    <BSButton Class="btn-primary" OnClick="() => Execute(c)">执行</BSButton>
+    <pre>@(results.ContainsKey(c) ? results[c] : "")</pre>
+}
+
+
+@code {
+    Dictionary<string, string> results = new();
+    string[] commands = new[]
+    {
+        "金星赏金",
+        "金星赏金 5",
+        "地球赏金",
+        "地球赏金 5",
+        "火卫赏金",
+        "火卫赏金 7",
+        "裂隙",
+        "裂隙 1",
+        "遗物 后纪L4",
+        "翻译 致残突击",
+        "赤毒",
+        "警报",
+        "突击",
+        "入侵",
+        "仲裁",
+        "午夜电波",
+        "平原",
+        "活动",
+        "虚空商人",
+        "小小黑",
+        "s船",
+        "wiki",
+        "查询 Valkyr Prime 一套",
+        "紫卡 绝路",
+        "WFA紫卡 绝路",
+        "wiki Valkyr",
+        "status",
+        "help",
+        "查询 瓦尔基里",
+        "查询 电男",
+        "查询 致残",
+        "虚空风暴 1",
+        "钢铁裂缝 1",
+    };
+
+    async Task Execute(string s)
+    {
+        
+        var cancelSource = new CancellationTokenSource();
+        AsyncContext.SetCancellationToken(cancelSource.Token);
+        var orichaltContext = new OrichaltContext(s, MessagePlatform.Unknown, MessageScope.Public);
+        AsyncContext.SetOrichaltContext(orichaltContext);
+        var c = new CommandsHandler(orichaltContext, s);
+        var input = await c.ProcessCommandInput();
+        results[s] = input.result + c.OutputStringBuilder.ToString();
+        InvokeAsync(StateHasChanged);
+    }
+
+}
