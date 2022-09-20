@@ -374,29 +374,31 @@ namespace WFBot.Features.ImageRendering
 
         public static byte[] Cycles(CetusCycle cetuscycle, VallisCycle valliscycle, EarthCycle earthcycle, CambionCycle cambioncycle)
         {
-            var c1 = RenderText("地球平原 "+ (cetuscycle.IsDay ? "白天" :"夜晚"), minWidth: 120);
+            var c1 = RenderText("地球平原 "+ (cetuscycle.IsDay ? "[白天]" :"[夜晚]"), minWidth: 120);
             var c1i = GetResource($"Weathers.{(cetuscycle.IsDay ? "sun" : "night")}");
             var c1ti = (cetuscycle.Expiry - DateTime.Now);
             var c1t = RenderText(c1ti.Hours > 0 ? c1ti.ToString("h\\h\\ m\\m\\ s\\s"): c1ti.ToString("m\\m\\ s\\s"));
             var e1 = StackImageYCentered(c1, Margin20, c1i, Margin20, c1t);
 
-            var c2 = RenderText("地球 " + (earthcycle.isDay ? "白天" : "夜晚"), minWidth: 120);
+            var c2 = RenderText("地球 " + (earthcycle.isDay ? "[白天]" : "[夜晚]"), minWidth: 120);
             var c2i = GetResource($"Weathers.{(earthcycle.isDay ? "sun" : "night")}");
             var c2ti = (earthcycle.expiry - DateTime.Now);
             var c2t = RenderText(c2ti.Hours > 0 ? c2ti.ToString("h\\h\\ m\\m\\ s\\s") : c2ti.ToString("m\\m\\ s\\s"));
             var e2 = StackImageYCentered(c2, Margin20, c2i, Margin20, c2t);
 
-            var c3 = RenderText("金星平原 " + (valliscycle.isWarm ? "温暖" : "夜晚"), minWidth: 120);
+            var c3 = RenderText("金星平原 " + (valliscycle.isWarm ? "[温暖]" : "[夜晚]"), minWidth: 120);
             var c3i = GetResource($"Weathers.{(valliscycle.isWarm ? "warm" : "cold")}");
             var c3ti = (valliscycle.expiry - DateTime.Now);
             var c3t = RenderText(c3ti.Hours > 0 ? c3ti.ToString("h\\h\\ m\\m\\ s\\s") : c3ti.ToString("m\\m\\ s\\s"));
             var e3 = StackImageYCentered(c3, Margin20, c3i, Margin20, c3t);
 
-            var c4 = RenderText("火卫二平原 " + (cambioncycle.active.FirstCharToUpper() == "Fass" ? "Fass" : "Vome"), minWidth: 120);
+            var c4 = RenderText("火卫二平原 " + (cambioncycle.active.FirstCharToUpper() == "Fass" ? "[Fass]" : "[Vome]"), minWidth: 120);
             var c4i = GetResource($"Weathers.{(cambioncycle.active.FirstCharToUpper() == "Fass" ?"sun" : "night")}");
             var c4ti = (cambioncycle.expiry - DateTime.Now);
             var c4t = RenderText(c4ti.Hours > 0 ? c4ti.ToString("h\\h\\ m\\m\\ s\\s") : c4ti.ToString("m\\m\\ s\\s"));
             var e4 = StackImageYCentered(c4, Margin20, c4i, Margin20, c4t);
+
+
 
             return Finish(StackImageY(Margin40, StackImageXCentered(Margin20, e1, Margin20, e2, Margin20, e3, Margin20, e4, Margin20),Margin40));
         }
