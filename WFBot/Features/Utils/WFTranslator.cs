@@ -288,7 +288,12 @@ namespace WFBot.Features.Utils
         {
             foreach (var challenge in nightwave.activeChallenges)
             {
+                var ori = challenge.desc;
                 challenge.desc = nightwaveTranslator.Translate(challenge.desc.Format().Replace(",", "")).Result;
+                if (challenge.desc.All(c => char.IsAscii(c)))
+                {
+                    challenge.desc = ori;
+                }
                 challenge.title = nightwaveTranslator.Translate(challenge.title.Format()).Result;
                 challenge.expiry = GetRealTime(challenge.expiry);
             }
