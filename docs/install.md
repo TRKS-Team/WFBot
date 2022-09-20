@@ -8,9 +8,9 @@
 
 
 ## 第一步: 配置WFBot
-1. 安装 .NET Core 3.1 [官方链接](https://dotnet.microsoft.com/download/dotnet-core/3.1) (Windows 请下载 Desktop Runtime)
-   ![](images/2021-01-20-23-07-05.png)
-   (Linux 用户 下载 .NET Core Runtime, 自己寻找答案, 或者加群来问)
+1. 安装 ASP.NET Core 6 [官方链接](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+   ![image](https://user-images.githubusercontent.com/14993992/191170239-f782e53c-725c-4904-bfdd-6edd924dd991.png)
+   (Linux 用户自己寻找答案, 或者加群来问)
 
 2. 创建并且进入一个叫做 WFBot 的文件夹
 
@@ -18,19 +18,10 @@
    ![]() TODO
 4. 启动 WFBot.exe, 你将看到以下内容:
    ![](images/QQ截图20220621224220.png)
-   (也有可能会直接闪退, 在这步这是正常现象)  
-5. 请在 WFBot 文件夹下找到 WFConfig.json, 修改以下的内容
-   ![](images/QQ%E6%88%AA%E5%9B%BE20220621224330.png)  
-   将后面的数字 5 修改为你想使用的聊天平台的对应数字序号, 对应表如下  
 
-| 数字序号 | 通讯协议    | 支持平台    |
-|----------|-------------|-------------|
-| 0        | OneBot      | Mirai等     |
-| 1        | 开黑啦      | 开黑啦(WIP) |
-| 2        | QQ频道      | QQ频道(WIP) |
-| 3        | MiraiHTTPv2 | Mirai       |
+5. 配置在 WebUI 进行, 默认绑定在 <http://localhost:9331/>
 
-6. 再次双击 WFBot.exe 生成平台对应的配置文件  
+6. 你需要选择一个聊天平台
 
 7. 请按照你选择的平台进入下一步配置  
    - [配置OneBot协议](#第二步-配置onebot协议)
@@ -72,9 +63,9 @@ clone 这个库, 运行 `build-wfbot.bat`, 编译的结果在 out 文件夹内.
    改好后重启 Mirai, 等待那堆绿绿的输出.  
    ![](images/QQ截图20220619213108.png)
 3. 配置 WFBot 的配置文件  
-   打开 WFBot 文件夹下的 OneBotConfig.json  
+   打开 <http://localhost:9331/>  
    更改以下内容:  
-   ![](images/QQ%E6%88%AA%E5%9B%BE20220621232534.png)
+   ![image](https://user-images.githubusercontent.com/14993992/191171395-a9e6f3c6-5243-4d87-a730-a70ab6c58f41.png)
 4. 自定义 WFBot 的功能  
    - [自定义](#第三步可选-自定义)
 ---
@@ -110,21 +101,21 @@ adapterSettings:
     port: 8080
     
     reservedSyncId: -1
-    http:
-      ## http server 监听的本地地址
-      ## 一般为 localhost 即可, 如果多网卡等情况，自定设置
-      host: localhost
+  http:
+    ## http server 监听的本地地址
+    ## 一般为 localhost 即可, 如果多网卡等情况，自定设置
+    host: localhost
 
-      ## http server 监听的端口
-      ## 与 websocket server 可以重复, 由于协议与路径不同, 不会产生冲突
-      port: 8080
+    ## http server 监听的端口
+    ## 与 websocket server 可以重复, 由于协议与路径不同, 不会产生冲突
+    port: 8080
 
-      ## 配置跨域, 默认允许来自所有域名
-      cors: [*]
+    ## 配置跨域, 默认允许来自所有域名
+    cors: [*]
 ```
 
 4. 配置 Mirai  
-   打开 WFBot 文件夹下的 Miraiv2Config.json, 按照说明修改配置文件
+   打开 WebUI , 默认绑定在 <http://localhost:9331/> 选择 Mirai 连接器并配置  
    ![](images/QQ%E6%88%AA%E5%9B%BE20220621235448.png)  
 
 5. 自定义 WFBot 的功能  
@@ -132,8 +123,10 @@ adapterSettings:
 --- 
 ## 第三步(可选): 自定义
 
-> WFBot 控制台内输入 ui 可以打开设置窗口 (仅 Windows) (以后可能会适配全平台)
-> ![](images/2021-01-20-23-36-00.png)
+> ~~WFBot 控制台内输入 ui 可以打开设置窗口 (仅 Windows) (以后可能会适配全平台)
+> ![](images/2021-01-20-23-36-00.png)~~
+
+自定义可在 WebUI 进行, 默认绑定在 http://localhost:9331/
 
 可自定义的内容如下:
 
