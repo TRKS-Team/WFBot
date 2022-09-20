@@ -62,7 +62,7 @@ namespace WFBot.Features.Telemetry
                         connected = true;
                         break;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                     }
                 }
@@ -147,7 +147,7 @@ namespace WFBot.Features.Telemetry
                 connected = true;   
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Trace.WriteLine("Telemetry 启动失败.");
 
@@ -162,7 +162,7 @@ namespace WFBot.Features.Telemetry
                             connected = true;
                             break;
                         }
-                        catch (Exception exception)
+                        catch (Exception )
                         {
                         }
                     }
