@@ -10,6 +10,7 @@ using GammaLibrary.Extensions;
 using WarframeAlertingPrime.SDK.Models.Core;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.Others;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
@@ -275,7 +276,7 @@ namespace WFBot.Features.Common
         }
 
 
-        public async Task<string> SendWMInfo(string word, bool quickReply, bool isbuyer)
+        public async Task<string> SendWMInfo(string word, bool quickReply, bool isbuyer, Action<byte[], string> richMessageSender)
         {
             var items = new List<Sale>();
             if (!Search(word, ref items) || items.IsEmpty())
@@ -332,7 +333,30 @@ namespace WFBot.Features.Common
             {
                 OrderWMInfo(info, isbuyer);
                 translator.TranslateWMOrder(info, searchword);
-                msg = WFFormatter.ToString(info, quickReply, isbuyer);
+                if (AsyncContext.GetUseImageRendering())
+                {
+                    var sb = new StringBuilder();
+                    if (quickReply)
+                    {
+                        foreach (var order in info.payload.orders)
+                        {
+                            sb.AppendLine(
+                                $"/w {order.user.ingame_name} Hi! I want to {(isbuyer ? "sell" : "buy")}: {info.sale.en} for {order.platinum} platinum. (warframe.market)");
+                        }
+                    }
+                    else
+                    {
+                        sb.AppendLine(info.payload.orders.Select(o => o.user.ingame_name).Connect(", "));
+                    }
+
+                    richMessageSender(ImageRenderHelper.WMInfo(info, isbuyer, quickReply), sb.ToString().Trim());
+                    return "";
+                }
+                else
+                {
+
+                    msg = WFFormatter.ToString(info, quickReply, isbuyer);
+                }
             }
             else
             {

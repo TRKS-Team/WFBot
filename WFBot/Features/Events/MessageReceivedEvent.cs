@@ -41,7 +41,12 @@ namespace WFBot.Features.Events
                 return Task.FromResult("");
             }
             var message = o.PlainMessage.TrimStart('/', '、', '／');
-
+            var useImageRendering = Config.Instance.EnableImageRendering;
+            if (message.EndsWith("*") || message.StartsWith("*"))
+            {
+                message = message.Trim('*');
+                useImageRendering = !useImageRendering;
+            }
             var handler = new CommandsHandler(o, message);
             
             // TODO 优化task数量
@@ -52,6 +57,7 @@ namespace WFBot.Features.Events
                 var cancelSource = new CancellationTokenSource();
                 AsyncContext.SetCancellationToken(cancelSource.Token);
                 AsyncContext.SetOrichaltContext(o);
+                AsyncContext.SetUseImageRendering(useImageRendering);
                 var commandProcessTask = handler.ProcessCommandInput();
                 var platforminfo = o.GetInfo();
                 using var locker = WFBotResourceLock.Create($"命令处理 #{Interlocked.Increment(ref commandCount)} {platforminfo}");

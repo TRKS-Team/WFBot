@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
@@ -153,6 +154,8 @@ namespace WFBot.Events
         {
             // Messenger.SuperBroadcast(content);
         }
+
+        public Action<RichMessages> RichMessageSender { get; }
     }
 
     public partial class PrivateMessageHandler : ICommandHandler<PrivateMessageHandler>

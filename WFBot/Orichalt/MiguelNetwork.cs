@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 using Chaldene.Utils.Scaffolds;
 using GammaLibrary.Extensions;
 using Mirai_CSharp.Models;
+using Sisters.WudiLib;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
+using ImageMessage = WFBot.Features.ImageRendering.ImageMessage;
 
 namespace WFBot.Orichalt
 {
@@ -239,6 +242,51 @@ namespace WFBot.Orichalt
             await WFBotCore.Instance.OnGroupMessage(o);
         }
 
+        /// <summary>
+        /// 响应通用命令应答
+        /// </summary>
+        /// <param name="o">OrichaltContext</param>
+        /// <param name="msg">消息内容</param>
+        public static void Reply(OrichaltContext o, RichMessages msg)
+        {
+            switch (o.Platform)
+            {
+                case MessagePlatform.OneBot:
+                    if (CheckCallPerMin(o))
+                    {
+                        var oneBotContext = OrichaltContextManager.GetOneBotContext(o);
+                        _ = OneBotSendToGroupWithAutoRevoke(oneBotContext.Group, msg);
+                        IncreaseCallCounts(o);
+                    }
+                    break;
+                case MessagePlatform.Kaiheila:
+                    break;
+                case MessagePlatform.QQChannel:
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    if (CheckCallPerMin(o))
+                    {
+                        var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
+                        MiraiHTTPSendToGroupWithAutoRevoke(miraiHTTPContext.Group, msg);
+                        IncreaseCallCounts(o);
+                    }
+                    break;
+                case MessagePlatform.MiraiHTTPV1:
+                    break;
+
+
+                case MessagePlatform.Test:
+                    const string resultPath = "TestResult.log";
+                    Trace.WriteLine(msg.OfType<TextMessage>().Select(x => x.Content).Connect());
+
+                    if (File.Exists(resultPath) && File.ReadLines(resultPath).Last() == "Done.") // 哈哈 Trick.
+                    {
+                        File.Delete(resultPath);
+                    }
+                    File.AppendAllText(resultPath, msg + Environment.NewLine);
+                    break;
+            }
+        }
 
         /// <summary>
         /// 响应通用命令应答
@@ -247,6 +295,8 @@ namespace WFBot.Orichalt
         /// <param name="msg">消息内容</param>
         public static void Reply(OrichaltContext o, string msg)
         {
+            if (msg.IsNullOrWhiteSpace()) return;
+            
             switch (o.Platform)
             {
                 case MessagePlatform.OneBot:
@@ -417,6 +467,16 @@ namespace WFBot.Orichalt
                    .ContinueWith(t => { OneBotCore.OneBotClient.RecallMessageAsync(response); });
             }
         }
+        private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, RichMessages msg)
+        {
+            var response = await OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch{ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t=> new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
+            if (OneBotConfig.Instance.AutoRevoke)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(OneBotConfig.Instance.RevokeTimeInSeconds))
+                    .ContinueWith(t => { OneBotCore.OneBotClient.RecallMessageAsync(response); });
+            }
+        }
+
         private static void OneBotSendToPrivate(UserID qq, string msg)
         {
             OneBotCore.OneBotClient.SendPrivateMessageAsync(qq, msg);
@@ -443,6 +503,42 @@ namespace WFBot.Orichalt
             }
             MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
         }
+
+        private static void MiraiHTTPSendToGroupWithAutoRevoke(GroupID qq, RichMessages msg)
+        {
+            var builder = new MessageChainBuilder();
+            
+            foreach (var message in msg)
+            {
+                switch (message)
+                {
+                    case ImageMessage image:
+                        builder.ImageFromId(MiraiHTTPCore.Bot.UploadImageAsync(new MemoryStream(image.Content)).Result
+                            .ImageId);
+                        break;
+                    case TextMessage text:
+                        builder.Plain(text.Content);
+                        break;
+                }
+            }
+            if (MiraiConfig.Instance.AutoRevoke)
+            {
+                var message = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
+                Task.Delay(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds)).ContinueWith(t =>
+                {
+                    MiraiHTTPCore.Bot.RecallAsync(message, qq.ID.ToString());
+                });
+
+                return;
+            }
+            MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
+        }
+
+        private static void MiraiHTTPV1SendToGroup(GroupID qq, string msg)
+        {
+            MiraiHTTPV1Core.Mirai.SendGroupMessageAsync(qq, new PlainMessage(msg));
+        }
+
         private static void MiraiHTTPSendToPrivate(UserID qq, string msg)
         {
             var builder = new MessageChainBuilder();
@@ -450,11 +546,6 @@ namespace WFBot.Orichalt
             MiraiHTTPCore.Bot.SendFriendMessageAsync(qq.ID, builder.Build());
         }
 
-
-        private static void MiraiHTTPV1SendToGroup(GroupID qq, string msg)
-        {
-            MiraiHTTPV1Core.Mirai.SendGroupMessageAsync(qq, new PlainMessage(msg));
-        }
         private static void MiraiHTTPV1SendToPrivate(UserID qq, string msg)
         {
             MiraiHTTPV1Core.Mirai.SendFriendMessageAsync(qq, new PlainMessage(msg));

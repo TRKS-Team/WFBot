@@ -10,6 +10,8 @@ namespace WFBot.Utils
             new AsyncLocal<Container<CancellationToken>>();
         internal static readonly AsyncLocal<Container<OrichaltContext>> CurrentOrichaltContext =
             new AsyncLocal<Container<OrichaltContext>>();
+        internal static readonly AsyncLocal<Container<bool>> UseImageRendering =
+            new ();
 
         public static void SetOrichaltContext(OrichaltContext context)
         {
@@ -29,6 +31,15 @@ namespace WFBot.Utils
         public static CancellationToken GetCancellationToken()
         {
             return CurrentCancellationToken.Value?.Value ?? CancellationToken.None;
+        }
+
+        public static void SetUseImageRendering(bool v)
+        {
+            UseImageRendering.Value = new Container<bool>(v);
+        }
+        public static bool GetUseImageRendering()
+        {
+            return UseImageRendering.Value?.Value ?? false;
         }
     }
 }

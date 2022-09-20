@@ -55,6 +55,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
 		<PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
 		<PackageReference Include="System.Management" Version="6.0.0" />
 		<PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
 		<PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
@@ -62,8 +63,15 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="wwwroot\**" />
+		<EmbeddedResource Include="Resources\**" />
 		<Content Remove="wwwroot\css\site.css" />
 		<Content Remove="wwwroot\js\editor.js" />
+		<None Remove="Resources\Factions\crossfire.png" />
+		<None Remove="Resources\Factions\orokin.png" />
+		<None Remove="Resources\Weathers\cold.png" />
+		<None Remove="Resources\Weathers\night.png" />
+		<None Remove="Resources\Weathers\sun.png" />
+		<None Remove="Resources\Weathers\warm.png" />
 		<EmbeddedResource Include="Features\Utils\WFFormatter.cs" />
 		<EmbeddedResource Update="Windows/Settings.resx" ExcludeFromManifest="true" />
 	</ItemGroup>
@@ -75,7 +83,6 @@
 
 	<ItemGroup>
 		<Folder Include="Dll\" />
-		<Folder Include="Features\NewFolder\" />
 	</ItemGroup>
 
 	<ItemGroup>

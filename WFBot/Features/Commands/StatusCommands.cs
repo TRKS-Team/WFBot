@@ -5,8 +5,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
 
@@ -23,9 +25,15 @@ namespace WFBot.Features.Commands
         async Task FortunaMissions(int index = 0)
         {
             var missions = await api.GetSyndicateMissions();
-            AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index));
+            AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Solaris United"), index, AsyncContext.GetUseImageRendering()));
             AppendLine();
             Append($"您正在查看 福尔图娜 的全部赏金任务, 使用 /地球赏金 /火卫二赏金 来查询其他地区.");
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var s = OutputStringBuilder.Value.ToString();
+                OutputStringBuilder.Value.Clear();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+            }
         }
 
         [Matchers("地球赏金", "地球平原赏金", "希图斯赏金")]
@@ -33,9 +41,15 @@ namespace WFBot.Features.Commands
         async Task CetusMissions(int index = 0)
         {
             var missions = await api.GetSyndicateMissions();
-            AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index));
+            AppendLine(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Ostrons"), index, AsyncContext.GetUseImageRendering()));
             AppendLine();
             Append("您正在查看 希图斯 的全部赏金任务, 使用 /金星赏金 /火卫二赏金 来查询其他地区.");
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var s = OutputStringBuilder.Value.ToString();
+                OutputStringBuilder.Value.Clear();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+            }
         }
 
         [Matchers("火卫赏金", "火卫二赏金", "火卫平原赏金", "火卫二平原赏金", "殁世幽都赏金", "魔胎之境赏金")]
@@ -43,9 +57,15 @@ namespace WFBot.Features.Commands
         async Task NecraliskMissions(int index = 0)
         {
             var missions = await api.GetSyndicateMissions();
-            Append(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Entrati"), index));
+            Append(WFFormatter.ToString(missions.First(mission => mission.syndicate == "Entrati"), index, AsyncContext.GetUseImageRendering()));
             AppendLine();
             AppendLine("您正在查看 殁世幽都 的全部赏金任务, 使用 /金星赏金 /地球赏金 来查询其他地区.");
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var s = OutputStringBuilder.Value.ToString();
+                OutputStringBuilder.Value.Clear();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+            }
         }
 
         [Matchers("翻译")]
@@ -80,24 +100,49 @@ namespace WFBot.Features.Commands
             var valliscycle = api.GetVallisCycle();
             var earthcycle = api.GetEarthCycle();
             var cambioncycle = api.GetCambionCycle();
-            AppendLine(WFFormatter.ToString(await cetuscycle));
-            AppendLine(WFFormatter.ToString(await valliscycle));
-            AppendLine(WFFormatter.ToString(await earthcycle));
-            AppendLine(WFFormatter.ToString(await cambioncycle));
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.Cycles(await cetuscycle, await valliscycle, await earthcycle, await cambioncycle));
+            }
+            else
+            {
+                AppendLine(WFFormatter.ToString(await cetuscycle));
+                AppendLine(WFFormatter.ToString(await valliscycle));
+                AppendLine(WFFormatter.ToString(await earthcycle));
+                AppendLine(WFFormatter.ToString(await cambioncycle));
+            }
         }
 
         [Matchers("突击")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> Sortie()
         {
-            return WFFormatter.ToString(await api.GetSortie());
+            var s = WFFormatter.ToString(await api.GetSortie());
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                return null;
+            }
+            else
+            {
+                return s;
+            }
         }
 
         [Matchers("奸商", "虚空商人", "商人")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> VoidTrader()
         {
-            return WFFormatter.ToString(await api.GetVoidTrader());
+            var s = WFFormatter.ToString(await api.GetVoidTrader());
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                return null;
+            }
+            else
+            {
+                return s;
+            }
         }
 
         [Matchers("活动", "事件")]
@@ -121,7 +166,15 @@ namespace WFBot.Features.Commands
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
-            return WFFormatter.ToString(fissures, tier);
+            if (AsyncContext.GetUseImageRendering())
+            {
+                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+                return null;
+            }
+            else
+            {
+                return WFFormatter.ToString(fissures, tier);
+            }
             // _fissures = api.GetFissures();
         }
 
@@ -131,7 +184,15 @@ namespace WFBot.Features.Commands
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
-            return WFFormatter.ToString(fissures, tier);
+            if (AsyncContext.GetUseImageRendering())
+            {
+                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+                return null;
+            }
+            else
+            {
+                return WFFormatter.ToString(fissures, tier);
+            }
             // _fissures = api.GetFissures();
         }
 
@@ -141,7 +202,15 @@ namespace WFBot.Features.Commands
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
-            return WFFormatter.ToString(fissures, tier);
+            if (AsyncContext.GetUseImageRendering())
+            {
+                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+                return null;
+            }
+            else
+            {
+                return WFFormatter.ToString(fissures, tier);
+            }
             // _fissures = api.GetFissures();
         }
 
@@ -149,7 +218,16 @@ namespace WFBot.Features.Commands
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> NightWave()
         {
-            return WFFormatter.ToString(await api.GetNightWave());
+            var s = WFFormatter.ToString(await api.GetNightWave());
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                return null;
+            }
+            else
+            {
+                return s;
+            }
         }
 
         [Matchers("仲裁", "仲裁警报", "精英警报")]
@@ -164,6 +242,12 @@ namespace WFBot.Features.Commands
             // var mission = kuvas.First(k => k.missiontype == "EliteAlertMission" && k.start < DateTime.Now && DateTime.Now < k.end);
             AppendLine("以下是仲裁警报的信息: ");
             AppendLine(WFFormatter.ToString(ar));
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var s = OutputStringBuilder.Value.ToString();
+                OutputStringBuilder.Value.Clear();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+            }
         }
 
         [Matchers("赤毒", "赤毒虹吸器", "赤毒洪潮", "赤毒任务")]

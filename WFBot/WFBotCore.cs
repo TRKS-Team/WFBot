@@ -430,6 +430,11 @@ namespace WFBot
             try
             {
                 var hc = new HttpClient();
+                if (!File.Exists("font.ttf"))
+                {
+                    Trace.WriteLine("下载图片渲染字体...");
+                    await hc.DownloadAsync("https://cyan.cafe/wfbot/font.ttf", "font.ttf");
+                }
                 var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}");
                 t = s;
             }

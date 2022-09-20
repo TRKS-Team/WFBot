@@ -7,6 +7,7 @@ using System.Text;
 using GammaLibrary.Extensions;
 using WFBot.Features.Commands;
 using WFBot.Features.Events;
+using WFBot.Features.ImageRendering;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
@@ -138,6 +139,8 @@ namespace WFBot.Features.Other
         {
             Trace.WriteLine(s);
         };
+
+        public Action<RichMessages> RichMessageSender { get; }
         public Action<Message> ErrorMessageSender { get; } = s => Trace.WriteLine(s);
         public OrichaltContext O { get; }
         public string Message { get; }

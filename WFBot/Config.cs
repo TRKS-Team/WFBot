@@ -71,7 +71,8 @@ namespace WFBot
         public bool SendResourceUpdateNotification = true;
         public MessagePlatform Miguel_Platform = MessagePlatform.Unknown;
         public bool EnableCustomCommandContent = false;
-        
+        public bool EnableImageRendering = false;
+
         protected override void AfterUpdate()
         {
             // 这里我写的好丑

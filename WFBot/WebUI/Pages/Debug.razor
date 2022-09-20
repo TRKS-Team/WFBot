@@ -1,9 +1,11 @@
 ﻿@page "/debug"
 @using WFBot.Features.Events
 @using WFBot.Features.Commands
+@using WFBot.Features.ImageRendering
 @using WFBot.Orichalt
 @using WFBot.TextCommandCore
 @using WFBot.Utils
+@using GammaLibrary.Extensions
 <h1>Debug</h1>
 
 <h2>命令测试</h2>
@@ -13,11 +15,14 @@
     <h2 class="my-3">@c</h2>
     <BSButton Class="btn-primary" OnClick="() => Execute(c)">执行</BSButton>
     <pre>@(results.ContainsKey(c) ? results[c] : "")</pre>
+    <img src="@(resultsImage.ContainsKey(c) ? resultsImage[c] : "")"/>
 }
 
 
 @code {
     Dictionary<string, string> results = new();
+    Dictionary<string, string> resultsImage = new();
+    
     string[] commands = new[]
     {
         "金星赏金",
@@ -57,15 +62,28 @@
 
     async Task Execute(string s)
     {
-        
-        var cancelSource = new CancellationTokenSource();
-        AsyncContext.SetCancellationToken(cancelSource.Token);
-        var orichaltContext = new OrichaltContext(s, MessagePlatform.Unknown, MessageScope.Public);
-        AsyncContext.SetOrichaltContext(orichaltContext);
-        var c = new CommandsHandler(orichaltContext, s);
-        var input = await c.ProcessCommandInput();
-        results[s] = input.result + c.OutputStringBuilder.ToString();
-        InvokeAsync(StateHasChanged);
+        await Task.Run(async () =>
+        {
+
+            var cancelSource = new CancellationTokenSource();
+            AsyncContext.SetCancellationToken(cancelSource.Token);
+
+            AsyncContext.SetUseImageRendering(true);
+            var orichaltContext = new OrichaltContext(s, MessagePlatform.Unknown, MessageScope.Public);
+            AsyncContext.SetOrichaltContext(orichaltContext);
+            var c = new CommandsHandler(orichaltContext, s);
+            c.RichMessageSender = messages =>
+            {
+                var image = messages.FirstOrDefault(x => x is ImageMessage);
+                if (image != null)
+                {
+                    resultsImage[s] = "data:image/png;base64," + ((ImageMessage) image).Content.ToBase64String();
+                }
+            };
+            var input = await c.ProcessCommandInput();
+            results[s] = input.result + c.OutputStringBuilder.ToString();
+            InvokeAsync(StateHasChanged);
+        });
     }
 
 }
