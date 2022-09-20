@@ -327,7 +327,7 @@ namespace WFBot.Features.Common
                 }
             }*/
 
-            var info = GetWMInfo(searchword).Result;
+            var info = await GetWMInfo(searchword);
             if (info.payload.orders.Any())
             {
                 OrderWMInfo(info, isbuyer);

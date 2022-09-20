@@ -9,14 +9,13 @@ namespace WFBot.Features.Utils
     {
         public static ReleaseData Get()
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var wc = new WebClient { Encoding = Encoding.UTF8 };
-            wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
+            var wc = new HttpClient();
+            wc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36");
             if (!string.IsNullOrWhiteSpace(Config.Instance.GitHubOAuthKey))
             {
-                wc.Headers.Add("Authorization", $"Token {Config.Instance.GitHubOAuthKey}");
+                wc.DefaultRequestHeaders.Add("Authorization", $"Token {Config.Instance.GitHubOAuthKey}");
             }
-            return wc.DownloadString("https://api.github.com/repos/TRKS-Team/WFBot/releases/latest").JsonDeserialize<ReleaseData>();
+            return wc.GetStringAsync("https://api.github.com/repos/TRKS-Team/WFBot/releases/latest").Result.JsonDeserialize<ReleaseData>();
         }
     }
 

@@ -336,7 +336,7 @@ namespace WFBot
             Config.Update();
             Config.Save();
 
-            TelemetryClient.Start();
+            _ = TelemetryClient.Start();
             // 初始化 WebUI
             WebUIServer = new WFBotWebUIServer();
             WebUIServer.Run();
