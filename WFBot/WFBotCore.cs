@@ -343,7 +343,7 @@ namespace WFBot
 
             if (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
-                Trace.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Trace.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kook 2.QQ频道 3.MiraiHTTPv2");
                 Trace.WriteLine("你也可以使用 WebUI 来进行设置，详情请查看文档.");
                 Trace.WriteLine("设置完后请重启 WFBot.");
                 if (OperatingSystem.IsWindows())
@@ -355,7 +355,7 @@ namespace WFBot
             }
             /*while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
-                Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kook 2.QQ频道 3.MiraiHTTPv2");
                 /*var platformstr = Console.ReadLine();
                 if (platformstr.IsNumber() && platformstr.ToInt() <= 3 && 0 <= platformstr.ToInt())
                 {
@@ -374,7 +374,7 @@ namespace WFBot
                 case MessagePlatform.MiraiHTTPV1:
                     Trace.WriteLine("服务协议: MiraiHTTPv1");
                     break;
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     Trace.WriteLine("服务协议: 开黑啦");
                     break;
                 case MessagePlatform.QQChannel:

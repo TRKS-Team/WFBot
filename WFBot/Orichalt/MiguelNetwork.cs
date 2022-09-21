@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Chaldene.Utils.Scaffolds;
 using GammaLibrary.Extensions;
+using Kook;
 using Mirai_CSharp.Models;
 using Sisters.WudiLib;
 using WFBot.Features.ImageRendering;
@@ -25,6 +26,7 @@ namespace WFBot.Orichalt
         public static OneBotCore OneBotCore;
         public static MiraiHTTPCore MiraiHTTPCore;
         public static MiraiHTTPV1Core MiraiHTTPV1Core;
+        public static KookCore KookCore;
 
         public static OrichaltContextManager OrichaltContextManager;
 
@@ -191,7 +193,7 @@ namespace WFBot.Orichalt
                     break;
                 case MessagePlatform.MiraiHTTP:
                     MiraiHTTPCore = new MiraiHTTPCore();
-                       MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
+                    MiraiHTTPCore.MiraiHTTPMessageReceived += MiraiHTTPMessageReceived;
                     MiraiHTTPCore.Init().Wait();
                     break;
                 case MessagePlatform.MiraiHTTPV1:
@@ -199,10 +201,26 @@ namespace WFBot.Orichalt
                     MiraiHTTPV1Core.MiraiHTTPMessageReceived += MiraiHTTPV1MessageReceived;
                     MiraiHTTPV1Core.Init().Wait();
                     break;
+                case MessagePlatform.Kook:
+                    KookCore = new KookCore();
+                    KookCore.KookMessageReceived += KookMessageReceived;
+                    break;
+                case MessagePlatform.QQChannel:
+                    break;
+                case MessagePlatform.Test:
+                    break;
+                case MessagePlatform.Unknown:
+                    break;
             }
 
             OrichaltMessageRecived += MiguelNetwork_OrichaltMessageRecived;
             Inited = true;
+        }
+
+        private static void KookMessageReceived(object sender, KookContext e)
+        {
+            var o = OrichaltContextManager.PutPlatformContext(e);
+            OnOrichaltMessageRecived(o);
         }
 
         private static void MiguelNetwork_OrichaltMessageRecived(object sender, OrichaltContext e)
@@ -307,7 +325,9 @@ namespace WFBot.Orichalt
                         IncreaseCallCounts(o);
                     }
                     break;
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
+                    var kookcontext = OrichaltContextManager.GetKookContext(o);
+                    ReplyKookChannelUser(msg, kookcontext);
                     break;
                 case MessagePlatform.QQChannel:
                     break;
@@ -361,6 +381,9 @@ namespace WFBot.Orichalt
                     var miraihttpcontext1 = OrichaltContextManager.GetMiraiHTTPV1Context(o);
                     MiraiHTTPV1SendToPrivate(miraihttpcontext1.SenderID, msg);
                     break;
+                case MessagePlatform.Kook:
+                    break;
+
             }
         }
         /// <summary>
@@ -421,7 +444,7 @@ namespace WFBot.Orichalt
                         case MessagePlatform.MiraiHTTP:
                             MiraiHTTPSendToGroup(group, sb.ToString().Trim());
                             break;
-                        case MessagePlatform.Kaiheila:
+                        case MessagePlatform.Kook:
                             break;
                         case MessagePlatform.QQChannel:
                             break;
@@ -549,6 +572,18 @@ namespace WFBot.Orichalt
         private static void MiraiHTTPV1SendToPrivate(UserID qq, string msg)
         {
             MiraiHTTPV1Core.Mirai.SendFriendMessageAsync(qq, new PlainMessage(msg));
+        }
+
+
+        public static void ReplyKookChannelUser(string msg, KookContext context)
+        {
+            var cb = new CardBuilder();
+            var sb = new SectionModuleBuilder
+            {
+                Text = new PlainTextElementBuilder().WithContent(msg)
+            };
+            cb.AddModule(sb);
+            context.Channel.SendCardAsync(cb.Build(), ephemeralUser: context.Author);
         }
     }
 }

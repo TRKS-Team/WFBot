@@ -13,23 +13,23 @@ namespace WFBot.Orichalt.OrichaltConnectors
 {
     public class OneBotContext : PlatformContextBase
     {
-        public OneBotContext(string rawMessage, GroupID @group, UserID senderId, MessageType type, DateTimeOffset time)
+        public OneBotContext(string rawMessage, GroupID @group, UserID senderId, MessageScope scope, DateTimeOffset time)
         {
             RawMessage = rawMessage;
             Group = @group;
             SenderID = senderId;
-            Type = type;
+            Scope = scope;
             Time = time;
         }
 
         public string RawMessage { get; set; }
         public GroupID Group { get; set; }
         public UserID SenderID { get; set; }
-        public MessageType Type { get; set; }
+        public MessageScope Scope { get; set; }
         public DateTimeOffset Time { get; set; }
     }
 
-    public enum MessageType
+    public enum MessageScope
     {
         Private,
         Group
@@ -94,10 +94,10 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 switch (message.MessageType)
                 {
                     case "private":
-                        OnOneBotMessage(new OneBotContext(message.RawMessage, new GroupID(), message.UserId.ToString(), MessageType.Private, message.Time));
+                        OnOneBotMessage(new OneBotContext(message.RawMessage, new GroupID(), message.UserId.ToString(), MessageScope.Private, message.Time));
                         break;
                     case "group":
-                        OnOneBotMessage(new OneBotContext(message.RawMessage,((GroupEndpoint)message.Endpoint).GroupId, message.UserId, MessageType.Group, message.Time ));
+                        OnOneBotMessage(new OneBotContext(message.RawMessage,((GroupEndpoint)message.Endpoint).GroupId, message.UserId, MessageScope.Group, message.Time ));
                         break;
                 }
             };
