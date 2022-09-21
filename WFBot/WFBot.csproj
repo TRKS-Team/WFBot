@@ -21,7 +21,12 @@
 	<PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
 		<DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
 	</PropertyGroup>
-
+	<PropertyGroup Condition=" '$(Configuration)' == 'Linux Release' ">
+		<AllowedReferenceRelatedFileExtensions>
+			.pdb;
+			.dll.config
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
 	<Choose>
 		<When Condition="('$(NoGitVersion)' == 'hso' ) or $([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
 			<!-- When DEFINED_CONSTANT is defined. -->

@@ -136,7 +136,7 @@ namespace WFBot.Features.ImageRendering
         {
             var option = CreateTextOptions(23);
             option.TextAlignment = TextAlignment.Center;
-
+            
             string polarity;
             switch (auction.Item.Polarity)
             {
@@ -200,7 +200,7 @@ namespace WFBot.Features.ImageRendering
 
         public static byte[] Finish(Image<Rgba32> image)
         {
-            var text = "> WFBot_  ";
+            var text = "> WFBot_  "; // 好兄弟 虽然你可以改 但是不建议你改 至少保留一下原文吧
             var options = CreateTextOptions(80);
             options.HorizontalAlignment = HorizontalAlignment.Right;
             options.VerticalAlignment = VerticalAlignment.Top;
@@ -209,7 +209,7 @@ namespace WFBot.Features.ImageRendering
             var width = image.Width;
             var height = image.Height;
             options.Origin = new Vector2(width, height);
-            var imageResult = new Image<Rgba32>(width, height + textHeight, new Rgba32(42,43,48));
+            var imageResult = new Image<Rgba32>(width, height + textHeight, new Rgba32(42,43,48)); // 我不会说我是从色图 https://danbooru.donmai.us/posts/2931102 取的颜色
             imageResult.Mutate(x => x.DrawImage(image, new Point(0,0), new GraphicsOptions()));
             imageResult.Mutate(x => x.Fill(new DrawingOptions(), new Color(new Rgba32(100, 181, 246)), new RectangleF(0, height, width, textHeight)));
             imageResult.Mutate(x => x.DrawText(options,text,new Color(new Rgba32(255,255,255))));

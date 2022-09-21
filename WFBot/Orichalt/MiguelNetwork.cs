@@ -277,7 +277,7 @@ namespace WFBot.Orichalt
                         IncreaseCallCounts(o);
                     }
                     break;
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     break;
                 case MessagePlatform.QQChannel:
                     break;
