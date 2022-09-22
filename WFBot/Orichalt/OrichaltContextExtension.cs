@@ -24,7 +24,6 @@ namespace WFBot.Orichalt
                     var miraihttpcontext = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPContext(o);
                     return
                         $"平台[MiraiHTTP] 群[{miraihttpcontext.Group}] 用户[{miraihttpcontext.SenderID}] 内容[{miraihttpcontext.RawMessage}]";
-
                 case MessagePlatform.MiraiHTTPV1:
                     var miraihttpcontext1 = MiguelNetwork.OrichaltContextManager.GetMiraiHTTPV1Context(o);
                     return

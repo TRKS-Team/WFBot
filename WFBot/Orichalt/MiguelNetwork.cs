@@ -32,10 +32,10 @@ namespace WFBot.Orichalt
         public static event EventHandler<OrichaltContext> OrichaltMessageRecived;
 
 
-        public static ConcurrentDictionary<GroupID, int> OneBotGroupCallDic = new ConcurrentDictionary<GroupID, int>();
-        public static ConcurrentDictionary<GroupID, int> MiraiHTTPGroupCallDic = new ConcurrentDictionary<GroupID, int>();
-        public static ConcurrentDictionary<GroupID, int> MiraiHTTPV1GroupCallDic = new ConcurrentDictionary<GroupID, int>();
-        public static ConcurrentDictionary<string, int> KookGroupCallDic = new ConcurrentDictionary<string, int>();
+        public static ConcurrentDictionary<GroupID, int> OneBotGroupCallDic = new();
+        public static ConcurrentDictionary<GroupID, int> MiraiHTTPGroupCallDic = new();
+        public static ConcurrentDictionary<GroupID, int> MiraiHTTPV1GroupCallDic = new();
+        public static ConcurrentDictionary<ulong, int> KookChannelCallDic = new();
 
 
         public static bool CheckCallPerMin(OrichaltContext o)
@@ -60,7 +60,7 @@ namespace WFBot.Orichalt
                     return true;
                 case MessagePlatform.MiraiHTTP:
                     var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
-                    lock (OneBotGroupCallDic)
+                    lock (MiraiHTTPGroupCallDic)
                     {
                         if (MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
                         {
@@ -74,7 +74,7 @@ namespace WFBot.Orichalt
                     return true;
                 case MessagePlatform.MiraiHTTPV1:
                     var miraiHTTPContext1 = OrichaltContextManager.GetMiraiHTTPV1Context(o);
-                    lock (OneBotGroupCallDic)
+                    lock (MiraiHTTPV1GroupCallDic)
                     {
                         if (MiraiHTTPV1GroupCallDic.ContainsKey(miraiHTTPContext1.Group))
                         {
@@ -89,15 +89,15 @@ namespace WFBot.Orichalt
                     return true;
                 case MessagePlatform.Kook:
                     var kookContext1 = OrichaltContextManager.GetKookContext(o);
-                    lock (OneBotGroupCallDic)
+                    lock (KookChannelCallDic)
                     {
-                        if (KookGroupCallDic.ContainsKey(kookContext1.Channel.Name))
+                        if (KookChannelCallDic.ContainsKey(kookContext1.Channel.Id))
                         {
-                            if (KookGroupCallDic[kookContext1.Channel.Name] > Config.Instance.CallperMinute - 1 && Config.Instance.CallperMinute != 0) return false;
+                            if (KookChannelCallDic[kookContext1.Channel.Id] > Config.Instance.CallperMinute - 1 && Config.Instance.CallperMinute != 0) return false;
                         }
                         else
                         {
-                            KookGroupCallDic[kookContext1.Channel.Name] = 0;
+                            KookChannelCallDic[kookContext1.Channel.Id] = 0;
                         }
                     }
 
@@ -182,25 +182,24 @@ namespace WFBot.Orichalt
                     });
                     break;
                 case MessagePlatform.Kook:
-                    lock (KookGroupCallDic)
+                    lock (KookChannelCallDic)
                     {
                         var kookContext = OrichaltContextManager.GetKookContext(o);
-                        if (KookGroupCallDic.ContainsKey(kookContext.Channel.Name))
+                        if (KookChannelCallDic.ContainsKey(kookContext.Channel.Id))
                         {
-                            KookGroupCallDic[kookContext.Channel.Name]++;
+                            KookChannelCallDic[kookContext.Channel.Id]++;
                         }
                         else
                         {
-                            KookGroupCallDic[kookContext.Channel.Name] = 1;
+                            KookChannelCallDic[kookContext.Channel.Id] = 1;
                         }
                     }
                     Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task =>
                     {
-                        lock (KookGroupCallDic)
+                        lock (KookChannelCallDic)
                         {
                             var context = OrichaltContextManager.GetKookContext(o);
-                            var group = context.Channel.Name;
-                            KookGroupCallDic[group]--;
+                            KookChannelCallDic[context.Channel.Id]--;
                         }
                     });
                     break;

@@ -1,5 +1,6 @@
 ﻿using Kook;
 using Kook.WebSocket;
+using System.Diagnostics;
 
 namespace WFBot.Orichalt.OrichaltConnectors
 {
@@ -36,12 +37,25 @@ namespace WFBot.Orichalt.OrichaltConnectors
 
         public KookCore()
         {
-            KookClient = new KookSocketClient();
-            KookClient.LoginAsync(TokenType.Bot, Token);
-            KookClient.MessageReceived += ChannelMessageReceived;
-            KookClient.StartAsync().Wait();
+
         }
 
+        public async void Init()
+        {
+            Console.WriteLine("检测到Kook实例, 如果没有特殊需求, 建议使用公用机器人, 为了社区的良性发展, 请不要将您的机器人设为公用机器人.");
+            KookClient = new KookSocketClient();
+            await KookClient.LoginAsync(TokenType.Bot, Token);
+            KookClient.MessageReceived += ChannelMessageReceived;
+            try
+            {
+                await KookClient.StartAsync();
+                Trace.WriteLine("尝试连接Kook···");
+            }
+            catch (Exception )
+            {
+                Trace.WriteLine("Kook连接失败, 1秒后重试···");
+            }
+        }
         private Task ChannelMessageReceived(SocketMessage arg)
         {
             var message = arg as SocketUserMessage;
