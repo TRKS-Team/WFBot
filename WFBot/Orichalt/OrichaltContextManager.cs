@@ -177,6 +177,9 @@ namespace WFBot.Orichalt
                 case MessagePlatform.MiraiHTTPV1:
                     MiraiHTTPV1Contexts.Remove(context.UUID, out _);
                     break;
+                case MessagePlatform.Kook:
+                    KookContexts.Remove(context.UUID, out _);
+                    break;
             }
             // 往下扩展各个平台
         }
