@@ -401,6 +401,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.MiraiHTTPV1:
                     MiraiHTTPV1SendToPrivate(Config.Instance.QQ, msg);
                     break;
+                // todo cock
             }
         }
 
