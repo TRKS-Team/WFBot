@@ -10,6 +10,7 @@ using Humanizer.Localisation;
 using PininSharp.Utils;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
@@ -41,20 +42,21 @@ namespace WFBot.Features.ImageRendering
             for (int i = 0; i < fissures.Count; i++)
             {
                 images[i] = StackImageX(images[i], new Image<Rgba32>(max - images[i].Width + 10, 1),
-                    GetResource($"Fissures.{fissures[i].tierNum}"));
+                    Margin100,
+                    GetResource($"Factions.{fissures[i].enemy.ToLower()}"));
             }
             var image = StackImageY(images);
-            return Finish(StackImageY(Margin30, image, Margin30));
+            return Finish(StackImageY(Margin40, image, Margin40));
         }
 
         public static Image<Rgba32> SingleFissure(Fissure fissure)
         {
-            return StackImageX(GetResource($"Factions.{fissure.enemy.ToLower()}"), Margin20,
+            return StackImageX(GetResource($"Fissures.{fissure.tierNum}"), Margin20,
                 StackImageY(
-                    RenderText($"{fissure.node}", options: CreateTextOptions(45)),
-                    RenderText($"{fissure.missionType} {fissure.enemy} {(fissure.isHard ? "钢铁裂缝" : fissure.isStorm ? "虚空风暴" : "普通裂缝")}\n" +
-                                       $"纪元: {fissure.tier}(T{fissure.tierNum})",color:Color.White),
-                    RenderText($"{fissure.eta}", color: new Color(new Rgba32(170,170,170))), Margin10));
+                    RenderText($"{fissure.missionType} - {fissure.enemy}", options: CreateTextOptions(45, true)),
+                    RenderText($"{fissure.tier}(T{fissure.tierNum}) {(fissure.isHard ? "钢铁裂缝" : fissure.isStorm ? "虚空风暴" : "普通裂缝")}", CreateTextOptions(30), Color.White),
+                    RenderText($"{fissure.node}", CreateTextOptions(30)),
+                    RenderText($"{fissure.eta}", CreateTextOptions(30), new Color(new Rgba32(170,170,170))), Margin10));
         }
 
         public static byte[] WMInfo(WMInfo info, bool isbuyer, bool quickReply)
@@ -252,7 +254,10 @@ namespace WFBot.Features.ImageRendering
 
         static Image<Rgba32> Margin40 = new Image<Rgba32>(40, 40, new Rgba32(0, 0, 0, 0));
 
-        static Image<Rgba32>[] Margins = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40};
+        static Image<Rgba32> Margin100 = new Image<Rgba32>(100, 100, new Rgba32(0, 0, 0, 0));
+
+        // 新加Margin之后请加入到Margins内
+        static Image<Rgba32>[] Margins = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100};
 
         public static Image<Rgba32> StackImageX(params Image<Rgba32>[] images)
         {
@@ -370,6 +375,50 @@ namespace WFBot.Features.ImageRendering
             var image = new Image<Rgba32>(minWidth == -1 ? (int)measure.Width : Math.Max(minWidth, (int)measure.Width), (int) measure.Height, new Rgba32(0, 0, 0, 0));
             image.Mutate(x => x.DrawText(options, s, color.Value));
             return image;
+        }
+        
+        // This method can be seen as an inline implementation of an `IImageProcessor`:
+        // (The combination of `IImageOperations.Apply()` + this could be replaced with an `IImageProcessor`)
+        private static IImageProcessingContext ApplyRoundedCorners(this IImageProcessingContext ctx, float cornerRadius)
+        {
+            Size size = ctx.GetCurrentSize();
+            IPathCollection corners = BuildCorners(size.Width, size.Height, cornerRadius);
+
+            ctx.SetGraphicsOptions(new GraphicsOptions()
+            {
+                Antialias = true,
+                AlphaCompositionMode = PixelAlphaCompositionMode.DestOut // enforces that any part of this shape that has color is punched out of the background
+            });
+            
+            // mutating in here as we already have a cloned original
+            // use any color (not Transparent), so the corners will be clipped
+            foreach (var c in corners)
+            {
+                ctx = ctx.Fill(Color.Red, c);
+            }
+            return ctx;
+        }
+
+        private static IPathCollection BuildCorners(int imageWidth, int imageHeight, float cornerRadius)
+        {
+            // first create a square
+            var rect = new RectangularPolygon(-0.5f, -0.5f, cornerRadius, cornerRadius);
+
+            // then cut out of the square a circle so we are left with a corner
+            IPath cornerTopLeft = rect.Clip(new EllipsePolygon(cornerRadius - 0.5f, cornerRadius - 0.5f, cornerRadius));
+
+            // corner is now a corner shape positions top left
+            //lets make 3 more positioned correctly, we can do that by translating the original around the center of the image
+
+            float rightPos = imageWidth - cornerTopLeft.Bounds.Width + 1;
+            float bottomPos = imageHeight - cornerTopLeft.Bounds.Height + 1;
+
+            // move it across the width of the image - the width of the shape
+            IPath cornerTopRight = cornerTopLeft.RotateDegree(90).Translate(rightPos, 0);
+            IPath cornerBottomLeft = cornerTopLeft.RotateDegree(-90).Translate(0, bottomPos);
+            IPath cornerBottomRight = cornerTopLeft.RotateDegree(180).Translate(rightPos, bottomPos);
+
+            return new PathCollection(cornerTopLeft, cornerBottomLeft, cornerTopRight, cornerBottomRight);
         }
 
         public static byte[] Cycles(CetusCycle cetuscycle, VallisCycle valliscycle, EarthCycle earthcycle, CambionCycle cambioncycle)
