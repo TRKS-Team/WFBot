@@ -302,7 +302,8 @@ namespace WFBot.Features.ImageRendering
             TextMeasurer.Measure(text, options);
             var ms = new MemoryStream();
             imageResult.Save(ms, new PngEncoder() {CompressionLevel = PngCompressionLevel.BestSpeed});
-
+            image.Dispose();
+            imageResult.Dispose();
             try
             {
                 if (Random.Shared.NextDouble() < 0.05)
