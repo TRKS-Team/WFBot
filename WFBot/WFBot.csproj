@@ -18,6 +18,12 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Linux Release' ">
+		<AllowedReferenceRelatedFileExtensions>
+			.pdb;
+			.dll.config
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
 		<DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
 	</PropertyGroup>

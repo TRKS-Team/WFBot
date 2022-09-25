@@ -184,6 +184,7 @@ namespace WFBot.Features.Commands
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
             var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
+            Console.WriteLine(fissures.Select(x => x.enemy).Connect(", "));
             if (AsyncContext.GetUseImageRendering())
             {
                 RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });

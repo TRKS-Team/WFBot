@@ -38,7 +38,7 @@ namespace WFBot.Features.ImageRendering
         public static byte[] Fissures(List<Fissure> fissures, int tier)
         {
             fissures = fissures.Where(x => tier == 0 || x.tierNum == tier).OrderBy(f => f.tierNum).ToList();
-            var images = fissures.Select(x => SingleFissure(x)).ToArray();
+            var images = fissures.AsParallel().AsOrdered().Select(x => SingleFissure(x)).ToArray();
             var max = images.Max(x => x.Width);
             for (int i = 0; i < fissures.Count; i++)
             {
@@ -193,7 +193,7 @@ namespace WFBot.Features.ImageRendering
             var baseOption = CreateTextOptions(30);
             
             var baseMsg = StackImageX(Margin20, RenderText(WFFormatter.GetRivenInfoString(weapon), baseOption));
-            var s = rivens.Select(x => SingleRiven(x, weapon)).ToArray();
+            var s = rivens.AsParallel().AsOrdered().Select(x => SingleRiven(x, weapon)).ToArray();
             var images = new List<Image<Rgba32>>();
             for (int i = 0; i < s.Length / 3; i++)
             {
@@ -211,7 +211,7 @@ namespace WFBot.Features.ImageRendering
             }
 
             var r = StackImageYCentered(images.ToArray());
-            return Finish(StackImageYCentered(Margin10,baseMsg, Margin20,r, Margin20));
+            return Finish(StackImageYCentered(Margin10,baseMsg, Margin20,r, Margin20, RenderText("紫卡渲染目前还在优化, 下个版本会渲染为真实紫卡.") ,Margin20));
         }
         private static WFTranslator translator => WFResources.WFTranslator;
 
@@ -321,6 +321,7 @@ namespace WFBot.Features.ImageRendering
 
             if (!Cache.ContainsKey(path))
             {
+                Console.WriteLine(path);
                 var stream = Assembly.GetCallingAssembly().GetManifestResourceStream("WFBot.Resources." + path + ".png");
                 Cache[path] = Image.Load<Rgba32>(stream, new PngDecoder());
             }
