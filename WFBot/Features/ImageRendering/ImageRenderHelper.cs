@@ -25,6 +25,7 @@ namespace WFBot.Features.ImageRendering
 {
     public static class ImageRenderHelper
     {
+        static ConcurrentDictionary<string, Image<Rgba32>> Cache = new ();
         static TextOptions defaultOptions = CreateTextOptions(40);
         public static TextOptions CreateTextOptions(int size = 40, bool bold = false)
         {
@@ -156,7 +157,7 @@ namespace WFBot.Features.ImageRendering
             public int MaxWidth{ get; set; }
             public TextOptions Options { get; set; }
         }
-        static Image<Rgba32> platinumIcon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
+        static Image<Rgba32> PlatinumIcon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
         public static Image<Rgba32> WMInfoSingle(Image<Rgba32> type, TextWithParms name, TextWithParms status, TextWithParms plat, TextWithParms quantity)
         {
             
@@ -173,7 +174,7 @@ namespace WFBot.Features.ImageRendering
                 RenderText(status, statusColor),
                 Margin30,
                 RenderText(plat, new Rgba32(6203, 74, 141)),
-                platinumIcon,
+                PlatinumIcon,
                 Margin30,
                 RenderText(quantity, new Rgba32(115, 120, 120)));
 
@@ -279,9 +280,6 @@ namespace WFBot.Features.ImageRendering
             var c3 = RenderText(sb.ToString(), option);
             return StackImageYCentered(title,  c1, c2, c3);
         }
-
-        static ConcurrentDictionary<string, Image<Rgba32>> Cache = new ConcurrentDictionary<string, Image<Rgba32>>();
-
         public static byte[] Finish(Image<Rgba32> image)
         {
             var text = "> WFBot_  "; // 好兄弟 虽然你可以改 但是不建议你改 至少保留一下原文吧
@@ -340,7 +338,7 @@ namespace WFBot.Features.ImageRendering
         static Image<Rgba32> Margin100 = new Image<Rgba32>(100, 100, new Rgba32(0, 0, 0, 0));
 
         // 新加静态资源之后请加入StaticResources到内
-        static Image<Rgba32>[] StaticResources = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100, Buy, Sell};
+        static Image<Rgba32>[] StaticResources = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100, Buy, Sell, PlatinumIcon};
 
         public static Image<Rgba32> StackImageX(params Image<Rgba32>[] images)
         {
