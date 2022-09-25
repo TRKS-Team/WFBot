@@ -156,9 +156,10 @@ namespace WFBot.Features.ImageRendering
             public int MaxWidth{ get; set; }
             public TextOptions Options { get; set; }
         }
+        static Image<Rgba32> platinumIcon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
         public static Image<Rgba32> WMInfoSingle(Image<Rgba32> type, TextWithParms name, TextWithParms status, TextWithParms plat, TextWithParms quantity)
         {
-            var platicon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
+            
             var statusColor = status.Text switch
             {
                 "游戏中" => new Color(new Rgba32(147,112,219)),
@@ -172,7 +173,7 @@ namespace WFBot.Features.ImageRendering
                 RenderText(status, statusColor),
                 Margin30,
                 RenderText(plat, new Rgba32(6203, 74, 141)),
-                platicon,
+                platinumIcon,
                 Margin30,
                 RenderText(quantity, new Rgba32(115, 120, 120)));
 
@@ -279,7 +280,7 @@ namespace WFBot.Features.ImageRendering
             return StackImageYCentered(title,  c1, c2, c3);
         }
 
-        static ConcurrentDictionary<string, Image<Rgba32>> Cache = new ();
+        static ConcurrentDictionary<string, Image<Rgba32>> Cache = new ConcurrentDictionary<string, Image<Rgba32>>();
 
         public static byte[] Finish(Image<Rgba32> image)
         {
