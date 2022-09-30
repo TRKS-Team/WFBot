@@ -9,6 +9,7 @@ using Humanizer;
 using Humanizer.Localisation;
 using PininSharp.Utils;
 using SixLabors.Fonts;
+using SixLabors.Fonts.Unicode;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.ColorSpaces;
 using SixLabors.ImageSharp.Drawing;
@@ -43,30 +44,44 @@ namespace WFBot.Features.ImageRendering
             var max = images.Max(x => x.Width);
             for (int i = 0; i < fissures.Count; i++)
             {
-                images[i] = StackImageX(images[i], new Image<Rgba32>(max - images[i].Width + 10, 1),
+                images[i] = StackImageXCentered(images[i], new Image<Rgba32>(max - images[i].Width + 10, 1),
                     Margin100,
                     GetResource($"Factions.{fissures[i].enemy.ToLower()}"));
             }
+
+            var lineColorBool = true;
+            images = images.ForEach(i => i.SetBackgroundColor(SwitchLineColor(ref lineColorBool))).ToArray();
             var image = StackImageY(images);
-            return Finish(StackImageY(Margin40, image, Margin40));
+            return Finish(StackImageY(/*Margin40*/ image /*Margin40*/));
+            // 我还没想到怎么给
         }
 
         public static Image<Rgba32> SingleFissure(Fissure fissure)
         {
-            return StackImageX(GetResource($"Fissures.{fissure.tierNum}"), Margin20,
+            return StackImageXCentered(GetResource($"Fissures.{fissure.tierNum}"), Margin20,
                 StackImageY(
                     RenderText($"{fissure.missionType} - {fissure.enemy}", options: CreateTextOptions(45, true)),
                     RenderText($"{fissure.tier}(T{fissure.tierNum}) {(fissure.isHard ? "钢铁裂缝" : fissure.isStorm ? "虚空风暴" : "普通裂缝")}", CreateTextOptions(30), Color.White),
                     RenderText($"{fissure.node}", CreateTextOptions(30)),
                     RenderText($"{fissure.eta}", CreateTextOptions(30), new Color(new Rgba32(170,170,170))), Margin10));
         }
-        static Image<Rgba32> Sell = RenderRectangle(50, 50, new Rgba32(63, 35, 59))
-            .OverlayTextCentered("卖", new Rgba32(203, 74, 158))
+        static Image<Rgba32> Sell = RenderRectangle(40, 40, new Rgba32(63, 35, 59))
+            .OverlayTextCentered("卖", new Rgba32(203, 74, 158), 30)
             .ApplyRoundedCorners(10);
 
-        static Image<Rgba32> Buy = RenderRectangle(50, 50, new Rgba32(25, 62, 53))
-            .OverlayTextCentered("买", new Rgba32(32, 158, 112))
+        static Image<Rgba32> Buy = RenderRectangle(40, 40, new Rgba32(25, 62, 53))
+            .OverlayTextCentered("买", new Rgba32(32, 158, 112), 30)
             .ApplyRoundedCorners(10);
+
+        static Image<Rgba32> PlatinumIcon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
+
+        static Image<Rgba32> Cubes = GetResource("WarframeMarket.Cubes").Resize(45, 45);
+
+        public static Rgba32 SwitchLineColor(ref bool lcb)
+        {
+            lcb = !lcb;
+            return lcb ? new Rgba32(23, 30, 33) : new Rgba32(16, 22, 25);
+        }
         public static byte[] WMInfo(WMInfo info, bool isbuyer, bool quickReply)
         {
             var sb = new StringBuilder();
@@ -80,15 +95,38 @@ namespace WFBot.Features.ImageRendering
                 var platicon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
 
             }*/
-            var nameOptions = CreateTextOptions();
+            var nameOptions = CreateTextOptions(35);
             var nameMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.ingame_name).ToArray(), nameOptions);
-            var statusOptions = CreateTextOptions();
+            var statusOptions = CreateTextOptions(30);
             var statusMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.status).ToArray(), statusOptions);
-            var platOptions = CreateTextOptions();
+            var platOptions = CreateTextOptions(30);
             var platMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => ((int)o.platinum).ToString()).ToArray(), platOptions);
-            var quantityOptions = CreateTextOptions();
+            var quantityOptions = CreateTextOptions(30);
             var quantityMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.quantity.ToString()).ToArray(), quantityOptions);
-            /*
+
+            var lineColorBool = true;
+
+
+            var headerOption = CreateTextOptions(20);
+            var header = StackImageXCentered(
+                new Image<Rgba32>(40, 40),
+                Margin30,
+                RenderText("游戏名", headerOption, new Rgba32(145, 149, 150), nameMax, true),
+                Margin30,
+                RenderText("状态", headerOption, new Rgba32(145, 149, 150), statusMax, true),
+                Margin30,
+                RenderText("单价", headerOption, new Rgba32(145, 149, 150), platMax, true),
+                Margin30,
+                new Image<Rgba32>(50, 50),
+                RenderText("数量", headerOption, new Rgba32(145, 149, 150), quantityMax+10+Cubes.Width, true)
+            );
+            // // 是不是很好奇为什么两侧要加空格? 当然是为了把下划线延长出来捏
+
+            header = header.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
+
+            var lines = new List<Image<Rgba32>>();
+            lines.Add(header);
+
             foreach (var order in info.payload.orders)
             {
                 var wmsingle = WMInfoSingle(isbuyer ? Buy : Sell,
@@ -96,16 +134,18 @@ namespace WFBot.Features.ImageRendering
                     new TextWithParms(order.user.status, statusMax, statusOptions),
                     new TextWithParms(((int)order.platinum).ToString(), platMax, platOptions),
                     new TextWithParms(order.quantity.ToString(), quantityMax, quantityOptions));
+                wmsingle = wmsingle.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
                 lines.Add(wmsingle);
             }
 
             return Finish(StackImageY(lines.ToArray()));
-             */
+             
 
-            return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParms(order.user.ingame_name, nameMax, nameOptions), new TextWithParms(order.user.status, statusMax, statusOptions), new TextWithParms(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParms(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
+            // return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParms(order.user.ingame_name, nameMax, nameOptions), new TextWithParms(order.user.status, statusMax, statusOptions), new TextWithParms(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParms(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
 
 
             // 写的一拖十
+
             /*var color1 = isbuyer ? new Color(new Rgba32(244, 67, 54)) : new Color(new Rgba32(100, 221, 23));
             var c1 = StackImageX(RenderText($"  物品: {info.sale.zh} 按价格{(isbuyer ? "从大到小" : "从小到大")} {info.payload.orders.Length}个 "), RenderText((isbuyer ? "买家  " : "卖家  "), color: color1));
 
@@ -157,7 +197,6 @@ namespace WFBot.Features.ImageRendering
             public int MaxWidth{ get; set; }
             public TextOptions Options { get; set; }
         }
-        static Image<Rgba32> PlatinumIcon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
         public static Image<Rgba32> WMInfoSingle(Image<Rgba32> type, TextWithParms name, TextWithParms status, TextWithParms plat, TextWithParms quantity)
         {
             
@@ -173,10 +212,12 @@ namespace WFBot.Features.ImageRendering
                 Margin30,
                 RenderText(status, statusColor),
                 Margin30,
-                RenderText(plat, new Rgba32(6203, 74, 141)),
+                RenderText(plat, new Rgba32(203, 74, 158)),
                 PlatinumIcon,
                 Margin30,
-                RenderText(quantity, new Rgba32(115, 120, 120)));
+                RenderText(quantity, new Rgba32(81, 93, 97)),
+                Margin10,
+                Cubes);
 
         }
 
@@ -321,7 +362,6 @@ namespace WFBot.Features.ImageRendering
 
             if (!Cache.ContainsKey(path))
             {
-                Console.WriteLine(path);
                 var stream = Assembly.GetCallingAssembly().GetManifestResourceStream("WFBot.Resources." + path + ".png");
                 Cache[path] = Image.Load<Rgba32>(stream, new PngDecoder());
             }
@@ -339,7 +379,7 @@ namespace WFBot.Features.ImageRendering
         static Image<Rgba32> Margin100 = new Image<Rgba32>(100, 100, new Rgba32(0, 0, 0, 0));
 
         // 新加静态资源之后请加入StaticResources到内
-        static Image<Rgba32>[] StaticResources = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100, Buy, Sell, PlatinumIcon};
+        static Image<Rgba32>[] StaticResources = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100, Buy, Sell, PlatinumIcon, Cubes};
 
         public static Image<Rgba32> StackImageX(params Image<Rgba32>[] images)
         {
@@ -401,7 +441,11 @@ namespace WFBot.Features.ImageRendering
 
             return image;
         }
-
+        public static Image<Rgba32> SetBackgroundColor(this Image<Rgba32> image, Color color)
+        {
+            image.Mutate(x => x.BackgroundColor(color));
+            return image;
+        }
         public static Image<Rgba32> OverlayImageCentered(this Image<Rgba32> background, Image<Rgba32> image)
         {
             var width = Math.Max(background.Width, image.Width);
@@ -436,11 +480,15 @@ namespace WFBot.Features.ImageRendering
             var image = new Image<Rgba32>(width, height, color.Value);
             return image;
         }
-        public static Image<Rgba32> RenderText(string s, TextOptions options = null, Color? color = null, int minWidth = -1)
+        public static Image<Rgba32> RenderText(string s, TextOptions options = null, Color? color = null, int minWidth = -1, bool underline = false)
         {
             options ??= defaultOptions;
             color ??= Color.White;
             // 就不用jieba了
+            if (underline)
+            {
+                options.TextRuns = new List<TextRun> { new() {Start = 0, End = s.GetGraphemeCount(),TextDecorations = TextDecorations.Underline } };
+            }
             if (s.IsNullOrWhiteSpace()) return new Image<Rgba32>(1, 1);
             // List<string> lines = new();
             //
@@ -493,57 +541,14 @@ namespace WFBot.Features.ImageRendering
             image.Mutate(x => x.DrawText(options, s, color.Value));
             return image;
         }
-        public static Image<Rgba32> RenderText(TextWithParms t, Color? color = null)
-        { ;
+        public static Image<Rgba32> RenderText(TextWithParms t, Color? color = null, bool underline = false)
+        {
             color ??= Color.White;
-            // 就不用jieba了
+            if (underline)
+            {
+                t.Options.TextRuns = new List<TextRun> { new() {Start = 0, End = t.Text.GetGraphemeCount(), TextDecorations = TextDecorations.Underline } };
+            }
             if (t.Text.IsNullOrWhiteSpace()) return new Image<Rgba32>(1, 1);
-            // List<string> lines = new();
-            //
-            // var start = 0;
-            // var end = 0;
-            //
-            //
-            // while (end != s.Length)
-            // {
-            //     end++;
-            //     if (TextMeasurer.Measure(s[start..end], options).Width > capLength)
-            //     {
-            //         var lastChar = s[end - 1];
-            //         if (char.IsLetterOrDigit(lastChar))
-            //         {
-            //             var i = end;
-            //             while (true)
-            //             {
-            //                 i--;
-            //                 if (i <= start + 1)
-            //                 {
-            //                     end -= 1;
-            //                     break;
-            //                 }
-            //
-            //                 if (!char.IsLetterOrDigit(s[i]))
-            //                 {
-            //                     end = i + 1;
-            //                 }
-            //             }
-            //         }
-            //         else
-            //         {
-            //             end -= 1;
-            //         }
-            //
-            //         lines.Add(s[start..end]);
-            //         start = end;
-            //     }
-            // }
-            //
-            // if (start != s.Length - 1)
-            // {
-            //     lines.Add(s[start..end]);
-            // }
-
-
             var measure = TextMeasurer.Measure(t.Text, t.Options);
             var image = new Image<Rgba32>(t.MaxWidth == (int)measure.Width ? (int)measure.Width : Math.Max(t.MaxWidth, (int)measure.Width), (int) measure.Height, new Rgba32(0, 0, 0, 0));
             image.Mutate(x => x.DrawText(t.Options, t.Text, color.Value));
