@@ -430,7 +430,7 @@ namespace WFBot
             try
             {
                 var hc = new HttpClient();
-                var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}");
+                var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}&clientid={TelemetryClient.ClientID}");
                 t = s;
             }
             catch (Exception)
