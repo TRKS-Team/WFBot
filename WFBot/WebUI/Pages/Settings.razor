@@ -1,11 +1,14 @@
 ﻿@page "/settings"
 @using WFBot.Orichalt
 @using GammaLibrary.Extensions
+@inject IBlazorStrap _blazorStrap
 <PageTitle>设置</PageTitle>
+<BSToaster />
 
 <h1>设置</h1>
+
 <div class="mb-3">
-    <button class="btn btn-primary" @onclick="() => Config.Save()">保存</button>
+    <button class="btn btn-primary" @onclick="Save">保存</button>
 </div>
 
 
@@ -459,4 +462,14 @@
 
 
     #endregion
+
+    async void Save()
+    {
+        await Task.Run(() =>
+        {
+            Config.Save();
+
+        });
+        _blazorStrap.Toaster.Add("提示", "保存成功");
+    }
 }
