@@ -39,7 +39,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BlazorStrap" Version="5.0.106" />
-		<PackageReference Include="Chaldene" Version="0.1.0" />
+		<PackageReference Include="Chaldene" Version="0.3.0" />
 		<PackageReference Include="Fastenshtein" Version="1.0.0.5" />
 		<PackageReference Include="GammaLibrary" Version="3.0.0-pre1" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
