@@ -41,12 +41,13 @@ namespace WFBot.Features.CustomCommandContent
             var syntaxTree = CSharpSyntaxTree.ParseText(CustomCommandContentConfig.Instance.Content);
             var dir = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
-            if (File.Exists("temp.dll") && (forceCreate || CacheInvalid()))
+            var tempDll = "WFCaches/temp.dll";
+            if (File.Exists(tempDll) && (forceCreate || CacheInvalid()))
             {
-                File.Delete("temp.dll");
+                File.Delete(tempDll);
             }
 
-            if (File.Exists("temp.dll"))
+            if (File.Exists(tempDll))
             {
                 goto load;
             }
@@ -83,7 +84,7 @@ namespace WFBot.Features.CustomCommandContent
                 else
                 {
                     dllStream.Seek(0, SeekOrigin.Begin);
-                    File.WriteAllBytes("temp.dll", dllStream.ToArray());
+                    File.WriteAllBytes(tempDll, dllStream.ToArray());
                 }
             }
 
@@ -97,7 +98,7 @@ namespace WFBot.Features.CustomCommandContent
             {
                 Console.WriteLine($"************警告: 自定义命令处理内容上次保存时的版本为 {CustomCommandContentConfig.Instance.LastSaveVersion} 可能有内容已经过期, 请查看 diff <https://github.com/TRKS-Team/WFBot/compare/v1.0.{CustomCommandContentConfig.Instance.LastSaveVersion.Split('.').Last().Split('+').First()}-universal.0...v1.0.{WFBotCore.Version.Split('.').Last().Split('+').First()}-universal.0?diff=unified>并修改.");
             }
-            var bytes = File.ReadAllBytes("temp.dll");
+            var bytes = File.ReadAllBytes(tempDll);
             CustomCommandContentConfig.Save();
             var type = Assembly.Load(bytes).GetType("WFBot.Features.Utils.WFFormatterCustom").GetMethods(BindingFlags.Public | BindingFlags.Static);
             var originType = typeof(WFFormatter).GetMethods(BindingFlags.Public | BindingFlags.Static);
