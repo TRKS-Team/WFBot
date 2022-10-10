@@ -66,6 +66,10 @@ namespace WFBot
                         Directory.CreateDirectory("WFBotConfigs");
                         UseConfigFolder = true;
                         break;
+                    case "--get-version":
+                        Console.WriteLine(WFBotCore.Version);
+                        Environment.Exit(0);
+                        break;
                 }
             }
 #if DEBUG
