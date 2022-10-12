@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using WFBot.Features.Resource;
 using WFBot.TextCommandCore;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -45,6 +48,14 @@ namespace WFBot.Utils
 
     public static class WebHelper
     {
+        public static async Task<Image<Rgba32>> LoadImageFromWeb(string url)
+        {
+            var client = SharedHttpClient.Value;
+            await using var bytes = await client.GetStreamAsync(url);
+            // Remember to dispose of this image once you are finished.
+            var image = Image.Load(bytes, new PngDecoder());
+            return image as Image<Rgba32>;
+        }
         public static async Task<WebStatus> TryGet(string url)
         {
             try

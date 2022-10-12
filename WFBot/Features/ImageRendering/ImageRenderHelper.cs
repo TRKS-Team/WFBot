@@ -53,7 +53,7 @@ namespace WFBot.Features.ImageRendering
             images = images.ForEach(i => i.SetBackgroundColor(SwitchLineColor(ref lineColorBool))).ToArray();
             var image = StackImageY(images);
             return Finish(StackImageY(/*Margin40*/ image /*Margin40*/));
-            // 我还没想到怎么给
+            // 我还没想到怎么给Margin上色
         }
 
         public static Image<Rgba32> SingleFissure(Fissure fissure)
@@ -65,6 +65,7 @@ namespace WFBot.Features.ImageRendering
                     RenderText($"{fissure.node}", CreateTextOptions(30)),
                     RenderText($"{fissure.eta}", CreateTextOptions(30), new Color(new Rgba32(170,170,170))), Margin10));
         }
+
         static Image<Rgba32> Sell = RenderRectangle(40, 40, new Rgba32(63, 35, 59))
             .OverlayTextCentered("卖", new Rgba32(203, 74, 158), 30)
             .ApplyRoundedCorners(10);
@@ -82,7 +83,7 @@ namespace WFBot.Features.ImageRendering
             lcb = !lcb;
             return lcb ? new Rgba32(23, 30, 33) : new Rgba32(16, 22, 25);
         }
-        public static byte[] WMInfo(WMInfo info, bool isbuyer, bool quickReply)
+        public static async Task<byte[]> WMInfo(WMInfo info, bool isbuyer, bool quickReply)
         {
             var sb = new StringBuilder();
             /*foreach (var order in info.payload.orders)
@@ -104,8 +105,43 @@ namespace WFBot.Features.ImageRendering
             var quantityOptions = CreateTextOptions(30);
             var quantityMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.quantity.ToString()).ToArray(), quantityOptions);
 
-            var lineColorBool = true;
+            var lines = new List<Image<Rgba32>>();
 
+            const string assetUrl = "https://warframe.market/static/assets/";
+
+            var item = info.include.item.items_in_set.First(i => i.url_name == info.sale.code);
+            var avatar_url = assetUrl + (info.include.item.items_in_set.Length == 1 ? item.thumb : item.set_root ? item.thumb : item.sub_icon);
+            var avatar = new Image<Rgba32>(128, 128).OverlayImageCentered(await WebHelper.LoadImageFromWeb(avatar_url));
+            var radius = (Math.Max(avatar.Width, avatar.Height) - 8) / 2;
+            avatar = avatar.ApplyCircleWithBoarder(radius, 4, new Rgba32(60,135,156));
+
+            var tags = info.sale.zh.Split(' ');
+            var tagOptions = CreateTextOptions(50);
+            var widths = tags.Select(t => (int)TextMeasurer.Measure(t, tagOptions).Width).ToArray();
+            var texts = new List<Image<Rgba32>>();
+            var currentLength = 0;
+            var currentText = "";
+            for (int i = 0; i < tags.Length; i++)
+            {
+                if (currentLength >= 300 || i == tags.Length-1)
+                {
+                    if (i == tags.Length-1)
+                    {
+                        currentText += currentText.IsNullOrEmpty() ? tags[i] : " " + tags[i];
+                        currentLength += widths[i];
+                    }
+                    texts.Add(RenderText(currentText, tagOptions));
+                    currentLength = default;
+                    currentText = default;
+                }
+                currentText += currentText.IsNullOrEmpty() ? tags[i] : " " + tags[i];
+                currentLength += widths[i];
+            }
+            var itemName = StackImageYCentered(texts.ToArray());
+
+            lines.Add(StackImageXCentered(avatar, Margin40, itemName));
+
+            var lineColorBool = true;
 
             var headerOption = CreateTextOptions(20);
             var header = StackImageXCentered(
@@ -124,7 +160,6 @@ namespace WFBot.Features.ImageRendering
 
             header = header.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
 
-            var lines = new List<Image<Rgba32>>();
             lines.Add(header);
 
             foreach (var order in info.payload.orders)
@@ -450,7 +485,7 @@ namespace WFBot.Features.ImageRendering
         {
             var width = Math.Max(background.Width, image.Width);
             var height = Math.Max(background.Height, image.Height);
-            var isbigger = background.Width > image.Width && background.Height > image.Height;
+            var isbigger = background.Width >= image.Width && background.Height >= image.Height;
             var result = new Image<Rgba32>(width, height, new Rgba32(0, 0, 0, 0));
 
             result.Mutate(m => m.DrawImage(background, isbigger
@@ -559,7 +594,63 @@ namespace WFBot.Features.ImageRendering
             image.Mutate(x => x.Resize(width, height));
             return image;
         }
+        private static Image<Rgba32> ApplyCircle(this Image<Rgba32> image, float circleRadius)
+        {
+            image.Mutate(x => x.ApplyCircle(circleRadius));
+            return image;
+        }
+        private static Image<Rgba32> ApplyCircleWithBoarder(this Image<Rgba32> image, float circleRadius, float boarderWidth, Color boarderColor)
+        {
+            image.Mutate(x => x.ApplyCircleWithBoarder(circleRadius, boarderWidth, boarderColor));
+            return image;
+        }
+        public static IImageProcessingContext ApplyCircle(this IImageProcessingContext ctx, float circleRadius)
+        {
+            Size size = ctx.GetCurrentSize();
+            IPathCollection corners = BuildCircleCorners(size.Width, size.Height, circleRadius);
 
+            ctx.SetGraphicsOptions(new GraphicsOptions()
+            {
+                Antialias = true,
+                AlphaCompositionMode = PixelAlphaCompositionMode.DestOut // enforces that any part of this shape that has color is punched out of the background
+            });
+
+            foreach (var c in corners)
+            {
+                ctx = ctx.Fill(Color.Red, c);
+            }
+            return ctx;
+        }
+        public static IImageProcessingContext ApplyCircleWithBoarder(this IImageProcessingContext ctx, float circleRadius, float boarderWidth, Color boarderColor)
+        {
+            Size size = ctx.GetCurrentSize();
+            IPathCollection corners = BuildCircleCorners(size.Width, size.Height, circleRadius);
+
+            ctx.SetGraphicsOptions(new GraphicsOptions
+            {
+                Antialias = true,
+                AlphaCompositionMode = PixelAlphaCompositionMode.DestOut // enforces that any part of this shape that has color is punched out of the background
+            });
+
+            foreach (var c in corners)
+            {
+                ctx = ctx.Fill(Color.Red, c);
+            }
+
+            var boarder = new EllipsePolygon(size.Width / 2, size.Height / 2, circleRadius+boarderWidth).Clip(new EllipsePolygon(size.Width / 2, size.Height / 2, circleRadius));
+            ctx.SetGraphicsOptions(new GraphicsOptions());
+            ctx = ctx.Fill(boarderColor, boarder);
+            return ctx;
+        }
+        public static IPathCollection BuildCircleCorners(int imageWidith, int imageHeight, float circleRadius)
+        {
+            var rect = new RectangularPolygon(0, 0, imageWidith, imageHeight);
+
+            IPath corners = rect.Clip(new EllipsePolygon(imageWidith/2, imageHeight/2, circleRadius));
+
+            return new PathCollection(corners);
+
+        }
         private static Image<Rgba32> ApplyRoundedCorners(this Image<Rgba32> image, float cornerRadius)
         {
             image.Mutate(x => x.ApplyRoundedCorners(cornerRadius));
@@ -572,7 +663,7 @@ namespace WFBot.Features.ImageRendering
             Size size = ctx.GetCurrentSize();
             IPathCollection corners = BuildCorners(size.Width, size.Height, cornerRadius);
 
-            ctx.SetGraphicsOptions(new GraphicsOptions()
+            ctx.SetGraphicsOptions(new GraphicsOptions
             {
                 Antialias = true,
                 AlphaCompositionMode = PixelAlphaCompositionMode.DestOut // enforces that any part of this shape that has color is punched out of the background

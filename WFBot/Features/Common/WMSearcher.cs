@@ -349,7 +349,7 @@ namespace WFBot.Features.Common
                         sb.AppendLine(info.payload.orders.Select(o => o.user.ingame_name).Connect(", "));
                     }
 
-                    richMessageSender(ImageRenderHelper.WMInfo(info, isbuyer, quickReply), sb.ToString().Trim());
+                    richMessageSender(ImageRenderHelper.WMInfo(info, isbuyer, quickReply).Result, sb.ToString().Trim());
                     return "";
                 }
                 else
