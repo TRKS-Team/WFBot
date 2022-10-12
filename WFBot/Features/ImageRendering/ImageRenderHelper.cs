@@ -21,6 +21,7 @@ using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.Utils;
+using ColorX = System.Drawing.Color;
 
 namespace WFBot.Features.ImageRendering
 {
@@ -138,13 +139,14 @@ namespace WFBot.Features.ImageRendering
                 currentLength += widths[i];
             }
             var itemName = StackImageYCentered(texts.ToArray());
-
-            lines.Add(StackImageXCentered(avatar, Margin40, itemName));
-
+            lines.Add(Margin20);
+            lines.Add(StackImageXCentered(Margin20, avatar, Margin40, itemName));
+            lines.Add(Margin20);
             var lineColorBool = true;
 
             var headerOption = CreateTextOptions(20);
             var header = StackImageXCentered(
+                Margin30,
                 new Image<Rgba32>(40, 40),
                 Margin30,
                 RenderText("游戏名", headerOption, new Rgba32(145, 149, 150), nameMax, true),
@@ -154,7 +156,8 @@ namespace WFBot.Features.ImageRendering
                 RenderText("单价", headerOption, new Rgba32(145, 149, 150), platMax, true),
                 Margin30,
                 new Image<Rgba32>(50, 50),
-                RenderText("数量", headerOption, new Rgba32(145, 149, 150), quantityMax+10+Cubes.Width, true)
+                RenderText("数量", headerOption, new Rgba32(145, 149, 150), quantityMax+10+Cubes.Width, true),
+                Margin30
             );
             // // 是不是很好奇为什么两侧要加空格? 当然是为了把下划线延长出来捏
 
@@ -173,6 +176,12 @@ namespace WFBot.Features.ImageRendering
                 lines.Add(wmsingle);
             }
 
+            var len = lines.Last().Width;
+            var margin = len / 13.0;
+            var image = RenderRectangle((int)(len - 2 * margin), 8, new Rgba32(255,255,255)).ApplyRoundedCorners(7);
+            lines.Add(Margin20);
+            lines.Add(StackImageX(new Image<Rgba32>((int)margin,1),image));
+            lines.Add(Margin20);
             return Finish(StackImageY(lines.ToArray()));
              
 
@@ -237,22 +246,26 @@ namespace WFBot.Features.ImageRendering
             
             var statusColor = status.Text switch
             {
-                "游戏中" => new Color(new Rgba32(147,112,219)),
-                "在线" => new Color(new Rgba32(0, 100, 0)),
-                "离线" => new Color(new Rgba32(139, 0, 0))
+                "游戏中" => ColorX.FromArgb(157,119,233),
+                "在线" => ColorX.FromArgb(0, 161, 0),
+                "离线" => ColorX.FromArgb(209, 0, 0)
             };
-            return StackImageXCentered(type,
+            
+            return StackImageXCentered(
+                Margin30
+                ,type,
                 Margin30,
-                RenderText(name, new Rgba32(60, 135, 156)),
+                RenderText(name, ColorX.FromArgb(79, 177, 205)),
                 Margin30,
                 RenderText(status, statusColor),
                 Margin30,
-                RenderText(plat, new Rgba32(203, 74, 158)),
+                RenderText(plat, ColorX.FromArgb(235, 82, 182)),
                 PlatinumIcon,
                 Margin30,
-                RenderText(quantity, new Rgba32(81, 93, 97)),
+                RenderText(quantity, ColorX.FromArgb(157, 180, 187)),
                 Margin10,
-                Cubes);
+                Cubes,
+                Margin30);
 
         }
 
@@ -359,7 +372,16 @@ namespace WFBot.Features.ImageRendering
         public static byte[] Finish(Image<Rgba32> image)
         {
             var text = "> WFBot_  "; // 好兄弟 虽然你可以改 但是不建议你改 至少保留一下原文吧
-            var options = CreateTextOptions(80);
+            TextOptions options;
+            var size = 80.0 / 0.9;
+            FontRectangle measure;
+            do
+            {
+                size *= 0.9;
+                options = CreateTextOptions((int)size);
+                measure = TextMeasurer.Measure(text, options);
+            } while (measure.Width / (double)image.Width > 0.37);
+            
             options.HorizontalAlignment = HorizontalAlignment.Right;
             options.VerticalAlignment = VerticalAlignment.Top;
             var textHeight = (int)TextMeasurer.Measure(text, options).Height;
@@ -415,6 +437,7 @@ namespace WFBot.Features.ImageRendering
 
         // 新加静态资源之后请加入StaticResources到内
         static Image<Rgba32>[] StaticResources = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100, Buy, Sell, PlatinumIcon, Cubes};
+        static Image<Rgba32>[] Margins = new Image<Rgba32>[] {Margin10, Margin20, Margin30, Margin40, Margin100};
 
         public static Image<Rgba32> StackImageX(params Image<Rgba32>[] images)
         {
@@ -424,7 +447,8 @@ namespace WFBot.Features.ImageRendering
             var image = new Image<Rgba32>(width, height, new Rgba32(0, 0, 0, 0));
             foreach (var i in images)
             {
-                image.Mutate(m => m.DrawImage(i, new Point(x, 0), new GraphicsOptions()));
+                if (!Margins.Contains(i))
+                    image.Mutate(m => m.DrawImage(i, new Point(x, 0), new GraphicsOptions()));
                 if (!StaticResources.Contains(i) && !Cache.Any(c => c.Value == i)) i.Dispose();
                 x += i.Width;
             }
@@ -439,7 +463,8 @@ namespace WFBot.Features.ImageRendering
             var image = new Image<Rgba32>(width, height, new Rgba32(0, 0, 0, 0));
             foreach (var i in images)
             {
-                image.Mutate(m => m.DrawImage(i, new Point(x, height / 2 - i.Height / 2), new GraphicsOptions()));
+                if (!Margins.Contains(i))
+                    image.Mutate(m => m.DrawImage(i, new Point(x, height / 2 - i.Height / 2), new GraphicsOptions()));
                 if (!StaticResources.Contains(i) && !Cache.Any(c => c.Value == i)) i.Dispose();
                 x += i.Width;
             }
@@ -454,7 +479,8 @@ namespace WFBot.Features.ImageRendering
             var image = new Image<Rgba32>(width, height, new Rgba32(0, 0, 0, 0));
             foreach (var i in images)
             {
-                image.Mutate(m => m.DrawImage(i, new Point(width / 2 - i.Width / 2, y), new GraphicsOptions()));
+                if (!Margins.Contains(i))
+                    image.Mutate(m => m.DrawImage(i, new Point(width / 2 - i.Width / 2, y), new GraphicsOptions()));
                 if (!StaticResources.Contains(i) && !Cache.Any(c => c.Value == i)) i.Dispose();
                 y += i.Height;
             }
@@ -469,7 +495,8 @@ namespace WFBot.Features.ImageRendering
             var image = new Image<Rgba32>(width, height, new Rgba32(0, 0, 0, 0));
             foreach (var i in images)
             {
-                image.Mutate(m => m.DrawImage(i, new Point(0, y), new GraphicsOptions()));
+                if (!Margins.Contains(i))
+                    image.Mutate(m => m.DrawImage(i, new Point(0, y), new GraphicsOptions()));
                 if (!StaticResources.Contains(i) && !Cache.Any(c => c.Value == i)) i.Dispose();
                 y += i.Height;
             }
@@ -576,6 +603,13 @@ namespace WFBot.Features.ImageRendering
             image.Mutate(x => x.DrawText(options, s, color.Value));
             return image;
         }
+
+        public static Image<Rgba32> RenderText(TextWithParms t, ColorX color = default, bool underline = false)
+        {
+            return RenderText(t,new Rgba32(color.R, color.G, color.B),underline);
+        }
+
+
         public static Image<Rgba32> RenderText(TextWithParms t, Color? color = null, bool underline = false)
         {
             color ??= Color.White;
