@@ -92,7 +92,7 @@ namespace WFBot.Features.Commands
             }
         }
 
-        [Matchers("平野", "夜灵平野", "平原", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "平原温度", "平原时间")]
+        [Matchers("平原", "平野", "夜灵平野", "夜灵平原", "金星平原", "奥布山谷", "金星平原温度", "平原温度", "平原时间")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task Cycles()
         {

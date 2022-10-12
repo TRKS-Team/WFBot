@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using WFBot.Features.Telemetry;
 using WFBot.Orichalt;
+using WFBot.Utils;
 
 
 namespace WFBot.TextCommandCore
@@ -51,7 +52,10 @@ namespace WFBot.TextCommandCore
                 Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
                 TelemetryClient.AddMessageCount();
 
-                var method = GetCommandHandler<T>(message);
+                var info = GetCommandHandler<T>(message);
+                var method = info.Method;
+                var commandIdentifier = method.GetCustomAttribute<MatchersAttribute>()?.Matchers[0] ?? "";
+                AsyncContext.SetCommandIdentifier(commandIdentifier);
                 message = PreProcess(method, message, handlers);
 
                 var param = BuildParams(message, method);
@@ -321,13 +325,13 @@ namespace WFBot.TextCommandCore
             }
         }
 
-        static MethodInfo GetCommandHandler<T>(string message)
+        static CommandInfo GetCommandHandler<T>(string message)
         {
             var 我不知道该咋命名了 = message.Split(' ')[0];
             var matchInfo = GetCommandInfos<T>().FirstOrDefault(info => info.Matchers.Any(m => m(我不知道该咋命名了)));
             if (matchInfo is null) throw new CommandMismatchException();
 
-            return matchInfo.Method;
+            return matchInfo;
         }
 
         static T SafeGet<T>(this T[] array, int position) where T : class

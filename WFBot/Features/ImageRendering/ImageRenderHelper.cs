@@ -168,10 +168,10 @@ namespace WFBot.Features.ImageRendering
             foreach (var order in info.payload.orders)
             {
                 var wmsingle = WMInfoSingle(isbuyer ? Buy : Sell,
-                    new TextWithParms(order.user.ingame_name, nameMax, nameOptions),
-                    new TextWithParms(order.user.status, statusMax, statusOptions),
-                    new TextWithParms(((int)order.platinum).ToString(), platMax, platOptions),
-                    new TextWithParms(order.quantity.ToString(), quantityMax, quantityOptions));
+                    new TextWithParams(order.user.ingame_name, nameMax, nameOptions),
+                    new TextWithParams(order.user.status, statusMax, statusOptions),
+                    new TextWithParams(((int)order.platinum).ToString(), platMax, platOptions),
+                    new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions));
                 wmsingle = wmsingle.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
                 lines.Add(wmsingle);
             }
@@ -185,7 +185,7 @@ namespace WFBot.Features.ImageRendering
             return Finish(StackImageY(lines.ToArray()));
              
 
-            // return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParms(order.user.ingame_name, nameMax, nameOptions), new TextWithParms(order.user.status, statusMax, statusOptions), new TextWithParms(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParms(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
+            // return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParams(order.user.ingame_name, nameMax, nameOptions), new TextWithParams(order.user.status, statusMax, statusOptions), new TextWithParams(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
 
 
             // 写的一拖十
@@ -228,9 +228,9 @@ namespace WFBot.Features.ImageRendering
         {
             return texts.Select(t => (int)TextMeasurer.Measure(t, options).Width).Max();
         }
-        public class TextWithParms
+        public class TextWithParams
         {
-            public TextWithParms(string text, int maxWidth, TextOptions options = null)
+            public TextWithParams(string text, int maxWidth, TextOptions options = null)
             {
                 Text = text;
                 MaxWidth = maxWidth;
@@ -241,7 +241,7 @@ namespace WFBot.Features.ImageRendering
             public int MaxWidth{ get; set; }
             public TextOptions Options { get; set; }
         }
-        public static Image<Rgba32> WMInfoSingle(Image<Rgba32> type, TextWithParms name, TextWithParms status, TextWithParms plat, TextWithParms quantity)
+        public static Image<Rgba32> WMInfoSingle(Image<Rgba32> type, TextWithParams name, TextWithParams status, TextWithParams plat, TextWithParams quantity)
         {
             
             var statusColor = status.Text switch
@@ -393,6 +393,9 @@ namespace WFBot.Features.ImageRendering
             imageResult.Mutate(x => x.DrawImage(image, new Point(0,0), new GraphicsOptions()));
             imageResult.Mutate(x => x.Fill(new DrawingOptions(), new Color(new Rgba32(100, 181, 246)), new RectangleF(0, height, width, textHeight)));
             imageResult.Mutate(x => x.DrawText(options,text,new Color(new Rgba32(255,255,255))));
+            options.HorizontalAlignment = HorizontalAlignment.Left;
+            options.Origin = new Vector2(0, height);
+            imageResult.Mutate(x => x.DrawText(options, "   ∕ " + AsyncContext.GetCommandIdentifier(), new Color(new Rgba32(255, 255, 255))));
 
 
             TextMeasurer.Measure(text, options);
@@ -604,13 +607,13 @@ namespace WFBot.Features.ImageRendering
             return image;
         }
 
-        public static Image<Rgba32> RenderText(TextWithParms t, ColorX color = default, bool underline = false)
+        public static Image<Rgba32> RenderText(TextWithParams t, ColorX color = default, bool underline = false)
         {
             return RenderText(t,new Rgba32(color.R, color.G, color.B),underline);
         }
 
 
-        public static Image<Rgba32> RenderText(TextWithParms t, Color? color = null, bool underline = false)
+        public static Image<Rgba32> RenderText(TextWithParams t, Color? color = null, bool underline = false)
         {
             color ??= Color.White;
             if (underline)

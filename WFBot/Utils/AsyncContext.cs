@@ -12,7 +12,8 @@ namespace WFBot.Utils
             new AsyncLocal<Container<OrichaltContext>>();
         internal static readonly AsyncLocal<Container<bool>> UseImageRendering =
             new ();
-
+        internal static readonly AsyncLocal<Container<string>> CommandIdentifier =
+            new();
         public static void SetOrichaltContext(OrichaltContext context)
         {
             CurrentOrichaltContext.Value = new Container<OrichaltContext>(context);
@@ -40,6 +41,14 @@ namespace WFBot.Utils
         public static bool GetUseImageRendering()
         {
             return UseImageRendering.Value?.Value ?? false;
+        }
+        public static void SetCommandIdentifier(string v)
+        {
+            CommandIdentifier.Value = new Container<string>(v);
+        }
+        public static string GetCommandIdentifier()
+        {
+            return CommandIdentifier.Value?.Value ?? "";
         }
     }
 }

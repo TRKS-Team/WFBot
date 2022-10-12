@@ -29,7 +29,7 @@ namespace WFBot.Features.Commands
         
         [DoNotMeasureTime]
         [AddPlatformInfo]
-        [Matchers("status", "状态", "机器人状态", "机器人信息", "我需要机器人")]
+        [Matchers("状态", "status", "机器人状态", "机器人信息", "我需要机器人")]
         async Task<string> Status()
         {
             var sb = new StringBuilder();
