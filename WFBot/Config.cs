@@ -71,6 +71,7 @@ namespace WFBot
         public bool SendResourceUpdateNotification = true;
         public MessagePlatform Miguel_Platform = MessagePlatform.Unknown;
         public bool EnableCustomCommandContent = false;
+        public bool UseKraber = true;
         
         protected override void AfterUpdate()
         {
