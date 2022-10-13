@@ -15,6 +15,7 @@ using GammaLibrary.Extensions;
 using HarmonyLib;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using System.Reflection.Metadata;
 
 namespace WFBot.Features.CustomCommandContent
 {
@@ -26,7 +27,7 @@ namespace WFBot.Features.CustomCommandContent
         public string LastCompileHash = "";
     }
 
-    public class CustomCommandContentHandler
+    public static class CustomCommandContentHandler
     {
         static bool FirstLoad = true;
 
@@ -39,7 +40,6 @@ namespace WFBot.Features.CustomCommandContent
                 new Harmony("what").PatchAll(Assembly.GetCallingAssembly());
             }
             var syntaxTree = CSharpSyntaxTree.ParseText(CustomCommandContentConfig.Instance.Content);
-            var dir = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
             var tempDll = "WFCaches/temp.dll";
             if (File.Exists(tempDll) && (forceCreate || CacheInvalid()))
@@ -51,16 +51,16 @@ namespace WFBot.Features.CustomCommandContent
             {
                 goto load;
             }
-
+            
             var compilation = CSharpCompilation.Create(
                 "Formatter",
                 new[] { syntaxTree },
-                Directory.GetFiles(".", "*.dll").Concat(Directory.GetFiles(dir, "System.*").Where(x => !x.Contains("Native"))).Select(d => MetadataReference.CreateFromFile(d)).Concat(new[]
+                (AppDomain.CurrentDomain.GetAssemblies().Where(x=>x.GetTypes().Any()).Select(x=>x.GetTypes().First().GetRawMetadataReference()).Concat(new[]
                 {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(Path.Combine(dir, "mscorlib.dll")),
-                    MetadataReference.CreateFromFile(Path.Combine(dir, "netstandard.dll")),
-                }),
+                    Assembly.Load("netstandard").GetRawMetadataReference(),
+                    Assembly.Load("System.Runtime").GetRawMetadataReference()
+
+                })),
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
 
@@ -129,7 +129,27 @@ namespace WFBot.Features.CustomCommandContent
 
 
         }
-
+        public static MetadataReference GetRawMetadataReference(this Type type)
+        {
+            unsafe
+            {
+                return type.Assembly.TryGetRawMetadata(out var blob, out var length)
+                    ? AssemblyMetadata
+                        .Create(ModuleMetadata.CreateFromMetadata((IntPtr)blob, length))
+                        .GetReference()
+                    : throw new InvalidOperationException($"Could not get raw metadata for type {type}");
+            }
+        }        public static MetadataReference GetRawMetadataReference(this Assembly type)
+        {
+            unsafe
+            {
+                return type.TryGetRawMetadata(out var blob, out var length)
+                    ? AssemblyMetadata
+                        .Create(ModuleMetadata.CreateFromMetadata((IntPtr)blob, length))
+                        .GetReference()
+                    : throw new InvalidOperationException($"Could not get raw metadata for type {type}");
+            }
+        }
         static bool CacheInvalid()
         {
             return CustomCommandContentConfig.Instance.LastCompileHash !=

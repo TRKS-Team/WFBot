@@ -52,6 +52,12 @@ namespace WFBot.WebUI
                     typeof(Program).Assembly, "wwwroot"
                 )
             });
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(
+                    typeof(Program).Assembly, "wwwroot2"
+                )
+            });
             app.UseStaticFiles();
             app.UseRouting();
 
