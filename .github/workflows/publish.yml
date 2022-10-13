@@ -73,17 +73,17 @@ jobs:
         name: Download the file
         with:
           url: "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapperWindows"
-          target: ./
+          target: ./WFBotWrapper-win-x86.exe
       - uses: suisei-cn/actions-download-file@v1.0.1
         name: Download the file
         with:
           url: "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapperLinuxArm64"
-          target: ./
+          target: WFBotWrapper-linux-arm64
       - uses: suisei-cn/actions-download-file@v1.0.1
         name: Download the file
         with:
           url: "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapperLinuxX64"
-          target: ./
+          target: ./WFBotWrapper-linux-x64
 
       - name: Create a GitHub release
         id: create_release
