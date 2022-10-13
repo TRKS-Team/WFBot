@@ -39,7 +39,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: build-wfbot-ci.bat
+        run: ./build-wfbot-ci.bat
         env:
           OFFICIAL_BUILD: official
 
