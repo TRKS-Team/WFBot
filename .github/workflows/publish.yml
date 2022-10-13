@@ -129,8 +129,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: WFBotWrapper-linux-arm64
-          asset_name: WFBotWrapper-linux-arm64
-          asset_content_type: ctet-stream
+          asset_content_type: application/octet-stream
       - name: Upload WFBot Linux Release
         uses: actions/upload-release-asset@v1
         env:
@@ -138,8 +137,8 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./WFBotWrapper-win-x86.exe
-          asset_name: WFBotWrapper-win-x86.exe
-          asset_content_type: ctet-stream
+          asset_name:WFBotWrapper-win-x86.exe
+          asset_content_type: application/octet-stream
       - name: Upload WFBot Linux Release
         uses: actions/upload-release-asset@v1
         env:
@@ -148,7 +147,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./WFBotWrapper-linux-x64
           asset_name: WFBotWrapper-linux-x64
-          asset_content_type: ctet-stream
+          asset_content_type: application/octet-stream
 
 
   docker-publish:
