@@ -50,10 +50,12 @@ namespace WFBot.Utils
     {
         public static async Task<Image<Rgba32>> LoadImageFromWeb(string url)
         {
+            var sw = Stopwatch.StartNew();
             var client = SharedHttpClient.Value;
             await using var bytes = await client.GetStreamAsync(url);
             // Remember to dispose of this image once you are finished.
             var image = Image.Load(bytes, new PngDecoder());
+            Trace.WriteLine($"图片下载完成: URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
             return image as Image<Rgba32>;
         }
         public static async Task<WebStatus> TryGet(string url)

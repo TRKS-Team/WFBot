@@ -97,6 +97,7 @@ namespace WFBot.Features.ImageRendering
                 var platicon = GetResource("WarframeMarket.PlatinumSimple").Resize(50, 50);
 
             }*/
+            using var profiler = new ImageRenderProfiler();
             var nameOptions = CreateTextOptions(35);
             var nameMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.ingame_name).ToArray(), nameOptions);
             var statusOptions = CreateTextOptions(30);
@@ -115,6 +116,7 @@ namespace WFBot.Features.ImageRendering
             var avatar = new Image<Rgba32>(128, 128).OverlayImageCentered(await WebHelper.LoadImageFromWeb(avatar_url));
             var radius = (Math.Max(avatar.Width, avatar.Height) - 8) / 2;
             avatar = avatar.ApplyCircleWithBoarder(radius, 4, new Rgba32(60,135,156));
+            profiler.Segment("渲染avatar");
 
             var tags = info.sale.zh.Split(' ');
             var tagOptions = CreateTextOptions(50);
@@ -142,6 +144,8 @@ namespace WFBot.Features.ImageRendering
             lines.Add(Margin20);
             lines.Add(StackImageXCentered(Margin20, avatar, Margin40, itemName));
             lines.Add(Margin20);
+            profiler.Segment("渲染头部");
+
             var lineColorBool = true;
 
             var headerOption = CreateTextOptions(20);
@@ -164,17 +168,28 @@ namespace WFBot.Features.ImageRendering
             header = header.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
 
             lines.Add(header);
+            profiler.Segment("渲染表头");
 
-            foreach (var order in info.payload.orders)
+            var nl = new Dictionary<Order, Image<Rgba32>>();
+            Parallel.ForEach(info.payload.orders, order =>
             {
                 var wmsingle = WMInfoSingle(isbuyer ? Buy : Sell,
                     new TextWithParams(order.user.ingame_name, nameMax, nameOptions),
                     new TextWithParams(order.user.status, statusMax, statusOptions),
-                    new TextWithParams(((int)order.platinum).ToString(), platMax, platOptions),
+                    new TextWithParams(((int) order.platinum).ToString(), platMax, platOptions),
                     new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions));
                 wmsingle = wmsingle.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
-                lines.Add(wmsingle);
+                lock (nl)
+                {
+                    nl.Add(order, wmsingle);
+                }
+            });
+            
+            foreach (var order in info.payload.orders)
+            {
+                lines.Add(nl[order]);
             }
+            profiler.Segment("渲染表内容");
 
             var len = lines.Last().Width;
             var margin = len / 13.0;
@@ -182,7 +197,10 @@ namespace WFBot.Features.ImageRendering
             lines.Add(Margin20);
             lines.Add(StackImageX(new Image<Rgba32>((int)margin,1),image));
             lines.Add(Margin20);
-            return Finish(StackImageY(lines.ToArray()));
+            profiler.Segment("渲染底部");
+            var result = StackImageY(lines.ToArray());
+            profiler.Segment("图片拼合");
+            return Finish(result);
              
 
             // return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParams(order.user.ingame_name, nameMax, nameOptions), new TextWithParams(order.user.status, statusMax, statusOptions), new TextWithParams(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
@@ -371,34 +389,37 @@ namespace WFBot.Features.ImageRendering
         }
         public static byte[] Finish(Image<Rgba32> image)
         {
+            var profiler = new ImageRenderProfiler();
             var text = "> WFBot_  "; // 好兄弟 虽然你可以改 但是不建议你改 至少保留一下原文吧
             TextOptions options;
-            var size = 80.0 / 0.9;
+            var size = 70.0 / 0.75;
             FontRectangle measure;
+            
             do
             {
-                size *= 0.9;
+                size *= 0.75;
                 options = CreateTextOptions((int)size);
                 measure = TextMeasurer.Measure(text, options);
             } while (measure.Width / (double)image.Width > 0.37);
             
             options.HorizontalAlignment = HorizontalAlignment.Right;
             options.VerticalAlignment = VerticalAlignment.Top;
-            var textHeight = (int)TextMeasurer.Measure(text, options).Height;
+            var textHeight = (int)measure.Height;
 
             var width = image.Width;
             var height = image.Height;
             options.Origin = new Vector2(width, height);
             var imageResult = new Image<Rgba32>(width, height + textHeight, new Rgba32(42,43,48)); // 我不会说我是从色图 https://danbooru.donmai.us/posts/2931102 取的颜色
-            imageResult.Mutate(x => x.DrawImage(image, new Point(0,0), new GraphicsOptions()));
+            profiler.Segment("初始化完成渲染");
+            imageResult.Mutate(x => x.DrawImage(image, new Point(0,0), new GraphicsOptions(){Antialias = false}));
+            profiler.Segment("渲染原图");
             imageResult.Mutate(x => x.Fill(new DrawingOptions(), new Color(new Rgba32(100, 181, 246)), new RectangleF(0, height, width, textHeight)));
             imageResult.Mutate(x => x.DrawText(options,text,new Color(new Rgba32(255,255,255))));
             options.HorizontalAlignment = HorizontalAlignment.Left;
             options.Origin = new Vector2(0, height);
-            imageResult.Mutate(x => x.DrawText(options, "   ∕ " + AsyncContext.GetCommandIdentifier(), new Color(new Rgba32(255, 255, 255))));
+            imageResult.Mutate(x => x.DrawText(options, "   / " + AsyncContext.GetCommandIdentifier(), new Color(new Rgba32(255, 255, 255))));
+            profiler.Segment("渲染底部标签");
 
-
-            TextMeasurer.Measure(text, options);
             var ms = new MemoryStream();
             imageResult.Save(ms, new PngEncoder() {CompressionLevel = PngCompressionLevel.BestSpeed});
             image.Dispose();
@@ -414,6 +435,7 @@ namespace WFBot.Features.ImageRendering
             {
                 
             }
+            profiler.Segment("完成渲染");
             return ms.ToArray();
         }
 
