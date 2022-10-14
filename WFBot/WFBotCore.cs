@@ -88,7 +88,11 @@ namespace WFBot
             }
 
 
-            if (!IsInDocker && !args.Any(x => x == "--wrapper") && !Debugger.IsAttached)
+            if (!IsInDocker && !args.Any(x => x == "--wrapper") && !Debugger.IsAttached
+#if DEBUG
+                && false
+#endif
+               )
             {
                 Migrate();
                 return;
