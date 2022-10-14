@@ -16,6 +16,7 @@ using HarmonyLib;
 using WFBot.Features.Utils;
 using WFBot.Utils;
 using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace WFBot.Features.CustomCommandContent
 {
@@ -67,7 +68,7 @@ namespace WFBot.Features.CustomCommandContent
             using (var dllStream = new MemoryStream())
             using (var pdbStream = new MemoryStream())
             {
-                var emitResult = compilation.Emit(dllStream, pdbStream);
+                var emitResult = compilation.Emit(dllStream);
                 if (!emitResult.Success)
                 {
                     var errors = new StringBuilder();
