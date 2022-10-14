@@ -226,6 +226,12 @@ namespace WFBot.Features.Utils
             translator.TranslateSentientOutpost(outpost);
             return outpost;
         }
+        public async Task<ArchonHunt> GetArchonHunt()
+        {
+            var outpost = await WebHelper.DownloadJsonAsync<ArchonHunt>(WFstat + "/archonHunt");
+            translator.TranslateArchonHunt(outpost);
+            return outpost;
+        }
 
         public async Task<SentientAnomaly> GetSentientAnomaly()
         {
