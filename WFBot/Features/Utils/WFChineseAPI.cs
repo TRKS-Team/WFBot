@@ -65,7 +65,12 @@ namespace WFBot.Features.Utils
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
 
         private static string platform => Config.Instance.Platform.GetSymbols().First();
+#if DEBUG
+        //TODO!!!
+        private static string WFstat => $"https://wfbot.cyan.cafe/api/WFBotProxy/https://api.warframestat.us/{platform}";
+#else
         private static string WFstat => $"https://api.warframestat.us/{platform}";
+#endif
 
         public async Task<List<WFInvasion>> GetInvasions()
         {

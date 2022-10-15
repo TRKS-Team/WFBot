@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;
 using WFBot.TextCommandCore;
@@ -53,13 +54,20 @@ namespace WFBot.Features.Commands
             }
             var invasions = WFNotificationHandler.InvasionPool;
 
-            AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
-            AppendLine();
-
-            foreach (var invasion in invasions.Where(invasion => !invasion.completed))
+            if (!AsyncContext.GetUseImageRendering())
             {
-                AppendLine(WFFormatter.ToString(invasion));
+                AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
                 AppendLine();
+
+                foreach (var invasion in invasions.Where(invasion => !invasion.completed))
+                {
+                    AppendLine(WFFormatter.ToString(invasion));
+                    AppendLine();
+                }
+            }
+            else
+            {
+                SendImage(ImageRenderHelper.Invasion(invasions.Where(invasion => !invasion.completed)));
             }
             
         }

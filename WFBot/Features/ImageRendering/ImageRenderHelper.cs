@@ -61,12 +61,62 @@ namespace WFBot.Features.ImageRendering
         {
             return StackImageXCentered(GetResource($"Fissures.{fissure.tierNum}"), Margin20,
                 StackImageY(
-                    RenderText($"{fissure.missionType} - {fissure.enemy}", options: CreateTextOptions(45, true)),
-                    RenderText($"{fissure.tier}(T{fissure.tierNum}) {(fissure.isHard ? "钢铁裂缝" : fissure.isStorm ? "虚空风暴" : "普通裂缝")}", CreateTextOptions(30), Color.White),
-                    RenderText($"{fissure.node}", CreateTextOptions(30)),
-                    RenderText($"{fissure.eta}", CreateTextOptions(30), new Color(new Rgba32(170,170,170))), Margin10));
+                    RenderText($"{fissure.missionType} - {fissure.enemy}", options: CreateTextOptions(43, true)),
+                    RenderText($"{fissure.tier}(T{fissure.tierNum}) {(fissure.isHard ? "钢铁裂缝" : fissure.isStorm ? "虚空风暴" : "普通裂缝")}", CreateTextOptions(33), Color.White),
+                    RenderText($"{fissure.node}", CreateTextOptions(33)),
+                    RenderText($"{fissure.eta}", CreateTextOptions(33), new Color(new Rgba32(170,170,170))), Margin10));
         }
 
+        public static byte[] Invasion(IEnumerable<WFInvasion> invasions)
+        {
+            var images = invasions.AsParallel().AsOrdered().Select(x => SingleInvasion(x)).ToArray();
+            var lineColorBool = true;
+            foreach (var image in images)
+            {
+                image.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
+            }
+
+            return Finish(StackImageY(images));
+        }
+        public static Image<Rgba32> SingleInvasion(WFInvasion invasion)
+        {
+            var grineerColor = ColorX.FromArgb(227, 49, 62);
+            var infestedColor = ColorX.FromArgb(106, 220, 141);
+            var corpusColor = ColorX.FromArgb(96, 182, 229);
+            var aColor = invasion.attackingFaction switch
+            {
+                "Corpus" => corpusColor,
+                "Infested" => infestedColor, 
+                "Grineer" => grineerColor
+            };
+            var aPercent = invasion.completion / 100.0;
+            var bColor = invasion.defendingFaction switch
+            {
+                "Corpus" => corpusColor,
+                "Infested" => infestedColor,
+                "Grineer" => grineerColor
+            };
+            var bPercent = 1 - aPercent;
+            var percentageImage = new Image<Rgba32>(400, 10);
+            var breakPoint = (int)(aPercent * percentageImage.Width);
+            percentageImage.Mutate(x => x.Fill(new Rgba32(aColor.R, aColor.G, aColor.B),  new RectangleF(0,0, breakPoint, percentageImage.Height)));
+            percentageImage.Mutate(x => x.Fill(new Rgba32(bColor.R, bColor.G, bColor.B), new RectangleF(breakPoint, 0, percentageImage.Width - breakPoint, percentageImage.Height)));
+            var textA = $"{invasion.attackingFaction.ToUpper()} {aPercent*100:F1}% {(!invasion.vsInfestation ? $"\n{WFFormatter.ToString(invasion.attackerReward)}" : "")}";
+            var textB = $"{bPercent*100:F1}% {invasion.defendingFaction.ToUpper()}\n奖励: {WFFormatter.ToString(invasion.defenderReward)}";
+            var textOptions = CreateTextOptions(15);
+            var textImage = new Image<Rgba32>(400, 50);
+            using var attackerImage = GetResource($"Factions.{invasion.attackingFaction.ToLower()}").Clone().Resize(30, 30);
+            using var defenderImage = GetResource($"Factions.{invasion.defendingFaction.ToLower()}").Clone().Resize(30, 30);
+            textImage.Mutate(x => x.DrawImage(attackerImage, new Point(0,0), new GraphicsOptions()));
+            textImage.Mutate(x => x.DrawImage(attackerImage, new Point(textImage.Width - defenderImage.Width,0), new GraphicsOptions()));
+            textOptions.Origin = new Vector2(attackerImage.Width + 10, 0);
+            textImage.Mutate(x => x.DrawText(textOptions, textA, Color.White));
+            textOptions.HorizontalAlignment = HorizontalAlignment.Right;
+            textOptions.TextAlignment = TextAlignment.End;
+            textOptions.Origin = new Vector2(textImage.Width - defenderImage.Width - 10, 0);
+            textImage.Mutate(x => x.DrawText(textOptions, textB, Color.White));
+            return StackImageX(Margin20, StackImageY(Margin10,percentageImage, Margin10, textImage, Margin20), Margin20);
+        }
         static Image<Rgba32> Sell = RenderRectangle(40, 40, new Rgba32(63, 35, 59))
             .OverlayTextCentered("卖", new Rgba32(203, 74, 158), 30)
             .ApplyRoundedCorners(10);
@@ -109,7 +159,7 @@ namespace WFBot.Features.ImageRendering
 
             var lines = new List<Image<Rgba32>>();
 
-            const string assetUrl = "https://warframe.market/static/assets/";
+            const string assetUrl = "https://wfbot.cyan.cafe/api/WFBotProxy/https://warframe.market/static/assets/";
 
             var item = info.include.item.items_in_set.First(i => i.url_name == info.sale.code);
             var avatar_url = assetUrl + (info.include.item.items_in_set.Length == 1 ? item.thumb : item.set_root ? item.thumb : item.sub_icon);
@@ -372,11 +422,22 @@ namespace WFBot.Features.ImageRendering
             }
 
             var price = auction.BuyoutPrice ?? auction.StartingPrice;
+
             var titleOption = CreateTextOptions(28);
-            var title = RenderText($"[{auction.Owner.IngameName} {ownerstatus}]", titleOption, color);
-            var c1 = RenderText($"<{weapon.zhname} {auction.Item.Name}>", option);
-            var c2 = RenderText(
-                $"{price}白金 {auction.Item.MasteryLevel}段 {auction.Item.ModRank}级\n {auction.Item.ReRolls}洗 {polarity}槽", option);
+            titleOption.WrappingLength = 400;
+            var title = RenderText($"[{auction.Owner.IngameName} {ownerstatus}] {price}白金", titleOption, color);
+            var c0 = new Image<Rgba32>(400, 100);
+            var r = RenderText($"{auction.Item.MasteryLevel} {polarity}", option);
+            c0.Mutate(x => x.DrawImage(r, new Point(c0.Width-r.Width - 10, 10), new GraphicsOptions()));
+            var c1 = RenderText(new TextWithParams($"<{weapon.zhname} {auction.Item.Name}>", 400, option), ColorX.White, dontUseMaxLength: true);
+            var t = new Image<Rgba32>(380, (int)TextMeasurer.Measure("鸡", option).Height);
+            var rOptions = CreateTextOptions(23);
+            t.Mutate(x => x.DrawText(rOptions, $"{auction.Item.ModRank}级", Color.White));
+            rOptions.HorizontalAlignment = HorizontalAlignment.Right;
+            rOptions.Origin = new Vector2(t.Width, 0);
+            t.Mutate(x => x.DrawText(rOptions, $"{auction.Item.ReRolls}洗", Color.White));
+          
+
             var sb = new StringBuilder();
 
             foreach (var attribute in auction.Item.Attributes)
@@ -384,9 +445,15 @@ namespace WFBot.Features.ImageRendering
                 sb.AppendLine($"{(attribute.Positive ? "+" : ""/*fun fact, 后面这个数据带正负*/)}{attribute.Value}% {translator.GetAttributeEffect(attribute.UrlName)}");
             }
             
-            var c3 = RenderText(sb.ToString(), option);
-            return StackImageYCentered(title,  c1, c2, c3);
+            var c3 = RenderText(new TextWithParams(sb.ToString(), 400, option), ColorX.White, dontUseMaxLength: true);
+            var i = StackImageYCentered(c0,c1, c3, t);
+            var rect = RenderRectangle(i.Width + 20, i.Height + 20, Color.FromRgb(50,50,50));
+            rect.ApplyRoundedCorners(7);
+            rect.Mutate(x => x.DrawImage(i, new Point(10,10), new GraphicsOptions()));
+            
+            return StackImageYCentered(title, rect);
         }
+        
         public static byte[] Finish(Image<Rgba32> image)
         {
             var profiler = new ImageRenderProfiler();
@@ -629,13 +696,13 @@ namespace WFBot.Features.ImageRendering
             return image;
         }
 
-        public static Image<Rgba32> RenderText(TextWithParams t, ColorX color = default, bool underline = false)
+        public static Image<Rgba32> RenderText(TextWithParams t, ColorX color = default, bool underline = false, bool dontUseMaxLength = false)
         {
-            return RenderText(t,new Rgba32(color.R, color.G, color.B),underline);
+            return RenderText(t,new Rgba32(color.R, color.G, color.B),underline,dontUseMaxLength);
         }
 
 
-        public static Image<Rgba32> RenderText(TextWithParams t, Color? color = null, bool underline = false)
+        public static Image<Rgba32> RenderText(TextWithParams t, Color? color = null, bool underline = false, bool dontUseMaxLength = false)
         {
             color ??= Color.White;
             if (underline)
@@ -644,7 +711,7 @@ namespace WFBot.Features.ImageRendering
             }
             if (t.Text.IsNullOrWhiteSpace()) return new Image<Rgba32>(1, 1);
             var measure = TextMeasurer.Measure(t.Text, t.Options);
-            var image = new Image<Rgba32>(t.MaxWidth == (int)measure.Width ? (int)measure.Width : Math.Max(t.MaxWidth, (int)measure.Width), (int) measure.Height, new Rgba32(0, 0, 0, 0));
+            var image = new Image<Rgba32>(dontUseMaxLength ? (int)measure.Width : t.MaxWidth == (int)measure.Width ? (int)measure.Width : Math.Max(t.MaxWidth, (int)measure.Width), (int) measure.Height, new Rgba32(0, 0, 0, 0));
             image.Mutate(x => x.DrawText(t.Options, t.Text, color.Value));
             return image;
         }
