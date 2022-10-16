@@ -10,6 +10,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
 WORKDIR /src
 COPY ["WFBot/WFBot.csproj", "WFBot/"]
+RUN sed -i -e 's/net6.0/net7.0/g' WFBot/WFBot.csproj
 RUN dotnet restore "WFBot/WFBot.csproj"
 COPY . .
 ENV OFFICIAL_BUILD=official

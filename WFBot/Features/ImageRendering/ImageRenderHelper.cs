@@ -104,14 +104,14 @@ namespace WFBot.Features.ImageRendering
                 "Grineer" => grineerColor
             };
             var bPercent = 1 - aPercent;
-            var percentageImage = new Image<Rgba32>(500, 10);
+            var percentageImage = new Image<Rgba32>(560, 10);
             var breakPoint = (int)(aPercent * percentageImage.Width);
             percentageImage.Mutate(x => x.Fill(new Rgba32(aColor.R, aColor.G, aColor.B),  new RectangleF(0,0, breakPoint, percentageImage.Height)));
             percentageImage.Mutate(x => x.Fill(new Rgba32(bColor.R, bColor.G, bColor.B), new RectangleF(breakPoint, 0, percentageImage.Width - breakPoint, percentageImage.Height)));
-            var textA = $"{invasion.attackingFaction.ToUpper()} {aPercent*100:F1}% {(!invasion.vsInfestation ? $"\n{WFFormatter.ToString(invasion.attackerReward)}" : "")}";
+            var textA = $"{invasion.attackingFaction.ToUpper()} {aPercent*100:F1}% {(!invasion.vsInfestation ? $"\n奖励: {WFFormatter.ToString(invasion.attackerReward)}" : "")}";
             var textB = $"{bPercent*100:F1}% {invasion.defendingFaction.ToUpper()}\n奖励: {WFFormatter.ToString(invasion.defenderReward)}";
-            var textOptions = CreateTextOptions(15);
-            var textImage = new Image<Rgba32>(500, 50);
+            var textOptions = CreateTextOptions(18);
+            var textImage = new Image<Rgba32>(560, 55);
             using var attackerImage = GetResource($"Factions.{invasion.attackingFaction.ToLower()}").Clone().Resize(30, 30);
             using var defenderImage = GetResource($"Factions.{invasion.defendingFaction.ToLower()}").Clone().Resize(30, 30);
             textImage.Mutate(x => x.DrawImage(attackerImage, new Point(0,0), new GraphicsOptions()));
@@ -452,6 +452,7 @@ namespace WFBot.Features.ImageRendering
 
             var titleOption = CreateTextOptions(28);
             titleOption.WrappingLength = 400;
+            titleOption.TextAlignment = TextAlignment.Center;
             var title = RenderText($"[{auction.Owner.IngameName} {ownerstatus}]\n{price}白金", titleOption, color);
             var c0 = new Image<Rgba32>(400, 100);
             var r = RenderText($"{auction.Item.MasteryLevel} {polarity}", option);
