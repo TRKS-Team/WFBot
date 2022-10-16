@@ -452,7 +452,7 @@ namespace WFBot.Features.ImageRendering
 
             var titleOption = CreateTextOptions(28);
             titleOption.WrappingLength = 400;
-            var title = RenderText($"[{auction.Owner.IngameName} {ownerstatus}] {price}白金", titleOption, color);
+            var title = RenderText($"[{auction.Owner.IngameName} {ownerstatus}]\n{price}白金", titleOption, color);
             var c0 = new Image<Rgba32>(400, 100);
             var r = RenderText($"{auction.Item.MasteryLevel} {polarity}", option);
             c0.Mutate(x => x.DrawImage(r, new Point(c0.Width-r.Width - 10, 10), new GraphicsOptions()));

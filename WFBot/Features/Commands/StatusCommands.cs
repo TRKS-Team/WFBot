@@ -276,6 +276,12 @@ namespace WFBot.Features.Commands
                 AppendLine(WFFormatter.ToString(kuva));
                 AppendLine();
             }
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var s = OutputStringBuilder.Value.ToString();
+                OutputStringBuilder.Value.Clear();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+            }
         }
 
         [Matchers("s船", "前哨战", "sentient", "异常", "异常事件", "sentient异常事件")]
@@ -285,6 +291,12 @@ namespace WFBot.Features.Commands
             var outpost = await api.GetSentientOutpost();
             AppendLine($"Sentient异常事件已发现:");
             AppendLine(WFFormatter.ToString(outpost));
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var s = OutputStringBuilder.Value.ToString();
+                OutputStringBuilder.Value.Clear();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+            }
         }
 
     }
