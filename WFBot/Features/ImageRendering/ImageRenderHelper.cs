@@ -77,13 +77,13 @@ namespace WFBot.Features.ImageRendering
                 image.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
             }
 
-            return Finish(StackImageY(images));
+            return Finish(StackImageY(images), predefinedSize: 50);
         }
 
         public static byte[] InvasionNotification(WFInvasion invasion)
         {
             AsyncContext.SetCommandIdentifier("WFBot通知");
-            return Finish(StackImageY(SingleInvasion(invasion)));
+            return Finish(StackImageY(SingleInvasion(invasion)), predefinedSize: 50);
         }
         public static Image<Rgba32> SingleInvasion(WFInvasion invasion)
         {
@@ -277,7 +277,7 @@ namespace WFBot.Features.ImageRendering
             profiler.Segment("渲染底部");
             var result = StackImageY(lines.ToArray());
             profiler.Segment("图片拼合");
-            return Finish(result, 50);
+            return Finish(result, 60);
              
 
             // return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParams(order.user.ingame_name, nameMax, nameOptions), new TextWithParams(order.user.status, statusMax, statusOptions), new TextWithParams(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
@@ -486,15 +486,15 @@ namespace WFBot.Features.ImageRendering
             var profiler = new ImageRenderProfiler();
             var text = "> WFBot_  "; // 好兄弟 虽然你可以改 但是不建议你改 至少保留一下原文吧
             TextOptions options;
-            var size = predefinedSize ?? 70.0 / 0.75;
+            var size = predefinedSize ?? 60.0 / 0.78;
             FontRectangle measure;
             
             do
             {
-                size *= 0.75;
+                size *= 0.78;
                 options = CreateTextOptions((int)size);
                 measure = TextMeasurer.Measure(text, options);
-            } while (measure.Width / (double)image.Width > 0.37 && predefinedSize != null);
+            } while (measure.Width / (double)image.Width > 0.42 && predefinedSize == null);
             profiler.Segment("计算底部渲染的文字大小");
 
             options.HorizontalAlignment = HorizontalAlignment.Right;
