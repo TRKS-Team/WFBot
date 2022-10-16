@@ -170,7 +170,9 @@ namespace WFBot.Features.Common
             }
             var header = new List<KeyValuePair<string, string>> { new ("platform", platform) };
 
-            var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);
+            var info = await WebHelper.DownloadJsonAsync<WMInfo>(Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://api.warframe.market/v1/items/{searchword}/orders{Uri.EscapeDataString("?include=item")}" :
+                $"https://api.warframe.market/v1/items/{searchword}/orders?include=item"
+                , header);
 
             info.sale = wfbotapi.Sale.First(s => s.code == searchword);
             return info;
