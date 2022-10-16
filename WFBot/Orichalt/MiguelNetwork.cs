@@ -419,6 +419,54 @@ namespace WFBot.Orichalt
         /// 广播通知到所有订阅消息的群体
         /// </summary>
         /// <param name="content">消息内容</param>
+        public static void Broadcast(RichMessages content)
+        {
+            if (!Inited)
+            {
+                Trace.WriteLine("由于 Miguel Network 未初始化完成, 广播无法发送.");
+                return;
+            }
+            Task.Factory.StartNew(() =>
+            {
+                var count = 0;
+                foreach (var group in Config.Instance.WFGroupList)
+                {
+                    var sb = new StringBuilder();
+                    
+                    // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                    switch (Platform)
+                    {
+                        case MessagePlatform.OneBot:
+                            OneBotSendToGroup(group, content);
+                            break;
+                        case MessagePlatform.MiraiHTTP:
+                            MiraiHTTPSendToGroup(group, content);
+                            break;
+                        case MessagePlatform.Kook:
+                            break;
+                        case MessagePlatform.QQChannel:
+                            break;
+                        case MessagePlatform.Test:
+                            break;
+                        case MessagePlatform.Unknown:
+                            break;
+                        case MessagePlatform.MiraiHTTPV1:
+                            Console.WriteLine("MiraiHTTPV1 不支持发送富文本内容.");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    count++;
+                    Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                }
+            }, TaskCreationOptions.LongRunning);
+
+        }
+
+        /// <summary>
+        /// 广播通知到所有订阅消息的群体
+        /// </summary>
+        /// <param name="content">消息内容</param>
         public static void Broadcast(string content)
         {
             if (!Inited)
@@ -476,7 +524,12 @@ namespace WFBot.Orichalt
             if (previousMessageDic.ContainsKey(qq) && msg == previousMessageDic[qq]) return;
             previousMessageDic[qq] = msg;
             OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg);
-        }        
+        }
+        private static void OneBotSendToGroup(GroupID group, RichMessages msg)
+        {
+            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch { ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
+
+        }
         private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, string msg)
         {
             var qq = group.ID;
@@ -510,6 +563,26 @@ namespace WFBot.Orichalt
             builder.Plain(msg);
             MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
         }
+        private static void MiraiHTTPSendToGroup(GroupID qq, RichMessages msg)
+        {
+            var builder = new MessageChainBuilder();
+
+            foreach (var message in msg)
+            {
+                switch (message)
+                {
+                    case ImageMessage image:
+                        builder.ImageFromId(MiraiHTTPCore.Bot.UploadImageAsync(new MemoryStream(image.Content)).Result
+                            .ImageId);
+                        break;
+                    case TextMessage text:
+                        builder.Plain(text.Content);
+                        break;
+                }
+            }
+            MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
+        }
+
         private static void MiraiHTTPSendToGroupWithAutoRevoke(GroupID qq, string msg)
         {
             var builder = new MessageChainBuilder();

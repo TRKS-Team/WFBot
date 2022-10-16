@@ -79,6 +79,11 @@ namespace WFBot.Features.ImageRendering
 
             return Finish(StackImageY(images));
         }
+
+        public static byte[] InvasionNotification(WFInvasion invasion)
+        {
+            return Finish(StackImageY(RenderText("[WFBot 通知]\n\n"), SingleInvasion(invasion)));
+        }
         public static Image<Rgba32> SingleInvasion(WFInvasion invasion)
         {
             var grineerColor = ColorX.FromArgb(227, 49, 62);

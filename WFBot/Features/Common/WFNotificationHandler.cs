@@ -10,6 +10,7 @@ using System.Xml.XPath;
 using GammaLibrary.Extensions;
 using HtmlAgilityPack;
 using WFBot.Events;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
@@ -110,7 +111,18 @@ namespace WFBot.Features.Other
             if (!sendedUpdateSet.Contains(updates.First()))
             {
                 var msg = WFFormatter.ToString(updates.First());
-                MiguelNetwork.Broadcast(msg);
+                if (Config.Instance.EnableImageRendering)
+                {
+                    MiguelNetwork.Broadcast(new RichMessages()
+                    {
+
+                        new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering("[WFBot 通知]\n\n"+msg) }
+                    });
+                }
+                else
+                {
+                    MiguelNetwork.Broadcast(msg);
+                }
                 sendedUpdateSet.Add(updates.First());
             }
         }   
@@ -149,7 +161,20 @@ namespace WFBot.Features.Other
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
             }
 
-            MiguelNetwork.Broadcast(sb.ToString().Trim());
+            var result = sb.ToString().Trim();
+            if (Config.Instance.EnableImageRendering)
+            {
+                MiguelNetwork.Broadcast(new RichMessages()
+                {
+
+                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering("[WFBot 通知]\n\n"+result) }
+                });
+            }
+            else
+            {
+                MiguelNetwork.Broadcast(result);
+
+            }
         }
 
         /*
@@ -183,21 +208,41 @@ namespace WFBot.Features.Other
         {
             try
             {
-                foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                if (Config.Instance.EnableImageRendering)
                 {
-                    // 不发已经完成的入侵 你学的好快啊
-                    // 不发已经发过的入侵
-                    var list = GetAllInvasionsCountedItems(inv).ToArray();
-
-                    if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
+                    foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
                     {
-                        var notifyText = $"" +
-                                         $"{WFFormatter.ToString(inv)}";
+                        // 不发已经完成的入侵 你学的好快啊
+                        // 不发已经发过的入侵
+                        var list = GetAllInvasionsCountedItems(inv).ToArray();
 
-                        MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
-                        sendedInvSet.Add(inv.id);
+                        if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
+                        {
+                            
+                            MiguelNetwork.Broadcast(new RichMessages() {new ImageMessage(){Content = ImageRenderHelper.InvasionNotification(inv) } });
+                            sendedInvSet.Add(inv.id);
+                        }
                     }
                 }
+                else
+                {
+                    foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                    {
+                        // 不发已经完成的入侵 你学的好快啊
+                        // 不发已经发过的入侵
+                        var list = GetAllInvasionsCountedItems(inv).ToArray();
+
+                        if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
+                        {
+                            var notifyText = $"" +
+                                             $"{WFFormatter.ToString(inv)}";
+
+                            MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
+                            sendedInvSet.Add(inv.id);
+                        }
+                    }
+                }
+                
             }
             catch (Exception e)
             {
@@ -251,7 +296,19 @@ namespace WFBot.Features.Other
         {
             var result = "" +
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
-            MiguelNetwork.Broadcast(result);
+            if (Config.Instance.EnableImageRendering)
+            {
+                MiguelNetwork.Broadcast(new RichMessages()
+                {
+                    
+                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering("[WFBot 通知]\n\n"+result) }
+                });
+            }
+            else
+            {
+                MiguelNetwork.Broadcast(result);
+
+            }
             sendedAlertsSet.Add(alert.Id);
         }
 
