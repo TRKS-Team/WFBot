@@ -20,7 +20,12 @@ namespace WFBot.Features.Common
         private WFTranslator translator => WFResources.WFTranslator;
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
         private WeaponInfo[] weaponInfos => WFResources.Weaponinfos;
-        private static string platform => Config.Instance.Platform == Platform.NS ? "switch" : Config.Instance.Platform.GetSymbols().First();
+        private static string platform => Config.Instance.Platform switch
+        {
+            Platform.XBOX => "xbox",
+            Platform.NS => "switch",
+            _ => Config.Instance.Platform.GetSymbols().First()
+        };
         // 这是给WarframeMarketAuctions用的
         public async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
         {

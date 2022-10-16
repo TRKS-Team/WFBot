@@ -45,7 +45,7 @@ namespace WFBot
     public enum Platform
     {
         [Symbol("pc")]PC,
-        [Symbol("xbox")]XBOX,
+        [Symbol("xb1")]XBOX,
         [Symbol("ps4")]PS4,
         [Symbol("swi")]NS
     }

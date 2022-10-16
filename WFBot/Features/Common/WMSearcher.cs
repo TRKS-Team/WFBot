@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -159,14 +160,15 @@ namespace WFBot.Features.Common
         // private Client wfaClient => WFResources.WFAApi.WfaClient;
         // private bool isWFA => WFResources.WFAApi.isWFA;
 
-        private string platform => Config.Instance.Platform.ToString();
         public async Task<WMInfo> GetWMInfo(string searchword)
         {
-            var platform = Config.Instance.Platform.GetSymbols().First();
-            if (Config.Instance.Platform == Platform.NS)
+            var platform = Config.Instance.Platform switch
             {
-                platform = "switch";
-            }
+                Platform.XBOX => "xbox",
+                Platform.NS => "switch",
+                _ => Config.Instance.Platform.GetSymbols().First()
+            };
+
             var header = new List<KeyValuePair<string, string>> { new ("platform", platform) };
 
             var info = await WebHelper.DownloadJsonAsync<WMInfo>($"https://api.warframe.market/v1/items/{searchword}/orders?include=item", header);

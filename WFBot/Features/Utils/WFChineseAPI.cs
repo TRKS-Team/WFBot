@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO.Compression;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using Microsoft.CSharp;
 using WFBot.Events;
@@ -67,11 +69,20 @@ namespace WFBot.Features.Utils
         private static string platform => Config.Instance.Platform.GetSymbols().First();
         private static string WFstat => $"https://api.warframestat.us/{platform}";
 
+        public async Task<T> DownloadWFStatData<T>(string url)
+        {
+            var ub = new UriBuilder(url);
+            var query = HttpUtility.ParseQueryString(ub.Query);
+            query["language"] = "en";
+            ub.Query = query.ToString();
+            url = ub.ToString();
+            return await WebHelper.DownloadJsonAsync<T>(url);
+        }
         public async Task<List<WFInvasion>> GetInvasions()
         {
             try
             {
-                var invasions = await WebHelper.DownloadJsonAsync<List<WFInvasion>>(WFstat + "/invasions");
+                var invasions = await DownloadWFStatData<List<WFInvasion>>(WFstat + "/invasions");
                 foreach (var invasion in invasions)
                 {
                     translator.TranslateInvasion(invasion);
@@ -93,7 +104,7 @@ namespace WFBot.Features.Utils
             try
             {
                 var alerts =
-                    await WebHelper.DownloadJsonAsync<List<WFAlert>>(WFstat + "/alerts");
+                    await DownloadWFStatData<List<WFAlert>>(WFstat + "/alerts");
                 foreach (var alert in alerts)
                 {
                     translator.TranslateAlert(alert);
@@ -125,14 +136,14 @@ namespace WFBot.Features.Utils
         }
         public async Task<List<Kuva>> GetKuvaMissions()
         {
-            var kuvas = await WebHelper.DownloadJsonAsync<List<Kuva>>(WFstat + "/kuva");
+            var kuvas = await DownloadWFStatData<List<Kuva>>(WFstat + "/kuva");
             translator.TranslateKuvaMission(kuvas);
             return kuvas;
         }
 
         public async Task<Arbitration> GetArbitrationMission()
         {
-            var ar = await WebHelper.DownloadJsonAsync<Arbitration>(WFstat + "/arbitration");
+            var ar = await DownloadWFStatData<Arbitration>(WFstat + "/arbitration");
             if (ar?.type == null) return null;
             
             translator.TranslateArbitrationMission(ar);
@@ -140,33 +151,33 @@ namespace WFBot.Features.Utils
         }
         public async Task<WFNightWave> GetNightWave()
         {
-            var wave = await WebHelper.DownloadJsonAsync<WFNightWave>(WFstat + "/nightwave");
+            var wave = await DownloadWFStatData<WFNightWave>(WFstat + "/nightwave");
             translator.TranslateNightWave(wave);
             return wave;
         }
         public async Task<CetusCycle> GetCetusCycle()
         {
-            var cycle = await WebHelper.DownloadJsonAsync<CetusCycle>(WFstat + "/cetusCycle");
+            var cycle = await DownloadWFStatData<CetusCycle>(WFstat + "/cetusCycle");
             cycle.Expiry = GetRealTime(cycle.Expiry);
             return cycle;
         }
 
         public async Task<VallisCycle> GetVallisCycle()
         {
-            var cycle = await WebHelper.DownloadJsonAsync<VallisCycle>(WFstat + "/vallisCycle");
+            var cycle = await DownloadWFStatData<VallisCycle>(WFstat + "/vallisCycle");
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
         public async Task<EarthCycle> GetEarthCycle()
         {
-            var cycle = await WebHelper.DownloadJsonAsync<EarthCycle>(WFstat + "/earthCycle");
+            var cycle = await DownloadWFStatData<EarthCycle>(WFstat + "/earthCycle");
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
 
         public async Task<CambionCycle> GetCambionCycle()
         {
-            var cycle = await WebHelper.DownloadJsonAsync<CambionCycle>(WFstat + "/cambionCycle");
+            var cycle = await DownloadWFStatData<CambionCycle>(WFstat + "/cambionCycle");
             cycle.expiry = GetRealTime(cycle.expiry);
             return cycle;
         }
@@ -174,20 +185,20 @@ namespace WFBot.Features.Utils
 
         public async Task<Sortie> GetSortie()
         {
-            var sortie = await WebHelper.DownloadJsonAsync<Sortie>(WFstat + "/sortie");
+            var sortie = await DownloadWFStatData<Sortie>(WFstat + "/sortie");
             translator.TranslateSortie(sortie);
             return sortie;
         }
 
         public async Task<List<SyndicateMission>> GetSyndicateMissions()
         {
-            var missions = await WebHelper.DownloadJsonAsync<List<SyndicateMission>>(WFstat + "/syndicateMissions");
+            var missions = await DownloadWFStatData<List<SyndicateMission>>(WFstat + "/syndicateMissions");
             translator.TranslateSyndicateMission(missions);
             return missions;
         }
         public async Task<VoidTrader> GetVoidTrader()
         {
-            var trader = await WebHelper.DownloadJsonAsync<VoidTrader>(WFstat + "/voidTrader");
+            var trader = await DownloadWFStatData<VoidTrader>(WFstat + "/voidTrader");
             trader.activation = GetRealTime(trader.activation);
             trader.expiry = GetRealTime(trader.expiry);
             translator.TranslateVoidTrader(trader);
@@ -196,14 +207,14 @@ namespace WFBot.Features.Utils
 
         public async Task<List<Fissure>> GetFissures()
         {
-            var fissures = await WebHelper.DownloadJsonAsync<List<Fissure>>(WFstat + "/fissures");
+            var fissures = await DownloadWFStatData<List<Fissure>>(WFstat + "/fissures");
             translator.TranslateFissures(fissures);
             return fissures;
         }
 
         public async Task<List<Event>> GetEvents()
         {
-            var events = await WebHelper.DownloadJsonAsync<List<Event>>(WFstat + "/events");
+            var events = await DownloadWFStatData<List<Event>>(WFstat + "/events");
             translator.TranslateEvents(events);
             foreach (var @event in events)
             {
@@ -215,20 +226,20 @@ namespace WFBot.Features.Utils
 
         public async Task<List<PersistentEnemie>> GetPersistentEnemies()
         {
-            var enemies = await WebHelper.DownloadJsonAsync<List<PersistentEnemie>>(WFstat + "/persistentEnemies");
+            var enemies = await DownloadWFStatData<List<PersistentEnemie>>(WFstat + "/persistentEnemies");
             translator.TranslatePersistentEnemies(enemies);
             return enemies;
         }
 
         public async Task<SentientOutpost> GetSentientOutpost()
         {
-            var outpost = await WebHelper.DownloadJsonAsync<SentientOutpost>(WFstat + "/sentientOutposts");
+            var outpost = await DownloadWFStatData<SentientOutpost>(WFstat + "/sentientOutposts");
             translator.TranslateSentientOutpost(outpost);
             return outpost;
         }
         public async Task<ArchonHunt> GetArchonHunt()
         {
-            var hunt = await WebHelper.DownloadJsonAsync<ArchonHunt>(WFstat + "/archonHunt");
+            var hunt = await DownloadWFStatData<ArchonHunt>(WFstat + "/archonHunt");
             translator.TranslateArchonHunt(hunt);
             return hunt;
         }
