@@ -228,9 +228,9 @@ namespace WFBot.Features.Utils
         }
         public async Task<ArchonHunt> GetArchonHunt()
         {
-            var outpost = await WebHelper.DownloadJsonAsync<ArchonHunt>(WFstat + "/archonHunt");
-            translator.TranslateArchonHunt(outpost);
-            return outpost;
+            var hunt = await WebHelper.DownloadJsonAsync<ArchonHunt>(WFstat + "/archonHunt");
+            translator.TranslateArchonHunt(hunt);
+            return hunt;
         }
 
         public async Task<SentientAnomaly> GetSentientAnomaly()
