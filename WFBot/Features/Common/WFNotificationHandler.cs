@@ -113,10 +113,11 @@ namespace WFBot.Features.Other
                 var msg = WFFormatter.ToString(updates.First());
                 if (Config.Instance.EnableImageRendering)
                 {
+                    AsyncContext.SetCommandIdentifier("WFBot通知");
                     MiguelNetwork.Broadcast(new RichMessages()
                     {
 
-                        new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering("[WFBot 通知]\n\n"+msg) }
+                        new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(msg) }
                     });
                 }
                 else
@@ -164,10 +165,11 @@ namespace WFBot.Features.Other
             var result = sb.ToString().Trim();
             if (Config.Instance.EnableImageRendering)
             {
+            AsyncContext.SetCommandIdentifier("WFBot通知");
                 MiguelNetwork.Broadcast(new RichMessages()
                 {
 
-                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering("[WFBot 通知]\n\n"+result) }
+                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(result) }
                 });
             }
             else
@@ -298,10 +300,11 @@ namespace WFBot.Features.Other
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
             if (Config.Instance.EnableImageRendering)
             {
+             AsyncContext.SetCommandIdentifier("WFBot通知");
                 MiguelNetwork.Broadcast(new RichMessages()
                 {
                     
-                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering("[WFBot 通知]\n\n"+result) }
+                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(result) }
                 });
             }
             else
