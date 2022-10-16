@@ -398,12 +398,12 @@ namespace WFBot.Features.Utils
         public string Name { get; set; }
         public RelicReward[] RelicRewards { get; set; }
 #if DEBUG
-       public string UniqueName { get; set; }
-       public bool CodexSecret { get; set; }
-       public string Description { get; set; }
-       public bool? ExcludeFromCodex { get; set; }
-       public string Rarity { get; set; }
-       public LevelStat[] LevelStats { get; set; }
+        public string UniqueName { get; set; }
+        public bool CodexSecret { get; set; }
+        public string Description { get; set; }
+        public bool? ExcludeFromCodex { get; set; }
+        public string Rarity { get; set; }
+        public LevelStat[] LevelStats { get; set; }
 #endif
     }
 
@@ -425,9 +425,9 @@ namespace WFBot.Features.Utils
         public string name { get; set; }
         public List<Component> components { get; set; } = new List<Component>();
 #if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
-// 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
-// TODO 换数据源
-// 笑死 CY还因为这个问题专门写了个Commit, 以为机器人开不起是这玩意造成的
+        // 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
+        // TODO 换数据源
+        // 笑死 CY还因为这个问题专门写了个Commit, 以为机器人开不起是这玩意造成的
         public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }
