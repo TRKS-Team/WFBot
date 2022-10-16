@@ -521,7 +521,7 @@ namespace WFBot
             try
             {
                 var hc = new HttpClient();
-                if (!File.Exists("font.ttf") || new FileInfo("font.ttf").Length < 100000) // 之前服务器没传上文件
+                if (!File.Exists("WFConfigs/font.ttf") || new FileInfo("WFConfigs/font.ttf").Length < 100000) // 之前服务器没传上文件
                 {
                     Trace.WriteLine("下载图片渲染字体...");
                     Directory.CreateDirectory("WFConfigs");

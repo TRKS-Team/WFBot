@@ -43,17 +43,18 @@ namespace WFBot.Features.ImageRendering
             fissures = fissures.Where(x => tier == 0 || x.tierNum == tier).OrderBy(f => f.tierNum).ToList();
             var images = fissures.AsParallel().AsOrdered().Select(x => SingleFissure(x)).ToArray();
             var max = images.Max(x => x.Width);
-            for (int i = 0; i < fissures.Count; i++)
+            Parallel.For(0, fissures.Count, i =>
             {
                 images[i] = StackImageXCentered(images[i], new Image<Rgba32>(max - images[i].Width + 10, 1),
                     Margin100,
                     GetResource($"Factions.{fissures[i].enemy.ToLower()}"));
-            }
+            });
+            
 
             var lineColorBool = true;
             images = images.ForEach(i => i.SetBackgroundColor(SwitchLineColor(ref lineColorBool))).ToArray();
             var image = StackImageY(images);
-            return Finish(StackImageY(/*Margin40*/ image /*Margin40*/));
+            return Finish(image);
             // 我还没想到怎么给Margin上色
         }
 
@@ -148,24 +149,44 @@ namespace WFBot.Features.ImageRendering
 
             }*/
             using var profiler = new ImageRenderProfiler();
+            int nameMax = 0;
+            int statusMax = 0;
+            int platMax = 0;
+            int quantityMax = 0;
             var nameOptions = CreateTextOptions(35);
-            var nameMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.ingame_name).ToArray(), nameOptions);
             var statusOptions = CreateTextOptions(30);
-            var statusMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.status).ToArray(), statusOptions);
             var platOptions = CreateTextOptions(30);
-            var platMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => ((int)o.platinum).ToString()).ToArray(), platOptions);
             var quantityOptions = CreateTextOptions(30);
-            var quantityMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.quantity.ToString()).ToArray(), quantityOptions);
+            
 
             var lines = new List<Image<Rgba32>>();
-            
+            profiler.Segment("计算渲染头");
+
             string assetUrl = Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://warframe.market/static/assets/" : "https://warframe.market/static/assets/";
 
-            var item = info.include.item.items_in_set.First(i => i.url_name == info.sale.code);
-            var avatar_url = assetUrl + (info.include.item.items_in_set.Length == 1 ? item.thumb : item.set_root ? item.thumb : item.sub_icon);
-            var avatar = new Image<Rgba32>(128, 128).OverlayImageCentered(await WebHelper.LoadImageFromWeb(avatar_url));
-            var radius = (Math.Max(avatar.Width, avatar.Height) - 8) / 2;
-            avatar = avatar.ApplyCircleWithBoarder(radius, 4, new Rgba32(60,135,156));
+            Image<Rgba32> avatar = null;
+            Task.WaitAll(
+                Task.Run(() =>
+                    nameMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.ingame_name).ToArray(),
+                        nameOptions)),
+                Task.Run(() =>
+                    statusMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.user.status).ToArray(),
+                        statusOptions)),
+                Task.Run(() =>
+                    platMax = MeasureTextsMaxWidth(
+                        info.payload.orders.Select(o => ((int) o.platinum).ToString()).ToArray(), platOptions)),
+                Task.Run(() =>
+                    quantityMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.quantity.ToString()).ToArray(),
+                        quantityOptions)),
+                Task.Run(() =>
+                {
+                    var item = info.include.item.items_in_set.First(i => i.url_name == info.sale.code);
+                    var avatar_url = assetUrl + (info.include.item.items_in_set.Length == 1 ? item.thumb : item.set_root ? item.thumb : item.sub_icon);
+                    avatar = new Image<Rgba32>(128, 128).OverlayImageCentered(WebHelper.LoadImageFromWeb(avatar_url).Result);
+                    var radius = (Math.Max(avatar.Width, avatar.Height) - 8) / 2;
+                    avatar = avatar.ApplyCircleWithBoarder(radius, 4, new Rgba32(60, 135, 156));
+                }));
+
             profiler.Segment("渲染avatar");
 
             var tags = info.sale.zh.Split(' ');
@@ -250,7 +271,7 @@ namespace WFBot.Features.ImageRendering
             profiler.Segment("渲染底部");
             var result = StackImageY(lines.ToArray());
             profiler.Segment("图片拼合");
-            return Finish(result);
+            return Finish(result, 50);
              
 
             // return Finish(StackImageY(info.payload.orders.AsParallel().AsOrdered().Select(order => WMInfoSingle(isbuyer ? Buy : Sell, new TextWithParams(order.user.ingame_name, nameMax, nameOptions), new TextWithParams(order.user.status, statusMax, statusOptions), new TextWithParams(((int)order.platinum).ToString(), platMax, platOptions), new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions))).ToArray()));
@@ -454,12 +475,12 @@ namespace WFBot.Features.ImageRendering
             return StackImageYCentered(title, rect);
         }
         
-        public static byte[] Finish(Image<Rgba32> image)
+        public static byte[] Finish(Image<Rgba32> image, int ?predefinedSize = null)
         {
             var profiler = new ImageRenderProfiler();
             var text = "> WFBot_  "; // 好兄弟 虽然你可以改 但是不建议你改 至少保留一下原文吧
             TextOptions options;
-            var size = 70.0 / 0.75;
+            var size = predefinedSize ?? 70.0 / 0.75;
             FontRectangle measure;
             
             do
@@ -467,8 +488,9 @@ namespace WFBot.Features.ImageRendering
                 size *= 0.75;
                 options = CreateTextOptions((int)size);
                 measure = TextMeasurer.Measure(text, options);
-            } while (measure.Width / (double)image.Width > 0.37);
-            
+            } while (measure.Width / (double)image.Width > 0.37 && predefinedSize != null);
+            profiler.Segment("计算底部渲染的文字大小");
+
             options.HorizontalAlignment = HorizontalAlignment.Right;
             options.VerticalAlignment = VerticalAlignment.Top;
             var textHeight = (int)measure.Height;
