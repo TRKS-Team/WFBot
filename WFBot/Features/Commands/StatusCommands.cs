@@ -194,6 +194,12 @@ namespace WFBot.Features.Commands
             AppendLine(WFFormatter.ToString(outpost));
         }
 
+        [Matchers("执行官", "执刑官", "执行官猎杀", "执刑官猎杀", "猎杀")]
+        [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
+        async Task<string> ArchonHunt()
+        {
+            return WFFormatter.Format(await api.GetArchonHunt());
+        }
     }
 
 }

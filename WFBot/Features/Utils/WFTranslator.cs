@@ -258,6 +258,21 @@ namespace WFBot.Features.Utils
             //se.previous.activation = GetRealTime(se.activation);
 
         }
+
+        public void TranslateArchonHunt(ArchonHunt ah)
+        {
+            ah.expiry = GetRealTime(ah.expiry);
+            ah.activation = GetRealTime(ah.activation);
+            
+            ah.boss = dictTranslator.Translate(ah.boss).Result;
+
+            foreach (var mission in ah.missions)
+            {
+                mission.node = TranslateNode(mission.node);
+                mission.type = dictTranslator.Translate(mission.type).Result;
+            }
+
+        }
         // 打了最后一愿之后就再也没法直视Riven这个单词了
         public void TranslateRivenOrders(List<WarframeAlertingPrime.SDK.Models.User.Order> orders)
         {

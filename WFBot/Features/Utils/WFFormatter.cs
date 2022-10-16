@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using GammaLibrary.Extensions;
 using Humanizer;
 using Humanizer.Localisation;
 using WarframeAlertingPrime.SDK.Models.Enums;
 using WarframeAlertingPrime.SDK.Models.User;
 using WFBot.Features.Common;
-using WFBot.Features.Other;
 using WFBot.Features.Resource;
 using WFBot.Features.Telemetry;
 using WFBot.Utils;
@@ -52,6 +47,7 @@ namespace WFBot.Features.Utils
     /警报 | 所有警报
     /入侵 | 所有入侵
     /突击 | 所有突击
+    /猎杀 | 本周执刑官猎杀
     /活动 | 所有活动
     /虚空商人 | 奸商的状态
     /平原 | 地球&金星&火卫二平原的时间循环
@@ -904,6 +900,22 @@ namespace WFBot.Features.Utils
             return string.Join(" + ", rewards);
         }
 
-        
+        public static string Format(ArchonHunt archonHunt)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("指挥官, 下面是本周的执刑官猎杀任务.");
+            sb.AppendLine($"> 首领: {archonHunt.boss}");
+            sb.AppendLine();
+            foreach (var mission in archonHunt.missions)
+            {
+                sb.AppendLine($"[{mission.node}]");
+                sb.AppendLine($"- 类型:{mission.type}");
+            }
+            sb.AppendLine();
+            var time = (DateTime.Now - archonHunt.expiry).Humanize(int.MaxValue,
+                    CultureInfo.GetCultureInfo("zh-CN"), TimeUnit.Day, TimeUnit.Second, " ");
+            sb.Append($"结束时间: {time} 后");
+            return sb.ToString().Trim();
+        }
     }
 }
