@@ -106,6 +106,22 @@
                     </label>
                 </div>
             </div>
+            
+            <div class="mb-1 mt-4">
+                <div class="form-check form-switch">
+                    <input @bind="config.UseWFBotProxy" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        启用 WFBot 网络中转服务
+                    </label>
+                </div>
+            </div>
+            <div class="mb-1 row">
+                <label class="col-sm-3 col-form-label">中转服务 Token</label>
+                <div class="col-sm-9">
+                    <input @bind="config.WFBotProxyToken" type="text" class="form-control">
+                </div>
+            </div>
+            <label class="form-control mb-5" style="color: darkgray">如果你的网络环境较差, 可以使用 WFBot 提供的 HK 服务器中转服务, Token 可以在群里找 Cyl18 免费获取, 仅作数据统计用, 但是服务器一个月得 34 块钱, 建议你还是打点钱分担一下我的负担吧~</label>
 
             <div class="mb-2 row">
                 <label class="col-sm-3 col-form-label">WebUI 密码</label>

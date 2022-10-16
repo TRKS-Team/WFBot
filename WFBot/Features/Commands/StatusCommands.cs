@@ -32,7 +32,7 @@ namespace WFBot.Features.Commands
             {
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
             }
         }
 
@@ -48,7 +48,7 @@ namespace WFBot.Features.Commands
             {
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
             }
         }
 
@@ -64,7 +64,7 @@ namespace WFBot.Features.Commands
             {
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
             }
         }
 
@@ -152,7 +152,15 @@ namespace WFBot.Features.Commands
             var events = await api.GetEvents();
             if (events.Any())
             {
-                return WFFormatter.ToString(events);
+                if (AsyncContext.GetUseImageRendering())
+                {
+                    SendImage(ImageRenderHelper.SimpleImageRendering(WFFormatter.ToString(events)));
+                    return "";
+                }
+                else
+                {
+                    return WFFormatter.ToString(events);
+                }
             }
             else
             {
@@ -247,7 +255,7 @@ namespace WFBot.Features.Commands
             {
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, 1000));
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
             }
         }
 

@@ -37,6 +37,12 @@ namespace WFBot.Features.Commands
                 AppendLine(WFFormatter.ToString(alert));
                 AppendLine();
             }
+
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(OutputStringBuilder.Value.ToString()));
+                OutputStringBuilder.Value.Clear();
+            }
         }
 
         [Matchers("入侵")]
@@ -98,7 +104,11 @@ namespace WFBot.Features.Commands
             {
                 AppendLine(WFFormatter.ToString(enemy));
             }
-
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(OutputStringBuilder.Value.ToString()));
+                OutputStringBuilder.Value.Clear();
+            }
         }
 
     }

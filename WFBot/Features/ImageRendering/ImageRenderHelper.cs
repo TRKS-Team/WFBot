@@ -97,14 +97,14 @@ namespace WFBot.Features.ImageRendering
                 "Grineer" => grineerColor
             };
             var bPercent = 1 - aPercent;
-            var percentageImage = new Image<Rgba32>(400, 10);
+            var percentageImage = new Image<Rgba32>(500, 10);
             var breakPoint = (int)(aPercent * percentageImage.Width);
             percentageImage.Mutate(x => x.Fill(new Rgba32(aColor.R, aColor.G, aColor.B),  new RectangleF(0,0, breakPoint, percentageImage.Height)));
             percentageImage.Mutate(x => x.Fill(new Rgba32(bColor.R, bColor.G, bColor.B), new RectangleF(breakPoint, 0, percentageImage.Width - breakPoint, percentageImage.Height)));
             var textA = $"{invasion.attackingFaction.ToUpper()} {aPercent*100:F1}% {(!invasion.vsInfestation ? $"\n{WFFormatter.ToString(invasion.attackerReward)}" : "")}";
             var textB = $"{bPercent*100:F1}% {invasion.defendingFaction.ToUpper()}\n奖励: {WFFormatter.ToString(invasion.defenderReward)}";
             var textOptions = CreateTextOptions(15);
-            var textImage = new Image<Rgba32>(400, 50);
+            var textImage = new Image<Rgba32>(500, 50);
             using var attackerImage = GetResource($"Factions.{invasion.attackingFaction.ToLower()}").Clone().Resize(30, 30);
             using var defenderImage = GetResource($"Factions.{invasion.defendingFaction.ToLower()}").Clone().Resize(30, 30);
             textImage.Mutate(x => x.DrawImage(attackerImage, new Point(0,0), new GraphicsOptions()));
@@ -158,8 +158,8 @@ namespace WFBot.Features.ImageRendering
             var quantityMax = MeasureTextsMaxWidth(info.payload.orders.Select(o => o.quantity.ToString()).ToArray(), quantityOptions);
 
             var lines = new List<Image<Rgba32>>();
-
-            const string assetUrl = "https://wfbot.cyan.cafe/api/WFBotProxy/https://warframe.market/static/assets/";
+            
+            string assetUrl = Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://warframe.market/static/assets/" : "https://warframe.market/static/assets/";
 
             var item = info.include.item.items_in_set.First(i => i.url_name == info.sale.code);
             var avatar_url = assetUrl + (info.include.item.items_in_set.Length == 1 ? item.thumb : item.set_root ? item.thumb : item.sub_icon);
@@ -338,9 +338,9 @@ namespace WFBot.Features.ImageRendering
         }
 
 
-        public static byte[] SimpleImageRendering(string s, int maxLength = -1)
+        public static byte[] SimpleImageRendering(string s,TextOptions options = null, int maxLength = -1)
         {
-            var option = CreateTextOptions();
+            var option = options ?? CreateTextOptions();
             if (maxLength != -1) option.WrappingLength = maxLength;
             
             return Finish(StackImageY(Margin30, StackImageX(Margin30, RenderText(s, option), Margin30), Margin30));
@@ -493,9 +493,9 @@ namespace WFBot.Features.ImageRendering
             imageResult.Dispose();
             try
             {
-                if (Random.Shared.NextDouble() < 0.05)
+                if (Random.Shared.NextDouble() < 0.015)
                 {
-                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "图片渲染目前还在测试阶段, 可以在 <https://github.com/TRKS-Team/WFBot/issues/161> 反馈.\n在命令前或者命令后加入 * 可以对这个命令关闭图片渲染.");
+                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), "提示: 图片渲染目前还在测试阶段, 可以在 <https://github.com/TRKS-Team/WFBot/issues/161> 反馈.\n在命令前或者命令后加入 * 可以对这个命令关闭图片渲染.");
                 }
             }
             catch (Exception e)
@@ -854,7 +854,7 @@ namespace WFBot.Features.ImageRendering
 
 
 
-            return Finish(StackImageY(Margin40, StackImageXCentered(Margin20, e1, Margin20, e2, Margin20, e3, Margin20, e4, Margin20),Margin40));
+            return Finish(StackImageY(Margin40, StackImageXCentered(Margin30, e1, Margin30, e2, Margin30, e3, Margin30, e4, Margin30),Margin40));
         }
     }
 }

@@ -99,7 +99,7 @@ namespace WFBot.Features.Commands
         {
             var header = new List<KeyValuePair<string, string>>
                 {new KeyValuePair<string, string>("Platform", platform)};
-            var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(
+            var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://api.warframe.market/v1/auctions/search{Uri.EscapeDataString($"?type=riven&weapon_url_name={urlname}&sort_by=price_desc")}" :
                 $"https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name={urlname}&sort_by=price_desc", header);
 
             return auctions.Payload.Auctions;

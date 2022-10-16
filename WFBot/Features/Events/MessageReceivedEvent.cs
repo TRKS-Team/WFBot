@@ -78,7 +78,7 @@ namespace WFBot.Features.Events
                 var result = "";
                 if (handler.OutputStringBuilder.IsValueCreated)
                 {
-                    var s = handler.OutputStringBuilder.ToString().Trim();
+                    var s = handler.OutputStringBuilder.Value.ToString().Trim();
                     result = s;
                     MiguelNetwork.Reply(o, s);
                 }

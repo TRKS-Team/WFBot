@@ -71,7 +71,9 @@ namespace WFBot
         public bool SendResourceUpdateNotification = true;
         public MessagePlatform Miguel_Platform = MessagePlatform.Unknown;
         public bool EnableCustomCommandContent = false;
-        public bool EnableImageRendering = false;
+        public bool EnableImageRendering = true;
+        public string WFBotProxyToken = "";
+        public bool UseWFBotProxy = false;
 
         protected override void AfterUpdate()
         {

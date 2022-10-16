@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Telemetry;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
@@ -24,7 +25,14 @@ namespace WFBot.Features.Commands
         void HelpDoc()
         {
             MiguelNetwork.Reply(O, WFFormatter.HelpCommandSegment1());
-            MiguelNetwork.Reply(O, WFFormatter.HelpCommandSegment2());
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(WFFormatter.HelpCommandSegment2()));            
+            }
+            else
+            {
+                MiguelNetwork.Reply(O, WFFormatter.HelpCommandSegment2());
+            }
         }
         
         [DoNotMeasureTime]
@@ -47,7 +55,17 @@ namespace WFBot.Features.Commands
             var commitResult = await commitTask;
             // var wfastat = await q3;
             // var kuvastat = await q4;
-            return WFFormatter.FormatStatusCommand(apistat, wmstat, cdnstat, sb, commitResult);
+            
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(WFFormatter.FormatStatusCommand(apistat, wmstat, cdnstat, sb, commitResult)));
+                OutputStringBuilder.Value.Clear();
+                return "";
+            }
+            else
+            {
+                return WFFormatter.FormatStatusCommand(apistat, wmstat, cdnstat, sb, commitResult);
+            }
         }
 
         
