@@ -32,7 +32,7 @@ namespace WFBot.Features.ImageRendering
         public static TextOptions CreateTextOptions(int size = 40, bool bold = false)
         {
             var collection = new FontCollection();
-            var family = collection.Add("font.ttf");
+            var family = collection.Add("WFConfigs/font.ttf");
             var font = family.CreateFont(size, bold ? FontStyle.Bold : FontStyle.Regular);
 
             return new TextOptions(font);
