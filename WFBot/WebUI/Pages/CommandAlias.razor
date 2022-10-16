@@ -3,10 +3,13 @@
 @using WFBot.TextCommandCore
 @using System.Reflection
 @using GammaLibrary.Extensions
+
+@inject IBlazorStrap _blazorStrap
+<BSToaster />
 <PageTitle>命令别名</PageTitle>
 <h1>命令别名</h1>
 <p>配置命令的别名, 按行分割</p>
-<BSButton class="btn-primary mb-4" @onclick="CustomCommandConfig.Save">保存</BSButton>
+<BSButton class="btn-primary mb-4" @onclick="Save">保存</BSButton>
 @foreach (var info in CustomCommandMatcherHandler._commandInfos.Value)
 {
     var id = info.Method.Name;
@@ -28,5 +31,13 @@
 
 @code {
     internal static Dictionary<string, List<string>> CustomCommandsRegistry => CustomCommandConfig.Instance.CustomCommands;
+    async void Save()
+    {
+        await Task.Run(() =>
+        {
+            CustomCommandConfig.Save();
 
+        });
+        _blazorStrap.Toaster.Add("提示", "保存成功");
+    }
 }

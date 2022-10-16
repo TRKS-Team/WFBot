@@ -161,11 +161,14 @@ Warframe 是 Digital Extremes Ltd. 的商标.
   > **qiutong123** 提供了翻译功能的代码 (PR)  
   > **@wu452148993** 解决了一个令我很头疼的问题  
   > **Kengxxiao** 解决#91  
-  > **Simplicity** 帮忙画了图片渲染的图标
+  > **Simplicity** 帮忙画了图片渲染的图标  
+  > **@Superexboom** 贡献黑话词典  
 
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:
 ![nb](https://wfbot.cyan.cafe/api/Sponsors?)
+
+以及 chaoshi258 的支付宝打赏
 
 ---
 

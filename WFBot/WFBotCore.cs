@@ -66,18 +66,37 @@ namespace WFBot
                         Directory.CreateDirectory("WFBotConfigs");
                         UseConfigFolder = true;
                         break;
+                    case "--get-version":
+                        Console.WriteLine(WFBotCore.Version);
+                        Environment.Exit(0);
+                        break;
                 }
+            }
+            Directory.CreateDirectory("WFCaches");
+
+            if (!File.Exists("WFConfig.json"))
+            {
+                Directory.CreateDirectory("WFBotConfigs");
+                UseConfigFolder = true;
             }
 #if DEBUG
             setCurrentFolder = true;
 #endif
             if (setCurrentFolder)
             {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName));
             }
 
 
-            //return;
+            if (!IsInDocker && !args.Any(x => x == "--wrapper") && !Debugger.IsAttached
+#if DEBUG
+                && false
+#endif
+               )
+            {
+                Migrate();
+                return;
+            }
 
             var wfbot = new WFBotCore();
             try
@@ -108,6 +127,78 @@ namespace WFBot
             wfbot.Run();
         }
 
+        static bool IsInDocker => Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+
+        static void Migrate()
+        {
+            var fileName = OperatingSystem.IsWindows() ? "WFBotWrapper.exe" : "WFBotWrapper";
+            if (!File.Exists(fileName))
+            {
+                DownloadWrapper();
+            }
+            Console.WriteLine($"请打开 ./{fileName}");
+        }
+
+        static void DownloadWrapper()
+        {
+            var fileName = OperatingSystem.IsWindows() ? "WFBotWrapper.exe" : "WFBotWrapper";
+            var fs = File.Open(fileName, FileMode.Create, FileAccess.Write);
+            string url = "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapper";
+            if (OperatingSystem.IsWindows())
+            {
+                url += "Windows";
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+                {
+                    url += "LinuxArm64";
+                }
+                else if (RuntimeInformation.ProcessArchitecture == Architecture.X64)
+                {
+                    url += "LinuxX64";
+                }
+                else
+                {
+                    throw new InvalidOperationException("不支持的系统版本");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("不支持的系统版本");
+            }
+            new HttpClient().GetStreamAsync(url).Result.CopyTo(fs);
+            fs.Close();
+            EnsureExecutePermission(fileName);
+        }
+
+        static void EnsureExecutePermission(string path)
+        {
+            if (OperatingSystem.IsLinux())
+            {
+                Exec($"chmod 777 {path}");
+            }
+        }
+
+        static void Exec(string cmd)
+        {
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "/bin/sh",
+                    Arguments = $"-c \"{escapedArgs}\""
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+        }
         public static bool Panic { get; private set; } = false;
     }
     public sealed class WFBotCore
@@ -433,9 +524,10 @@ namespace WFBot
                 if (!File.Exists("font.ttf") || new FileInfo("font.ttf").Length < 100000) // 之前服务器没传上文件
                 {
                     Trace.WriteLine("下载图片渲染字体...");
-                    await hc.DownloadAsync("https://cyan.cafe/wfbot/font.ttf", "font.ttf");
+                    Directory.CreateDirectory("WFConfigs");
+                    await hc.DownloadAsync("https://cyan.cafe/wfbot/font.ttf", "WFConfigs/font.ttf");
                 }
-                var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}");
+                var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}&clientid={TelemetryClient.ClientID}");
                 t = s;
             }
             catch (Exception)

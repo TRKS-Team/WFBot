@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Management;
+using System.Runtime.InteropServices;
 using GammaLibrary.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
 using WFBot.Orichalt;
@@ -93,13 +94,23 @@ namespace WFBot.Features.Telemetry
                             arch = "Linux";
                             try
                             {
-                                var file = File.ReadAllText("/etc/lsb-release").Split('\n')
-                                    .First(l => l.Contains("DISTRIB_DESCRIPTION")).Split('=')[1].Trim('\"');
+                                var file = File.ReadAllText(Directory.GetFiles("/etc/", "*elease").First()).Split('\n')
+                                    .First(l => l.Contains("DISTRIB_DESCRIPTION") || l.Contains("PRETTY_NAME")).Split('=').Last().Trim('\"');
                                 arch = file;
                             }
                             catch (Exception)
                             {
                             }
+
+                            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+                            {
+                                arch += " Arm64";
+                            }
+                            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm)
+                            {
+                                arch += " Arm";
+                            }
+
                         }
                         else if (OperatingSystem.IsWindows())
                         {
@@ -132,7 +143,6 @@ namespace WFBot.Features.Telemetry
                         WFBotStorageSize = (new DirectoryInfo(".").EnumerateFiles("*.*", SearchOption.AllDirectories).Select(f => f.Length).Sum() / 1024.0 / 1024.0).ToString("F1") + "MB",
                         WFBotMemory = (Environment.WorkingSet / 1024.0 / 1024.0).ToString("F1")+"MB",
                         CustomCommandContentStatus = Config.Instance.EnableCustomCommandContent ? "启用 上次保存版本: " + CustomCommandContentConfig.Instance.LastSaveVersion : "禁用"
-
                     }});
                 }
                 catch (Exception e)

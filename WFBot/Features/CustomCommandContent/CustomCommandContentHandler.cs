@@ -15,6 +15,8 @@ using GammaLibrary.Extensions;
 using HarmonyLib;
 using WFBot.Features.Utils;
 using WFBot.Utils;
+using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace WFBot.Features.CustomCommandContent
 {
@@ -26,7 +28,7 @@ namespace WFBot.Features.CustomCommandContent
         public string LastCompileHash = "";
     }
 
-    public class CustomCommandContentHandler
+    public static class CustomCommandContentHandler
     {
         static bool FirstLoad = true;
 
@@ -39,34 +41,34 @@ namespace WFBot.Features.CustomCommandContent
                 new Harmony("what").PatchAll(Assembly.GetCallingAssembly());
             }
             var syntaxTree = CSharpSyntaxTree.ParseText(CustomCommandContentConfig.Instance.Content);
-            var dir = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
-            if (File.Exists("temp.dll") && (forceCreate || CacheInvalid()))
+            var tempDll = "WFCaches/temp.dll";
+            if (File.Exists(tempDll) && (forceCreate || CacheInvalid()))
             {
-                File.Delete("temp.dll");
+                File.Delete(tempDll);
             }
 
-            if (File.Exists("temp.dll"))
+            if (File.Exists(tempDll))
             {
                 goto load;
             }
-
+            
             var compilation = CSharpCompilation.Create(
                 "Formatter",
                 new[] { syntaxTree },
-                Directory.GetFiles(".", "*.dll").Concat(Directory.GetFiles(dir, "System.*").Where(x => !x.Contains("Native"))).Select(d => MetadataReference.CreateFromFile(d)).Concat(new[]
+                (AppDomain.CurrentDomain.GetAssemblies().Where(x=>x.GetTypes().Any()).Select(x=>x.GetTypes().First().GetRawMetadataReference()).Concat(new[]
                 {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(Path.Combine(dir, "mscorlib.dll")),
-                    MetadataReference.CreateFromFile(Path.Combine(dir, "netstandard.dll")),
-                }),
+                    Assembly.Load("netstandard").GetRawMetadataReference(),
+                    Assembly.Load("System.Runtime").GetRawMetadataReference()
+
+                })),
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
 
             using (var dllStream = new MemoryStream())
             using (var pdbStream = new MemoryStream())
             {
-                var emitResult = compilation.Emit(dllStream, pdbStream);
+                var emitResult = compilation.Emit(dllStream);
                 if (!emitResult.Success)
                 {
                     var errors = new StringBuilder();
@@ -83,7 +85,7 @@ namespace WFBot.Features.CustomCommandContent
                 else
                 {
                     dllStream.Seek(0, SeekOrigin.Begin);
-                    File.WriteAllBytes("temp.dll", dllStream.ToArray());
+                    File.WriteAllBytes(tempDll, dllStream.ToArray());
                 }
             }
 
@@ -97,7 +99,7 @@ namespace WFBot.Features.CustomCommandContent
             {
                 Console.WriteLine($"************警告: 自定义命令处理内容上次保存时的版本为 {CustomCommandContentConfig.Instance.LastSaveVersion} 可能有内容已经过期, 请查看 diff <https://github.com/TRKS-Team/WFBot/compare/v1.0.{CustomCommandContentConfig.Instance.LastSaveVersion.Split('.').Last().Split('+').First()}-universal.0...v1.0.{WFBotCore.Version.Split('.').Last().Split('+').First()}-universal.0?diff=unified>并修改.");
             }
-            var bytes = File.ReadAllBytes("temp.dll");
+            var bytes = File.ReadAllBytes(tempDll);
             CustomCommandContentConfig.Save();
             var type = Assembly.Load(bytes).GetType("WFBot.Features.Utils.WFFormatterCustom").GetMethods(BindingFlags.Public | BindingFlags.Static);
             var originType = typeof(WFFormatter).GetMethods(BindingFlags.Public | BindingFlags.Static);
@@ -128,7 +130,27 @@ namespace WFBot.Features.CustomCommandContent
 
 
         }
-
+        public static MetadataReference GetRawMetadataReference(this Type type)
+        {
+            unsafe
+            {
+                return type.Assembly.TryGetRawMetadata(out var blob, out var length)
+                    ? AssemblyMetadata
+                        .Create(ModuleMetadata.CreateFromMetadata((IntPtr)blob, length))
+                        .GetReference()
+                    : throw new InvalidOperationException($"Could not get raw metadata for type {type}");
+            }
+        }        public static MetadataReference GetRawMetadataReference(this Assembly type)
+        {
+            unsafe
+            {
+                return type.TryGetRawMetadata(out var blob, out var length)
+                    ? AssemblyMetadata
+                        .Create(ModuleMetadata.CreateFromMetadata((IntPtr)blob, length))
+                        .GetReference()
+                    : throw new InvalidOperationException($"Could not get raw metadata for type {type}");
+            }
+        }
         static bool CacheInvalid()
         {
             return CustomCommandContentConfig.Instance.LastCompileHash !=

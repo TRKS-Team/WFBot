@@ -2,6 +2,9 @@
 @using WFBot.Orichalt
 @using WFBot.Orichalt.OrichaltConnectors
 @using Microsoft.AspNetCore.Components
+
+@inject IBlazorStrap _blazorStrap
+<BSToaster />
 <PageTitle>设置</PageTitle>
 
 <h1>设置</h1>
@@ -17,7 +20,7 @@
 else
 {
     <div class="mb-3">
-        <button class="btn btn-primary" @onclick="() => OneBotConfig.Save()">保存</button>
+        <button class="btn btn-primary" @onclick="Save">保存</button>
     </div>
 
 
@@ -75,4 +78,13 @@ else
 @code
 {
     OneBotConfig config => OneBotConfig.Instance;
+    async void Save()
+    {
+        await Task.Run(() =>
+        {
+            OneBotConfig.Save();
+
+        });
+        _blazorStrap.Toaster.Add("提示", "保存成功");
+    }
 }

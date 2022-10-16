@@ -519,7 +519,7 @@ namespace WFBot.Orichalt
                 var message = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
                 Task.Delay(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds)).ContinueWith(t =>
                 {
-                    MiraiHTTPCore.Bot.RecallAsync(message, qq.ID.ToString());
+                    MiraiHTTPCore.Bot.RecallAsync(qq.ID.ToString(), message);
                 });
 
                 return;

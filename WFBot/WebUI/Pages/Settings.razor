@@ -1,11 +1,14 @@
 ﻿@page "/settings"
 @using WFBot.Orichalt
 @using GammaLibrary.Extensions
+@inject IBlazorStrap _blazorStrap
 <PageTitle>设置</PageTitle>
+<BSToaster />
 
 <h1>设置</h1>
+
 <div class="mb-3">
-    <button class="btn btn-primary" @onclick="() => Config.Save()">保存</button>
+    <button class="btn btn-primary" @onclick="Save">保存</button>
 </div>
 
 
@@ -97,7 +100,14 @@
                     </label>
                 </div>
             </div>
-            
+            <div class="mb-2">
+                <div class="form-check form-switch">
+                    <input @bind="config.UseKraber" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        使用WFBot自建CDN下载资源
+                    </label>
+                </div>
+            </div>
             <div class="mb-2">
                 <div class="form-check form-switch">
                     <input @bind="config.EnableImageRendering" class="form-check-input" type="checkbox">
@@ -106,7 +116,7 @@
                     </label>
                 </div>
             </div>
-            
+
             <div class="mb-1 mt-4">
                 <div class="form-check form-switch">
                     <input @bind="config.UseWFBotProxy" class="form-check-input" type="checkbox">
@@ -122,6 +132,8 @@
                 </div>
             </div>
             <label class="form-control mb-5" style="color: darkgray">如果你的网络环境较差, 可以使用 WFBot 提供的 HK 服务器中转服务, Token 可以在群里找 Cyl18 免费获取, 仅作数据统计用, 但是服务器一个月得 34 块钱, 建议你还是打点钱分担一下我的负担吧~</label>
+
+
 
             <div class="mb-2 row">
                 <label class="col-sm-3 col-form-label">WebUI 密码</label>
@@ -484,4 +496,14 @@
 
 
     #endregion
+
+    async void Save()
+    {
+        await Task.Run(() =>
+        {
+            Config.Save();
+
+        });
+        _blazorStrap.Toaster.Add("提示", "保存成功");
+    }
 }

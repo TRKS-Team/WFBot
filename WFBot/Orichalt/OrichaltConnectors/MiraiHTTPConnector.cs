@@ -100,7 +100,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 }
             }
             Trace.WriteLine("MiraiHTTPv2已连接.");
-            
+            Bot.UseAutoReconnect();
             
             Bot.GroupMessageReceived += (s, e) => GroupMessageReceived(e);
             Bot.FriendMessageReceived += (s, e) => FriendMessageReceived(e);
