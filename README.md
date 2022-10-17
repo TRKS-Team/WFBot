@@ -161,7 +161,8 @@ Warframe 是 Digital Extremes Ltd. 的商标.
   > **qiutong123** 提供了翻译功能的代码 (PR)  
   > **@wu452148993** 解决了一个令我很头疼的问题  
   > **Kengxxiao** 解决#91
-  > **@Superexboom** 贡献黑话词典
+  > **@Superexboom** 贡献黑话词典  
+  > **@9ikj** 执刑官猎杀
 
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:
