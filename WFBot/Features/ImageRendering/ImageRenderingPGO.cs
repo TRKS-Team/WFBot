@@ -59,7 +59,7 @@ namespace WFBot.Features.ImageRendering
                 Directory.Delete(cacheDir, true);
             }
             Directory.CreateDirectory(cacheDir);
-            Task.Run(async () =>
+            /*Task.Run(async () =>
             {
                 while (true)
                 {
@@ -91,8 +91,8 @@ namespace WFBot.Features.ImageRendering
                         await Task.Delay(TimeSpan.FromMinutes(1));
                     }
                 }
-            });
-            Task.Run(async () =>
+            });*/
+            /*Task.Run(async () =>
             {
                 var start = DateTime.Now;
                 while (true)
@@ -127,7 +127,7 @@ namespace WFBot.Features.ImageRendering
                         await Task.Delay(TimeSpan.FromMinutes(5));
                     }
                 }
-            });
+            });*/
         }
 
         private static WFChineseAPI api => WFResources.WFChineseApi;

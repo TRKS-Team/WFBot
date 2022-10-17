@@ -92,6 +92,7 @@
 
 	<ItemGroup>
 		<Folder Include="Dll\" />
+		<Folder Include="Resources\InvasionRewards\" />
 	</ItemGroup>
 
 	<ItemGroup>

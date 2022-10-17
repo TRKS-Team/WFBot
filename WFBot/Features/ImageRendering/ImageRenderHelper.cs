@@ -88,10 +88,22 @@ namespace WFBot.Features.ImageRendering
             return Finish(StackImageY(images), predefinedSize: 50);
         }
 
+        public static string FlipNode(string node)
+        {
+            return node.Split(' ').Reverse().Connect(" ");
+        }
         public static byte[] InvasionNotification(WFInvasion invasion)
         {
             AsyncContext.SetCommandIdentifier("WFBot通知");
             return Finish(StackImageY(SingleInvasion(invasion)), predefinedSize: 50);
+        }
+
+        public static Image<Rgba32> GetInvasionReward(string name)
+        {
+            var trims = new List<string> { "蓝图", "枪管", "枪机", "枪托", "连接器", "刀刃", "握柄", "散热器" };
+            name = trims.Aggregate(name, (current, trim) => current.Replace(trim, ""));
+            name = name.Trim();
+            return GetResource($"InvasionRewards.{name}");
         }
         public static Image<Rgba32> SingleInvasion(WFInvasion invasion)
         {
@@ -111,26 +123,39 @@ namespace WFBot.Features.ImageRendering
                 "Infested" => infestedColor,
                 "Grineer" => grineerColor
             };
+            
             var bPercent = 1 - aPercent;
             var percentageImage = new Image<Rgba32>(560, 10);
             var breakPoint = (int)(aPercent * percentageImage.Width);
             percentageImage.Mutate(x => x.Fill(new Rgba32(aColor.R, aColor.G, aColor.B),  new RectangleF(0,0, breakPoint, percentageImage.Height)));
             percentageImage.Mutate(x => x.Fill(new Rgba32(bColor.R, bColor.G, bColor.B), new RectangleF(breakPoint, 0, percentageImage.Width - breakPoint, percentageImage.Height)));
-            var textA = $"{invasion.attackingFaction.ToUpper()} {aPercent*100:F1}% {(!invasion.vsInfestation ? $"\n奖励: {WFFormatter.ToString(invasion.attackerReward)}" : "")}";
-            var textB = $"{bPercent*100:F1}% {invasion.defendingFaction.ToUpper()}\n奖励: {WFFormatter.ToString(invasion.defenderReward)}";
+            var factionA = $"{invasion.attackingFaction.ToUpper()} {aPercent*100:F1}%";
+            var factionB = $"{bPercent*100:F1}% {invasion.defendingFaction.ToUpper()}";
+            var rewardA = $"{(!invasion.vsInfestation ? $"{WFFormatter.ToString(invasion.attackerReward)}" : "")}";
+            var rewardB = $"{WFFormatter.ToString(invasion.defenderReward)}";
             var textOptions = CreateTextOptions(18);
-            var textImage = new Image<Rgba32>(560, 55);
+            var factionImage = new Image<Rgba32>(560, 40);
+            var rewardImage = new Image<Rgba32>(560, 40);
             using var attackerImage = GetResource($"Factions.{invasion.attackingFaction.ToLower()}").Clone().Resize(30, 30);
             using var defenderImage = GetResource($"Factions.{invasion.defendingFaction.ToLower()}").Clone().Resize(30, 30);
-            textImage.Mutate(x => x.DrawImage(attackerImage, new Point(0,0), new GraphicsOptions()));
-            textImage.Mutate(x => x.DrawImage(attackerImage, new Point(textImage.Width - defenderImage.Width,0), new GraphicsOptions()));
+            using var attackerReward = invasion.vsInfestation
+                ? new Image<Rgba32>(35, 35)
+                : GetInvasionReward(invasion.attackerReward.countedItems.First().type).Clone().Resize(35, 35);
+            using var defenderReward = GetInvasionReward(invasion.defenderReward.countedItems.First().type).Clone().Resize(35, 35);
+            var desc = RenderText($"{FlipNode(invasion.node)}", CreateTextOptions(23));
+            factionImage.Mutate(x => x.DrawImage(attackerImage, new Point(0,0), new GraphicsOptions()));
+            rewardImage.Mutate(x => x.DrawImage(attackerReward, new Point(0,0), new GraphicsOptions()));
+            factionImage.Mutate(x => x.DrawImage(defenderImage, new Point(factionImage.Width - defenderImage.Width,0), new GraphicsOptions()));
+            rewardImage.Mutate(x => x.DrawImage(defenderReward, new Point(rewardImage.Width - defenderReward.Width, 0), new GraphicsOptions()));
             textOptions.Origin = new Vector2(attackerImage.Width + 10, 0);
-            textImage.Mutate(x => x.DrawText(textOptions, textA, Color.White));
+            factionImage.Mutate(x => x.DrawText(textOptions, factionA, Color.White));
+            rewardImage.Mutate(x => x.DrawText(textOptions, rewardA, Color.White));
             textOptions.HorizontalAlignment = HorizontalAlignment.Right;
             textOptions.TextAlignment = TextAlignment.End;
-            textOptions.Origin = new Vector2(textImage.Width - defenderImage.Width - 10, 0);
-            textImage.Mutate(x => x.DrawText(textOptions, textB, Color.White));
-            return StackImageX(Margin20, StackImageY(Margin10,percentageImage, Margin10, textImage, Margin20), Margin20);
+            textOptions.Origin = new Vector2(factionImage.Width - defenderImage.Width - 10, 0);
+            factionImage.Mutate(x => x.DrawText(textOptions, factionB, Color.White));
+            rewardImage.Mutate(x => x.DrawText(textOptions, rewardB, Color.White));
+            return StackImageX(Margin20, StackImageY(Margin10, desc, StackImageY(Margin10, percentageImage, Margin10, factionImage, rewardImage, Margin20)), Margin20);
         }
         static Image<Rgba32> Sell = RenderRectangle(40, 40, new Rgba32(63, 35, 59))
             .OverlayTextCentered("卖", new Rgba32(203, 74, 158), 30)
