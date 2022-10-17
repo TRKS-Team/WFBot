@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Telemetry;
 using WFBot.Orichalt;
 using WFBot.Utils;
@@ -157,7 +158,8 @@ namespace WFBot.TextCommandCore
                             result = $"操作超时: {handlers.Message}";
                             break;
                         case HttpRequestException _:
-                            result = $"网络请求错误: ";
+                            result = $"";
+                            MiguelNetwork.Reply(o, new RichMessages() { new ImageMessage(){Content = ImageRenderHelper.NetworkUnstable } });
                             break;
                         case NullReferenceException _:
                             result = "发生异常: 找不到对象.";
