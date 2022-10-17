@@ -574,6 +574,11 @@ namespace WFBot.Features.ImageRendering
             if (!Cache.ContainsKey(path))
             {
                 var stream = Assembly.GetCallingAssembly().GetManifestResourceStream("WFBot.Resources." + path + ".png");
+                if (stream == null)
+                {
+                    Console.WriteLine($"错误: {path} 为 null");
+                    return new Image<Rgba32>(1, 1);
+                }
                 Cache[path] = Image.Load<Rgba32>(stream, new PngDecoder());
             }
             return Cache[path];
