@@ -577,7 +577,11 @@ namespace WFBot.Features.ImageRendering
                 if (stream == null)
                 {
                     Console.WriteLine($"错误: {path} 为 null");
-                    return new Image<Rgba32>(1, 1);
+                    var image = new Image<Rgba32>(50,50, new Rgba32(0,0,0));
+                    image.Mutate(x => x.Fill(new Color(new Rgba32(206, 64, 202)), new RectangleF(0,0,25,25)));
+                    image.Mutate(x => x.Fill(new Color(new Rgba32(206, 64, 202)), new RectangleF(25,25,25,25)));
+                    image.Mutate(x => x.DrawText(CreateTextOptions(10), "错误", Color.White));
+                    return RenderText("错误");
                 }
                 Cache[path] = Image.Load<Rgba32>(stream, new PngDecoder());
             }
