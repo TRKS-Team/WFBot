@@ -579,6 +579,13 @@ namespace WFBot.Features.ImageRendering
             return Cache[path];
         }
 
+        static ImageRenderHelper()
+        {
+            var ms = new MemoryStream();
+            Assembly.GetCallingAssembly().GetManifestResourceStream("WFBot.Resources.network-unstable.gif").CopyTo(ms);
+            NetworkUnstable = ms.ToArray();
+        }
+        public static byte[] NetworkUnstable;
         static Image<Rgba32> Margin10 = new Image<Rgba32>(10, 10, new Rgba32(0, 0, 0, 0));
 
         static Image<Rgba32> Margin20 = new Image<Rgba32>(20, 20, new Rgba32(0, 0, 0, 0));

@@ -60,7 +60,7 @@ namespace WFBot.Features.Utils
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((WMAItems) obj);
+            return Equals((WMAItems)obj);
         }
 
         public override int GetHashCode()
@@ -77,7 +77,8 @@ namespace WFBot.Features.Utils
         private WMAItem[] _items;
 
         [JsonProperty("items")]
-        public WMAItem[] Items {
+        public WMAItem[] Items
+        {
             get => _items;
             set
             {
@@ -112,7 +113,7 @@ namespace WFBot.Features.Utils
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((WMARivens) obj);
+            return Equals((WMARivens)obj);
         }
 
         public override int GetHashCode()
@@ -129,7 +130,8 @@ namespace WFBot.Features.Utils
         private WMARiven[] _rivens;
 
         [JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
-        public WMARiven[] Rivens { 
+        public WMARiven[] Rivens
+        {
             get => _rivens;
             set
             {
@@ -317,7 +319,7 @@ namespace WFBot.Features.Utils
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((WMAAttributes) obj);
+            return Equals((WMAAttributes)obj);
         }
 
         public override int GetHashCode()
@@ -334,7 +336,9 @@ namespace WFBot.Features.Utils
         private WMAAttribute[] _attributes;
 
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
-        public WMAAttribute[] Attributes { get => _attributes;
+        public WMAAttribute[] Attributes
+        {
+            get => _attributes;
             set
             {
                 _attributes = value.OrderBy(a => a.Id).ToArray();
@@ -375,55 +379,55 @@ namespace WFBot.Features.Utils
         public bool? PositiveIsNegative { get; set; }
     }
 
-    public enum Group { Default, Melee, Top};
+    public enum Group { Default, Melee, Top };
 
     public enum Units { Percent, Seconds };
     public class WFContentApi
-   {
-       public ExportRelicArcane[] ExportRelicArcanes => RExportRelicArcanes.Value;
-       public WFResource<ExportRelicArcane[]> RExportRelicArcanes;
-   }
+    {
+        public ExportRelicArcane[] ExportRelicArcanes => RExportRelicArcanes.Value;
+        public WFResource<ExportRelicArcane[]> RExportRelicArcanes;
+    }
 
-   public partial class ExportRelicArcaneZh
-   {
-       public ExportRelicArcane[] ExportRelicArcane { get; set; }
-   }
+    public partial class ExportRelicArcaneZh
+    {
+        public ExportRelicArcane[] ExportRelicArcane { get; set; }
+    }
 
-   public partial class ExportRelicArcane
-   {
-       public string Name { get; set; }
-       public RelicReward[] RelicRewards { get; set; }
+    public partial class ExportRelicArcane
+    {
+        public string Name { get; set; }
+        public RelicReward[] RelicRewards { get; set; }
 #if DEBUG
-       public string UniqueName { get; set; }
-       public bool CodexSecret { get; set; }
-       public string Description { get; set; }
-       public bool? ExcludeFromCodex { get; set; }
-       public string Rarity { get; set; }
-       public LevelStat[] LevelStats { get; set; }
+        public string UniqueName { get; set; }
+        public bool CodexSecret { get; set; }
+        public string Description { get; set; }
+        public bool? ExcludeFromCodex { get; set; }
+        public string Rarity { get; set; }
+        public LevelStat[] LevelStats { get; set; }
 #endif
-   }
+    }
 
-   public partial class LevelStat
-   {
-       public string[] Stats { get; set; }
-   }
+    public partial class LevelStat
+    {
+        public string[] Stats { get; set; }
+    }
 
-   public partial class RelicReward
-   {
-       public string RewardName { get; set; }
-       public string Rarity { get; set; }
-       public long Tier { get; set; }
-       public long ItemCount { get; set; }
-   }
-    
+    public partial class RelicReward
+    {
+        public string RewardName { get; set; }
+        public string Rarity { get; set; }
+        public long Tier { get; set; }
+        public long ItemCount { get; set; }
+    }
+
     public class WFCD_All
     {
         public string name { get; set; }
         public List<Component> components { get; set; } = new List<Component>();
 #if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
-// 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
-// TODO 换数据源
-// 笑死 CY还因为这个问题专门写了个Commit, 以为机器人开不起是这玩意造成的
+        // 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
+        // TODO 换数据源
+        // 笑死 CY还因为这个问题专门写了个Commit, 以为机器人开不起是这玩意造成的
         public string uniqueName { get; set; }
         public string description { get; set; }
         public string type { get; set; }
@@ -888,7 +892,7 @@ namespace WFBot.Features.Utils
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Sale) obj);
+            return Equals((Sale)obj);
         }
 
         public override int GetHashCode()
@@ -1783,6 +1787,37 @@ namespace WFBot.Features.Utils
     {
         public int count { get; set; }
         public string type { get; set; }
+    }
+
+
+    public class ArchonHunt
+    {
+        public string id { get; set; }
+        public DateTime activation { get; set; }
+        public string startString { get; set; }
+        public DateTime expiry { get; set; }
+        public bool active { get; set; }
+        public string rewardPool { get; set; }
+        public object[] variants { get; set; }
+        public AHMission[] missions { get; set; }
+        public string boss { get; set; }
+        public string faction { get; set; }
+        public bool expired { get; set; }
+        public string eta { get; set; }
+    }
+
+    public class AHMission
+    {
+        public string node { get; set; }
+        public string nodeKey { get; set; }
+        public string type { get; set; }
+        public string typeKey { get; set; }
+        public bool nightmare { get; set; }
+        public bool archwingRequired { get; set; }
+        public bool isSharkwing { get; set; }
+        public object[] advancedSpawners { get; set; }
+        public object[] requiredItems { get; set; }
+        public object[] levelAuras { get; set; }
     }
 
 }
