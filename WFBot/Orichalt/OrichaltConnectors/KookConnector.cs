@@ -3,7 +3,7 @@ using Kook.WebSocket;
 
 namespace WFBot.Orichalt.OrichaltConnectors
 {
-    [Utils.Configuration("KookConfig.json")]
+    [Utils.Configuration("KookConfig")]
     public class KookConfig : Utils.Configuration<KookConfig>
     {
         public string Token { get; set; }

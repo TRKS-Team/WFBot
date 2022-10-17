@@ -10,7 +10,7 @@ namespace WFBot.Features.Timers
 {
     class NotificationTimer : WFBotTimer
     {
-        public NotificationTimer() : base(3.Minutes())
+        public NotificationTimer() : base(1.Minutes())
         {
         }
 

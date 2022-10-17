@@ -199,7 +199,7 @@ namespace WFBot.Features.Other
             AlertPool = await api.GetAlerts();
             CheckAlerts();
         }
-
+        
         public async Task UpdateInvasionPool()
         {
             InvasionPool = await api.GetInvasions();

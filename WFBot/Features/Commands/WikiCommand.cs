@@ -12,7 +12,7 @@ namespace WFBot.Features.Commands
 
     public partial class CommandsHandler
     {
-        [Matchers("wiki")]
+        [Matchers("wiki", "wk")]
         [CombineParams]
         async Task<string> Wiki(string word = "wiki")
         {

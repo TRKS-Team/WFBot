@@ -96,16 +96,28 @@ namespace WFBot.Features.Commands
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task Cycles()
         {
-            var cetuscycle = api.GetCetusCycle();
-            var valliscycle = api.GetVallisCycle();
-            var earthcycle = api.GetEarthCycle();
-            var cambioncycle = api.GetCambionCycle();
             if (AsyncContext.GetUseImageRendering())
             {
+                var i = ImageRenderingPGO.Cycles();
+                if (i != null)
+                {
+                    SendImage(i);
+                    return;
+                }
+
+                var cetuscycle = api.GetCetusCycle();
+                var valliscycle = api.GetVallisCycle();
+                var earthcycle = api.GetEarthCycle();
+                var cambioncycle = api.GetCambionCycle();
                 SendImage(ImageRenderHelper.Cycles(await cetuscycle, await valliscycle, await earthcycle, await cambioncycle));
             }
             else
             {
+
+                var cetuscycle = api.GetCetusCycle();
+                var valliscycle = api.GetVallisCycle();
+                var earthcycle = api.GetEarthCycle();
+                var cambioncycle = api.GetCambionCycle();
                 AppendLine(WFFormatter.ToString(await cetuscycle));
                 AppendLine(WFFormatter.ToString(await valliscycle));
                 AppendLine(WFFormatter.ToString(await earthcycle));
@@ -117,14 +129,22 @@ namespace WFBot.Features.Commands
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> Sortie()
         {
-            var s = WFFormatter.ToString(await api.GetSortie());
             if (AsyncContext.GetUseImageRendering())
             {
+                var i = ImageRenderingPGO.Sortie();
+                if (i != null)
+                {
+                    SendImage(i);
+                    Console.WriteLine("使用了pgo的图");
+                    return null;
+                }
+                var s = WFFormatter.ToString(await api.GetSortie());
                 SendImage(ImageRenderHelper.SimpleImageRendering(s));
                 return null;
             }
             else
             {
+                var s = WFFormatter.ToString(await api.GetSortie());
                 return s;
             }
         }
@@ -133,14 +153,21 @@ namespace WFBot.Features.Commands
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> VoidTrader()
         {
-            var s = WFFormatter.ToString(await api.GetVoidTrader());
             if (AsyncContext.GetUseImageRendering())
             {
+                var i = ImageRenderingPGO.Trader();
+                if (i != null)
+                {
+                    SendImage(i);
+                    return null;
+                }
+                var s = WFFormatter.ToString(await api.GetVoidTrader());
                 SendImage(ImageRenderHelper.SimpleImageRendering(s));
                 return null;
             }
             else
             {
+                var s = WFFormatter.ToString(await api.GetVoidTrader());
                 return s;
             }
         }
@@ -173,14 +200,21 @@ namespace WFBot.Features.Commands
         async Task<string> Fissures(int tier = 0)
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
-            var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
             if (AsyncContext.GetUseImageRendering())
             {
+                var i = ImageRenderingPGO.Fissures();
+                if (i != null && tier == 0)
+                {
+                    SendImage(i);
+                    return null;
+                }
+                var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
                 RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
                 return null;
             }
             else
             {
+                var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
                 return WFFormatter.ToString(fissures, tier);
             }
             // _fissures = api.GetFissures();
@@ -191,33 +225,46 @@ namespace WFBot.Features.Commands
         async Task<string> FissuresStorm(int tier = 0)
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
-            var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
-            Console.WriteLine(fissures.Select(x => x.enemy).Connect(", "));
             if (AsyncContext.GetUseImageRendering())
             {
+                var i = ImageRenderingPGO.FissuresStorm();
+                if (i != null && tier == 0)
+                {
+                    SendImage(i);
+                    return null;
+                }
+                var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
                 RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
                 return null;
             }
             else
             {
+                var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
                 return WFFormatter.ToString(fissures, tier);
             }
             // _fissures = api.GetFissures();
         }
 
-        [Matchers("钢铁裂缝", "钢铁裂缝", "钢铁裂隙")]
+        [Matchers("钢铁裂缝", "钢铁裂缝", "钢铁裂隙", "钢裂")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> FissuresHard(int tier = 0)
         {
             // var fissures = _fissures.Where(fissure => fissure.active).ToList();
-            var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
             if (AsyncContext.GetUseImageRendering())
             {
+                var i = ImageRenderingPGO.FissuresHard();
+                if (i != null && tier == 0)
+                {
+                    SendImage(i);
+                    return null;
+                }
+                var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
                 RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
                 return null;
             }
             else
             {
+                var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
                 return WFFormatter.ToString(fissures, tier);
             }
             // _fissures = api.GetFissures();

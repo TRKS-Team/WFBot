@@ -9,14 +9,17 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
 using InternetTime;
 using WFBot.Events;
+using WFBot.Features.Common;
 using WFBot.Features.CustomCommandContent;
 using WFBot.Features.Events;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Resource;
 using WFBot.Features.Telemetry;
@@ -123,7 +126,7 @@ namespace WFBot
                 }
                 return;
             }
-
+            
             wfbot.Run();
         }
 
@@ -501,6 +504,10 @@ namespace WFBot
             // 检查时间...
             _ = Task.Run(() => CheckTime());
 
+            // 初始化图片渲染 PGO
+            Trace.WriteLine("初始化图片渲染PGO...");
+            ImageRenderingPGO.Init();
+
             // 初始化定时器
             Trace.WriteLine("初始化定时器...");
             InitTimer();
@@ -597,6 +604,7 @@ namespace WFBot
         {
             AddTimer<NotificationTimer>();
             AddTimer<WFResourcesTimer>();
+            AddTimer<ImageRenderingPGOTimer>();
 
             void AddTimer<T>() where T : WFBotTimer
             {

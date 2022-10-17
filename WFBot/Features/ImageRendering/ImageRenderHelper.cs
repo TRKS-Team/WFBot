@@ -40,6 +40,10 @@ namespace WFBot.Features.ImageRendering
 
         public static byte[] Fissures(List<Fissure> fissures, int tier)
         {
+            if (!fissures.Any())
+            {
+                return SimpleImageRendering("目前没有裂隙.");
+            }
             fissures = fissures.Where(x => tier == 0 || x.tierNum == tier).OrderBy(f => f.tierNum).ToList();
             var images = fissures.AsParallel().AsOrdered().Select(x => SingleFissure(x)).ToArray();
             var max = images.Max(x => x.Width);
@@ -70,6 +74,10 @@ namespace WFBot.Features.ImageRendering
 
         public static byte[] Invasion(IEnumerable<WFInvasion> invasions)
         {
+            if (!invasions.Any())
+            {
+                return SimpleImageRendering("额, 没有任何入侵.");
+            }
             var images = invasions.AsParallel().AsOrdered().Select(x => SingleInvasion(x)).ToArray();
             var lineColorBool = true;
             foreach (var image in images)

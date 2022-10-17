@@ -156,12 +156,12 @@ namespace WFBot.Features.Common
     public class WMSearcher
     {
         private static WFTranslator translator => WFResources.WFTranslator;
-        private WFBotApi wfbotapi => WFResources.WFBotTranslateData;
+        private static WFBotApi wfbotapi => WFResources.WFBotTranslateData;
         // private Client wfaClient => WFResources.WFAApi.WfaClient;
         // private bool isWFA => WFResources.WFAApi.isWFA;
 
         private string platform => Config.Instance.Platform.ToString();
-        public async Task<WMInfo> GetWMInfo(string searchword)
+        public static async Task<WMInfo> GetWMInfo(string searchword)
         {
             var platform = Config.Instance.Platform.GetSymbols().First();
             if (Config.Instance.Platform == Platform.NS)
@@ -195,7 +195,7 @@ namespace WFBot.Features.Common
             return result;
         }*/
 
-        public void OrderWMInfo(WMInfo info, bool isbuyer)
+        public static void OrderWMInfo(WMInfo info, bool isbuyer)
         {
             info.payload.orders = (isbuyer ? info.payload.orders
                 .Where(order => order.order_type == "buy")
@@ -329,6 +329,31 @@ namespace WFBot.Features.Common
                     failed = true;
                 }
             }*/
+
+            if (AsyncContext.GetUseImageRendering() && !isbuyer)
+            {
+                var i = ImageRenderingPGO.WMInfo(searchword);
+                if (i != null)
+                {
+                    var info1 = PGOCache.WmInfos.ContainsKey(searchword) ? PGOCache.WmInfos[searchword] :  await GetWMInfo(searchword);
+                    var sb = new StringBuilder();
+                    if (quickReply)
+                    {
+                        foreach (var order in info1.payload.orders)
+                        {
+                            sb.AppendLine(
+                                $"/w {order.user.ingame_name} Hi! I want to {(isbuyer ? "sell" : "buy")}: {info1.sale.en} for {order.platinum} platinum. (warframe.market)");
+                        }
+                    }
+                    else
+                    {
+                        sb.AppendLine(info1.payload.orders.Select(o => o.user.ingame_name).Connect(", "));
+                    }
+
+                    richMessageSender(ImageRenderHelper.WMInfo(info1, isbuyer, quickReply).Result, sb.ToString().Trim());
+                    return "";
+                }
+            }
 
             var info = await GetWMInfo(searchword);
             if (info.payload.orders.Any())

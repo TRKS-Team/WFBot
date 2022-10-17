@@ -49,6 +49,15 @@ namespace WFBot.Features.Commands
         [AddPlatformInfo]
         async Task Invasions()
         {
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var i = ImageRenderingPGO.Invasion();
+                if (i != null)
+                {
+                    SendImage(i);
+                    return;
+                }
+            }
             try
             {
                 await WFNotificationHandler.UpdateInvasionPool();

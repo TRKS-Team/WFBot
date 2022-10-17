@@ -80,7 +80,7 @@ namespace WFBot.Features.Commands
             return null;
         }
 
-        [Matchers("紫卡")]
+        [MatchersIgnoreCase("紫卡", "zk")]
         [CombineParams]
         [DoNotMeasureTime]
         Task<string> Riven(string word)
@@ -95,7 +95,7 @@ namespace WFBot.Features.Commands
         private WeaponInfo[] weaponInfos => WFResources.Weaponinfos;
         private static string platform => Config.Instance.Platform == Platform.NS ? "switch" : Config.Instance.Platform.GetSymbols().First();
         // 这是给WarframeMarketAuctions用的
-        public async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
+        public static async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
         {
             var header = new List<KeyValuePair<string, string>>
                 {new KeyValuePair<string, string>("Platform", platform)};
@@ -117,6 +117,17 @@ namespace WFBot.Features.Commands
                     MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), WFFormatter.Searching(weapon.zhname));
                 }
 
+                if (AsyncContext.GetUseImageRendering())
+                {
+                    var i = ImageRenderingPGO.Riven(weapon.urlname);
+                    if (i != null)
+                    {
+                        var auctions1 = PGOCache.Rivens.ContainsKey(weapon.urlname) ? PGOCache.Rivens[weapon.urlname] : await GetRivenAuctions(weapon.urlname);
+                        var rivens = auctions1.Take(Config.Instance.WFASearchCount).ToList();
+                        SendImageAndText(i, rivens.Select(x => x.Owner.IngameName).Connect(", "));
+                        return null;
+                    }
+                }
                 var auctions = await GetRivenAuctions(weapon.urlname);
 
                 if (AsyncContext.GetUseImageRendering())

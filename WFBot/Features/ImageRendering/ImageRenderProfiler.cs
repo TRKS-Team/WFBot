@@ -1,4 +1,4 @@
-﻿#define PROFILE
+﻿//#define PROFILE
 using System.Diagnostics;
 
 namespace WFBot.Features.ImageRendering
