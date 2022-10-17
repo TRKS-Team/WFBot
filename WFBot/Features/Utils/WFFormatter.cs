@@ -694,11 +694,14 @@ namespace WFBot.Features.Utils
             return sb.ToString().Trim();
         }
         [Pure]
-        public static string ToString(WFInvasion inv)
+        public static string ToString(WFInvasion inv, bool isNotification = false)
         {
             var sb = new StringBuilder();
             var completion = Math.Floor(inv.completion);
-            sb.Append("指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n");
+            if (isNotification)
+            {
+                sb.Append("指挥官, 太阳系陷入了一片混乱, 查看你的星图\r\n");
+            }
             sb.AppendLine($"地点: [{inv.node}]");
 
             sb.AppendLine($"> 进攻方: {inv.attackingFaction}");

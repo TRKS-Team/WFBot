@@ -237,7 +237,7 @@ namespace WFBot.Features.Other
                         if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
                         {
                             var notifyText = $"" +
-                                             $"{WFFormatter.ToString(inv)}";
+                                             $"{WFFormatter.ToString(inv, true)}";
 
                             MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
                             sendedInvSet.Add(inv.id);
