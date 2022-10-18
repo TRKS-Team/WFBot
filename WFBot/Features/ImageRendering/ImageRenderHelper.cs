@@ -565,6 +565,10 @@ namespace WFBot.Features.ImageRendering
                 
             }
             profiler.Segment("完成渲染");
+            if (Config.Instance.CleanMemoryAfterImageRendering)
+            {
+                GC.Collect();
+            }
             return ms.ToArray();
         }
 

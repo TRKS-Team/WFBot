@@ -75,7 +75,9 @@ namespace WFBot
         public string WFBotProxyToken = "";
         public bool UseWFBotProxy = false;
         public bool UseKraber = true;
-        
+        public bool CleanMemoryAfterImageRendering = false;
+        public bool UseImagePGO = true;
+
         protected override void AfterUpdate()
         {
             // 这里我写的好丑

@@ -30,6 +30,7 @@ namespace WFBot.Features.Commands
             Append($"您正在查看 福尔图娜 的全部赏金任务, 使用 /地球赏金 /火卫二赏金 来查询其他地区.");
             if (AsyncContext.GetUseImageRendering())
             {
+                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -46,6 +47,7 @@ namespace WFBot.Features.Commands
             Append("您正在查看 希图斯 的全部赏金任务, 使用 /金星赏金 /火卫二赏金 来查询其他地区.");
             if (AsyncContext.GetUseImageRendering())
             {
+                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount()
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -62,6 +64,7 @@ namespace WFBot.Features.Commands
             AppendLine("您正在查看 殁世幽都 的全部赏金任务, 使用 /金星赏金 /地球赏金 来查询其他地区.");
             if (AsyncContext.GetUseImageRendering())
             {
+                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount()
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -139,6 +142,7 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var s = WFFormatter.ToString(await api.GetSortie());
+                s = s.AddRemainCallCount().AddPlatformInfo();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s));
                 return null;
             }
@@ -162,6 +166,7 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var s = WFFormatter.ToString(await api.GetVoidTrader());
+                s = s.AddRemainCallCount().AddPlatformInfo();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s));
                 return null;
             }
@@ -181,7 +186,10 @@ namespace WFBot.Features.Commands
             {
                 if (AsyncContext.GetUseImageRendering())
                 {
-                    SendImage(ImageRenderHelper.SimpleImageRendering(WFFormatter.ToString(events)));
+                    var s = WFFormatter.ToString(events);
+                    s = s.AddRemainCallCount().AddPlatformInfo();
+
+                    SendImage(ImageRenderHelper.SimpleImageRendering(s);
                     return "";
                 }
                 else
@@ -300,6 +308,7 @@ namespace WFBot.Features.Commands
             AppendLine(WFFormatter.ToString(ar));
             if (AsyncContext.GetUseImageRendering())
             {
+                OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -325,6 +334,7 @@ namespace WFBot.Features.Commands
             }
             if (AsyncContext.GetUseImageRendering())
             {
+                OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -340,6 +350,7 @@ namespace WFBot.Features.Commands
             AppendLine(WFFormatter.ToString(outpost));
             if (AsyncContext.GetUseImageRendering())
             {
+                OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -350,7 +361,15 @@ namespace WFBot.Features.Commands
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> ArchonHunt()
         {
-            return WFFormatter.Format(await api.GetArchonHunt());
+            var s = WFFormatter.Format(await api.GetArchonHunt());
+            if (AsyncContext.GetUseImageRendering())
+            {
+                s = s.AddRemainCallCount().AddPlatformInfo();
+                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                return "";
+            }
+
+            return s;
         }
     }
 

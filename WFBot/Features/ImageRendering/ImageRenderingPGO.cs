@@ -179,7 +179,8 @@ namespace WFBot.Features.ImageRendering
         public static async void Tick()
         {
             if (!tickSemaphore.Wait(1000)) return;
-
+            if (!Config.Instance.UseImagePGO) return;
+            
             try
             {
                 AsyncContext.SetCommandIdentifier("入侵");

@@ -61,7 +61,7 @@
                 <div class="form-check form-switch">
                     <input @bind="config.NotifyBeforeResult" class="form-check-input" type="checkbox">
                     <label class="form-check-label">
-                        长时间查询前通知
+                        长时间查询前发送通知
                     </label>
                 </div>
             </div>
@@ -116,6 +116,24 @@
                     </label>
                 </div>
             </div>
+            <div class="mb-1 mt-4">
+                <div class="form-check form-switch">
+                    <input @bind="config.UseImagePGO" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        启用图片渲染缓存
+                    </label>
+                </div>
+            </div>
+            <label class="form-control mb-5" style="color: darkgray">定期渲染常用的命令缓存, 可以达到查询秒回的效果</label>
+            <div class="mb-1 mt-4">
+                <div class="form-check form-switch">
+                    <input @bind="config.CleanMemoryAfterImageRendering" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        在图片渲染后清理内存
+                    </label>
+                </div>
+            </div>
+            <label class="form-control mb-5" style="color: darkgray">除非你想让内存占用好看点, 不然不建议打开此项开关, 会导致性能大幅降低！</label>
 
             <div class="mb-1 mt-4">
                 <div class="form-check form-switch">
@@ -132,7 +150,6 @@
                 </div>
             </div>
             <label class="form-control mb-5" style="color: darkgray">隐藏功能仅供内部测试使用</label>
-
 
 
             <div class="mb-2 row">
