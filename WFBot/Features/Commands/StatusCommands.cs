@@ -47,7 +47,7 @@ namespace WFBot.Features.Commands
             Append("您正在查看 希图斯 的全部赏金任务, 使用 /金星赏金 /火卫二赏金 来查询其他地区.");
             if (AsyncContext.GetUseImageRendering())
             {
-                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount()
+                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -64,7 +64,7 @@ namespace WFBot.Features.Commands
             AppendLine("您正在查看 殁世幽都 的全部赏金任务, 使用 /金星赏金 /地球赏金 来查询其他地区.");
             if (AsyncContext.GetUseImageRendering())
             {
-                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount()
+                OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
                 SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
@@ -189,7 +189,7 @@ namespace WFBot.Features.Commands
                     var s = WFFormatter.ToString(events);
                     s = s.AddRemainCallCount().AddPlatformInfo();
 
-                    SendImage(ImageRenderHelper.SimpleImageRendering(s);
+                    SendImage(ImageRenderHelper.SimpleImageRendering(s));
                     return "";
                 }
                 else
