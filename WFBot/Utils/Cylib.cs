@@ -323,6 +323,26 @@ namespace WFBot.Utils
                     {
                         return $"\n机器人在本群一分钟内信息发送配额已经用完.";
                     }
+                case MessagePlatform.Kook:
+                    var kookContext1 = MiguelNetwork.OrichaltContextManager.GetKookContext(o);
+                    if (Config.Instance.CallperMinute == 0)
+                    {
+                        return "";
+                    }
+                    if (!MiguelNetwork.KookChannelCallDic.ContainsKey(kookContext1.Channel.Id))
+                    {
+                        return $"\n机器人在本频道一分钟内还能发送{Config.Instance.CallperMinute - 1}条消息.";
+                    }
+
+                    remainCount = Config.Instance.CallperMinute - MiguelNetwork.KookChannelCallDic[kookContext1.Channel.Id];
+                    if (remainCount > 0 && remainCount - 1 != 0)
+                    {
+                        return $"\n机器人在本频道一分钟内还能发送{remainCount - 1}条消息.";
+                    }
+                    else
+                    {
+                        return $"\n机器人在本频道一分钟内信息发送配额已经用完.";
+                    }
                 default:
                     return "";
             }

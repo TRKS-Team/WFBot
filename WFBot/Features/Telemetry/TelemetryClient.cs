@@ -134,7 +134,7 @@ namespace WFBot.Features.Telemetry
                         Memory = $"{memory.Used/1024.0:F1}GB/{memory.Total/1024.0:F1}GB",
                         ClientID = ClientID,
                         Connector = Config.Instance.Miguel_Platform.ToString(),
-                        InstanceCommandsProcessed = WFBotCore.InstanceCommandsProcessed, //todo
+                        InstanceCommandsProcessed = WFBotCore.InstanceCommandsProcessed,
                         InstanceMessagesProcessed = WFBotCore.InstanceMessagesProcessed,
                         StartupTime = WFBotCore.StartUpTime,
                         TimeDifferenceFromRealTime = WFBotCore.TimeDelayFromRealTime.TotalMinutes.ToString("F1") + "min",

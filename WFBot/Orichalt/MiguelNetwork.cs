@@ -35,9 +35,10 @@ namespace WFBot.Orichalt
         public static event EventHandler<OrichaltContext> OrichaltMessageRecived;
 
 
-        public static ConcurrentDictionary<GroupID, int> OneBotGroupCallDic = new ConcurrentDictionary<GroupID, int>();
-        public static ConcurrentDictionary<GroupID, int> MiraiHTTPGroupCallDic = new ConcurrentDictionary<GroupID, int>();
-        public static ConcurrentDictionary<GroupID, int> MiraiHTTPV1GroupCallDic = new ConcurrentDictionary<GroupID, int>();
+        public static ConcurrentDictionary<GroupID, int> OneBotGroupCallDic = new();
+        public static ConcurrentDictionary<GroupID, int> MiraiHTTPGroupCallDic = new();
+        public static ConcurrentDictionary<GroupID, int> MiraiHTTPV1GroupCallDic = new();
+        public static ConcurrentDictionary<ulong, int> KookChannelCallDic = new();
 
 
         public static bool CheckCallPerMin(OrichaltContext o)
@@ -62,7 +63,7 @@ namespace WFBot.Orichalt
                     return true;
                 case MessagePlatform.MiraiHTTP:
                     var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
-                    lock (OneBotGroupCallDic)
+                    lock (MiraiHTTPGroupCallDic)
                     {
                         if (MiraiHTTPGroupCallDic.ContainsKey(miraiHTTPContext.Group))
                         {
@@ -76,7 +77,7 @@ namespace WFBot.Orichalt
                     return true;
                 case MessagePlatform.MiraiHTTPV1:
                     var miraiHTTPContext1 = OrichaltContextManager.GetMiraiHTTPV1Context(o);
-                    lock (OneBotGroupCallDic)
+                    lock (MiraiHTTPV1GroupCallDic)
                     {
                         if (MiraiHTTPV1GroupCallDic.ContainsKey(miraiHTTPContext1.Group))
                         {
@@ -85,6 +86,21 @@ namespace WFBot.Orichalt
                         else
                         {
                             MiraiHTTPV1GroupCallDic[miraiHTTPContext1.Group] = 0;
+                        }
+                    }
+
+                    return true;
+                case MessagePlatform.Kook:
+                    var kookContext1 = OrichaltContextManager.GetKookContext(o);
+                    lock (KookChannelCallDic)
+                    {
+                        if (KookChannelCallDic.ContainsKey(kookContext1.Channel.Id))
+                        {
+                            if (KookChannelCallDic[kookContext1.Channel.Id] > Config.Instance.CallperMinute - 1 && Config.Instance.CallperMinute != 0) return false;
+                        }
+                        else
+                        {
+                            KookChannelCallDic[kookContext1.Channel.Id] = 0;
                         }
                     }
 
@@ -165,6 +181,28 @@ namespace WFBot.Orichalt
                             var context = OrichaltContextManager.GetMiraiHTTPV1Context(o);
                             var group = context.Group;
                             MiraiHTTPV1GroupCallDic[group]--;
+                        }
+                    });
+                    break;
+                case MessagePlatform.Kook:
+                    lock (KookChannelCallDic)
+                    {
+                        var kookContext = OrichaltContextManager.GetKookContext(o);
+                        if (KookChannelCallDic.ContainsKey(kookContext.Channel.Id))
+                        {
+                            KookChannelCallDic[kookContext.Channel.Id]++;
+                        }
+                        else
+                        {
+                            KookChannelCallDic[kookContext.Channel.Id] = 1;
+                        }
+                    }
+                    Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(task =>
+                    {
+                        lock (KookChannelCallDic)
+                        {
+                            var context = OrichaltContextManager.GetKookContext(o);
+                            KookChannelCallDic[context.Channel.Id]--;
                         }
                     });
                     break;
@@ -412,6 +450,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.MiraiHTTPV1:
                     MiraiHTTPV1SendToPrivate(Config.Instance.QQ, msg);
                     break;
+                // todo cock
             }
         }
 
