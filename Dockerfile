@@ -9,10 +9,9 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS publish
 WORKDIR /src
-COPY ["WFBot/WFBot.csproj", "WFBot/"]
+COPY . .
 RUN sed -i -e 's/net6.0/net7.0/g' WFBot/WFBot.csproj
 RUN dotnet restore "WFBot/WFBot.csproj"
-COPY . .
 #WORKDIR "/src/WFBot"
 RUN dotnet publish "WFBot" -c "Linux Release" -o /app/publish && rm -rf .git
 
