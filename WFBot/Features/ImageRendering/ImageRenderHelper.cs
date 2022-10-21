@@ -85,17 +85,12 @@ namespace WFBot.Features.ImageRendering
                 image.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
             }
 
-            return Finish(StackImageY(images), predefinedSize: 50);
+            return Finish(StackImageY(images), predefinedSize: 45);
         }
 
         public static string FlipNode(string node)
         {
             return node.Split(' ').Reverse().Connect(" ");
-        }
-        public static byte[] InvasionNotification(WFInvasion invasion)
-        {
-            AsyncContext.SetCommandIdentifier("WFBot通知");
-            return Finish(StackImageY(SingleInvasion(invasion)), predefinedSize: 50);
         }
 
         public static Image<Rgba32> GetInvasionReward(string name)
