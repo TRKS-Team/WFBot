@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.XPath;
 using GammaLibrary.Extensions;
 using HtmlAgilityPack;
+using Humanizer;
 using WFBot.Events;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
@@ -212,6 +213,7 @@ namespace WFBot.Features.Other
             {
                 if (Config.Instance.EnableImageRendering)
                 {
+                    var invs = new List<WFInvasion>();
                     foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
                     {
                         // 不发已经完成的入侵 你学的好快啊
@@ -220,11 +222,13 @@ namespace WFBot.Features.Other
 
                         if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
                         {
-                            
-                            MiguelNetwork.Broadcast(new RichMessages() {new ImageMessage(){Content = ImageRenderHelper.InvasionNotification(inv) } });
+                            invs.Add(inv);
                             sendedInvSet.Add(inv.id);
                         }
                     }
+                    AsyncContext.SetCommandIdentifier("WFBot通知");
+                    MiguelNetwork.Broadcast(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Invasion(invs) } });
+
                 }
                 else
                 {
