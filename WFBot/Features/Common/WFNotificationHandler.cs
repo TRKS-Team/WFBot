@@ -227,7 +227,10 @@ namespace WFBot.Features.Other
                         }
                     }
                     AsyncContext.SetCommandIdentifier("WFBot通知");
-                    MiguelNetwork.Broadcast(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Invasion(invs) } });
+                    if (invs.Any())
+                    {
+                        MiguelNetwork.Broadcast(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Invasion(invs) } });
+                    }
 
                 }
                 else
