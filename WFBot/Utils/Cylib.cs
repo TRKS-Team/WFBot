@@ -15,53 +15,63 @@ namespace WFBot.Utils
     public abstract class Configuration<T> where T : Configuration<T>, new()
     {
         private static T _instance;
-
+        static object locker = new();
         public static T Instance
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                if (_instance == null) Update();
-                return _instance;
+                lock (locker)
+                {
+                    if (_instance == null) Update();
+                    return _instance;
+                }
             }
             protected set => _instance = value;
         }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
+        
         public static void Update()
         {
-            try
+            lock (locker)
             {
-                var savePath = SavePath;
-                if (FileSystem.Exists(savePath))
+                try
                 {
-                    _instance = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
-                }
-                else
-                {
-                    _instance = new T();
-                    Save();
-                }
+                    var savePath = SavePath;
+                    if (FileSystem.Exists(savePath))
+                    {
+                        _instance = FileSystem.ReadFile(savePath).JsonDeserialize<T>();
+                    }
+                    else
+                    {
+                        _instance = new T();
+                        Save();
+                    }
 
-                if (_instance == null)
-                {
-                    throw new Exception("有些东西出了点问题.");
+                    if (_instance == null)
+                    {
+                        throw new Exception("有些东西出了点问题.");
+                    }
+                    Instance.AfterUpdate();
                 }
-                Instance.AfterUpdate();
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(e, nameof(Configuration<T>));
-                throw;
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e, nameof(Configuration<T>));
+                    throw;
+                }
             }
         }
 
         protected virtual void AfterUpdate()
         {
         }
+        
+        public static void Save()
+        {
+            lock (locker)
+            {
+                Instance.ToJsonString().SaveToFile(SavePath);
+            }
+        }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Save() => Instance.ToJsonString().SaveToFile(SavePath);
 
         public static string SavePath
         {
@@ -312,6 +322,26 @@ namespace WFBot.Utils
                     else
                     {
                         return $"\n机器人在本群一分钟内信息发送配额已经用完.";
+                    }
+                case MessagePlatform.Kook:
+                    var kookContext1 = MiguelNetwork.OrichaltContextManager.GetKookContext(o);
+                    if (Config.Instance.CallperMinute == 0)
+                    {
+                        return "";
+                    }
+                    if (!MiguelNetwork.KookChannelCallDic.ContainsKey(kookContext1.Channel.Id))
+                    {
+                        return $"\n机器人在本频道一分钟内还能发送{Config.Instance.CallperMinute - 1}条消息.";
+                    }
+
+                    remainCount = Config.Instance.CallperMinute - MiguelNetwork.KookChannelCallDic[kookContext1.Channel.Id];
+                    if (remainCount > 0 && remainCount - 1 != 0)
+                    {
+                        return $"\n机器人在本频道一分钟内还能发送{remainCount - 1}条消息.";
+                    }
+                    else
+                    {
+                        return $"\n机器人在本频道一分钟内信息发送配额已经用完.";
                     }
                 default:
                     return "";

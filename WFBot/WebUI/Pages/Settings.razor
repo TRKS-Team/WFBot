@@ -29,7 +29,7 @@
                         <label class="form-check-label" style="color: darkgrey" for="mahRadio2">测试模式</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <InputRadioForkMicrosoft SelectedValue="MessagePlatform.Kaiheila" @bind-TrueValue="platform" id="kaiheilaRadio"/>
+                        <InputRadioForkMicrosoft SelectedValue="MessagePlatform.Kook" @bind-TrueValue="platform" id="kaiheilaRadio"/>
                         <label class="form-check-label" for="kaiheilaRadio">开黑啦/KOOK</label>
                     </div>
                     <div class="form-check form-check-inline">
@@ -61,7 +61,7 @@
                 <div class="form-check form-switch">
                     <input @bind="config.NotifyBeforeResult" class="form-check-input" type="checkbox">
                     <label class="form-check-label">
-                        长时间查询前通知
+                        长时间查询前发送通知
                     </label>
                 </div>
             </div>
@@ -108,6 +108,49 @@
                     </label>
                 </div>
             </div>
+            <div class="mb-2">
+                <div class="form-check form-switch">
+                    <input @bind="config.EnableImageRendering" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        启用图片渲染
+                    </label>
+                </div>
+            </div>
+            <div class="mb-1 mt-4">
+                <div class="form-check form-switch">
+                    <input @bind="config.UseImagePGO" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        启用图片渲染缓存
+                    </label>
+                </div>
+            </div>
+            <label class="form-control mb-5" style="color: darkgray">定期渲染常用的命令缓存, 可以达到查询秒回的效果</label>
+            <div class="mb-1 mt-4">
+                <div class="form-check form-switch">
+                    <input @bind="config.CleanMemoryAfterImageRendering" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        在图片渲染后清理内存
+                    </label>
+                </div>
+            </div>
+            <label class="form-control mb-5" style="color: darkgray">除非你想让内存占用好看点, 不然不建议打开此项开关, 会导致性能大幅降低！</label>
+
+            <div class="mb-1 mt-4">
+                <div class="form-check form-switch">
+                    <input @bind="config.UseWFBotProxy" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        隐藏功能
+                    </label>
+                </div>
+            </div>
+            <div class="mb-1 row">
+                <label class="col-sm-3 col-form-label">隐藏功能 Token</label>
+                <div class="col-sm-9">
+                    <input @bind="config.WFBotProxyToken" type="text" class="form-control">
+                </div>
+            </div>
+            <label class="form-control mb-5" style="color: darkgray">隐藏功能仅供内部测试使用</label>
+
 
             <div class="mb-2 row">
                 <label class="col-sm-3 col-form-label">WebUI 密码</label>

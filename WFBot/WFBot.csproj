@@ -18,10 +18,21 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Linux Release' ">
+		<AllowedReferenceRelatedFileExtensions>
+			.pdb;
+			.dll.config
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(ConfigurationName)' == 'Windows Release'">
 		<DefineConstants>$(DefineConstants);WINDOWS_RELEASE</DefineConstants>
 	</PropertyGroup>
-
+	<PropertyGroup Condition=" '$(Configuration)' == 'Linux Release' ">
+		<AllowedReferenceRelatedFileExtensions>
+			.pdb;
+			.dll.config
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
 	<Choose>
 		<When Condition="('$(NoGitVersion)' == 'hso' ) or $([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(DefineConstants), '^(.*;)*NoGitVersion(;.*)*$'))">
 			<!-- When DEFINED_CONSTANT is defined. -->
@@ -41,11 +52,12 @@
 		<PackageReference Include="BlazorStrap" Version="5.0.106" />
 		<PackageReference Include="Chaldene" Version="0.3.0" />
 		<PackageReference Include="Fastenshtein" Version="1.0.0.5" />
-		<PackageReference Include="GammaLibrary" Version="3.0.0-pre1" />
+		<PackageReference Include="GammaLibrary" Version="3.0.0-pre2" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.20" />
 		<PackageReference Include="Humanizer.Core" Version="2.8.26" />
 		<PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
 		<PackageReference Include="IdentityModel" Version="4.1.1" />
+		<PackageReference Include="Kook.Net" Version="0.0.41-alpha" />
 		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.9" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0-1.final" />
@@ -56,6 +68,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
 		<PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
 		<PackageReference Include="System.Management" Version="6.0.0" />
 		<PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
@@ -66,6 +79,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="wwwroot\**" />
+		<EmbeddedResource Include="Resources\**" />
 		<EmbeddedResource Include="wwwroot2\**" />
 		<EmbeddedResource Include="Features\Utils\WFFormatter.cs" />
 		<EmbeddedResource Update="Windows/Settings.resx" ExcludeFromManifest="true" />
@@ -78,7 +92,7 @@
 
 	<ItemGroup>
 		<Folder Include="Dll\" />
-		<Folder Include="Features\NewFolder\" />
+		<Folder Include="Resources\InvasionRewards\" />
 	</ItemGroup>
 
 	<ItemGroup>

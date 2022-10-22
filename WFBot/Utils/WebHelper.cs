@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using GammaLibrary.Enhancements;
 using GammaLibrary.Extensions;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 using WFBot.Features.Resource;
 using WFBot.TextCommandCore;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -45,6 +48,26 @@ namespace WFBot.Utils
 
     public static class WebHelper
     {
+        public static async Task<Image<Rgba32>> LoadImageFromWeb(string url)
+        {
+            var sw = Stopwatch.StartNew();
+            var client = SharedHttpClient.Value;
+            Directory.CreateDirectory("WFCaches/WebImageCache");
+            var filePath = "WFCaches/WebImageCache/" + url.SHA256().ToHexString();
+            if (File.Exists(filePath))
+            {
+                return Image.Load(filePath, new PngDecoder()) as Image<Rgba32>;
+            }
+
+            await using var bytes = await client.GetStreamAsync(url);
+            // Remember to dispose of this image once you are finished.
+            var fs = File.OpenWrite(filePath);
+            bytes.CopyTo(fs);
+            fs.Close();
+            var image = Image.Load(filePath, new PngDecoder());
+            Trace.WriteLine($"图片下载完成: URL [{url}], 用时 {sw.Elapsed.TotalSeconds:F1}s.");
+            return image as Image<Rgba32>;
+        }
         public static async Task<WebStatus> TryGet(string url)
         {
             try

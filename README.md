@@ -152,6 +152,13 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 > 如果有新的 他就发到群里  
 > 如果群里有人调用机器人 他就手动把信息发过去
 
+> @780712  
+> Cyl18 现在学会了 PS  
+> 每次看到有人调用命令的时候 就 P 一张图发到群里  
+> 如果发图太慢 会被我扣掉一天的工资  
+> Cyl18 已经两年多没领到工资了  
+
+
 乐子: <https://github.com/TRKS-Team/WFBot/commit/a43c2c944231389b4f95489a6aa180fdb2cdf6b9#r50572036>
 ## 贡献者列表 [排名不分先后]
 
@@ -160,9 +167,10 @@ Warframe 是 Digital Extremes Ltd. 的商标.
   > **Cyl18** 项目维护 代码修改 文档修改 苦力 ~~装逼~~  
   > **qiutong123** 提供了翻译功能的代码 (PR)  
   > **@wu452148993** 解决了一个令我很头疼的问题  
-  > **Kengxxiao** 解决#91
+  > **Simplicity** 帮忙画了图片渲染的图标  
   > **@Superexboom** 贡献黑话词典  
-  > **@9ikj** 执刑官猎杀
+  > **Kengxxiao** 解决#91  
+  > **@9ikj** 执刑官猎杀  
 
 - 问题贡献: wosiwq Aujin JJins mengpf
 - 捐助者 **(不惨)**:

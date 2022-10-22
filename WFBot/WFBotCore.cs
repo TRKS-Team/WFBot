@@ -9,14 +9,17 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using GammaLibrary.Extensions;
 using InternetTime;
 using WFBot.Events;
+using WFBot.Features.Common;
 using WFBot.Features.CustomCommandContent;
 using WFBot.Features.Events;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Resource;
 using WFBot.Features.Telemetry;
@@ -123,7 +126,7 @@ namespace WFBot
                 }
                 return;
             }
-
+            
             wfbot.Run();
         }
 
@@ -434,7 +437,7 @@ namespace WFBot
 
             if (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
-                Trace.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Trace.WriteLine("看起来你是第一次使用WFBot, 请在WFConfig.json里修改\"Miguel_Platform\"项, 聊天平台对应关系: 0.OneBot 1.Kook 2.QQ频道 3.MiraiHTTPv2");
                 Trace.WriteLine("你也可以使用 WebUI 来进行设置，详情请查看文档.");
                 Trace.WriteLine("设置完后请重启 WFBot.");
                 if (OperatingSystem.IsWindows())
@@ -446,7 +449,7 @@ namespace WFBot
             }
             /*while (Config.Instance.Miguel_Platform == MessagePlatform.Unknown && !IsTest)
             {
-                Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kaiheila 2.QQ频道 3.MiraiHTTPv2");
+                Console.WriteLine("看起来你是第一次使用WFBot, 请通过数字序号指定聊天平台, 0.OneBot(Mirai) 1.Kook 2.QQ频道 3.MiraiHTTPv2");
                 /*var platformstr = Console.ReadLine();
                 if (platformstr.IsNumber() && platformstr.ToInt() <= 3 && 0 <= platformstr.ToInt())
                 {
@@ -465,7 +468,7 @@ namespace WFBot
                 case MessagePlatform.MiraiHTTPV1:
                     Trace.WriteLine("服务协议: MiraiHTTPv1");
                     break;
-                case MessagePlatform.Kaiheila:
+                case MessagePlatform.Kook:
                     Trace.WriteLine("服务协议: 开黑啦");
                     break;
                 case MessagePlatform.QQChannel:
@@ -501,6 +504,10 @@ namespace WFBot
             // 检查时间...
             _ = Task.Run(() => CheckTime());
 
+            // 初始化图片渲染 PGO
+            Trace.WriteLine("初始化图片渲染PGO...");
+            ImageRenderingPGO.Init();
+
             // 初始化定时器
             Trace.WriteLine("初始化定时器...");
             InitTimer();
@@ -521,6 +528,12 @@ namespace WFBot
             try
             {
                 var hc = new HttpClient();
+                if (!File.Exists("WFConfigs/font.ttf") || new FileInfo("WFConfigs/font.ttf").Length < 100000) // 之前服务器没传上文件
+                {
+                    Trace.WriteLine("下载图片渲染字体...");
+                    Directory.CreateDirectory("WFConfigs");
+                    await hc.DownloadAsync("https://cyan.cafe/wfbot/font.ttf", "WFConfigs/font.ttf");
+                }
                 var s = await hc.GetStringAsync($"https://wfbot.cyan.cafe/api/StartUpTime?time={startTime:F4}&clientid={TelemetryClient.ClientID}");
                 t = s;
             }
@@ -591,6 +604,7 @@ namespace WFBot
         {
             AddTimer<NotificationTimer>();
             AddTimer<WFResourcesTimer>();
+            AddTimer<ImageRenderingPGOTimer>();
 
             void AddTimer<T>() where T : WFBotTimer
             {

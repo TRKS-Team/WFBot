@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WarframeAlertingPrime.SDK.Models.GameInfo;
 using WFBot.Events;
 using WFBot.Features.Common;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
@@ -15,6 +17,7 @@ namespace WFBot.Features.Commands
     public partial class CommandsHandler : ICommandHandler<CommandsHandler>
     {
         public Action<Message> MessageSender { get; }
+        public Action<RichMessages> RichMessageSender { get; set; }
         public Action<Message> ErrorMessageSender { get; }
         public string Message { get; }
         public OrichaltContext O { get; private set; }
@@ -25,6 +28,15 @@ namespace WFBot.Features.Commands
         private static readonly WMASearcher _wmaSearcher = new WMASearcher();
 
 
+        void SendImage(byte[] bytes)
+        {
+            RichMessageSender(new RichMessages() { new ImageMessage() { Content = bytes } });
+        }
+
+        void SendImageAndText(byte[] bytes, string s)
+        {
+            RichMessageSender(new RichMessages() { new ImageMessage() { Content = bytes }, new TextMessage() {Content = s} });
+        }
 
         void Append(string s)
         {
@@ -44,6 +56,10 @@ namespace WFBot.Features.Commands
         public CommandsHandler(OrichaltContext o, string message)
         {
             MessageSender = (msg) =>
+            {
+                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
+            };
+            RichMessageSender = (msg) =>
             {
                 MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
             };

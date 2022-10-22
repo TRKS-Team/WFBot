@@ -66,6 +66,8 @@ namespace WFBot.Features.Utils
         public string Process<T>(MethodInfo method, string msg, string result, ICommandHandler<T> handlers) where T : ICommandHandler<T>
         {
             var handler = (CommandsHandler)handlers;
+            if (AsyncContext.GetUseImageRendering()) return null;
+            
             if (handler.OutputStringBuilder.IsValueCreated)
             {
                 handler.OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();

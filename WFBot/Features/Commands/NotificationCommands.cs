@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;
 using WFBot.TextCommandCore;
@@ -36,12 +37,27 @@ namespace WFBot.Features.Commands
                 AppendLine(WFFormatter.ToString(alert));
                 AppendLine();
             }
+
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(OutputStringBuilder.Value.ToString()));
+                OutputStringBuilder.Value.Clear();
+            }
         }
 
         [Matchers("入侵")]
         [AddPlatformInfo]
         async Task Invasions()
         {
+            if (AsyncContext.GetUseImageRendering())
+            {
+                var i = ImageRenderingPGO.Invasion();
+                if (i != null)
+                {
+                    SendImage(i);
+                    return;
+                }
+            }
             try
             {
                 await WFNotificationHandler.UpdateInvasionPool();
@@ -53,13 +69,20 @@ namespace WFBot.Features.Commands
             }
             var invasions = WFNotificationHandler.InvasionPool;
 
-            AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
-            AppendLine();
-
-            foreach (var invasion in invasions.Where(invasion => !invasion.completed))
+            if (!AsyncContext.GetUseImageRendering())
             {
-                AppendLine(WFFormatter.ToString(invasion));
+                AppendLine("指挥官, 下面是太阳系内所有的入侵任务.");
                 AppendLine();
+
+                foreach (var invasion in invasions.Where(invasion => !invasion.completed))
+                {
+                    AppendLine(WFFormatter.ToString(invasion));
+                    AppendLine();
+                }
+            }
+            else
+            {
+                SendImage(ImageRenderHelper.Invasion(invasions.Where(invasion => !invasion.completed)));
             }
             
         }
@@ -90,7 +113,11 @@ namespace WFBot.Features.Commands
             {
                 AppendLine(WFFormatter.ToString(enemy));
             }
-
+            if (AsyncContext.GetUseImageRendering())
+            {
+                SendImage(ImageRenderHelper.SimpleImageRendering(OutputStringBuilder.Value.ToString()));
+                OutputStringBuilder.Value.Clear();
+            }
         }
 
     }

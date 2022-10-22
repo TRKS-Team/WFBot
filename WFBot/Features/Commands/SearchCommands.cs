@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using GammaLibrary.Extensions;
+using WFBot.Features.ImageRendering;
+using WFBot.Features.Resource;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
@@ -30,7 +33,7 @@ namespace WFBot.Features.Commands
                 word.ToLower()
                     .Replace(quickReply, "")
                     .Replace(buyer, "")
-                    .Format(), QR, B);
+                    .Format(), QR, B, SendImageAndText);
         }
 
         [MatchersIgnoreCase("qr")]
@@ -49,7 +52,7 @@ namespace WFBot.Features.Commands
                     lastWmSearch.ToLower()
                         .Replace(quickReply, "")
                         .Replace(buyer, "")
-                        .Format(), true, B);
+                        .Format(), true, B, SendImageAndText);
             }
 
             return null;
@@ -71,19 +74,89 @@ namespace WFBot.Features.Commands
                     lastWmSearch.ToLower()
                         .Replace(quickReply, "")
                         .Replace(buyer, "")
-                        .Format(), QR, true);
+                        .Format(), QR, true, SendImageAndText);
             }
 
             return null;
         }
 
-        [Matchers("紫卡")]
+        [MatchersIgnoreCase("紫卡", "zk")]
         [CombineParams]
         [DoNotMeasureTime]
         Task<string> Riven(string word)
         {
             word = word.Format();
-            return _wmaSearcher.SendRivenAuctions(word);
+            
+            return SendRivenAuctions(word);
+        }
+        
+        // 等有空了挪回去
+        private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
+        private WeaponInfo[] weaponInfos => WFResources.Weaponinfos;
+        private static string platform => Config.Instance.Platform switch
+        {
+            Platform.XBOX => "xbox",
+            Platform.NS => "switch",
+            _ => Config.Instance.Platform.GetSymbols().First()
+        };
+        // 这是给WarframeMarketAuctions用的
+        public static async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
+        {
+            var header = new List<KeyValuePair<string, string>>
+                {new KeyValuePair<string, string>("Platform", platform)};
+            var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://api.warframe.market/v1/auctions/search{Uri.EscapeDataString($"?type=riven&weapon_url_name={urlname}&sort_by=price_desc")}" :
+                $"https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name={urlname}&sort_by=price_desc", header);
+
+            return auctions.Payload.Auctions;
+        }
+        public async Task<string> SendRivenAuctions(string name)
+        {
+            var sb = new StringBuilder();
+            // 规范一下 武器的名字都按中文传递 使用WFResources.WeaponInfos来获取在判断武器存在后所传递的对象
+            var weapons = weaponInfos.Where(r => r.zhname.Format() == name).ToList();
+            if (weapons.Any())
+            {
+                var weapon = weapons.First();
+                if (Config.Instance.NotifyBeforeResult)
+                {
+                    MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), WFFormatter.Searching(weapon.zhname));
+                }
+
+                if (AsyncContext.GetUseImageRendering())
+                {
+                    var i = ImageRenderingPGO.Riven(weapon.urlname);
+                    if (i != null)
+                    {
+                        var auctions1 = PGOCache.Rivens.ContainsKey(weapon.urlname) ? PGOCache.Rivens[weapon.urlname] : await GetRivenAuctions(weapon.urlname);
+                        var rivens = auctions1.Take(Config.Instance.WFASearchCount).ToList();
+                        SendImageAndText(i, rivens.Select(x => x.Owner.IngameName).Connect(", "));
+                        return null;
+                    }
+                }
+                var auctions = await GetRivenAuctions(weapon.urlname);
+
+                if (AsyncContext.GetUseImageRendering())
+                {
+                    var rivens = auctions.Take(Config.Instance.WFASearchCount).ToList();
+                    var image = ImageRenderHelper.RivenAuction(rivens, weapon);
+                    SendImageAndText(image, rivens.Select(x => x.Owner.IngameName).Connect(", "));
+                    return null;
+                }
+                else
+                {
+                    var msg = WFFormatter.ToString(auctions.Take(Config.Instance.WFASearchCount).ToList(), weapon).AddPlatformInfo();
+                    sb.AppendLine(msg);
+
+                }
+
+            }
+            else
+            {
+                var similarlist = translator.GetSimilarItem(name, "wma");
+                WFFormatter.WeaponNotExists(name, sb, similarlist);
+            }
+
+            return sb.ToString().Trim();
         }
         /*
         [Matchers("WFA紫卡", "wfa紫卡")]

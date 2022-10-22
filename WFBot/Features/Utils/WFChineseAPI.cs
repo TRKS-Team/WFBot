@@ -67,7 +67,7 @@ namespace WFBot.Features.Utils
         private WMAAttribute[] attributes => WFResources.WMAuction.Attributes;
 
         private static string platform => Config.Instance.Platform.GetSymbols().First();
-        private static string WFstat => $"https://api.warframestat.us/{platform}";
+        private static string WFstat => Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://api.warframestat.us/{platform}" : $"https://api.warframestat.us/{platform}";
 
         public async Task<T> DownloadWFStatData<T>(string url)
         {

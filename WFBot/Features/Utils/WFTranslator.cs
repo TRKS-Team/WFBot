@@ -335,7 +335,10 @@ namespace WFBot.Features.Utils
         {
             TranslateReward(invasion.attackerReward);
             TranslateReward(invasion.defenderReward);
+            
             invasion.node = TranslateNode(invasion.node);
+
+            invasion.desc = dictTranslator.Translate(invasion.desc).Result;
         }
 
         private void TranslateReward(RewardInfo reward)

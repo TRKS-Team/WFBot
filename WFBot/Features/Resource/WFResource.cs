@@ -599,7 +599,7 @@ namespace WFBot.Features.Resource
         // Strongly consider limiting the number of retries - "retry forever" is
         // probably not the most user friendly way you could respond to "the
         // network cable got pulled out."
-        private const int MaxRetries = 3;
+        private const int MaxRetries = 4;
 
         public RetryHandler(HttpMessageHandler innerHandler)
             : base(innerHandler)
@@ -617,6 +617,8 @@ namespace WFBot.Features.Resource
                 {
                     return response;
                 }
+
+                await Task.Delay(500);
             }
 
             return response;

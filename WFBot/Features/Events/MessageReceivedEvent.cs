@@ -24,7 +24,7 @@ namespace WFBot.Features.Events
         int commandCount;
         bool showedSlashTip = false;
 
-        public Task ProcessGroupMessage(OrichaltContext o)
+        public Task<string> ProcessGroupMessage(OrichaltContext o)
         {
             // 检查每分钟最大调用
             // if (CheckCallPerMin(groupId)) return Task.CompletedTask;
@@ -38,10 +38,15 @@ namespace WFBot.Features.Events
                     Trace.WriteLine("提示: 设置中要求命令必须以 / 开头. ");
                     showedSlashTip = true;
                 }
-                return Task.CompletedTask;
+                return Task.FromResult("");
             }
             var message = o.PlainMessage.TrimStart('/', '、', '／');
-
+            var useImageRendering = Config.Instance.EnableImageRendering;
+            if (message.EndsWith("*") || message.StartsWith("*"))
+            {
+                message = message.Trim('*');
+                useImageRendering = !useImageRendering;
+            }
             var handler = new CommandsHandler(o, message);
             
             // TODO 优化task数量
@@ -52,6 +57,7 @@ namespace WFBot.Features.Events
                 var cancelSource = new CancellationTokenSource();
                 AsyncContext.SetCancellationToken(cancelSource.Token);
                 AsyncContext.SetOrichaltContext(o);
+                AsyncContext.SetUseImageRendering(useImageRendering);
                 var commandProcessTask = handler.ProcessCommandInput();
                 var platforminfo = o.GetInfo();
                 using var locker = WFBotResourceLock.Create($"命令处理 #{Interlocked.Increment(ref commandCount)} {platforminfo}");
@@ -66,13 +72,13 @@ namespace WFBot.Features.Events
                         MiguelNetwork.Reply(o, $"命令 [{message}] 处理超时.");
                     }
                     Trace.WriteLine($"命令 {platforminfo} 处理超时.");
-                    return;
+                    return "超时";
                 }
 
                 var result = "";
                 if (handler.OutputStringBuilder.IsValueCreated)
                 {
-                    var s = handler.OutputStringBuilder.ToString().Trim();
+                    var s = handler.OutputStringBuilder.Value.ToString().Trim();
                     result = s;
                     MiguelNetwork.Reply(o, s);
                 }
@@ -92,6 +98,7 @@ namespace WFBot.Features.Events
                 }
 
 
+                return result;
             });
         }
 

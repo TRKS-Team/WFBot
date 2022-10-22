@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using System.Xml.XPath;
 using GammaLibrary.Extensions;
 using HtmlAgilityPack;
+using Humanizer;
 using WFBot.Events;
+using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
@@ -110,7 +112,19 @@ namespace WFBot.Features.Other
             if (!sendedUpdateSet.Contains(updates.First()))
             {
                 var msg = WFFormatter.ToString(updates.First());
-                MiguelNetwork.Broadcast(msg);
+                if (Config.Instance.EnableImageRendering)
+                {
+                    AsyncContext.SetCommandIdentifier("WFBot通知");
+                    MiguelNetwork.Broadcast(new RichMessages()
+                    {
+
+                        new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(msg) }
+                    });
+                }
+                else
+                {
+                    MiguelNetwork.Broadcast(msg);
+                }
                 sendedUpdateSet.Add(updates.First());
             }
         }   
@@ -149,7 +163,21 @@ namespace WFBot.Features.Other
                 sendedStalkerSet.Add(enemy.lastDiscoveredTime);
             }
 
-            MiguelNetwork.Broadcast(sb.ToString().Trim());
+            var result = sb.ToString().Trim();
+            if (Config.Instance.EnableImageRendering)
+            {
+            AsyncContext.SetCommandIdentifier("WFBot通知");
+                MiguelNetwork.Broadcast(new RichMessages()
+                {
+
+                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(result) }
+                });
+            }
+            else
+            {
+                MiguelNetwork.Broadcast(result);
+
+            }
         }
 
         /*
@@ -172,7 +200,7 @@ namespace WFBot.Features.Other
             AlertPool = await api.GetAlerts();
             CheckAlerts();
         }
-
+        
         public async Task UpdateInvasionPool()
         {
             InvasionPool = await api.GetInvasions();
@@ -183,21 +211,44 @@ namespace WFBot.Features.Other
         {
             try
             {
-                foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                if (Config.Instance.EnableImageRendering)
                 {
-                    // 不发已经完成的入侵 你学的好快啊
-                    // 不发已经发过的入侵
-                    var list = GetAllInvasionsCountedItems(inv).ToArray();
-
-                    if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
+                    var invs = new List<WFInvasion>();
+                    foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
                     {
-                        var notifyText = $"" +
-                                         $"{WFFormatter.ToString(inv)}";
+                        // 不发已经完成的入侵 你学的好快啊
+                        // 不发已经发过的入侵
+                        var list = GetAllInvasionsCountedItems(inv).ToArray();
 
-                        MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
-                        sendedInvSet.Add(inv.id);
+                        if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
+                        {
+                            invs.Add(inv);
+                            sendedInvSet.Add(inv.id);
+                        }
+                    }
+                    AsyncContext.SetCommandIdentifier("WFBot通知");
+                    MiguelNetwork.Broadcast(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Invasion(invs) } });
+
+                }
+                else
+                {
+                    foreach (var inv in InvasionPool.Where(inv => !inv.completed && !sendedInvSet.Contains(inv.id)))
+                    {
+                        // 不发已经完成的入侵 你学的好快啊
+                        // 不发已经发过的入侵
+                        var list = GetAllInvasionsCountedItems(inv).ToArray();
+
+                        if (Config.Instance.InvationRewardList.Any(item => list.Contains(item)))
+                        {
+                            var notifyText = $"" +
+                                             $"{WFFormatter.ToString(inv, true)}";
+
+                            MiguelNetwork.Broadcast(notifyText.AddPlatformInfo());
+                            sendedInvSet.Add(inv.id);
+                        }
                     }
                 }
+                
             }
             catch (Exception e)
             {
@@ -251,7 +302,20 @@ namespace WFBot.Features.Other
         {
             var result = "" +
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
-            MiguelNetwork.Broadcast(result);
+            if (Config.Instance.EnableImageRendering)
+            {
+             AsyncContext.SetCommandIdentifier("WFBot通知");
+                MiguelNetwork.Broadcast(new RichMessages()
+                {
+                    
+                    new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(result) }
+                });
+            }
+            else
+            {
+                MiguelNetwork.Broadcast(result);
+
+            }
             sendedAlertsSet.Add(alert.Id);
         }
 
