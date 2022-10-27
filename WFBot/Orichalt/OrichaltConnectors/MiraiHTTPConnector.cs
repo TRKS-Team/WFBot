@@ -7,9 +7,9 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Chaldene.Data.Messages;
-using Chaldene.Data.Messages.Receivers;
-using Chaldene.Sessions;
+using Mirai.Net.Data.Messages;
+using Mirai.Net.Data.Messages.Receivers;
+using Mirai.Net.Sessions;
 using Flurl.Http;
 using GammaLibrary;
 using GammaLibrary.Extensions;
@@ -77,7 +77,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 Address = $"{config.Host}:{config.Port}",
                 QQ = config.BotQQ.ToString(),
                 VerifyKey = config.AuthKey,
-                UseHttps = config.UseHttps
+                //UseHttps = config.UseHttps
             };
             var i = true;
             while (true)
@@ -100,10 +100,26 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 }
             }
             Trace.WriteLine("MiraiHTTPv2已连接.");
-            Bot.UseAutoReconnect();
+            Bot.DisconnectionHappened.Subscribe(async e =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Trace.WriteLine("尝试连接MiraiHTTPv2···");
+                        await Bot.LaunchAsync();
+                        break;
+                    }
+                    catch (FlurlHttpException e1)
+                    {
+                        Trace.WriteLine("MiraiHTTPv2连接失败, 1秒后重试···");
+                        await Task.Delay(1000);
+                    }
+                }
+            });
             
-            Bot.GroupMessageReceived += (s, e) => GroupMessageReceived(e);
-            Bot.FriendMessageReceived += (s, e) => FriendMessageReceived(e);
+            Bot.EventReceived.OfType<GroupMessageReceiver>().Subscribe(GroupMessageReceived);
+            Bot.EventReceived.OfType<FriendMessageReceiver>().Subscribe(FriendMessageReceived);
         }
 
         private MiraiConfig config => MiraiConfig.Instance;
