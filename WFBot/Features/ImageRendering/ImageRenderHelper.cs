@@ -283,7 +283,6 @@ namespace WFBot.Features.ImageRendering
                     new TextWithParams(order.user.status, statusMax, statusOptions),
                     new TextWithParams(((int) order.platinum).ToString(), platMax, platOptions),
                     new TextWithParams(order.quantity.ToString(), quantityMax, quantityOptions));
-                wmsingle = wmsingle.SetBackgroundColor(SwitchLineColor(ref lineColorBool));
                 lock (nl)
                 {
                     nl.Add(order, wmsingle);
@@ -292,7 +291,7 @@ namespace WFBot.Features.ImageRendering
             
             foreach (var order in info.payload.orders)
             {
-                lines.Add(nl[order]);
+                lines.Add(nl[order].SetBackgroundColor(SwitchLineColor(ref lineColorBool)));
             }
             profiler.Segment("渲染表内容");
 
@@ -537,7 +536,8 @@ namespace WFBot.Features.ImageRendering
             profiler.Segment("初始化完成渲染");
             imageResult.Mutate(x => x.DrawImage(image, new Point(0,0), new GraphicsOptions(){Antialias = false}));
             profiler.Segment("渲染原图");
-            imageResult.Mutate(x => x.Fill(new DrawingOptions(), new Color(new Rgba32(100, 181, 246)), new RectangleF(0, height, width, textHeight)));
+            var bottomBarColor = AsyncContext.GetCommandIdentifier() == "WFBot通知" ? new Rgba32(244,67,54) : new Rgba32(3,169,244);
+            imageResult.Mutate(x => x.Fill(new DrawingOptions(), new Color(bottomBarColor), new RectangleF(0, height, width, textHeight)));
             imageResult.Mutate(x => x.DrawText(options,text,new Color(new Rgba32(255,255,255))));
             options.HorizontalAlignment = HorizontalAlignment.Left;
             options.Origin = new Vector2(0, height);

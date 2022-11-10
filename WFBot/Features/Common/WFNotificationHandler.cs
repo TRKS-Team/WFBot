@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.XPath;
-using GammaLibrary.Extensions;
 using HtmlAgilityPack;
-using Humanizer;
-using WFBot.Events;
+using Manganese.Array;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Timers;
@@ -18,10 +9,10 @@ using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
 using WFBot.Utils;
-using Timer = System.Timers.Timer;
+
 // ReSharper disable FieldCanBeMadeReadOnly.Global
 
-namespace WFBot.Features.Other
+namespace WFBot.Features.Common
 {
     public class WFNotificationHandler
     {
@@ -44,6 +35,10 @@ namespace WFBot.Features.Other
 #pragma warning restore 4014
         }
 
+        public void TestNotification()
+        {
+            sendedInvSet.Clear();
+        }
         private async Task InitWFNotificationAsync()
         {
             try

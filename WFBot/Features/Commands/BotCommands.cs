@@ -27,7 +27,7 @@ namespace WFBot.Features.Commands
             MiguelNetwork.Reply(O, WFFormatter.HelpCommandSegment1());
             if (AsyncContext.GetUseImageRendering())
             {
-                SendImage(ImageRenderHelper.SimpleImageRendering(WFFormatter.HelpCommandSegment2()));            
+                SendImage(ImageRenderHelper.SimpleImageRendering(WFFormatter.HelpCommandSegment2()));
             }
             else
             {

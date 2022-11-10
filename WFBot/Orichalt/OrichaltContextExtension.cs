@@ -63,7 +63,8 @@ namespace WFBot.Orichalt
                     var onebotcontext = MiguelNetwork.OrichaltContextManager.GetOneBotContext(o);
                     return $"QQ:{onebotcontext.SenderID}";
                 case MessagePlatform.Kook:
-                    throw new NotImplementedException();
+                    var kookContext = MiguelNetwork.OrichaltContextManager.GetKookContext(o);
+                    return $"用户:{kookContext.Author}";
                 case MessagePlatform.QQChannel:
                     throw new NotImplementedException();
                 case MessagePlatform.MiraiHTTP:

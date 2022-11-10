@@ -57,7 +57,7 @@
 		<PackageReference Include="Humanizer.Core" Version="2.8.26" />
 		<PackageReference Include="Humanizer.Core.zh-CN" Version="2.8.26" />
 		<PackageReference Include="IdentityModel" Version="4.1.1" />
-		<PackageReference Include="Kook.Net" Version="0.0.41-alpha" />
+		<PackageReference Include="Kook.Net" Version="0.0.44-alpha" />
 		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.9" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0-1.final" />

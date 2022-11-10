@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using WFBot.Events;
 using WFBot.Features.Commands;
+using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
 
@@ -106,5 +107,13 @@ namespace WFBot.Features.Utils
             return result.IsNullOrEmpty() ? null : result.AddPlatformInfo();
         }
     }
-
+    [AttributeUsage(AttributeTargets.Method)]
+    public class KookOnlyAttribute : Attribute, IPreProcessor
+    {
+        public string Process<T>(MethodInfo method, string msg, ICommandHandler<T> handlers) where T : ICommandHandler<T>
+        {
+            if (Config.Instance.Miguel_Platform != MessagePlatform.Kook) throw new CommandMismatchException();
+            return msg;
+        }
+    }
 }

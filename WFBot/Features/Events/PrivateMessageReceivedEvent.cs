@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using GammaLibrary.Extensions;
+﻿using GammaLibrary.Extensions;
+using WFBot.Events;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
@@ -13,7 +9,7 @@ using WFBot.Utils;
 using Number = System.Numerics.BigInteger;
 using static WFBot.Features.Utils.Messenger;
 
-namespace WFBot.Events
+namespace WFBot.Features.Events
 {
     public class PrivateMessageReceivedEvent
     {

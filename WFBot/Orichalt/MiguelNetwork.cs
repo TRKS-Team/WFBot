@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Chaldene.Utils.Scaffolds;
 using GammaLibrary.Extensions;
 using Kook;
+using Kook.WebSocket;
 using Mirai_CSharp.Models;
 using Sisters.WudiLib;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
 using ImageMessage = WFBot.Features.ImageRendering.ImageMessage;
+using KookConfig = WFBot.Orichalt.OrichaltConnectors.KookConfig;
 
 namespace WFBot.Orichalt
 {
@@ -242,6 +247,7 @@ namespace WFBot.Orichalt
                 case MessagePlatform.Kook:
                     KookCore = new KookCore();
                     KookCore.KookMessageReceived += KookMessageReceived;
+                    KookCore.Init();
                     break;
                 case MessagePlatform.QQChannel:
                     break;
@@ -316,6 +322,8 @@ namespace WFBot.Orichalt
                     }
                     break;
                 case MessagePlatform.Kook:
+                    var kookContext = OrichaltContextManager.GetKookContext(o);
+                    ReplyKookChannelUser(kookContext, msg).Wait();
                     break;
                 case MessagePlatform.QQChannel:
                     break;
@@ -328,6 +336,19 @@ namespace WFBot.Orichalt
                     }
                     break;
                 case MessagePlatform.MiraiHTTPV1:
+                    if (msg.First() is TextMessage && msg.Count == 1)
+                    {
+                        if (CheckCallPerMin(o))
+                        {
+                            var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPV1Context(o);
+                            MiraiHTTPV1SendToGroup(miraiHTTPContext.Group, ((TextMessage)msg.First()).Content);
+                            IncreaseCallCounts(o);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("MiraiHTTPV1 不支持发送富文本内容.");
+                    }
                     break;
 
 
@@ -344,60 +365,6 @@ namespace WFBot.Orichalt
             }
         }
 
-        /// <summary>
-        /// 响应通用命令应答
-        /// </summary>
-        /// <param name="o">OrichaltContext</param>
-        /// <param name="msg">消息内容</param>
-        public static void Reply(OrichaltContext o, string msg)
-        {
-            if (msg.IsNullOrWhiteSpace()) return;
-            
-            switch (o.Platform)
-            {
-                case MessagePlatform.OneBot:
-                    if (CheckCallPerMin(o))
-                    {
-                        var oneBotContext = OrichaltContextManager.GetOneBotContext(o); 
-                        _ = OneBotSendToGroupWithAutoRevoke(oneBotContext.Group, msg);
-                        IncreaseCallCounts(o);
-                    }
-                    break;
-                case MessagePlatform.Kook:
-                    var kookcontext = OrichaltContextManager.GetKookContext(o);
-                    ReplyKookChannelUser(msg, kookcontext);
-                    break;
-                case MessagePlatform.QQChannel:
-                    break;
-                case MessagePlatform.MiraiHTTP:
-                    if (CheckCallPerMin(o))
-                    {
-                        var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPContext(o);
-                        MiraiHTTPSendToGroupWithAutoRevoke(miraiHTTPContext.Group, msg);
-                        IncreaseCallCounts(o);
-                    }
-                    break;
-                case MessagePlatform.MiraiHTTPV1:
-                    if (CheckCallPerMin(o))
-                    {
-                        var miraiHTTPContext = OrichaltContextManager.GetMiraiHTTPV1Context(o);
-                        MiraiHTTPV1SendToGroup(miraiHTTPContext.Group, msg);
-                        IncreaseCallCounts(o);
-                    }
-                    break;
-
-
-                case MessagePlatform.Test:
-                    const string resultPath = "TestResult.log";
-                    Trace.WriteLine(msg);
-                    if (File.Exists(resultPath) && File.ReadLines(resultPath).Last() == "Done.") // 哈哈 Trick.
-                    {
-                        File.Delete(resultPath);
-                    }
-                    File.AppendAllText(resultPath, msg + Environment.NewLine);
-                    break;
-            }
-        }
         /// <summary>
         /// 响应私聊命令应答
         /// </summary>
@@ -420,6 +387,8 @@ namespace WFBot.Orichalt
                     MiraiHTTPV1SendToPrivate(miraihttpcontext1.SenderID, msg);
                     break;
                 case MessagePlatform.Kook:
+                    var kookcontext = OrichaltContextManager.GetKookContext(o);
+                    kookcontext.Author.SendTextAsync(msg);
                     break;
 
             }
@@ -430,10 +399,6 @@ namespace WFBot.Orichalt
         /// <param name="msg">消息内容</param>
         public static void SendDebugInfo(string msg)
         {
-            if (Config.Instance.QQ.IsNullOrWhiteSpace())
-            {
-                return;
-            }
             if (!Inited)
             {
                 Console.WriteLine("正在等待 Miguel Network 初始化完成...");
@@ -450,7 +415,10 @@ namespace WFBot.Orichalt
                 case MessagePlatform.MiraiHTTPV1:
                     MiraiHTTPV1SendToPrivate(Config.Instance.QQ, msg);
                     break;
-                // todo cock
+                case MessagePlatform.Kook:
+                    var admin = KookCore.KookClient.Rest.GetUserAsync(KookConfig.Instance.AdminID).Result;
+                    admin.SendTextAsync(msg);
+                    break;
             }
         }
 
@@ -465,89 +433,60 @@ namespace WFBot.Orichalt
                 Trace.WriteLine("由于 Miguel Network 未初始化完成, 广播无法发送.");
                 return;
             }
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 var count = 0;
-                foreach (var group in Config.Instance.WFGroupList)
+                switch (Platform)
                 {
-                    var sb = new StringBuilder();
+                    case MessagePlatform.MiraiHTTP:
+                    case MessagePlatform.MiraiHTTPV1:
+                    case MessagePlatform.OneBot:
+                        foreach (var group in Config.Instance.WFGroupList)
+                        {
+                            var sb = new StringBuilder();
                     
-                    // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
-                    switch (Platform)
-                    {
-                        case MessagePlatform.OneBot:
-                            OneBotSendToGroup(group, content);
-                            break;
-                        case MessagePlatform.MiraiHTTP:
-                            MiraiHTTPSendToGroup(group, content);
-                            break;
-                        case MessagePlatform.Kook:
-                            break;
-                        case MessagePlatform.QQChannel:
-                            break;
-                        case MessagePlatform.Test:
-                            break;
-                        case MessagePlatform.Unknown:
-                            break;
-                        case MessagePlatform.MiraiHTTPV1:
-                            Console.WriteLine("MiraiHTTPV1 不支持发送富文本内容.");
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                    count++;
-                    Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                            // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
+                            switch (Platform)
+                            {
+                                case MessagePlatform.OneBot:
+                                    OneBotSendToGroup(group, content);
+                                    break;
+                                case MessagePlatform.MiraiHTTP:
+                                    MiraiHTTPSendToGroup(group, content);
+                                    break;
+                                case MessagePlatform.Kook:
+                                    break;
+                                case MessagePlatform.MiraiHTTPV1:
+                                    if (content.First() is TextMessage && content.Count == 1)
+                                    {
+                                        MiraiHTTPV1SendToGroup(group, ((TextMessage)content.First()).Content);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("MiraiHTTPV1 不支持发送富文本内容.");
+                                    }
+                                    break;
+                            }
+                            count++;
+                            Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
+                        }
+                        break;
+                    case MessagePlatform.Kook:
+                        var channels = KookCore.KookClient.Guilds
+                            .Select(g =>
+                                g.TextChannels
+                                    .Where(t => t.Id == KookConfig.Instance.NotificationChannelDict[g.Id]))
+                            .SelectMany(l => l);
+                        var cb = new CardBuilder();
+                        cb.AddModule(new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = "[WFBot通知]" } });
+                        cb = await BuildRichMessagesCard(content, cb);
+                        foreach (var channel in channels)
+                        {
+                            await channel.SendCardAsync(cb.Build());
+                        }
+                        break;
                 }
-            }, TaskCreationOptions.LongRunning);
 
-        }
-
-        /// <summary>
-        /// 广播通知到所有订阅消息的群体
-        /// </summary>
-        /// <param name="content">消息内容</param>
-        public static void Broadcast(string content)
-        {
-            if (!Inited)
-            {
-                Trace.WriteLine("由于 Miguel Network 未初始化完成, 广播无法发送.");
-                return;
-            }
-            Task.Factory.StartNew(() =>
-            {
-                var count = 0;
-                foreach (var group in Config.Instance.WFGroupList)
-                {
-                    var sb = new StringBuilder();
-                    sb.Append("[WFBot通知] ");
-                    sb.AppendLine(content);
-                    if (count > 10) sb.AppendLine($"发送次序: {count}(与真实延迟了{7 * count}秒)");
-                    // sb.AppendLine($"如果想要获取更好的体验,请自行部署.");
-                    switch (Platform)
-                    {
-                        case MessagePlatform.OneBot:
-                            OneBotSendToGroup(group, sb.ToString().Trim());
-                            break;
-                        case MessagePlatform.MiraiHTTP:
-                            MiraiHTTPSendToGroup(group, sb.ToString().Trim());
-                            break;
-                        case MessagePlatform.Kook:
-                            break;
-                        case MessagePlatform.QQChannel:
-                            break;
-                        case MessagePlatform.Test:
-                            break;
-                        case MessagePlatform.Unknown:
-                            break;
-                        case MessagePlatform.MiraiHTTPV1:
-                            MiraiHTTPV1SendToGroup(group, sb.ToString().Trim());
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                    count++;
-                    Thread.Sleep(7000); //我真的很生气 为什么傻逼tencent服务器就不能让我好好地发通知 NMSL
-                }
             }, TaskCreationOptions.LongRunning);
 
         }
@@ -686,16 +625,72 @@ namespace WFBot.Orichalt
             MiraiHTTPV1Core.Mirai.SendFriendMessageAsync(qq, new PlainMessage(msg));
         }
 
-
-        public static void ReplyKookChannelUser(string msg, KookContext context)
+        public static async Task<CardBuilder> BuildRichMessagesCard(RichMessages msg)
         {
             var cb = new CardBuilder();
-            var sb = new SectionModuleBuilder
+            foreach (var message in msg)
             {
-                Text = new PlainTextElementBuilder().WithContent(msg)
-            };
-            cb.AddModule(sb);
-            context.Channel.SendCardAsync(cb.Build(), ephemeralUser: context.Author);
+                switch (message)
+                {
+                    case ImageMessage image:
+                        var url = await KookCore.KookClient.Rest.CreateAssetAsync(new MemoryStream(image.Content),
+                            Guid.NewGuid().ToString());
+                        var cob = new ContainerModuleBuilder
+                        {
+                            Elements = new List<ImageElementBuilder>
+                            {
+                                new()
+                                {
+                                    Source = url
+                                }
+                            }
+                        };
+                        cb.AddModule(cob);
+                        break;
+                    case TextMessage text:
+                        var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
+                        cb.AddModule(sb);
+                        break;
+                }
+            }
+
+            return cb;
+        }
+        public static async Task<CardBuilder> BuildRichMessagesCard(RichMessages msg, CardBuilder cb)
+        {
+            foreach (var message in msg)
+            {
+                switch (message)
+                {
+                    case ImageMessage image:
+                        var url = await KookCore.KookClient.Rest.CreateAssetAsync(new MemoryStream(image.Content),
+                            Guid.NewGuid().ToString());
+                        var cob = new ContainerModuleBuilder
+                        {
+                            Elements = new List<ImageElementBuilder>
+                            {
+                                new()
+                                {
+                                    Source = url
+                                }
+                            }
+                        };
+                        cb.AddModule(cob);
+                        break;
+                    case TextMessage text:
+                        var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
+                        cb.AddModule(sb);
+                        break;
+                }
+            }
+
+            return cb;
+        }
+
+        public static async Task ReplyKookChannelUser(KookContext context, RichMessages msg)
+        {
+            var cb = await BuildRichMessagesCard(msg);
+            await context.Channel.SendCardAsync(cb.Build(), ephemeralUser: context.Author);
         }
     }
 }

@@ -10,9 +10,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using Kook;
 using WFBot.MahuaEvents;
 using WFBot.Orichalt;
 using WFBot.Utils;
+using KookConfig = WFBot.Orichalt.OrichaltConnectors.KookConfig;
 using Timer = System.Timers.Timer;
 
 namespace WFBot.Features.Utils
@@ -28,8 +30,28 @@ namespace WFBot.Features.Utils
 
         public static void SendDebugInfo(string content)
         {
-            if (Config.Instance.QQ.IsNumber())
-                MiguelNetwork.SendDebugInfo(content);
+            switch (Config.Instance.Miguel_Platform)
+            {
+                case MessagePlatform.OneBot:
+                    if (!Config.Instance.QQ.IsNumber()) return;
+                    break;
+                case MessagePlatform.Kook:
+                    if (KookConfig.Instance.AdminID == default) return;
+                    break;
+                case MessagePlatform.QQChannel:
+                    break;
+                case MessagePlatform.MiraiHTTP:
+                    if (!Config.Instance.QQ.IsNumber()) return;
+                    break;
+                case MessagePlatform.Test:
+                    break;
+                case MessagePlatform.Unknown:
+                    break;
+                case MessagePlatform.MiraiHTTPV1:
+                    if (!Config.Instance.QQ.IsNumber()) return;
+                    break;
+            }
+            MiguelNetwork.SendDebugInfo(content);
             Trace.WriteLine($"{content}");
         }
 

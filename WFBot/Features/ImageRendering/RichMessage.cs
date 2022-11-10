@@ -2,9 +2,10 @@
 {
     public class RichMessages : List<RichMessage>
     {
+
         public static implicit operator RichMessages(string s)
         {
-            return new RichMessages(){ new TextMessage() };
+            return new RichMessages{ new TextMessage{Content = s} };
         }
     }
 

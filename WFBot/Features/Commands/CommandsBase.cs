@@ -57,7 +57,7 @@ namespace WFBot.Features.Commands
         {
             MessageSender = (msg) =>
             {
-                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg);
+                MiguelNetwork.Reply(AsyncContext.GetOrichaltContext(), msg.Content);
             };
             RichMessageSender = (msg) =>
             {

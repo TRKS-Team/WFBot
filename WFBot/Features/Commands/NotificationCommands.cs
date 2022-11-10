@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WFBot.Features.Common;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;

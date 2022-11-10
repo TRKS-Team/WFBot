@@ -6,10 +6,13 @@
 @using WFBot.TextCommandCore
 @using WFBot.Utils
 @using GammaLibrary.Extensions
+@inject IBlazorStrap _blazorStrap
 <h1>Debug</h1>
 
-<h2>命令测试</h2>
+<h2>通知测试</h2>
+<BSButton Class="btn-primary" OnClick="TestNotify">执行</BSButton>
 
+<h2>命令测试</h2>
 @foreach (var c in commands)
 {
     <h2 class="my-3">@c</h2>
@@ -60,6 +63,13 @@
         "钢铁裂缝 1",
     };
 
+
+    void TestNotify()
+    {
+        WFBotCore.Instance.NotificationHandler.TestNotification();
+        _blazorStrap.Toaster.Add("提示", "已经清空了已发送的入侵, 如果其中有稀有奖励, 机器人将会在下次提醒时发送.");
+
+    }
     async Task Execute(string s)
     {
         await Task.Run(async () =>
