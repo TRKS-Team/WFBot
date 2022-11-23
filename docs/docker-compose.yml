@@ -9,6 +9,7 @@ services:
       - ./data:/app/data
       - ./logs:/app/logs
       - ./bots:/app/bots
+      - ./plugin-libraries:/app/plugin-libraries
     deploy:
       labels:
         com.centurylinklabs.watchtower.enable: true
