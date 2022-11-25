@@ -94,4 +94,16 @@ namespace WFBot.TextCommandCore
     {
     }
     //TODO Timer' 请求比预计时间长
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SkipValidationCheckAttribute : Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SkipBotChannelCheckAttribute : Attribute
+    {
+
+    }
+
 }

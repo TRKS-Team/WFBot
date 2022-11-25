@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using Kook;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Telemetry;
 using WFBot.Orichalt;
@@ -41,20 +42,37 @@ namespace WFBot.TextCommandCore
             return CommandInfosCache[type];
         }
 
+        private static bool VerifyMessage(OrichaltContext o)
+        {
+            if (o.Platform != MessagePlatform.Kook) return true;
+            return MiguelNetwork.KookVerifyServer.VerifyGuild(o).Result;
+
+        }
+
+        private static bool CheckBotChannel(OrichaltContext o)
+        {
+            if (o.Platform != MessagePlatform.Kook) return true;
+            return MiguelNetwork.KookCore.CheckBotChannel(o);
+        }
         public static async Task<(bool matched, string result)> ProcessCommandInput<T>(this ICommandHandler<T> handlers) where T : ICommandHandler<T>
         {
             var message = handlers.Message.Trim();
             var o = handlers.O;
             if (message.IsNullOrEmpty()) return (false, null);
-
             string result;
+
             try
             {
+                var info = GetCommandHandler<T>(message);
+                var method = info.Method;
+
+                if (!method.IsAttributeDefined<SkipValidationCheckAttribute>() && !VerifyMessage(o)) return (false, null);
+
+                if (!method.IsAttributeDefined<SkipBotChannelCheckAttribute>() && !CheckBotChannel(o)) return (false, null);
+
                 Interlocked.Increment(ref WFBotCore.InstanceMessagesProcessed);
                 TelemetryClient.AddMessageCount();
 
-                var info = GetCommandHandler<T>(message);
-                var method = info.Method;
                 var commandIdentifier = method.GetCustomAttribute<MatchersAttribute>()?.Matchers[0] ?? "";
                 AsyncContext.SetCommandIdentifier(commandIdentifier);
                 message = PreProcess(method, message, handlers);

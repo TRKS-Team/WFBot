@@ -11,6 +11,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
         public ulong AdminID { get; set; }
         public Dictionary<ulong, ulong> NotificationChannelDict { get; set; } = new();
         public Dictionary<ulong, ulong> BotChannelDict { get; set; } = new();
+        public string VerifyServerUrl { get; set; }
     }
     public class KookContext : PlatformContextBase
     {
@@ -92,7 +93,7 @@ namespace WFBot.Orichalt.OrichaltConnectors
         // 这一段方法只能在加了[{Platform}Only]的标签的消息处理中使用
         //
 
-        public bool CheckKookModerator(KookContext context)
+        private bool CheckKookModerator(KookContext context)
         {
             if (context.Author is SocketGuildUser guildUser)
             {
@@ -169,6 +170,18 @@ namespace WFBot.Orichalt.OrichaltConnectors
                 return;
             }
             MiguelNetwork.Reply(o, "本频道不是机器人调用频道.");
+        }
+
+        public bool CheckBotChannel(OrichaltContext o)
+        {
+            var context = MiguelNetwork.OrichaltContextManager.GetKookContext(o);
+            var guildId = context.Guild.Id;
+            var channelId = context.Channel.Id;
+            if (KookConfig.Instance.BotChannelDict.ContainsKey(guildId))
+            {
+                return KookConfig.Instance.BotChannelDict[guildId] == channelId;
+            }
+            return false;
         }
     }
 }

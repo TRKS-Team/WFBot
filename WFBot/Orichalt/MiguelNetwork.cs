@@ -33,6 +33,8 @@ namespace WFBot.Orichalt
         public static MiraiHTTPV1Core MiraiHTTPV1Core;
         public static KookCore KookCore;
 
+        public static KookVerifyServer KookVerifyServer;
+
         public static OrichaltContextManager OrichaltContextManager;
 
         private static bool Inited;
@@ -248,6 +250,9 @@ namespace WFBot.Orichalt
                     KookCore = new KookCore();
                     KookCore.KookMessageReceived += KookMessageReceived;
                     KookCore.Init();
+
+                    KookVerifyServer = new KookVerifyServer();
+                    KookVerifyServer.Init();
                     break;
                 case MessagePlatform.QQChannel:
                     break;
