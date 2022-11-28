@@ -19,6 +19,7 @@ namespace WFBot.WebUI
             {
                 WebRootPath = "wwwroot"
             });
+
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
             var serverPort = GetServerPort();

@@ -61,5 +61,14 @@ namespace WFBot.Features.Commands
         {
             return $"本服务器的机器人有效期为: {MiguelNetwork.KookVerifyServer.GetGuildValidationTime(O).Result.ToString(CultureInfo.CurrentCulture)}\n状态: {(MiguelNetwork.KookVerifyServer.VerifyGuild(O).Result ? "未过期": "已过期")}";
         }
+
+        [SkipBotChannelCheck]
+        [SkipValidationCheck]
+        [KookOnly]
+        [Matchers("试用")]
+        string Trial()
+        {
+            return MiguelNetwork.KookVerifyServer.StartGuildTrial(O).Result ? "成功激活三天试用, 请输入 /有效期 查询有效期." : "激活试用失败, 此服务器已经试用过机器人.";
+        }
     }
 }

@@ -13,21 +13,32 @@ namespace WFBot.Orichalt
         private bool connected;
         public void Init()
         {
-            _connection.StartAsync();
-            connected = false;
-            while (true)
+            try
             {
-                Task.Delay(new Random().Next(0, 5) * 1000);
-                try
-                {
-                    _connection.StartAsync();
-                    connected = true;
-                    break;
-                }
-                catch (Exception)
-                {
-                }
+                _connection.StartAsync();
+                connected = false;
             }
+            catch (Exception e)
+            {
+
+            }
+            _connection.Closed += async (error) =>
+            {
+                connected = false;
+                while (true)
+                {
+                    await Task.Delay(new Random().Next(0, 5) * 1000);
+                    try
+                    {
+                        await _connection.StartAsync();
+                        connected = true;
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            };
         }
 
         private ulong GetGuildID(OrichaltContext o)
@@ -48,6 +59,10 @@ namespace WFBot.Orichalt
         public async Task<DateTime> GetGuildValidationTime(OrichaltContext o)
         {
             return await _connection.InvokeAsync<DateTime>("GetGuildValidationTime", GetGuildID(o));
+        }
+        public async Task<bool> StartGuildTrial(OrichaltContext o)
+        {
+            return await _connection.InvokeAsync<bool>("StartGuildTrial", GetGuildID(o));
         }
     }
 }
