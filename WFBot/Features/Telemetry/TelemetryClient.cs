@@ -122,7 +122,7 @@ namespace WFBot.Features.Telemetry
                         }
                     }
 
-                    connection.InvokeAsync("ReportServer", new object[]{g, new WFBotTelemetryReport()
+                    connection.InvokeCoreAsync("ReportServer", new object[]{g, new WFBotTelemetryReport()
                     {
 #if DEBUG
                         Build = "DEBUG",
