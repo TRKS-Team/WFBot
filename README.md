@@ -11,7 +11,7 @@
 此项目使用 [AGPL](https://github.com/TRKS-Team/WFBot/blob/universal/LICENSE) 协议授权. 如果你修改了源代码并应用到了机器人上, 请将最新的代码开源.  
 我们**不允许**任何商业用途, 如果你发现有人违反, 请向我们反馈.
 
-> 基于 莎比的 [mirai](https://github.com/mamoe/mirai) 及 [mirai-http-api](https://github.com/project-mirai/mirai-api-http) 和 [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) 开发.  
+> 基于 莎比的 [mirai](https://github.com/mamoe/mirai) 及 [mirai-http-api](https://github.com/project-mirai/mirai-api-http) 和 可爱的 [Chaldene](https://github.com/Cyl18/Chaldene) 开发.  
 > 翻译 云之幻整理的 [词典](https://github.com/Richasy/WFA_Lexicon)  
 > 使用 云之幻 的 [WFAAPI](https://www.richasy.cn/wfa-api-overview/)  
 > 任务 API 来自 [WarframeStat](https://docs.warframestat.us/)
@@ -20,7 +20,7 @@
 > 本分支将持续更新, 预计在将来支持更多种机器人平台和聊天平台, 你也可以自己适配  
 > 官方QQ群: [878527767](https://shang.qq.com/wpa/qunwpa?idkey=1a6da96f714791f3289ee2cafb98847efefd5c5d28e913b6bdf71b8d07e35c53)
 
-> 目前已经支持的平台/协议: [mirai-http-api v2](https://github.com/project-mirai/mirai-api-http) [OneBot11](https://11.onebot.dev/)
+> 目前已经支持的平台/协议: [mirai-http-api v2](https://github.com/project-mirai/mirai-api-http) [OneBot11](https://11.onebot.dev/) [Kook](https://www.kookapp.cn/)
 
 ![MONEY](docs/images/MONEY.png) 
 --by [@Lasm_Gratel](https://github.com/LasmGratel)  
@@ -28,8 +28,15 @@
 您的赞助会成为我们维护此项目的动力
 
 ---
+## 关于Kook公用机器人
+由于腾讯对群聊天的机器人一直持灭绝态度, 所以在永封了多个机器人账户之后, 我们不再提供公用的QQ机器人  
+但是如果对公用机器人有需求, 可以考虑使用 Kook 公用机器人  
+[邀请链接](https://www.kookapp.cn/app/oauth2/authorize?id=12919&permissions=4096&client_id=GJ6p4dR1iVBkGzH5&redirect_uri=&scope=bot) 邀请后请点击机器人头像查看使用说明.
+
+---
 
 ## 🚧 如何部署
+[**Kook机器人邀请链接**](https://www.kookapp.cn/app/oauth2/authorize?id=12919&permissions=4096&client_id=GJ6p4dR1iVBkGzH5&redirect_uri=&scope=bot)
 
 [**🐳Docker 部署(支持自动更新)**](docs/docker.md)  
 
@@ -100,7 +107,7 @@
 
 ### 其他东西
 
-直接邀请机器人机器人就会同意 (可修改配置)  
+~~直接邀请机器人机器人就会同意 (可修改配置)~~  
 默认口令: `*******` (某梗)
 
 ---
@@ -119,7 +126,7 @@
 |      [HtmlAgilityPack](https://html-agility-pack.net/)      |        MIT        |        HTML 分析         |
 |       [Harmony](https://github.com/pardeike/Harmony)        |        MIT        |         插件支持         |
 |    [Richasy.WFA.Sdk](https://github.com/Richasy/WFA-SDK)    | richasy Copyright |         WFA API          |
-| [Mirai-CSharp](https://github.com/Executor-Cheng/Mirai-CSharp) | AGPL-3.0 | Mirai C# 连接 |
+| [Chaldene](https://github.com/Cyl18/Chaldene) | AGPL-3.0 | Mirai C# 连接 |
 | [WudiLib](https://github.com/int-and-his-friends/Sisters.WudiLib) | MIT | OntBot C# 连接 |
 | [GitVersion](https://github.com/GitTools/GitVersion) | MIT | 提供版本号支持 |
 | [Magick.NET](https://github.com/dlemstra/Magick.NET) | Apache-2.0 | 临时图片渲染 |
