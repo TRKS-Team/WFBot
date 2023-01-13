@@ -1,4 +1,6 @@
-﻿namespace WFBot.Features.ImageRendering
+﻿using WFBot.Orichalt.OrichaltConnectors;
+
+namespace WFBot.Features.ImageRendering
 {
     public class RichMessages : List<RichMessage>
     {
@@ -21,5 +23,11 @@
     public class ImageMessage : RichMessage
     {
         public byte[] Content { get; set; }
+    }
+
+    public class AtMessage : RichMessage
+    {
+        public bool IsAll { get; set; }
+        public string QQ { get; set; }
     }
 }

@@ -19,6 +19,7 @@ using Sisters.WudiLib;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Utils;
 using WFBot.Orichalt.OrichaltConnectors;
+using AtMessage = WFBot.Features.ImageRendering.AtMessage;
 using ImageMessage = WFBot.Features.ImageRendering.ImageMessage;
 using KookConfig = WFBot.Orichalt.OrichaltConnectors.KookConfig;
 
@@ -597,6 +598,14 @@ namespace WFBot.Orichalt
                         break;
                     case TextMessage text:
                         builder.Plain(text.Content);
+                        break;
+                    case AtMessage at:
+                        if (at.IsAll)
+                        {
+                            builder.AtAll();
+                            break;
+                        }
+                        builder.At(at.QQ);
                         break;
                 }
             }
