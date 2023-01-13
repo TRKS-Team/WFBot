@@ -143,7 +143,7 @@ namespace WFBot.Features.Common
                     new TextMessage {Content = "(国际服)有新的钢铁虚空生存裂隙出现了!"},
                     new ImageMessage {Content = ImageRenderHelper.Fissures(matches.ToList(), 0)}
                 });
-                sendedFissureSet.Add(matches.Select(m => m.id));
+                matches.ForEach(m => sendedFissureSet.Add(m.id));
             }
         }
         // public async Task SendSentientOutpost()

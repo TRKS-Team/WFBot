@@ -203,7 +203,7 @@ namespace WFBot.Features.Commands
             }
         }
         */
-        [Matchers("裂隙", "裂缝")]
+        /*[Matchers("裂隙", "裂缝")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> Fissures(int tier = 0)
         {
@@ -276,7 +276,7 @@ namespace WFBot.Features.Commands
                 return WFFormatter.ToString(fissures, tier);
             }
             // _fissures = api.GetFissures();
-        }
+        }*/
         /*
         [Matchers("午夜电波", "电波", "每日任务", "每周任务", "每日任务", "每周挑战")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
