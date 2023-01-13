@@ -562,6 +562,14 @@ namespace WFBot.Orichalt
                     case TextMessage text:
                         builder.Plain(text.Content);
                         break;
+                    case AtMessage at:
+                        if (at.IsAll)
+                        {
+                            builder.AtAll();
+                            break;
+                        }
+                        builder.At(at.QQ);
+                        break;
                 }
             }
             MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build());
