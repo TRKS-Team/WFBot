@@ -14,34 +14,14 @@
 ```yaml
 adapters: 
   - http
-  - ws 
+  - ws
 debug: false
 enableVerify: true
-verifyKey: '请修改我' ## 修改为一个与下文一样的Token
+verifyKey: 请修改我 # 修改为和下文对应的一个Token
 singleMode: false
 cacheSize: 4096
-adapterSettings: 
-  ws:
-  ## websocket server 监听的本地地址
-  ## 一般为 localhost 即可, 如果多网卡等情况，自定设置
-    host: 0.0.0.0
-
-    ## websocket server 监听的端口
-    ## 与 http server 可以重复, 由于协议与路径不同, 不会产生冲突
-    port: 8080
-    
-    reservedSyncId: -1
-  http:
-    ## http server 监听的本地地址
-    ## 一般为 localhost 即可, 如果多网卡等情况，自定设置
-    host: 0.0.0.0
-
-    ## http server 监听的端口
-    ## 与 websocket server 可以重复, 由于协议与路径不同, 不会产生冲突
-    port: 8080
-
-    ## 配置跨域, 默认允许来自所有域名
-    cors: [*]
+persistenceFactory: 'built-in'
+adapterSettings: {}
 ```
 5. 再次运行 `sudo docker-compose run --rm mirai` 观察到以下绿色输出
 ![](images/QQ%E6%88%AA%E5%9B%BE20220627214408.png)
