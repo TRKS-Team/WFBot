@@ -15,7 +15,7 @@ namespace WFBot.Features.Commands
 
     public partial class CommandsHandler
     {
-        WFNotificationHandler WFNotificationHandler => WFBotCore.Instance.NotificationHandler;
+        /*WFNotificationHandler WFNotificationHandler => WFBotCore.Instance.NotificationHandler;
 
         [Matchers("警报")]
         [AddPlatformInfo]
@@ -119,7 +119,7 @@ namespace WFBot.Features.Commands
                 SendImage(ImageRenderHelper.SimpleImageRendering(OutputStringBuilder.Value.ToString()));
                 OutputStringBuilder.Value.Clear();
             }
-        }
+        }*/
 
     }
 }

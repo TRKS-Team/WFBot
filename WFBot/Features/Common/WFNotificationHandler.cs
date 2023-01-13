@@ -19,6 +19,7 @@ namespace WFBot.Features.Common
         private static readonly object Locker = new object();
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
+        private readonly HashSet<string> sendedFissureSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
         private readonly HashSet<WarframeUpdate> sendedUpdateSet = new HashSet<WarframeUpdate>();
         // 如果你把它改到5分钟以上 sentientoutpost会出错
@@ -37,14 +38,15 @@ namespace WFBot.Features.Common
 
         public void TestNotification()
         {
-            sendedInvSet.Clear();
+            sendedFissureSet.Clear();
+            CheckHardVoidFissures(true).Wait();
         }
         private async Task InitWFNotificationAsync()
         {
             try
             {
                 AsyncContext.SetCancellationToken(CancellationToken.None);
-                var alerts = api.GetAlerts();
+               /* var alerts = api.GetAlerts();
                 var invs = api.GetInvasions();
                 var enemies = api.GetPersistentEnemies();
                 var updates = GetWarframeUpdates();
@@ -56,8 +58,10 @@ namespace WFBot.Features.Common
                 foreach (var enemy in await enemies)
                     sendedStalkerSet.Add(enemy.lastDiscoveredTime);
                 foreach (var update in await updates)
-                    sendedUpdateSet.Add(update);
-                WFNotificationLoaded = true;
+                    sendedUpdateSet.Add(update);*/
+               var fissures = await api.GetFissures();
+               foreach (var fissure in fissures) sendedFissureSet.Add(fissure.id);
+               WFNotificationLoaded = true;
                 Trace.WriteLine("WF 通知初始化完成.");
             }
             catch (Exception e)
@@ -74,10 +78,11 @@ namespace WFBot.Features.Common
             lock (Locker)
             {
                 Task.WaitAll(
-                    UpdateAlertPool(),
+                    /*UpdateAlertPool(),
                     UpdateInvasionPool(),
                     UpdatePersistentEnemiePool(),
-                    CheckWarframeUpdates()
+                    CheckWarframeUpdates()*/
+                    CheckHardVoidFissures()
                 );
                 
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
@@ -122,7 +127,25 @@ namespace WFBot.Features.Common
                 }
                 sendedUpdateSet.Add(updates.First());
             }
-        }   
+        }
+
+        public async Task CheckHardVoidFissures(bool test = false)
+        {
+            var fissures = await api.GetFissures();
+            var matches = fissures.Where(f => !sendedFissureSet.Contains(f.id)).Where(f => f.isHard && f.active)
+                .Where(f => f.node.Contains("Mot") || f.node.Contains("Ani")).ToList();
+            if (matches.Any())
+            {
+                AsyncContext.SetCommandIdentifier("WFBot通知");
+                MiguelNetwork.Broadcast(new RichMessages
+                {
+                    new AtMessage {IsAll = true},
+                    new TextMessage {Content = "(国际服)有新的钢铁虚空生存裂隙出现了!"},
+                    new ImageMessage {Content = ImageRenderHelper.Fissures(matches.ToList(), 0)}
+                });
+                sendedFissureSet.Add(matches.Select(m => m.id));
+            }
+        }
         // public async Task SendSentientOutpost()
         // {
         //     var sb = new StringBuilder();

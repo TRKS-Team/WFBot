@@ -13,7 +13,7 @@ namespace WFBot.Features.Commands
 {
     public partial class CommandsHandler
     {
-        string VersionText => WFBotCore.IsOfficial ? $"WFBot 官方 {(WFBotCore.Version)}" : $"WFBot 非官方 {(WFBotCore.Version)}";
+        /*string VersionText => WFBotCore.IsOfficial ? $"WFBot 官方 {(WFBotCore.Version)}" : $"WFBot 非官方 {(WFBotCore.Version)}";
 
         [MatchersIgnoreCase("wfbotversion", "wfbot-version")]
         string Version()
@@ -34,7 +34,7 @@ namespace WFBot.Features.Commands
                 MiguelNetwork.Reply(O, WFFormatter.HelpCommandSegment2());
             }
         }
-        
+        */
         [DoNotMeasureTime]
         [AddPlatformInfo]
         [Matchers("状态", "status", "机器人状态", "机器人信息", "我需要机器人")]

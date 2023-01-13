@@ -8,7 +8,7 @@ namespace WFBot.Features.Commands
 {
     public partial class CommandsHandler
     {
-        [SkipBotChannelCheck]
+        /*[SkipBotChannelCheck]
         [SkipValidationCheck]
         [KookOnly]
         [Matchers("设置通知频道", "设置通知")]
@@ -69,6 +69,6 @@ namespace WFBot.Features.Commands
         string Trial()
         {
             return MiguelNetwork.KookVerifyServer.StartGuildTrial(O).Result ? "成功激活三天试用, 请输入 /有效期 查询有效期." : "激活试用失败, 此服务器已经试用过机器人.";
-        }
+        }*/
     }
 }

@@ -19,7 +19,7 @@ namespace WFBot.Features.Commands
     {
         private static WFChineseAPI api => WFResources.WFChineseApi;
         private static WFTranslator translator => WFResources.WFTranslator;
-
+        /*
         [Matchers("金星赏金", "金星平原赏金", "福尔图娜赏金", "奥布山谷赏金")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task FortunaMissions(int index = 0)
@@ -202,7 +202,7 @@ namespace WFBot.Features.Commands
                 return "目前游戏内没有任何活动 (尸鬼, 豺狼, 舰队).";
             }
         }
-
+        */
         [Matchers("裂隙", "裂缝")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> Fissures(int tier = 0)
@@ -277,7 +277,7 @@ namespace WFBot.Features.Commands
             }
             // _fissures = api.GetFissures();
         }
-
+        /*
         [Matchers("午夜电波", "电波", "每日任务", "每周任务", "每日任务", "每周挑战")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> NightWave()
@@ -370,7 +370,7 @@ namespace WFBot.Features.Commands
             }
 
             return s;
-        }
+        }*/
     }
 
 }

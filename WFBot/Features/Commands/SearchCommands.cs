@@ -15,7 +15,7 @@ namespace WFBot.Features.Commands
 
     public partial class CommandsHandler
     {
-        static Dictionary<string, string> LastWMSearchs = new Dictionary<string, string>();
+        /*static Dictionary<string, string> LastWMSearchs = new Dictionary<string, string>();
         // 三巨头
         [Matchers("查询", "wm")]
         [CombineParams]
