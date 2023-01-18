@@ -481,7 +481,7 @@ namespace WFBot.Orichalt
                         var channels = KookCore.KookClient.Guilds
                             .Select(g =>
                                 g.TextChannels
-                                    .Where(t => t.Id == KookConfig.Instance.NotificationChannelDict[g.Id]))
+                                    .Where(t => KookConfig.Instance.NotificationChannelDict.ContainsKey(g.Id) && t.Id == KookConfig.Instance.NotificationChannelDict[g.Id]))
                             .SelectMany(l => l);
                         var cb = new CardBuilder();
                         cb.AddModule(new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = "[WFBot通知]" } });
