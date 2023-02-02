@@ -1557,6 +1557,9 @@ namespace WFBot.Features.Utils
     {
         public Sale[] Sale => RSale.Value;
         public WFResource<Sale[]> RSale;
+
+        public Dict[] Dict => RDict.Value;
+        public WFResource<Dict[]> RDict;
     }
 
     public class WFApi
