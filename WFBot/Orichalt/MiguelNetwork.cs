@@ -441,7 +441,7 @@ namespace WFBot.Orichalt
             }
             Task.Factory.StartNew(async () =>
             {
-                if (true)
+                if (Config.Instance.AtAllBroadcast)
                 {
                     content.Insert(0, new AtMessage{IsAll = true});
                 }
@@ -492,7 +492,25 @@ namespace WFBot.Orichalt
                         cb = await BuildRichMessagesCard(content, cb);
                         foreach (var channel in channels)
                         {
+
+
+                            // 这特么写的太屎了, 但是我真的想不出别的方法了, 妈的Kook.Net真傻逼啊
+                            // 我找了大概一个小时的文档才弄明白该这么写, Kook.Net的文档也一坨, 我都去查Discord.Net了.
+                            if (content.Any(c => c is AtMessage { IsAll: true }))
+                            {
+                                cb.AddModule(new SectionModuleBuilder()
+                                {
+                                    Text = new PlainTextElementBuilder
+                                        { Content = MentionUtils.PlainTextMentionChannel(channel.Id) }
+                                });
+                            }
+
                             await channel.SendCardAsync(cb.Build());
+
+                            cb.Modules.RemoveAt(cb.Modules.Count - 1);
+
+
+
                         }
                         break;
                 }
@@ -572,7 +590,7 @@ namespace WFBot.Orichalt
                             builder.AtAll();
                             break;
                         }
-                        builder.At(at.QQ);
+                        builder.At(at.UserID);
                         break;
                 }
             }
@@ -617,7 +635,7 @@ namespace WFBot.Orichalt
                             builder.AtAll();
                             break;
                         }
-                        builder.At(at.QQ);
+                        builder.At(at.UserID);
                         break;
                 }
             }
@@ -707,7 +725,8 @@ namespace WFBot.Orichalt
                         var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
                         cb.AddModule(sb);
                         break;
-                    case AtMessage all:
+                    case AtMessage at:
+                        // 目前@全体消息只在Broadcast那边处理
                         break;
                 }
             }
@@ -718,7 +737,7 @@ namespace WFBot.Orichalt
         public static async Task ReplyKookChannelUser(KookContext context, RichMessages msg)
         {
             var cb = await BuildRichMessagesCard(msg);
-            await context.Channel.SendCardAsync(cb.Build(), ephemeralUser: context.Author);
+            await context.Channel.SendCardAsync(cb.Build());
         }
     }
 }

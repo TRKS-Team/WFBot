@@ -2,6 +2,7 @@
 using System.Text;
 using HtmlAgilityPack;
 using Manganese.Array;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Timers;
@@ -21,7 +22,8 @@ namespace WFBot.Features.Common
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
         private readonly HashSet<WarframeUpdate> sendedUpdateSet = new HashSet<WarframeUpdate>();
-        // 如果你把它改到5分钟以上 sentientoutpost会出错
+        private readonly HashSet<string> sendedCetusSet = new HashSet<string>();
+        
         private WFChineseAPI api => WFResources.WFChineseApi;
         public List<WFAlert> AlertPool = new List<WFAlert>();
         public List<WFInvasion> InvasionPool = new List<WFInvasion>();
@@ -50,6 +52,7 @@ namespace WFBot.Features.Common
                     var invs = api.GetInvasions();
                     var enemies = api.GetPersistentEnemies();
                     var updates = GetWarframeUpdates();
+                    var cetus = api.GetCetusCycle();
 
                     foreach (var alert in await alerts)
                         sendedAlertsSet.Add(alert.Id);
@@ -59,13 +62,16 @@ namespace WFBot.Features.Common
                         sendedStalkerSet.Add(enemy.lastDiscoveredTime);
                     foreach (var update in await updates)
                         sendedUpdateSet.Add(update);
+
+                    sendedCetusSet.Add(cetus.Result.ID);
+
                     WFNotificationLoaded = true;
                     Trace.WriteLine("WF 通知初始化完成.");
                 }
                 catch (Exception e)
                 {
                     Trace.WriteLine($"WF 通知初始化出错: {e}, 正在重试.");
-                    // 发生过机器人的通知初始化在下载Update那块报错, 然后机器人一直不发通知, 所以写个重试
+                    // 发生过机器人的通知初始化在下载Update那块报错, 然后机器人一直不发通知, 所以写个重试.
                 }
             }
 
@@ -82,7 +88,8 @@ namespace WFBot.Features.Common
                     UpdateAlertPool(),
                     UpdateInvasionPool(),
                     UpdatePersistentEnemiePool(),
-                    CheckWarframeUpdates()
+                    CheckWarframeUpdates(),
+                    CheckCetusCycle()
                 );
                 
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
@@ -90,6 +97,26 @@ namespace WFBot.Features.Common
                 // CheckSentientOutpost();
                 // 很不幸 S船已经被DE改的我不知道怎么写了
                 // 无法与你继续互动
+            }
+        }
+
+        public async Task CheckCetusCycle()
+        {
+            if (Config.Instance.Miguel_Platform != MessagePlatform.Kook) return;
+            // 因为只有Kook可以这么频繁的发通知, 不用担心被封号...
+
+            var cetus = await api.GetCetusCycle();
+            if (cetus.IsDay && !sendedCetusSet.Contains(cetus.ID))
+            {
+                var eta = cetus.Expiry - DateTime.Now;
+                if (eta <= TimeSpan.FromMinutes(10))
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine("距离希图斯的夜晚剩余不足10分钟, 夜灵即将出现.");
+                    var messages = new RichMessages { new TextMessage { Content = sb.ToString() } };
+                    MiguelNetwork.Broadcast(messages);
+                    sendedCetusSet.Add(cetus.ID);
+                }
             }
         }
 
@@ -166,7 +193,7 @@ namespace WFBot.Features.Common
             var result = sb.ToString().Trim();
             if (Config.Instance.EnableImageRendering)
             {
-            AsyncContext.SetCommandIdentifier("WFBot通知");
+                AsyncContext.SetCommandIdentifier("WFBot通知");
                 MiguelNetwork.Broadcast(new RichMessages()
                 {
 

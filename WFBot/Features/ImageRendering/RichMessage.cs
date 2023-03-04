@@ -28,6 +28,6 @@ namespace WFBot.Features.ImageRendering
     public class AtMessage : RichMessage
     {
         public bool IsAll { get; set; }
-        public string QQ { get; set; }
+        public string UserID { get; set; }
     }
 }
