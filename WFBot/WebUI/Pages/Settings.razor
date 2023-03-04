@@ -224,7 +224,14 @@
                     </div>
                 </div>
             </div>
-
+            <div class="mb-2">
+                <div class="form-check form-switch">
+                    <input @bind="config.AtAllBroadcast" class="form-check-input" type="checkbox">
+                    <label class="form-check-label">
+                        在所有通知前@全体成员(需要机器人为管理员)
+                    </label>
+                </div>
+            </div>
             <h3 class="my-4">发送通知的群号</h3>
 
             <textarea type="text" @bind="NotifyGroupList" class="form-control my-3" style="min-height: 300px">

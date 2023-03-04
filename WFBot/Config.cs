@@ -77,6 +77,7 @@ namespace WFBot
         public bool UseKraber = true;
         public bool CleanMemoryAfterImageRendering = false;
         public bool UseImagePGO = false;
+        public bool AtAllBroadcast = false;
 
         protected override void AfterUpdate()
         {

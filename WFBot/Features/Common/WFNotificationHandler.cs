@@ -41,29 +41,34 @@ namespace WFBot.Features.Common
         }
         private async Task InitWFNotificationAsync()
         {
-            try
+            while (!WFNotificationLoaded)
             {
-                AsyncContext.SetCancellationToken(CancellationToken.None);
-                var alerts = api.GetAlerts();
-                var invs = api.GetInvasions();
-                var enemies = api.GetPersistentEnemies();
-                var updates = GetWarframeUpdates();
+                try
+                {
+                    AsyncContext.SetCancellationToken(CancellationToken.None);
+                    var alerts = api.GetAlerts();
+                    var invs = api.GetInvasions();
+                    var enemies = api.GetPersistentEnemies();
+                    var updates = GetWarframeUpdates();
 
-                foreach (var alert in await alerts)
-                    sendedAlertsSet.Add(alert.Id);
-                foreach (var inv in await invs)
-                    sendedInvSet.Add(inv.id);
-                foreach (var enemy in await enemies)
-                    sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-                foreach (var update in await updates)
-                    sendedUpdateSet.Add(update);
-                WFNotificationLoaded = true;
-                Trace.WriteLine("WF 通知初始化完成.");
+                    foreach (var alert in await alerts)
+                        sendedAlertsSet.Add(alert.Id);
+                    foreach (var inv in await invs)
+                        sendedInvSet.Add(inv.id);
+                    foreach (var enemy in await enemies)
+                        sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+                    foreach (var update in await updates)
+                        sendedUpdateSet.Add(update);
+                    WFNotificationLoaded = true;
+                    Trace.WriteLine("WF 通知初始化完成.");
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine($"WF 通知初始化出错: {e}, 正在重试.");
+                    // 发生过机器人的通知初始化在下载Update那块报错, 然后机器人一直不发通知, 所以写个重试
+                }
             }
-            catch (Exception e)
-            {
-                Trace.WriteLine($"WF 通知初始化出错: {e}");
-            }
+
         }
 
         [CalledByTimer(typeof(NotificationTimer))]

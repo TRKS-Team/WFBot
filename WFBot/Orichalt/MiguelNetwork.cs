@@ -441,6 +441,10 @@ namespace WFBot.Orichalt
             }
             Task.Factory.StartNew(async () =>
             {
+                if (true)
+                {
+                    content.Insert(0, new AtMessage{IsAll = true});
+                }
                 var count = 0;
                 switch (Platform)
                 {
@@ -581,10 +585,10 @@ namespace WFBot.Orichalt
             builder.Plain(msg);
             if (MiraiConfig.Instance.AutoRevoke)
             {
-                var message = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
+                var messageId = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
                 Task.Delay(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds)).ContinueWith(t =>
                 {
-                    MiraiHTTPCore.Bot.RecallAsync(qq.ID.ToString(), message);
+                    MiraiHTTPCore.Bot.RecallAsync(qq.ID.ToString(), messageId);
                 });
 
                 return;
@@ -702,6 +706,8 @@ namespace WFBot.Orichalt
                     case TextMessage text:
                         var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
                         cb.AddModule(sb);
+                        break;
+                    case AtMessage all:
                         break;
                 }
             }
