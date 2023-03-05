@@ -496,7 +496,8 @@ namespace WFBot.Orichalt
 
                             // 这特么写的太屎了, 但是我真的想不出别的方法了, 妈的Kook.Net真傻逼啊
                             // 我找了大概一个小时的文档才弄明白该这么写, Kook.Net的文档也一坨, 我都去查Discord.Net了.
-                            if (content.Any(c => c is AtMessage { IsAll: true }))
+                            var isAll = content.Any(c => c is AtMessage { IsAll: true });
+                            if (isAll)
                             {
                                 cb.AddModule(new SectionModuleBuilder()
                                 {
@@ -507,7 +508,10 @@ namespace WFBot.Orichalt
 
                             await channel.SendCardAsync(cb.Build());
 
-                            cb.Modules.RemoveAt(cb.Modules.Count - 1);
+                            if (isAll)
+                            {
+                                cb.Modules.RemoveAt(cb.Modules.Count - 1);
+                            }
 
 
 
