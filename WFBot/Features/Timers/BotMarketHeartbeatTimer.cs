@@ -6,7 +6,7 @@ using WFBot.Utils;
 
 namespace WFBot.Features.Timers
 {
-    public class BotMarketHeartbeatTimer : WFBotTimer
+    class BotMarketHeartbeatTimer : WFBotTimer
     {
         public BotMarketHeartbeatTimer() : base(30.Minutes())
         {
