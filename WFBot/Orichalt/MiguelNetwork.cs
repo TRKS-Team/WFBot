@@ -499,19 +499,9 @@ namespace WFBot.Orichalt
                             var isAll = content.Any(c => c is AtMessage { IsAll: true });
                             if (isAll)
                             {
-                                cb.AddModule(new SectionModuleBuilder()
-                                {
-                                    Text = new PlainTextElementBuilder
-                                        { Content = MentionUtils.PlainTextMentionChannel(channel.Id) }
-                                });
+                                await channel.SendTextAsync(MentionUtils.PlainTextMentionChannel(channel.Id));
                             }
-
                             await channel.SendCardAsync(cb.Build());
-
-                            if (isAll)
-                            {
-                                cb.Modules.RemoveAt(cb.Modules.Count - 1);
-                            }
 
 
 
@@ -726,7 +716,13 @@ namespace WFBot.Orichalt
                         cb.AddModule(cob);
                         break;
                     case TextMessage text:
-                        var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
+                        var sb = new SectionModuleBuilder
+                        {
+                            Text = new PlainTextElementBuilder
+                            {
+                                Content = text.Content
+                            }
+                        };
                         cb.AddModule(sb);
                         break;
                     case AtMessage at:
