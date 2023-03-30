@@ -55,7 +55,7 @@ namespace WFBot
 
         public string localsha;
 
-        public int WMSearchCount = 3;
+        public int WMSearchCount = 5;
 
         public int WFASearchCount = 5;
 
@@ -79,6 +79,7 @@ namespace WFBot
         public bool UseImagePGO = false;
         public bool AtAllBroadcast = false;
         public string BotMarketUUID = "";
+        public bool BroadcastToAllGroup = false;
 
         protected override void AfterUpdate()
         {

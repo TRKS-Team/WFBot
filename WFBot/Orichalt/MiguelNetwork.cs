@@ -451,7 +451,8 @@ namespace WFBot.Orichalt
                     case MessagePlatform.MiraiHTTP:
                     case MessagePlatform.MiraiHTTPV1:
                     case MessagePlatform.OneBot:
-                        foreach (var group in Config.Instance.WFGroupList)
+                        var groups = Config.Instance.BroadcastToAllGroup ? GetAllGroups() : Config.Instance.WFGroupList;
+                        foreach (var group in groups)
                         {
                             var sb = new StringBuilder();
                     
@@ -511,6 +512,24 @@ namespace WFBot.Orichalt
 
             }, TaskCreationOptions.LongRunning);
 
+        }
+        /// <summary>
+        /// 获取机器人所在的所有群号
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllGroups()
+        {
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    return OneBotCore.OneBotClient.GetGroupListAsync().Result.Select(g => g.Id.ToString()).ToList();
+                case MessagePlatform.MiraiHTTP:
+                    return MiraiHTTPCore.Bot.GetGroupsAsync().Result.Select(g => g.Id).ToList();
+                case MessagePlatform.MiraiHTTPV1:
+                    return MiraiHTTPV1Core.Mirai.GetGroupListAsync().Result.Select(g => g.Id.ToString()).ToList();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         //
