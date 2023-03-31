@@ -546,7 +546,11 @@ namespace WFBot.Orichalt
         }
         private static void OneBotSendToGroup(GroupID group, RichMessages msg)
         {
-            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch { ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
+            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch {
+                AtMessage atMessage => atMessage.IsAll ? SendingMessage.AtAll() : SendingMessage.At(atMessage.UserID.ToLong()),
+                ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content),
+                _ => new SendingMessage()
+            }).Aggregate((a, b) => a + b));
 
         }
         private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, string msg)
