@@ -441,13 +441,18 @@ namespace WFBot.Orichalt
             }
             Task.Factory.StartNew(async () =>
             {
+                if (Config.Instance.AtAllBroadcast)
+                {
+                    content.Insert(0, new AtMessage{IsAll = true});
+                }
                 var count = 0;
                 switch (Platform)
                 {
                     case MessagePlatform.MiraiHTTP:
                     case MessagePlatform.MiraiHTTPV1:
                     case MessagePlatform.OneBot:
-                        foreach (var group in Config.Instance.WFGroupList)
+                        var groups = Config.Instance.BroadcastToAllGroup ? GetAllGroups() : Config.Instance.WFGroupList;
+                        foreach (var group in groups)
                         {
                             var sb = new StringBuilder();
                     
@@ -481,20 +486,50 @@ namespace WFBot.Orichalt
                         var channels = KookCore.KookClient.Guilds
                             .Select(g =>
                                 g.TextChannels
-                                    .Where(t => t.Id == KookConfig.Instance.NotificationChannelDict[g.Id]))
+                                    .Where(t => KookConfig.Instance.NotificationChannelDict.ContainsKey(g.Id) && t.Id == KookConfig.Instance.NotificationChannelDict[g.Id]))
                             .SelectMany(l => l);
                         var cb = new CardBuilder();
                         cb.AddModule(new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = "[WFBot通知]" } });
                         cb = await BuildRichMessagesCard(content, cb);
                         foreach (var channel in channels)
                         {
+
+
+                            // 这特么写的太屎了, 但是我真的想不出别的方法了, 妈的Kook.Net真傻逼啊
+                            // 我找了大概一个小时的文档才弄明白该这么写, Kook.Net的文档也一坨, 我都去查Discord.Net了.
+                            var isAll = content.Any(c => c is AtMessage { IsAll: true });
+                            if (isAll)
+                            {
+                                await channel.SendTextAsync(MentionUtils.PlainTextMentionChannel(channel.Id));
+                            }
                             await channel.SendCardAsync(cb.Build());
+
+
+
                         }
                         break;
                 }
 
             }, TaskCreationOptions.LongRunning);
 
+        }
+        /// <summary>
+        /// 获取机器人所在的所有群号
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllGroups()
+        {
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    return OneBotCore.OneBotClient.GetGroupListAsync().Result.Select(g => g.Id.ToString()).ToList();
+                case MessagePlatform.MiraiHTTP:
+                    return MiraiHTTPCore.Bot.GetGroupsAsync().Result.Select(g => g.Id).ToList();
+                case MessagePlatform.MiraiHTTPV1:
+                    return MiraiHTTPV1Core.Mirai.GetGroupListAsync().Result.Select(g => g.Id.ToString()).ToList();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         //
@@ -511,7 +546,11 @@ namespace WFBot.Orichalt
         }
         private static void OneBotSendToGroup(GroupID group, RichMessages msg)
         {
-            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch { ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
+            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch {
+                AtMessage atMessage => atMessage.IsAll ? SendingMessage.AtAll() : SendingMessage.At(atMessage.UserID.ToLong()),
+                ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content),
+                _ => new SendingMessage()
+            }).Aggregate((a, b) => a + b));
 
         }
         private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, string msg)
@@ -568,7 +607,7 @@ namespace WFBot.Orichalt
                             builder.AtAll();
                             break;
                         }
-                        builder.At(at.QQ);
+                        builder.At(at.UserID);
                         break;
                 }
             }
@@ -581,10 +620,10 @@ namespace WFBot.Orichalt
             builder.Plain(msg);
             if (MiraiConfig.Instance.AutoRevoke)
             {
-                var message = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
+                var messageId = MiraiHTTPCore.Bot.SendGroupMessageAsync(qq.ID, builder.Build()).Result;
                 Task.Delay(TimeSpan.FromSeconds(MiraiConfig.Instance.RevokeTimeInSeconds)).ContinueWith(t =>
                 {
-                    MiraiHTTPCore.Bot.RecallAsync(qq.ID.ToString(), message);
+                    MiraiHTTPCore.Bot.RecallAsync(qq.ID.ToString(), messageId);
                 });
 
                 return;
@@ -613,7 +652,7 @@ namespace WFBot.Orichalt
                             builder.AtAll();
                             break;
                         }
-                        builder.At(at.QQ);
+                        builder.At(at.UserID);
                         break;
                 }
             }
@@ -700,8 +739,17 @@ namespace WFBot.Orichalt
                         cb.AddModule(cob);
                         break;
                     case TextMessage text:
-                        var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
+                        var sb = new SectionModuleBuilder
+                        {
+                            Text = new PlainTextElementBuilder
+                            {
+                                Content = text.Content
+                            }
+                        };
                         cb.AddModule(sb);
+                        break;
+                    case AtMessage at:
+                        // 目前@全体消息只在Broadcast那边处理
                         break;
                 }
             }
@@ -712,7 +760,7 @@ namespace WFBot.Orichalt
         public static async Task ReplyKookChannelUser(KookContext context, RichMessages msg)
         {
             var cb = await BuildRichMessagesCard(msg);
-            await context.Channel.SendCardAsync(cb.Build(), ephemeralUser: context.Author);
+            await context.Channel.SendCardAsync(cb.Build());
         }
     }
 }

@@ -37,7 +37,7 @@ namespace WFBot.Features.Utils
         private void InitTranslators()
         {
             dictTranslator.Clear();
-            foreach (var dict in translateApi.Dict)
+            foreach (var dict in wfbotApi.Dict)
             {
                 dictTranslator.AddEntry(dict.En, dict.Zh);
                 searchwordTranslator.Clear();
@@ -113,8 +113,8 @@ namespace WFBot.Features.Utils
 
             /*var formatedDict = translateApi.Dict.Select(dict => new Dict
                     {En = dict.En.Format(), Id = dict.Id, Type = dict.Type, Zh = dict.Zh}).ToList();*/
-            var zhResults = translateApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
-            var enResults = translateApi.Dict.Where(dict => dict.En.Format() == str).ToList();
+            var zhResults = wfbotApi.Dict.Where(dict => dict.Zh.Format() == str).ToList();
+            var enResults = wfbotApi.Dict.Where(dict => dict.En.Format() == str).ToList();
             if (!zhResults.Any() && !enResults.Any())
             {
                 return "并没有查询到任何翻译,请检查输入.";

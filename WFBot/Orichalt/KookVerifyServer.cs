@@ -34,8 +34,9 @@ namespace WFBot.Orichalt
                         connected = true;
                         break;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        MiguelNetwork.SendDebugInfo($"Kook验证服务器连接出错: {e}");
                     }
                 }
             };

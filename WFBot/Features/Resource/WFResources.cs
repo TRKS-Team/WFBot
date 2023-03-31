@@ -333,6 +333,7 @@ namespace WFBot.Features.Resource
             var source = IsKraber? "https://wfbot.kraber.top:8888/Resources/TRKS-Team/WFBot_Lexicon@master/" : "https://cdn.jsdelivr.net/gh/TRKS-Team/WFBot_Lexicon@master/";
 
             AddTask(ref api.RSale, "WFBot_Sale.json");
+            AddTask(ref api.RDict, "WFBot_Dict.json");
 
             if (WFResourcesManager.WFResourceGitHubInfos.All(i => i.Category != nameof(WFTranslator)))
             {

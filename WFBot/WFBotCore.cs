@@ -605,6 +605,7 @@ namespace WFBot
             AddTimer<NotificationTimer>();
             AddTimer<WFResourcesTimer>();
             AddTimer<ImageRenderingPGOTimer>();
+            AddTimer<BotMarketHeartbeatTimer>();
 
             void AddTimer<T>() where T : WFBotTimer
             {
