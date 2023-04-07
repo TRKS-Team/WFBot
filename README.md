@@ -163,7 +163,7 @@ Warframe 是 Digital Extremes Ltd. 的商标.
 > Cyl18 现在学会了 PS  
 > 每次看到有人调用命令的时候 就 P 一张图发到群里  
 > 如果发图太慢 会被我扣掉一天的工资  
-> Cyl18 已经两年多没领到工资了  
+> Cyl18 已经~~两~~三年多没领到工资了  
 
 
 乐子: <https://github.com/TRKS-Team/WFBot/commit/a43c2c944231389b4f95489a6aa180fdb2cdf6b9#r50572036>
