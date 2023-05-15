@@ -451,7 +451,8 @@ namespace WFBot.Orichalt
                     case MessagePlatform.MiraiHTTP:
                     case MessagePlatform.MiraiHTTPV1:
                     case MessagePlatform.OneBot:
-                        foreach (var group in Config.Instance.WFGroupList)
+                        var groups = Config.Instance.BroadcastToAllGroup ? GetAllGroups() : Config.Instance.WFGroupList;
+                        foreach (var group in groups)
                         {
                             var sb = new StringBuilder();
                     
@@ -499,19 +500,9 @@ namespace WFBot.Orichalt
                             var isAll = content.Any(c => c is AtMessage { IsAll: true });
                             if (isAll)
                             {
-                                cb.AddModule(new SectionModuleBuilder()
-                                {
-                                    Text = new PlainTextElementBuilder
-                                        { Content = MentionUtils.PlainTextMentionChannel(channel.Id) }
-                                });
+                                await channel.SendTextAsync(MentionUtils.PlainTextMentionChannel(channel.Id));
                             }
-
                             await channel.SendCardAsync(cb.Build());
-
-                            if (isAll)
-                            {
-                                cb.Modules.RemoveAt(cb.Modules.Count - 1);
-                            }
 
 
 
@@ -521,6 +512,24 @@ namespace WFBot.Orichalt
 
             }, TaskCreationOptions.LongRunning);
 
+        }
+        /// <summary>
+        /// 获取机器人所在的所有群号
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllGroups()
+        {
+            switch (Platform)
+            {
+                case MessagePlatform.OneBot:
+                    return OneBotCore.OneBotClient.GetGroupListAsync().Result.Select(g => g.Id.ToString()).ToList();
+                case MessagePlatform.MiraiHTTP:
+                    return MiraiHTTPCore.Bot.GetGroupsAsync().Result.Select(g => g.Id).ToList();
+                case MessagePlatform.MiraiHTTPV1:
+                    return MiraiHTTPV1Core.Mirai.GetGroupListAsync().Result.Select(g => g.Id.ToString()).ToList();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         //
@@ -537,7 +546,11 @@ namespace WFBot.Orichalt
         }
         private static void OneBotSendToGroup(GroupID group, RichMessages msg)
         {
-            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch { ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
+            OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch {
+                AtMessage atMessage => atMessage.IsAll ? SendingMessage.AtAll() : SendingMessage.At(atMessage.UserID.ToLong()),
+                ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content),
+                _ => new SendingMessage()
+            }).Aggregate((a, b) => a + b));
 
         }
         private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, string msg)
@@ -726,7 +739,13 @@ namespace WFBot.Orichalt
                         cb.AddModule(cob);
                         break;
                     case TextMessage text:
-                        var sb = new SectionModuleBuilder { Text = new PlainTextElementBuilder { Content = text.Content } };
+                        var sb = new SectionModuleBuilder
+                        {
+                            Text = new PlainTextElementBuilder
+                            {
+                                Content = text.Content
+                            }
+                        };
                         cb.AddModule(sb);
                         break;
                     case AtMessage at:
