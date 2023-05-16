@@ -17,8 +17,7 @@ namespace WFBot.Features.ImageRendering
         public void Segment(string s)
         {
 #if PROFILE
-            
-            Console.WriteLine($"Profiler: {s} {sw.Elapsed.TotalSeconds:F2}s");
+            Console.WriteLine($"Profiler: {s} {sw.Elapsed.TotalMilliseconds:N0}ms");
             sw.Restart();
 #endif
         }

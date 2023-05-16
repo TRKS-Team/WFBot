@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using Humanizer;
 using SharpVk;
 using SkiaSharp;
 using WFBot.Features.ImageRendering;
@@ -35,8 +36,8 @@ namespace WFBot.Features.Commands
             {
                 OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
-                OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                OutputStringBuilder.Value.Clear(); 
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -53,7 +54,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -70,7 +71,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -146,7 +147,7 @@ namespace WFBot.Features.Commands
                 }
                 var s = WFFormatter.ToString(await api.GetSortie());
                 s = s.AddRemainCallCount().AddPlatformInfo();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
                 return null;
             }
             else
@@ -169,8 +170,9 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var s = WFFormatter.ToString(await api.GetVoidTrader());
-                s = s.AddRemainCallCount().AddPlatformInfo();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                s = s.AddRemainCallCount().AddPlatformInfo(); 
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
+
                 return null;
             }
             else
@@ -191,8 +193,7 @@ namespace WFBot.Features.Commands
                 {
                     var s = WFFormatter.ToString(events);
                     s = s.AddRemainCallCount().AddPlatformInfo();
-
-                    SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                    SendImage(KoharuAdapter.SimpleStringRendering(s));
                     return "";
                 }
                 else
@@ -207,103 +208,8 @@ namespace WFBot.Features.Commands
         }
 
 
-        GRContext CreateVulkan()
-        {
+ 
 
-            var grVkBackendContext = new GRSharpVkBackendContext();
-
-            Instance? _instance;
-            Device? _device;
-
-            _instance = Instance.Create(Array.Empty<string>(), Array.Empty<string>(), applicationInfo: new ApplicationInfo()
-            {
-            });
-            grVkBackendContext.VkInstance = _instance;
-
-            var physicalDevices = _instance.EnumeratePhysicalDevices();
-            PhysicalDevice? physicalDevice = null;
-            string? deviceName = null;
-
-            Console.WriteLine($"All GPU(s):");
-            for (var i = 0; i < physicalDevices.Length; ++i)
-            {
-                var pd = physicalDevices[i];
-                var property = pd.GetProperties();
-                Console.WriteLine($"GPU {i}: {property.DeviceName}");
-
-                // 只采用VirtualCpu独立显卡和核显
-                if (property.DeviceType != PhysicalDeviceType.IntegratedGpu &&
-                    property.DeviceType != PhysicalDeviceType.DiscreteGpu &&
-                    property.DeviceType != PhysicalDeviceType.IntegratedGpu)
-                    continue;
-
-                // 默认不使用虚拟Gpu
-                if (property.DeviceType == PhysicalDeviceType.VirtualGpu &&
-                    physicalDevice != null)
-                    continue;
-                physicalDevice = pd;
-                deviceName = property.DeviceName;
-            }
-
-            if (physicalDevice == null)
-                throw new Exception("Unable to find physical device");
-
-            grVkBackendContext.VkPhysicalDevice = physicalDevice;
-
-            var queueFamilyProperties = physicalDevice.GetQueueFamilyProperties();
-
-            var families = queueFamilyProperties
-                .Select((properties, index) => new { properties, index })
-                .Where(pair => pair.properties.QueueFlags.HasFlag(QueueFlags.Graphics)).ToArray();
-
-            var graphicsFamily = families
-                .FirstOrDefault()?.index;
-
-            if (graphicsFamily == null)
-                throw new Exception("Unable to find graphics queue");
-
-            var queueInfos = new[]
-            {
-                new DeviceQueueCreateInfo { QueueFamilyIndex = (uint)graphicsFamily.Value, QueuePriorities = new[] { 1f } }
-            };
-
-            Console.WriteLine($"Create device");
-            _device = physicalDevice.CreateDevice(queueInfos, null, null);
-
-            if (_device == null)
-                throw new Exception("Failed to create device");
-
-            grVkBackendContext.VkDevice = _device;
-
-            Console.WriteLine($"Get queue");
-            var graphicsQueue = _device.GetQueue((uint)graphicsFamily.Value, 0);
-
-            if (graphicsQueue == null)
-                throw new Exception("Failed to get queue");
-
-            grVkBackendContext.VkQueue = graphicsQueue;
-            grVkBackendContext.GraphicsQueueIndex = (uint)graphicsFamily.Value;
-
-            grVkBackendContext.GetProcedureAddress = (name, ins, dev) =>
-            {
-                IntPtr ptr;
-                if (dev != null)
-                    ptr = dev.GetProcedureAddress(name);
-                else if (ins != null)
-                    ptr = ins.GetProcedureAddress(name);
-                else
-                    ptr = _instance.GetProcedureAddress(name);
-
-                if (ptr == IntPtr.Zero)
-                    Console.WriteLine($"{name} not found");
-                return ptr;
-            };
-
-            var grContext = GRContext.CreateVulkan(grVkBackendContext, null);
-            return grContext;
-        }
-
-        static GRContext context;
         [Matchers("裂隙", "裂缝")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
         async Task<string> Fissures(int tier = 0)
@@ -319,37 +225,11 @@ namespace WFBot.Features.Commands
                 }
                 var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
 
-                var vulkan = context ??= CreateVulkan();
+                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonStringS().JsonDeserializeS<List<FissureData.Fissure>>(), tier));
+                var bytes = command.BuildImage();
+                SendImage(bytes);
 
-                var profiler = new ImageRenderProfiler();
-                //var a = ImageRenderHelper.Fissures(fissures, tier);
-                profiler.Segment("ImageSharp");
 
-                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonString().JsonDeserialize<List<FissureData.Fissure>>(), tier));
-                command = command.ApplyWFBotInfoTag(AsyncContext.GetCommandIdentifier());
-                var list = new List<DrawingContentWithPosition>();
-                command.AcquireAllDrawingCommands(list);
-                var surface = SKSurface.Create(vulkan, false, new SKImageInfo(command.Size.Width, command.Size.Height, SKColorType.Rgba8888));
-                var canvas = surface.Canvas;
-                foreach (var (drawingContent, position) in list)
-                {
-                    if (drawingContent.DrawingPriority == DrawingPriority.Background)
-                    {
-                        drawingContent.DrawCore(canvas, position);
-                    }
-                }
-
-                foreach (var (drawingContent, position) in list)
-                {
-                    if (drawingContent.DrawingPriority == DrawingPriority.Foreground)
-                    {
-                        drawingContent.DrawCore(canvas, position);
-                    }
-                }
-
-                var gl = surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 97).ToArray();
-                profiler.Segment("SkiaSharp Vulkan");
-                RichMessageSender(new RichMessages() { new ImageMessage() { Content = gl }});
                 return null;
             }
             else
@@ -374,7 +254,9 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
-                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+
+                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonStringS().JsonDeserializeS<List<FissureData.Fissure>>(), tier));
+                SendImage(command.BuildImage());
                 return null;
             }
             else
@@ -399,7 +281,10 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
-                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+
+                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonStringS().JsonDeserializeS<List<FissureData.Fissure>>(), tier)); 
+                SendImage(command.BuildImage());
+
                 return null;
             }
             else
@@ -417,7 +302,7 @@ namespace WFBot.Features.Commands
             var s = WFFormatter.ToString(await api.GetNightWave());
             if (AsyncContext.GetUseImageRendering())
             {
-                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
                 return null;
             }
             else
@@ -443,7 +328,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -469,7 +354,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -485,7 +370,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -497,7 +382,7 @@ namespace WFBot.Features.Commands
             if (AsyncContext.GetUseImageRendering())
             {
                 s = s.AddRemainCallCount().AddPlatformInfo();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
                 return "";
             }
 

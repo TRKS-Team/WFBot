@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using WFBot.Features.Utils;
 using WFBot.Orichalt;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WFBot.Utils
 {
@@ -145,6 +146,18 @@ namespace WFBot.Utils
         {
             return JsonConvert.DeserializeObject<T>(source, SerializeSettings);
         }
+
+        public static string ToJsonStringS<T>(this T source)
+        {
+            return JsonSerializer.Serialize(source);
+        }
+
+        public static T JsonDeserializeS<T>(this string source)
+        {
+            return JsonSerializer.Deserialize<T>(source);
+        }
+
+        
 
         public static string ToJsonString<T>(this T source, JsonSerializerSettings settings)
         {

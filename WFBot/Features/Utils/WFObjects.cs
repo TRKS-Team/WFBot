@@ -1777,7 +1777,6 @@ namespace WFBot.Features.Utils
 
     public class RewardInfo
     {
-        public object[] items { get; set; }
         public Counteditem[] countedItems { get; set; }
         public int credits { get; set; }
         public string asString { get; set; }

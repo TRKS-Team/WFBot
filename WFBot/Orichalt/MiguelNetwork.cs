@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -369,6 +370,12 @@ namespace WFBot.Orichalt
                     File.AppendAllText(resultPath, msg + Environment.NewLine);
                     break;
             }
+
+            foreach (var message in msg.Where(m => m is ImageMessage i && i.ShouldDispose))
+            {
+                var imageMessage = (ImageMessage)message;
+                ArrayPool<byte>.Shared.Return(imageMessage.Content);
+            }
         }
 
         /// <summary>
@@ -568,7 +575,7 @@ namespace WFBot.Orichalt
         }
         private static async Task OneBotSendToGroupWithAutoRevoke(GroupID group, RichMessages msg)
         {
-            var response = await OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch{ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t=> new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
+            var response = await OneBotCore.OneBotClient.SendGroupMessageAsync(group, msg.Select(x => x switch { ImageMessage image => SendingMessage.ByteArrayImage(image.Content), TextMessage t => new SendingMessage(t.Content) }).Aggregate((a, b) => a + b));
             if (OneBotConfig.Instance.AutoRevoke)
             {
                 await Task.Delay(TimeSpan.FromSeconds(OneBotConfig.Instance.RevokeTimeInSeconds))

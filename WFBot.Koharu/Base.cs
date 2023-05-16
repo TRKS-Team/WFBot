@@ -4,19 +4,22 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Topten.RichTextKit;
 
 namespace WFBot.Koharu;
 
-public interface IDrawingData
+public class Painters
 {
-    
+    public static T Create<T>()
+    {
+        return Activator.CreateInstance<T>();
+    }
 }
-
 
 public abstract class Painter<T>
 {
     public abstract IDrawingCommand Draw(T data);
-    public static Color BaseBackgroundColor = Color.FromArgb(42, 43, 48);
+    public static Color BaseBackgroundColor = Color.FromArgb(42, 43, 48); // https://danbooru.donmai.us/posts/2931102
     protected virtual double? BottomInfoTagSize => null;
     public static TextOptions textOptions => CreateTextOptions();
 
@@ -25,7 +28,7 @@ public abstract class Painter<T>
         return new TextOptions(40,  Color.White, false, -1);
     }
 
-    static protected VerticalLayoutBuilder VerticalLayout(Alignment defaultAlignment = Alignment.TopOrLeft, int? minHeight = null)
+    protected static VerticalLayoutBuilder VerticalLayout(Alignment defaultAlignment = Alignment.TopOrLeft, int? minHeight = null)
     {
         var layout = new VerticalLayoutBuilder();
         layout.DefaultAlignment(defaultAlignment);
@@ -37,7 +40,7 @@ public abstract class Painter<T>
         return layout;
     }
 
-    static protected HorizontalLayoutBuilder HorizontalLayout(Alignment defaultAlignment = Alignment.TopOrLeft, int? minWidth = null)
+    protected static HorizontalLayoutBuilder HorizontalLayout(Alignment defaultAlignment = Alignment.TopOrLeft, int? minWidth = null)
     {
         var layout = new HorizontalLayoutBuilder();
         layout.DefaultAlignment(defaultAlignment);
@@ -48,23 +51,23 @@ public abstract class Painter<T>
         return layout;
     }
 
-    static protected IDrawingCommand PlaceLeftAndRight(IDrawingCommand left, IDrawingCommand right, int? minWidth = null)
+    protected static IDrawingCommand PlaceLeftAndRight(IDrawingCommand left, IDrawingCommand right, int? minWidth = null)
     {
         var layout = new HorizontalDockLayoutBuilder(minWidth + right.Size.Width, false);
         return layout.Draw(left).Alignment(Alignment.TopOrLeft).Draw(right).Alignment(Alignment.DownOrRight).Build();
     }
 
-    static protected IDrawingCommand SimpleImageRendering(string text)
+    protected static IDrawingCommand SimpleImageRendering(string text, int maxWidth = 1000)
     {
-        return new TextCommand(text, textOptions);
+        return new MarginCommand(new TextCommand(text, textOptions with{ MaxWidth = maxWidth}), 30,30,30,30);
     }
 
-    static protected Color SwitchLineColor(ref bool lcb)
+    protected static Color SwitchLineColor(ref bool lcb)
     {
         lcb = !lcb;
         return lcb ? Color.FromArgb(23, 30, 33) : Color.FromArgb(16, 22, 25);
     }
-
+    
     static ConcurrentDictionary<string, SKBitmap> Cache = new();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -89,7 +92,7 @@ public abstract class Painter<T>
 
 public static class WFBotExtensions
 {
-    static Color BaseBackgroundColor = Color.FromArgb(42, 43, 48);
+    static Color BaseBackgroundColor = Color.FromArgb(42, 43, 48); // https://danbooru.donmai.us/posts/2931102
     public static IDrawingCommand ApplyWFBotInfoTag(this IDrawingCommand command, string wfbotCommand, bool isNotification = false, double? BottomInfoTagSize = null)
     {
         var v = command;
@@ -117,17 +120,17 @@ public static class WFBotExtensions
 }
 
 
-public class HorizontalLayoutBuilder : LayoutBuilder
+public sealed class HorizontalLayoutBuilder : LayoutBuilder
 {
     protected override ComplexDrawingCommand Layout { get; } = new HorizontalLayout();
 }
 
-public class VerticalLayoutBuilder : LayoutBuilder
+public sealed class VerticalLayoutBuilder : LayoutBuilder
 {
     protected override ComplexDrawingCommand Layout { get; } = new VerticalLayout();
 }
 
-public class HorizontalDockLayoutBuilder : LayoutBuilder
+public sealed class HorizontalDockLayoutBuilder : LayoutBuilder
 {
     int _minWidth;
     bool _forceWidth;
@@ -141,6 +144,9 @@ public class HorizontalDockLayoutBuilder : LayoutBuilder
 
     protected override ComplexDrawingCommand Layout { get; }
 }
+
+
+
 
 public abstract class LayoutBuilder
 {
@@ -239,6 +245,12 @@ public static class LayoutExtensions
         return builder;
     }
 
+    public static LayoutBuilder Rect(this LayoutBuilder builder, Size size, Color color)
+    {
+        builder.Draw(new FillCommandCore(size, color));
+        return builder;
+    }
+
     public static LayoutBuilder ImageResource(this LayoutBuilder builder, string res)
     {
         builder.Draw(Painter<object>.GetResource(res).AsCommand());
@@ -262,7 +274,7 @@ public static class LayoutExtensions
     }
 }
 
-public class Margin : IDrawingContent
+public sealed class Margin : IDrawingContent
 {
     public Size Size { get; }
 
@@ -297,6 +309,7 @@ public interface IDrawingCommand
 public record struct DrawingCommandWithAlignment(IDrawingCommand DrawingCommand, Alignment Alignment);
 public record struct DrawingContentWithPosition(IDrawingContent DrawingCommand, Point Position);
 
+
 public abstract class ComplexDrawingCommand : IDrawingCommand
 {
     protected List<DrawingCommandWithAlignment> DrawingCommands { get; } = new ();
@@ -325,7 +338,7 @@ public abstract class ComplexDrawingCommand : IDrawingCommand
     }
 }
 
-public class DrawingCommandWrapper : ComplexDrawingCommand
+public sealed class DrawingCommandWrapper : ComplexDrawingCommand
 {
     IDrawingCommand _command;
 
@@ -345,7 +358,7 @@ public class DrawingCommandWrapper : ComplexDrawingCommand
 
 
 
-public class HorizontalDockLayout : ComplexDrawingCommand
+public sealed class HorizontalDockLayout : ComplexDrawingCommand
 {
     readonly int _minWidth;
     Size lastSize;
@@ -396,7 +409,7 @@ public class HorizontalDockLayout : ComplexDrawingCommand
 }
 
 
-public class VerticalLayout : ComplexDrawingCommand
+public sealed class VerticalLayout : ComplexDrawingCommand
 {
     Size lastSize;
     int lastVersion = -1;
@@ -447,7 +460,7 @@ public class VerticalLayout : ComplexDrawingCommand
 }
 
 
-public class HorizontalLayout : ComplexDrawingCommand
+public sealed class HorizontalLayout : ComplexDrawingCommand
 {
     Size lastSize;
     int lastVersion = -1;
@@ -512,6 +525,9 @@ public enum DrawingPriority
 public record struct Size(int Width, int Height)
 {
     public static Size Of(int x, int y) => new (x, y);
+    public static Size Of(double x, int y) => new ((int)x, y);
+    public static Size Of(double x, double y) => new ((int)x, (int)y);
+    public static Size Of(int x, double y) => new ((int)x, (int)y);
 }
 
 public record struct Point(int X, int Y)
@@ -529,4 +545,19 @@ public static class SbCSharpUtils
 
     public static void AcquireAllDrawingCommands(this IDrawingCommand content, List<DrawingContentWithPosition> list, Point? pos = null) =>
         new DrawingCommandWrapper(content).AcquireAllDrawingCommands(list, pos ?? Point.Of(0, 0));
+
+    public static SKBitmap Resize(this SKBitmap bitmap, int resizedWidth, int resizedHeight)
+    {
+        using var surface2 = SKSurface.Create(new SKImageInfo(resizedWidth, resizedHeight, SKColorType.Rgba8888));
+        using var paint = new SKPaint();
+        paint.IsAntialias = true;
+        paint.FilterQuality = SKFilterQuality.High;
+
+        surface2.Canvas.DrawBitmap(bitmap, new SKRectI(0, 0, resizedWidth, resizedHeight),
+            paint);
+        surface2.Canvas.Flush();
+
+        using var newImg = surface2.Snapshot();
+        return SKBitmap.FromImage(newImg);
+    }
 }

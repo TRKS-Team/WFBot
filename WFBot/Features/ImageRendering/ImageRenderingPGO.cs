@@ -183,52 +183,52 @@ namespace WFBot.Features.ImageRendering
             
             try
             {
-                AsyncContext.SetCommandIdentifier("入侵");
-                await WFBotCore.Instance.NotificationHandler.UpdateInvasionPool();
-                var inv = WFBotCore.Instance.NotificationHandler.InvasionPool;
-                var invPath = _invPath;
-                lock (fileAccessLock) File.WriteAllBytes(invPath, ImageRenderHelper.Invasion(inv.Where(i => !i.completed)));
-                
-                AsyncContext.SetCommandIdentifier("平原");
-                var cetuscycle = await api.GetCetusCycle();
-                var valliscycle = await api.GetVallisCycle();
-                var earthcycle = await api.GetEarthCycle();
-                var cambioncycle = await api.GetCambionCycle();
-                // 均衡时间差
-                cambioncycle.expiry += TimeSpan.FromSeconds(15);
-                valliscycle.expiry += TimeSpan.FromSeconds(15);
-                earthcycle.expiry += TimeSpan.FromSeconds(15);
-                cambioncycle.expiry += TimeSpan.FromSeconds(15);
-                var cyclesPath = _cyclesPath;
-                lock (fileAccessLock) File.WriteAllBytes(cyclesPath, ImageRenderHelper.Cycles(cetuscycle, valliscycle, earthcycle, cambioncycle));
-
-                AsyncContext.SetCommandIdentifier("裂隙");
-                var fs = await api.GetFissures();
-                var fissures = fs.Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
-                var f1 = ImageRenderHelper.Fissures(fissures, 0);
-                var f1Path = _f1Path;
-                AsyncContext.SetCommandIdentifier("虚空风暴");
-                var fissuresStorm = fs.Where(fissure => fissure.active && fissure.isStorm).ToList();
-                var f2 = ImageRenderHelper.Fissures(fissuresStorm, 0);
-                var f2Path = _f2Path;
-                AsyncContext.SetCommandIdentifier("钢铁裂缝");
-                var fissuresHard = fs.Where(fissure => fissure.active && fissure.isHard).ToList();
-                var f3 = ImageRenderHelper.Fissures(fissuresHard, 0);
-                var f3Path = _f3Path;
-                lock (fileAccessLock) File.WriteAllBytes(f1Path, f1);
-                lock (fileAccessLock) File.WriteAllBytes(f2Path, f2);
-                lock (fileAccessLock) File.WriteAllBytes(f3Path, f3);
-
-                AsyncContext.SetCommandIdentifier("虚空商人");
-                var trader = WFFormatter.ToString(await api.GetVoidTrader());
-                var traderPath = _traderPath;
-                lock (fileAccessLock) File.WriteAllBytes(traderPath, ImageRenderHelper.SimpleImageRendering(trader));
-
-                AsyncContext.SetCommandIdentifier("突击");
-                var sortie = WFFormatter.ToString(await api.GetSortie());
-                var sortiePath = _sortiePath;
-                lock (fileAccessLock) File.WriteAllBytes(sortiePath, ImageRenderHelper.SimpleImageRendering(sortie));
-                Console.WriteLine("普通PGO完成一次轮转");
+                // AsyncContext.SetCommandIdentifier("入侵");
+                // await WFBotCore.Instance.NotificationHandler.UpdateInvasionPool();
+                // var inv = WFBotCore.Instance.NotificationHandler.InvasionPool;
+                // var invPath = _invPath;
+                // lock (fileAccessLock) File.WriteAllBytes(invPath, ImageRenderHelper.Invasion(inv.Where(i => !i.completed)));
+                //
+                // AsyncContext.SetCommandIdentifier("平原");
+                // var cetuscycle = await api.GetCetusCycle();
+                // var valliscycle = await api.GetVallisCycle();
+                // var earthcycle = await api.GetEarthCycle();
+                // var cambioncycle = await api.GetCambionCycle();
+                // // 均衡时间差
+                // cambioncycle.expiry += TimeSpan.FromSeconds(15);
+                // valliscycle.expiry += TimeSpan.FromSeconds(15);
+                // earthcycle.expiry += TimeSpan.FromSeconds(15);
+                // cambioncycle.expiry += TimeSpan.FromSeconds(15);
+                // var cyclesPath = _cyclesPath;
+                // lock (fileAccessLock) File.WriteAllBytes(cyclesPath, ImageRenderHelper.Cycles(cetuscycle, valliscycle, earthcycle, cambioncycle));
+                //
+                // AsyncContext.SetCommandIdentifier("裂隙");
+                // var fs = await api.GetFissures();
+                // var fissures = fs.Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
+                // var f1 = ImageRenderHelper.Fissures(fissures, 0);
+                // var f1Path = _f1Path;
+                // AsyncContext.SetCommandIdentifier("虚空风暴");
+                // var fissuresStorm = fs.Where(fissure => fissure.active && fissure.isStorm).ToList();
+                // var f2 = ImageRenderHelper.Fissures(fissuresStorm, 0);
+                // var f2Path = _f2Path;
+                // AsyncContext.SetCommandIdentifier("钢铁裂缝");
+                // var fissuresHard = fs.Where(fissure => fissure.active && fissure.isHard).ToList();
+                // var f3 = ImageRenderHelper.Fissures(fissuresHard, 0);
+                // var f3Path = _f3Path;
+                // lock (fileAccessLock) File.WriteAllBytes(f1Path, f1);
+                // lock (fileAccessLock) File.WriteAllBytes(f2Path, f2);
+                // lock (fileAccessLock) File.WriteAllBytes(f3Path, f3);
+                //
+                // AsyncContext.SetCommandIdentifier("虚空商人");
+                // var trader = WFFormatter.ToString(await api.GetVoidTrader());
+                // var traderPath = _traderPath;
+                // lock (fileAccessLock) File.WriteAllBytes(traderPath, ImageRenderHelper.SimpleImageRendering(trader));
+                //
+                // AsyncContext.SetCommandIdentifier("突击");
+                // var sortie = WFFormatter.ToString(await api.GetSortie());
+                // var sortiePath = _sortiePath;
+                // lock (fileAccessLock) File.WriteAllBytes(sortiePath, ImageRenderHelper.SimpleImageRendering(sortie));
+                // Console.WriteLine("普通PGO完成一次轮转");
             }
             catch (Exception e)
             {

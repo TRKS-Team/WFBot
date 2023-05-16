@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using SkiaSharp;
 using Topten.RichTextKit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WFBot.Koharu;
 
 
 
-public class MarginCommand : ComplexDrawingCommand
+public sealed class MarginCommand : ComplexDrawingCommand
 {
     int _top;
     int _left;
@@ -46,7 +48,7 @@ public class MarginCommand : ComplexDrawingCommand
     }
 }
 
-public class RoundedRectCommand : ComplexDrawingCommand
+public sealed class RoundedRectCommand : ComplexDrawingCommand
 {
     IDrawingCommand _drawingCommand;
     float _curvature;
@@ -82,7 +84,7 @@ public class RoundedRectCommand : ComplexDrawingCommand
     }
 }
 
-public class RoundedRectCommandCore : IDrawingContent
+public sealed class RoundedRectCommandCore : IDrawingContent
 {
     float _curvature;
 
@@ -103,7 +105,7 @@ public class RoundedRectCommandCore : IDrawingContent
     }
 }
 
-public class FillCommand : ComplexDrawingCommand
+public sealed class FillCommand : ComplexDrawingCommand
 {
     IDrawingCommand _drawingCommand;
     Color _color;
@@ -122,7 +124,7 @@ public class FillCommand : ComplexDrawingCommand
         ApplyCommand(commands, _drawingCommand, offset);
     }
 }
-public class FillCommandCore : IDrawingContent
+public sealed class FillCommandCore : IDrawingContent
 {
     public FillCommandCore(Size size, Color color)
     {
@@ -146,19 +148,16 @@ class MyFontMapper : FontMapper
     }
 }
 
-public class TextCommand : IDrawingContent
+public sealed class TextCommand : IDrawingContent
 {
     public TextCommand(string text, TextOptions options)
     {
-
-        _textOptions = options;
         textBlock = new TextBlock();
         textBlock.AddText(text, new Style()
         {
             TextColor = options.Color.ToSkColor(),
             FontSize = options.Size,
             FontWeight = options.Bold ? 400 : 700,
-
         });
         
         textBlock.MaxWidth = options.MaxWidth == -1 ? null : options.MaxWidth;
@@ -172,8 +171,7 @@ public class TextCommand : IDrawingContent
 
     Size size;
     public Size Size => size;
-
-    TextOptions _textOptions;
+    
     TextBlock textBlock;
     
     public void DrawCore(SKCanvas canvas, Point position)
@@ -182,9 +180,90 @@ public class TextCommand : IDrawingContent
     }
 }
 
+public class RichTextBuilder
+{
+    TextBlock textBlock = new TextBlock();
+    TextOptions lastTextOptions;
+    string? lastText = null;
+
+    void Commit()
+    {
+        if (lastText != null)
+        {
+            textBlock.AddText(lastText, new Style()
+            {
+                TextColor = lastTextOptions.Color.ToSkColor(),
+                FontSize = lastTextOptions.Size,
+                FontWeight = lastTextOptions.Bold ? 400 : 700,
+            });
+            lastTextOptions = Painter<object>.textOptions;
+        }
+    }
+    private RichTextBuilder() {}
+
+    public static RichTextBuilder Create(int maxWidth = 1000)
+    {
+        var b = new RichTextBuilder();
+        b.lastTextOptions = Painter<object>.textOptions;
+        b.textBlock.MaxWidth = maxWidth;
+        return b;
+    }
+
+    public RichTextBuilder Text(string text)
+    {
+        Commit();
+        lastText = text;
+        return this;
+    }
+
+    public RichTextBuilder Bold()
+    {
+        lastTextOptions.Bold = true;
+        return this;
+    }
+
+    public RichTextBuilder Color(Color color)
+    {
+        lastTextOptions.Color = color;
+        return this;
+    }
+
+    public RichTextBuilder Size(int size)
+    {
+        lastTextOptions.Size = size;
+        return this;
+    }
+    
+    public IDrawingCommand Build()
+    {
+        Commit();
+        return new RichTextCommand(textBlock);
+    }
+}
+
+public class RichTextCommand : IDrawingCommand
+{
+    TextBlock textBlock;
+
+    public RichTextCommand(TextBlock textBlock)
+    {
+        this.textBlock = textBlock;
+
+        textBlock.FontMapper = new MyFontMapper();
+        size = new Size((int)textBlock.MeasuredWidth, (int)textBlock.MeasuredHeight);
+    }
+    Size size;
+    public Size Size => size;
+
+    public void DrawCore(SKCanvas canvas, Point position)
+    {
+        textBlock.Paint(canvas, position, new TextPaintOptions() { Edging = SKFontEdging.Antialias });
+    }
+}
+
 public record struct TextOptions(int Size, Color Color, bool Bold, int MaxWidth);
 
-public class ImageCommand : IDrawingContent
+public sealed class ImageCommand : IDrawingContent
 {
     SKBitmap bitmap;
 
