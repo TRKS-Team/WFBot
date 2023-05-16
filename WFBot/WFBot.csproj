@@ -3,7 +3,7 @@
 		<FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
 	</ItemGroup>
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<SatelliteResourceLanguages>zh-CN;zh-Hans</SatelliteResourceLanguages>
 		<OutputType>Exe</OutputType>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -69,6 +69,9 @@
 		<PackageReference Include="Richasy.WFA.Sdk" Version="1.1.0" />
 		<PackageReference Include="Sisters.WudiLib.WebSocket" Version="0.2.1" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+		<PackageReference Include="SkiaSharp" Version="2.88.3" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />
+		<PackageReference Include="SkiaSharp.Vulkan.SharpVk" Version="2.88.3" />
 		<PackageReference Include="System.Management" Version="6.0.0" />
 		<PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
@@ -93,6 +96,10 @@
 	<ItemGroup>
 		<Folder Include="Dll\" />
 		<Folder Include="Resources\InvasionRewards\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\WFBot.Koharu\WFBot.Koharu.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

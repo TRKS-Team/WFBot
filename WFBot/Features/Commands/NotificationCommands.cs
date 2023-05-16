@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpVk;
+using SkiaSharp;
 using WFBot.Features.Common;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
+using Version = System.Version;
 
 namespace WFBot.Features.Commands
 {
@@ -16,6 +19,10 @@ namespace WFBot.Features.Commands
     public partial class CommandsHandler
     {
         WFNotificationHandler WFNotificationHandler => WFBotCore.Instance.NotificationHandler;
+
+
+
+
 
         [Matchers("警报")]
         [AddPlatformInfo]

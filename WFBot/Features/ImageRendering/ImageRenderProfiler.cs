@@ -1,6 +1,6 @@
 ﻿//#define PROFILE
+#define PROFILE
 using System.Diagnostics;
-
 namespace WFBot.Features.ImageRendering
 {
     public class ImageRenderProfiler : IDisposable 
