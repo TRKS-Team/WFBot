@@ -33,12 +33,12 @@ public class FissurePainter : Painter<FissureData>
         var left = HorizontalLayout(Alignment.Center)
             .ImageResource($"Fissures.{fissure.tierNum}").Margin20()
             .Draw(VerticalLayout()
-                .Text($"{fissure.missionType} - {fissure.enemy}", textOptions with {Size = 43})
+                .Text($"{fissure.missionType} - {fissure.enemy}", textOptions with { Size = 43 })
                 .Text(
                     $"{fissure.tier}(T{fissure.tierNum}) {(fissure.isHard ? "钢铁裂缝" : fissure.isStorm ? "虚空风暴" : "普通裂缝")}",
-                    textOptions with {Size = 43})
-                .Text($"{fissure.node}", textOptions with {Size = 33})
-                .Text($"{fissure.eta}", textOptions with {Size = 33, Color = Color.FromArgb(170, 170, 170)})
+                    textOptions with { Size = 43 })
+                .Text($"{fissure.node}", textOptions with { Size = 33 })
+                .Text($"{fissure.eta}", textOptions with { Size = 33, Color = Color.FromArgb(170, 170, 170) })
                 .Margin10()
                 .Build()).Build();
         return left;
@@ -50,11 +50,18 @@ public class InvasionPainter : Painter<InvasionData>
 {
     public override IDrawingCommand Draw(InvasionData data)
     {
-        
+        var invasions = data.Invasions.Select(SingleInvasion).ToArray();
+        var lineColorBool = true;
+        foreach (ref var command in invasions.AsSpan())
+        {
+            command = command.ApplyBackground(SwitchLineColor(ref lineColorBool));
+        }
+
+        return VerticalLayout().DrawRange(invasions).Build();
     }
 
 
-    public static IDrawingCommand SingleInvasion(InvasionData.WFInvasion invasion)
+    public IDrawingCommand SingleInvasion(InvasionData.WFInvasion invasion)
     {
         var grineerColor = Color.FromArgb(227, 49, 62);
         var infestedColor = Color.FromArgb(106, 220, 141);
@@ -83,19 +90,34 @@ public class InvasionPainter : Painter<InvasionData>
         var factionB = $"{bPercent * 100:F1}% {invasion.defendingFaction.ToUpper()}";
         var rewardA = $"{(!invasion.vsInfestation ? $"{ToString(invasion.attackerReward)}" : "")}";
         var rewardB = $"{ToString(invasion.defenderReward)}";
-        using var attackerImage = GetResource($"Factions.{invasion.attackingFaction.ToLower()}").Resize(30, 30);
-        using var defenderImage = GetResource($"Factions.{invasion.defendingFaction.ToLower()}").Resize(30, 30);
-        if (invasion.vsInfestation)
+        var attackerImage = GetResourceWithSize($"Factions.{invasion.attackingFaction.ToLower()}",30, 30);
+        var defenderImage = GetResourceWithSize($"Factions.{invasion.defendingFaction.ToLower()}",30, 30);
+        
+
+        SKBitmap attackerReward1 = null;
+        if (!invasion.vsInfestation)
         {
-            
+            attackerReward1 = GetInvasionReward(invasion.attackerReward.countedItems.FirstOrDefault()?.type);
         }
-        using var attackerReward1 = GetInvasionReward(invasion.attackerReward.countedItems.FirstOrDefault()?.type).Resize(35, 35);
         IDrawingCommand attackerReward = invasion.vsInfestation
             ? new Margin(Size.Of(35, 35))
             : attackerReward1.AsCommand();
-        using var defenderReward = GetInvasionReward(invasion.defenderReward.countedItems.First().type).Resize(35, 35);
-        var desc = RenderText($"{FlipNode(invasion.node)}", CreateTextOptions(23));
+        var defenderRewardImage = GetInvasionReward(invasion.defenderReward.countedItems.First().type);
+        var defenderReward = defenderRewardImage.AsCommand();
 
+        var desc = Text($"{FlipNode(invasion.node)}", textOptions with { Size = 23, Bold = true });
+        var infoTextOptions = textOptions with {Size = 18};
+        var faction = PlaceLeftAndRight(HorizontalLayout().Image(attackerImage).Margin10().Text(factionA, infoTextOptions).Build(),
+            HorizontalLayout().Text(factionB, infoTextOptions).Margin10().Image(defenderImage).Build(), percentageBarWidth, true);
+        var reward = PlaceLeftAndRight(HorizontalLayout().Draw(attackerReward).Margin10().Text(rewardA, infoTextOptions).Build(),
+            HorizontalLayout().Text(rewardB, infoTextOptions).Margin10().Draw(defenderReward).Build(), percentageBarWidth, true);
+
+        var result = VerticalLayout().Draw(desc).Margin10().Draw(percentageBar).Margin10().Draw(faction).Margin10()
+            .Draw(reward).Build().ApplyMargin(20);
+        
+
+
+        return result;
     }
 
     public static string ToString(RewardInfo reward)
@@ -123,6 +145,6 @@ public class InvasionPainter : Painter<InvasionData>
         var trims = new List<string> { "蓝图", "枪管", "枪机", "枪托", "连接器", "刀刃", "握柄", "散热器" };
         name = trims.Aggregate(name, (current, trim) => current.Replace(trim, ""));
         name = name.Trim();
-        return GetResource($"InvasionRewards.{name}");
+        return GetResourceWithSize($"InvasionRewards.{name}", 35, 35);
     }
 }

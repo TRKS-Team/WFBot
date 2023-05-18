@@ -8,6 +8,7 @@ using WFBot.Features.Resource;
 using WFBot.Features.Timers;
 using WFBot.Features.Timers.Base;
 using WFBot.Features.Utils;
+using WFBot.Koharu;
 using WFBot.Orichalt;
 using WFBot.Utils;
 
@@ -256,7 +257,8 @@ namespace WFBot.Features.Common
                     AsyncContext.SetCommandIdentifier("WFBot通知");
                     if (invs.Any())
                     {
-                        MiguelNetwork.Broadcast(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Invasion(invs) } });
+                        using var painter = Painters.Create<InvasionPainter>();
+                        MiguelNetwork.Broadcast(new RichMessages() { new ImageMessage() { Content = painter.Draw(new InvasionData(invs.ToJsonStringS().JsonDeserializeS<InvasionData.WFInvasion[]>())).BuildImage() } });
                     }
 
                 }

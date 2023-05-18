@@ -18,7 +18,7 @@ public class StringPainter : Painter<string>
 
 public static class KoharuAdapter
 {
-    static bool UseGPU = true;
+    static bool UseGPU = false;
 
     public static byte[] SimpleStringRendering(string s)
     {
@@ -61,22 +61,22 @@ public static class KoharuAdapter
         using var skImage = surface.Snapshot();
         profiler.Segment("Snapshot");
 
-        const double ratio = 0.7;
-        var resizedWidth = (int)(skImage.Width * ratio);
-        var resizedHeight = (int)(skImage.Height * ratio);
-        using var surface2 = UseGPU ? SKSurface.Create(vulkan, false, new SKImageInfo(resizedWidth, resizedHeight, SKColorType.Rgba8888)) :
-            SKSurface.Create(new SKImageInfo(resizedWidth, resizedHeight, SKColorType.Rgba8888));
-        using var paint = new SKPaint();
-        paint.IsAntialias = true;
-        paint.FilterQuality = SKFilterQuality.High;
-            
-        surface2.Canvas.DrawImage(skImage, new SKRectI(0, 0, resizedWidth, resizedHeight),
-            paint);
-        surface2.Canvas.Flush();
-
-        using var newImg = surface2.Snapshot();
+        // const double ratio = 0.7;
+        // var resizedWidth = (int)(skImage.Width * ratio);
+        // var resizedHeight = (int)(skImage.Height * ratio);
+        // using var surface2 = UseGPU ? SKSurface.Create(vulkan, false, new SKImageInfo(resizedWidth, resizedHeight, SKColorType.Rgba8888)) :
+        //     SKSurface.Create(new SKImageInfo(resizedWidth, resizedHeight, SKColorType.Rgba8888));
+        // using var paint = new SKPaint();
+        // paint.IsAntialias = true;
+        // paint.FilterQuality = SKFilterQuality.High;
+        //     
+        // surface2.Canvas.DrawImage(skImage, new SKRectI(0, 0, resizedWidth, resizedHeight),
+        //     paint);
+        // surface2.Canvas.Flush();
+        //
+        // using var newImg = surface2.Snapshot();
         profiler.Segment("Resize");
-        using var gl1 = newImg.Encode(SKEncodedImageFormat.Png, 100);
+        using var gl1 = skImage.Encode(SKEncodedImageFormat.Jpeg, 100);
         var gl1Span = gl1.Span;
         var gl = ArrayPool<byte>.Shared.Rent(gl1Span.Length);
         gl1Span.CopyTo(gl);

@@ -142,9 +142,10 @@ public sealed class FillCommandCore : IDrawingContent
 
 class MyFontMapper : FontMapper
 {
+    static SKTypeface font = SKTypeface.FromFile("WFConfigs/font.ttf");
     public override SKTypeface TypefaceFromStyle(IStyle style, bool ignoreFontVariants)
     {
-        return SKTypeface.FromFile("WFConfigs/font.ttf");
+        return font;
     }
 }
 

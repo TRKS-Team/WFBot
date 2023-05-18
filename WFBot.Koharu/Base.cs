@@ -16,7 +16,7 @@ public class Painters
     }
 }
 
-public abstract class Painter<T>
+public abstract class Painter<T> : IDisposable
 {
     public abstract IDrawingCommand Draw(T data);
     public static Color BaseBackgroundColor = Color.FromArgb(42, 43, 48); // https://danbooru.donmai.us/posts/2931102
@@ -31,6 +31,7 @@ public abstract class Painter<T>
     protected static VerticalLayoutBuilder VerticalLayout(Alignment defaultAlignment = Alignment.TopOrLeft, int? minHeight = null)
     {
         var layout = new VerticalLayoutBuilder();
+        layout.Options = textOptions;
         layout.DefaultAlignment(defaultAlignment);
         if (minHeight != null)
         {
@@ -43,6 +44,7 @@ public abstract class Painter<T>
     protected static HorizontalLayoutBuilder HorizontalLayout(Alignment defaultAlignment = Alignment.TopOrLeft, int? minWidth = null)
     {
         var layout = new HorizontalLayoutBuilder();
+        layout.Options = textOptions;
         layout.DefaultAlignment(defaultAlignment);
         if (minWidth != null)
         {
@@ -51,15 +53,23 @@ public abstract class Painter<T>
         return layout;
     }
 
-    protected static IDrawingCommand PlaceLeftAndRight(IDrawingCommand left, IDrawingCommand right, int? minWidth = null)
+    protected static IDrawingCommand PlaceLeftAndRight(IDrawingCommand left, IDrawingCommand right, int? minWidth = null, bool forceWidth = false)
     {
-        var layout = new HorizontalDockLayoutBuilder(minWidth + right.Size.Width, false);
+        var layout = new HorizontalDockLayoutBuilder(forceWidth ? 
+            minWidth : minWidth + right.Size.Width, forceWidth);
+        layout.Options = textOptions;
+
         return layout.Draw(left).Alignment(Alignment.TopOrLeft).Draw(right).Alignment(Alignment.DownOrRight).Build();
     }
 
     protected static IDrawingCommand SimpleImageRendering(string text, int maxWidth = 1000)
     {
         return new MarginCommand(new TextCommand(text, textOptions with{ MaxWidth = maxWidth}), 30,30,30,30);
+    }
+
+    protected static IDrawingCommand Text(string text, TextOptions? options = null)
+    {
+        return new TextCommand(text, options ?? textOptions);
     }
 
     protected static Color SwitchLineColor(ref bool lcb)
@@ -69,10 +79,11 @@ public abstract class Painter<T>
     }
     
     static ConcurrentDictionary<string, SKBitmap> Cache = new();
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    
     public static SKBitmap GetResource(string path)
     {
+        if (Cache.TryGetValue(path, out var res)) return res;
+        
         var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WFBot.Koharu.Resources." + path + ".png");
         if (stream == null)
         {
@@ -82,12 +93,31 @@ public abstract class Painter<T>
             image.Mutate(x => x.Fill(new Color(new Rgba32(206, 64, 202)), new RectangleF(0, 0, 25, 25)));
             image.Mutate(x => x.Fill(new Color(new Rgba32(206, 64, 202)), new RectangleF(25, 25, 25, 25)));
             */
+            Cache[path] = SKBitmap.FromImage(SKImage.Create(new SKImageInfo(1, 1)));
             return SKBitmap.FromImage(SKImage.Create(new SKImageInfo(1,1)));
         }
         Cache[path] = SKBitmap.Decode(stream);
         return Cache[path];
     }
 
+    public static SKBitmap GetResourceWithSize(string path, int width, int height)
+    {
+        var cacheKey = $"{path}{width}x{height}";
+        if (Cache.TryGetValue(cacheKey, out var res)) return res;
+
+        var bitmap = GetResource(path).Resize(width, height);
+        Cache[cacheKey] = bitmap;
+        return bitmap;
+    }
+
+    protected List<SKBitmap> DisposeObjects = new List<SKBitmap>();
+    public virtual void Dispose()
+    {
+        foreach (var bitmap in DisposeObjects)
+        {
+            bitmap.Dispose();
+        }
+    }
 }
 
 public static class WFBotExtensions
@@ -213,8 +243,8 @@ public static class LayoutExtensions
     }
 
     public static LayoutBuilder Margin10(this LayoutBuilder builder) => Margin(builder, 10);
-    public static LayoutBuilder Margin100(this LayoutBuilder builder) => Margin(builder, 100);
     public static LayoutBuilder Margin20(this LayoutBuilder builder) => Margin(builder, 20);
+    public static LayoutBuilder Margin100(this LayoutBuilder builder) => Margin(builder, 100);
 
     public static LayoutBuilder MarginX(this LayoutBuilder builder, int x)
     {
