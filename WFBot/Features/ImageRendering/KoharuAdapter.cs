@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using BlazorStrap;
 using Humanizer;
 using SharpVk;
 using SkiaSharp;
@@ -28,7 +29,7 @@ public static class KoharuAdapter
 
     public static byte[] BuildImage(this IDrawingCommand command)
     {
-        var profiler = new ImageRenderProfiler();
+        var profiler = new ImageRenderProfiler(true);
 
         var vulkan = context ??= CreateVulkan();
 
@@ -49,6 +50,7 @@ public static class KoharuAdapter
                 drawingContent.DrawCore(canvas, position);
             }
         }
+
 
         foreach (var (drawingContent, position) in list)
         {
@@ -80,7 +82,7 @@ public static class KoharuAdapter
         var gl1Span = gl1.Span;
         var gl = ArrayPool<byte>.Shared.Rent(gl1Span.Length);
         gl1Span.CopyTo(gl);
-        Console.WriteLine($"图片大小: {gl.Length.Bytes().Kilobytes:F1}KB");
+        Console.WriteLine($"图片大小: {gl1.Size.Bytes().Kilobytes:F1}KB");
         profiler.Segment("Encode");
 
         return gl;
@@ -159,10 +161,7 @@ public static class KoharuAdapter
 
             var graphicsQueue = _device.GetQueue((uint)graphicsFamily.Value, 0);
 
-            if (graphicsQueue == null)
-                throw new Exception("Failed to get queue");
-
-            grVkBackendContext.VkQueue = graphicsQueue;
+            grVkBackendContext.VkQueue = graphicsQueue ?? throw new Exception("Failed to get queue");
             grVkBackendContext.GraphicsQueueIndex = (uint)graphicsFamily.Value;
 
             grVkBackendContext.GetProcedureAddress = (name, ins, dev) =>
