@@ -20,10 +20,11 @@ namespace WFBot.Features.Common
         private static readonly object Locker = new object();
         private readonly HashSet<string> sendedAlertsSet = new HashSet<string>();
         private readonly HashSet<string> sendedInvSet = new HashSet<string>();
+        private readonly HashSet<string> sendedFissureSet = new HashSet<string>();
         private readonly HashSet<DateTime> sendedStalkerSet = new HashSet<DateTime>();
         private readonly HashSet<WarframeUpdate> sendedUpdateSet = new HashSet<WarframeUpdate>();
         private readonly HashSet<string> sendedCetusSet = new HashSet<string>();
-        
+
         private WFChineseAPI api => WFResources.WFChineseApi;
         public List<WFAlert> AlertPool = new List<WFAlert>();
         public List<WFInvasion> InvasionPool = new List<WFInvasion>();
@@ -39,40 +40,35 @@ namespace WFBot.Features.Common
 
         public void TestNotification()
         {
-            sendedInvSet.Clear();
+            sendedFissureSet.Clear();
+            CheckHardVoidFissures(true).Wait();
         }
         private async Task InitWFNotificationAsync()
         {
-            while (!WFNotificationLoaded)
+            try
             {
-                try
-                {
-                    AsyncContext.SetCancellationToken(CancellationToken.None);
-                    var alerts = api.GetAlerts();
-                    var invs = api.GetInvasions();
-                    var enemies = api.GetPersistentEnemies();
-                    var updates = GetWarframeUpdates();
-                    var cetus = api.GetCetusCycle();
+                AsyncContext.SetCancellationToken(CancellationToken.None);
+                var alerts = api.GetAlerts();
+                 var invs = api.GetInvasions();
+                 var enemies = api.GetPersistentEnemies();
+                 var updates = GetWarframeUpdates();
 
-                    foreach (var alert in await alerts)
-                        sendedAlertsSet.Add(alert.Id);
-                    foreach (var inv in await invs)
-                        sendedInvSet.Add(inv.id);
-                    foreach (var enemy in await enemies)
-                        sendedStalkerSet.Add(enemy.lastDiscoveredTime);
-                    foreach (var update in await updates)
-                        sendedUpdateSet.Add(update);
-
-                    sendedCetusSet.Add(cetus.Result.ID);
-
-                    WFNotificationLoaded = true;
-                    Trace.WriteLine("WF 通知初始化完成.");
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine($"WF 通知初始化出错: {e}, 正在重试.");
-                    // 发生过机器人的通知初始化在下载Update那块报错, 然后机器人一直不发通知, 所以写个重试.
-                }
+                 foreach (var alert in await alerts)
+                     sendedAlertsSet.Add(alert.Id);
+                 foreach (var inv in await invs)
+                     sendedInvSet.Add(inv.id);
+                 foreach (var enemy in await enemies)
+                     sendedStalkerSet.Add(enemy.lastDiscoveredTime);
+                 foreach (var update in await updates)
+                     sendedUpdateSet.Add(update);
+                var fissures = await api.GetFissures();
+                foreach (var fissure in fissures) sendedFissureSet.Add(fissure.id);
+                WFNotificationLoaded = true;
+                Trace.WriteLine("WF 通知初始化完成.");
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine($"WF 通知初始化出错: {e}");
             }
 
         }
@@ -81,17 +77,17 @@ namespace WFBot.Features.Common
         public void Update()
         {
             if (!WFNotificationLoaded) return;
-            
+
             lock (Locker)
             {
                 Task.WaitAll(
-                    UpdateAlertPool(),
+                    /*UpdateAlertPool(),
                     UpdateInvasionPool(),
                     UpdatePersistentEnemiePool(),
-                    CheckWarframeUpdates(),
-                    CheckCetusCycle()
+                    CheckWarframeUpdates()*/
+                    CheckHardVoidFissures()
                 );
-                
+
                 // UpdateWFGroups(); 此处代码造成过一次数据丢失 暂时处理一下
 
                 // CheckSentientOutpost();
@@ -128,7 +124,7 @@ namespace WFBot.Features.Common
             var nodes = doc.DocumentNode.SelectNodes("/html/body/main/div/div/div/div[3]/div/ol/li/div/h4/span/a");
             foreach (var node in nodes)
             {
-                result.Add(new WarframeUpdate {title = node.InnerText.Trim(), url = node.GetAttributeValue("href", "")});
+                result.Add(new WarframeUpdate { title = node.InnerText.Trim(), url = node.GetAttributeValue("href", "") });
             }
 
             return result;
@@ -154,7 +150,25 @@ namespace WFBot.Features.Common
                 }
                 sendedUpdateSet.Add(updates.First());
             }
-        }   
+        }
+
+        public async Task CheckHardVoidFissures(bool test = false)
+        {
+            var fissures = await api.GetFissures();
+            var matches = fissures.Where(f => !sendedFissureSet.Contains(f.id)).Where(f => f.isHard && f.active)
+                .Where(f => f.node.Contains("Mot") || f.node.Contains("Ani")).ToList();
+            if (matches.Any())
+            {
+                AsyncContext.SetCommandIdentifier("WFBot通知");
+                MiguelNetwork.Broadcast(new RichMessages
+                {
+                    new AtMessage {IsAll = true},
+                    new TextMessage {Content = "(国际服)有新的钢铁虚空生存裂隙出现了!"},
+                    new ImageMessage {Content = ImageRenderHelper.Fissures(matches.ToList(), 0)}
+                });
+                matches.ForEach(m => sendedFissureSet.Add(m.id));
+            }
+        }
         // public async Task SendSentientOutpost()
         // {
         //     var sb = new StringBuilder();
@@ -163,7 +177,7 @@ namespace WFBot.Features.Common
         //     sb.AppendLine(WFFormatter.ToString(outpost));
         //     MiguelNetwork.Broadcast(sb.ToString().Trim());
         // }
-        
+
         // public async Task CheckSentientOutpost()
         // {
         //     var outpost = await api.GetSentientOutpost();
@@ -227,7 +241,7 @@ namespace WFBot.Features.Common
             AlertPool = await api.GetAlerts();
             CheckAlerts();
         }
-        
+
         public async Task UpdateInvasionPool()
         {
             InvasionPool = await api.GetInvasions();
@@ -278,7 +292,7 @@ namespace WFBot.Features.Common
                         }
                     }
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -300,7 +314,7 @@ namespace WFBot.Features.Common
                 yield return reward.type;
             }
         }
-        
+
         private void CheckAlerts()
         {
             try
@@ -327,17 +341,17 @@ namespace WFBot.Features.Common
                 Messenger.SendDebugInfo(e.ToString());
             }
         }
-        
+
         private void SendWFAlert(WFAlert alert)
         {
             var result = "" +
                          WFFormatter.ToString(alert).AddHelpInfo().AddPlatformInfo();
             if (Config.Instance.EnableImageRendering)
             {
-             AsyncContext.SetCommandIdentifier("WFBot通知");
+                AsyncContext.SetCommandIdentifier("WFBot通知");
                 MiguelNetwork.Broadcast(new RichMessages()
                 {
-                    
+
                     new ImageMessage(){Content = ImageRenderHelper.SimpleImageRendering(result) }
                 });
             }
@@ -395,4 +409,3 @@ namespace WFBot.Features.Common
         */
     }
 }
-
