@@ -44,7 +44,7 @@ jobs:
         env:
           OFFICIAL_BUILD: official
 
-      - name: Zip Linux Release
+      - name: Zip Linux Arm Release
         uses: DuckSoft/create-7z-action@v1.0
         with:
           pathSource: ./out/WFBotLinuxArm64S/WFBot
@@ -56,7 +56,7 @@ jobs:
           pathSource: ./out/WFBotLinuxX64S/WFBot
           pathTarget: WFBot-linux-x64.7z
 
-      - name: Zip Linux Release
+      - name: Zip Windows Release
         uses: DuckSoft/create-7z-action@v1.0
         with:
           pathSource: ./out/WFBotWindowsS/WFBot.exe
@@ -72,19 +72,19 @@ jobs:
 
       - uses: suisei-cn/actions-download-file@v1.0.1
         id: downloadfile1
-        name: Download the file
+        name: Download Windows Wrapper
         with:
           url: "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapperWindows"
           target: ./
       - uses: suisei-cn/actions-download-file@v1.0.1
         id: downloadfile2
-        name: Download the file
+        name: Download Linux Arm Wrapper 
         with:
           url: "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapperLinuxArm64"
           target: ./
       - uses: suisei-cn/actions-download-file@v1.0.1
         id: downloadfile3
-        name: Download the file
+        name: Download Linux Wrapper
         with:
           url: "https://wfbot.cyan.cafe/api/WFBotWrapper/DownloadWrapperLinuxX64"
           target: ./
@@ -99,7 +99,7 @@ jobs:
           release_name: ${{ steps.gitversion.outputs.informationalVersion }}
           body: ${{ inputs.changelogs }}
 
-      - name: Upload WFBot Linux Release
+      - name: Upload WFBot Linux Arm Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
           asset_path: ./WFBot-linux-x64.7z
           asset_name: WFBot-linux-x64.7z
           asset_content_type: application/x-7z-compressed
-      - name: Upload WFBot Linux Release
+      - name: Upload WFBot Windows Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -126,7 +126,7 @@ jobs:
           asset_path: ./WFBot-win-x86.7z
           asset_name: WFBot-win-x86.7z
           asset_content_type: application/x-7z-compressed
-      - name: Upload WFBot Linux Release
+      - name: Upload WFBot Linux Arm Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -135,7 +135,7 @@ jobs:
           asset_path: ${{ steps.downloadfile2.outputs.filename }}
           asset_name: WFBotWrapper-linux-arm64
           asset_content_type: application/octet-stream
-      - name: Upload WFBot Linux Release
+      - name: Upload WFBot Windows Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
