@@ -366,7 +366,7 @@ namespace WFBot.Orichalt
                     {
                         File.Delete(resultPath);
                     }
-                    File.AppendAllText(resultPath, msg + Environment.NewLine);
+                    File.AppendAllText(resultPath, msg.OfType<TextMessage>().Select(x => x.Content).Connect() + Environment.NewLine);
                     break;
             }
         }

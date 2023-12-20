@@ -424,7 +424,8 @@ namespace WFBot.Features.Utils
     {
         public string name { get; set; }
         public List<Component> components { get; set; } = new List<Component>();
-#if DEBUG // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
+#if DEBUG 
+        // 很鸡巴弱智, 这下面一堆东西的都会null/混用类型, 如果遇到问题就关掉DEBUG模式
         // 这个注释是我写的吗? 我又再次遇到这个问题了, 可是我得用DEBUG模式的功能 ah, 在未来换个数据源吧
         // TODO 换数据源
         // 笑死 CY还因为这个问题专门写了个Commit, 以为机器人开不起是这玩意造成的

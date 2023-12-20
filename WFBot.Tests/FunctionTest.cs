@@ -25,6 +25,7 @@ namespace WFBot.Tests
         {
             core = new WFBotCore(true);
             core.Init().Wait();
+            Config.Instance.EnableImageRendering = false;
         }
         WFBotCore core;
         [TestMethod]
@@ -76,7 +77,7 @@ namespace WFBot.Tests
         public void TestWildcards()
         {
             var test = new List<Sale>();
-            Assert.IsTrue(WMSearcher.Search("凯旋将军破坏者", ref test)); // 破坏者不加p
+            Assert.IsTrue(WMSearcher.Search("凯旋将军破坏者", ref test)); // 破坏者不加p // 这玩意出错了
             test.Clear();
             Assert.IsTrue(WMSearcher.Search("valkyrp", ref test)); // p自动补全为prime
             test.Clear();

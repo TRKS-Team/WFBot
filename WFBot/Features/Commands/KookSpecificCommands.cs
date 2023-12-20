@@ -59,7 +59,7 @@ namespace WFBot.Features.Commands
         [Matchers("有效期")]
         string ExpireTime()
         {
-            return $"本服务器的机器人有效期为: {MiguelNetwork.KookVerifyServer.GetGuildValidationTime(O).Result.ToString(CultureInfo.CurrentCulture)}\n状态: {(MiguelNetwork.KookVerifyServer.VerifyGuild(O).Result ? "未过期": "已过期")}";
+            return $"本服务器的机器人有效期为: {MiguelNetwork.KookVerifyServer.GetGuildValidationTime(O).Result.Humanize()}\n状态: {(MiguelNetwork.KookVerifyServer.VerifyGuild(O).Result ? "未过期": "已过期")}";
         }
 
         [SkipBotChannelCheck]

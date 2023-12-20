@@ -16,6 +16,7 @@ using WFBot.Features.Common;
 using WFBot.Features.Resource;
 using WFBot.Features.Telemetry;
 using WFBot.Utils;
+using WarframeAlertingPrime.SDK.Models.Meta;
 
 namespace WFBot.Features.Utils
 {
@@ -473,29 +474,46 @@ namespace WFBot.Features.Utils
         public static string GetRivenInfoString(Riven riven)
         {
             var sb = new StringBuilder();
-            var datas = GetRivenData().Result.Where(d => d.compatibility == riven.name).ToList();
+          
             var weaponinfo = WFResources.WFTranslateData.Riven.First(d => d.name == riven.name);
-
+            
             sb.AppendLine($"下面是 {riven.zhname} 紫卡的基本信息(来自DE)");
             sb.AppendLine($"类型: {WFResources.WFTranslator.TranslateWeaponType(weaponinfo.type)} 倾向: {weaponinfo.rank}星 倍率: {Math.Round(weaponinfo.modulus, 2)}");
-            var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
-            if (rerolled.Any())
+
+            var datas = new List<RivenData>();
+            try
             {
-                sb.AppendLine($"0洗均价: {rerolled.First().avg}白金");
+                datas = GetRivenData().Result?.Where(d => d.compatibility == riven.name).ToList();
+            }
+            catch (Exception )
+            {
+                return sb.ToString().Trim();
+                // DE数据目前不可用
             }
 
-            rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
-            if (rerolled.Any())
+
+            if (datas != null)
             {
-                sb.AppendLine($"全部均价: {rerolled.First().avg}白金");
+                var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
+                if (rerolled.Any())
+                {
+                    sb.AppendLine($"0洗均价: {rerolled.First().avg}白金");
+                }
+
+                rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
+                if (rerolled.Any())
+                {
+                    sb.AppendLine($"全部均价: {rerolled.First().avg}白金");
+                }
             }
+
 
             return sb.ToString().Trim();
         }
         public static string GetRivenInfoString(WeaponInfo weapon)
         {
             var sb = new StringBuilder();
-            var datas = GetRivenData().Result?.Where(d => d.compatibility.Format() == weapon.enname.Format()).ToList();
+
             var rivens = WFResources.WFTranslateData.Riven.Where(d => d.name == weapon.enname).ToList();
 
             if (rivens.Any())
@@ -504,21 +522,31 @@ namespace WFBot.Features.Utils
                 sb.AppendLine($"{weapon.zhname} 紫卡的基本信息");
                 sb.AppendLine($"类型: {WFResources.WFTranslator.TranslateWeaponType(riven.type)} 倾向: {riven.rank}星 倍率: {Math.Round(riven.modulus, 2)}");
             }
-
-            if (datas != null)
-            {
-                var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
-                if (rerolled.Any())
-                {
-                    sb.AppendLine($"0洗均价: {rerolled.First().avg}白金(每周交易数据)");
-                }
-
-                rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
-                if (rerolled.Any())
-                {
-                    sb.AppendLine($"全部均价: {rerolled.First().avg}白金(每周交易数据)");
-                }
+            var datas = new List<RivenData>();
+            try
+            { 
+                datas = GetRivenData().Result?.Where(d => d.compatibility.Format() == weapon.enname.Format()).ToList();
             }
+            catch (Exception)
+            {
+                return sb.ToString().Trim();
+                // DE数据目前不可用
+            }
+
+            if (datas == null) return sb.ToString().Trim();
+            
+            var rerolled = datas.Where(d => !d.rerolled).ToImmutableArray();
+            if (rerolled.Any())
+            {
+                sb.AppendLine($"0洗均价: {rerolled.First().avg}白金(每周交易数据)");
+            }
+
+            rerolled = datas.Where(d => d.rerolled).ToImmutableArray();
+            if (rerolled.Any())
+            {
+                sb.AppendLine($"全部均价: {rerolled.First().avg}白金(每周交易数据)");
+            }
+            
 
             return sb.ToString().Trim();
         }
