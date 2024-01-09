@@ -381,7 +381,7 @@ namespace WFBot.Features.Utils
 
     public enum Group { Default, Melee, Top };
 
-    public enum Units { Percent, Seconds };
+    public enum Units { Percent, Seconds, Multiply };
     public class WFContentApi
     {
         public ExportRelicArcane[] ExportRelicArcanes => RExportRelicArcanes.Value;
