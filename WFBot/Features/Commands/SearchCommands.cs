@@ -103,7 +103,10 @@ namespace WFBot.Features.Commands
         public static async Task<List<RivenAuction>> GetRivenAuctions(string urlname)
         {
             var header = new List<KeyValuePair<string, string>>
-                {new KeyValuePair<string, string>("Platform", platform)};
+            {
+                new KeyValuePair<string, string>("Platform", platform),
+                new KeyValuePair<string, string>("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            };
             var auctions = await WebHelper.DownloadJsonAsync<RivenAuctions>(Config.Instance.UseWFBotProxy ? $"https://wfbot.cyan.cafe/api/WFBotProxy/{Config.Instance.WFBotProxyToken}*https://api.warframe.market/v1/auctions/search{Uri.EscapeDataString($"?type=riven&weapon_url_name={urlname}&sort_by=price_desc")}" :
                 $"https://api.warframe.market/v1/auctions/search?type=riven&weapon_url_name={urlname}&sort_by=price_desc", header);
 
@@ -133,20 +136,30 @@ namespace WFBot.Features.Commands
                         return null;
                     }
                 }
-                var auctions = await GetRivenAuctions(weapon.urlname);
 
-                if (AsyncContext.GetUseImageRendering())
+                try
                 {
-                    var rivens = auctions.Take(Config.Instance.WFASearchCount).ToList();
-                    var image = ImageRenderHelper.RivenAuction(rivens, weapon);
-                    SendImageAndText(image, rivens.Select(x => x.Owner.IngameName).Connect(", "));
-                    return null;
+
+                    var auctions = await GetRivenAuctions(weapon.urlname);
+
+                    if (AsyncContext.GetUseImageRendering())
+                    {
+                        var rivens = auctions.Take(Config.Instance.WFASearchCount).ToList();
+                        var image = ImageRenderHelper.RivenAuction(rivens, weapon);
+                        SendImageAndText(image, rivens.Select(x => x.Owner.IngameName).Connect(", "));
+                        return null;
+                    }
+                    else
+                    {
+                        var msg = WFFormatter.ToString(auctions.Take(Config.Instance.WFASearchCount).ToList(), weapon).AddPlatformInfo();
+                        sb.AppendLine(msg);
+
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    var msg = WFFormatter.ToString(auctions.Take(Config.Instance.WFASearchCount).ToList(), weapon).AddPlatformInfo();
-                    sb.AppendLine(msg);
-
+                    Console.WriteLine(e);
+                    throw;
                 }
 
             }
