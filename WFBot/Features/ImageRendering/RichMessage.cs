@@ -23,6 +23,7 @@ namespace WFBot.Features.ImageRendering
     public class ImageMessage : RichMessage
     {
         public byte[] Content { get; set; }
+        public bool ShouldDispose { get; set; } = true;
     }
 
     public class AtMessage : RichMessage

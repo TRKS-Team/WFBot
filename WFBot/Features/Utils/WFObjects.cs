@@ -706,7 +706,7 @@ namespace WFBot.Features.Utils
     {
         public string uniqueName { get; set; }
         public string name { get; set; }
-#if DEBUG
+#if DEBUGA
         public string description { get; set; }
         public int itemCount { get; set; }
         public string imageName { get; set; }
@@ -1778,7 +1778,6 @@ namespace WFBot.Features.Utils
 
     public class RewardInfo
     {
-        public object[] items { get; set; }
         public Counteditem[] countedItems { get; set; }
         public int credits { get; set; }
         public string asString { get; set; }

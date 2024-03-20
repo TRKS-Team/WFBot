@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpVk;
+using SkiaSharp;
 using WFBot.Features.Common;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Other;
 using WFBot.Features.Utils;
+using WFBot.Koharu;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
+using Version = System.Version;
 
 namespace WFBot.Features.Commands
 {
@@ -16,6 +20,10 @@ namespace WFBot.Features.Commands
     public partial class CommandsHandler
     {
         WFNotificationHandler WFNotificationHandler => WFBotCore.Instance.NotificationHandler;
+
+
+
+
 
         [Matchers("警报")]
         [AddPlatformInfo]
@@ -59,9 +67,11 @@ namespace WFBot.Features.Commands
                     return;
                 }
             }
+            var s = new ImageRenderProfiler();
             try
             {
                 await WFNotificationHandler.UpdateInvasionPool();
+                s.Segment("网络请求");
             }
             catch (OperationCanceledException)
             {
@@ -83,7 +93,12 @@ namespace WFBot.Features.Commands
             }
             else
             {
-                SendImage(ImageRenderHelper.Invasion(invasions.Where(invasion => !invasion.completed)));
+                using var painter = Painters.Create<InvasionPainter>();
+                var data = new InvasionData(invasions.Where(invasion => !invasion.completed).ToJsonStringS().JsonDeserializeS<InvasionData.WFInvasion[]>());
+
+                var img = painter.Draw(data).BuildImage();
+                s.Segment("画图总耗时");
+                SendImage(img);
             }
             
         }

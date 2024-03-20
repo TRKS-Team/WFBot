@@ -5,9 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GammaLibrary.Extensions;
+using Humanizer;
+using SharpVk;
+using SkiaSharp;
 using WFBot.Features.ImageRendering;
 using WFBot.Features.Resource;
 using WFBot.Features.Utils;
+using WFBot.Koharu;
 using WFBot.Orichalt;
 using WFBot.TextCommandCore;
 using WFBot.Utils;
@@ -32,8 +36,8 @@ namespace WFBot.Features.Commands
             {
                 OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
-                OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                OutputStringBuilder.Value.Clear(); 
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -50,7 +54,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -67,7 +71,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddPlatformInfo().AddRemainCallCount();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -143,7 +147,7 @@ namespace WFBot.Features.Commands
                 }
                 var s = WFFormatter.ToString(await api.GetSortie());
                 s = s.AddRemainCallCount().AddPlatformInfo();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
                 return null;
             }
             else
@@ -166,8 +170,9 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var s = WFFormatter.ToString(await api.GetVoidTrader());
-                s = s.AddRemainCallCount().AddPlatformInfo();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                s = s.AddRemainCallCount().AddPlatformInfo(); 
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
+
                 return null;
             }
             else
@@ -188,8 +193,7 @@ namespace WFBot.Features.Commands
                 {
                     var s = WFFormatter.ToString(events);
                     s = s.AddRemainCallCount().AddPlatformInfo();
-
-                    SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                    SendImage(KoharuAdapter.SimpleStringRendering(s));
                     return "";
                 }
                 else
@@ -202,6 +206,9 @@ namespace WFBot.Features.Commands
                 return "目前游戏内没有任何活动 (尸鬼, 豺狼, 舰队).";
             }
         }
+
+
+ 
 
         [Matchers("裂隙", "裂缝")]
         [AddPlatformInfoAndAddRemainCallCountToTheCommandResultAndMakeTRKSHappyByDoingSoWhatSoEver]
@@ -217,7 +224,12 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var fissures = (await api.GetFissures()).Where(fissure => fissure.active && !fissure.isStorm && !fissure.isHard).ToList();
-                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+
+                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonStringS().JsonDeserializeS<List<FissureData.Fissure>>(), tier));
+                var bytes = command.BuildImage();
+                SendImage(bytes);
+
+
                 return null;
             }
             else
@@ -242,7 +254,9 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isStorm).ToList();
-                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+
+                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonStringS().JsonDeserializeS<List<FissureData.Fissure>>(), tier));
+                SendImage(command.BuildImage());
                 return null;
             }
             else
@@ -267,7 +281,10 @@ namespace WFBot.Features.Commands
                     return null;
                 }
                 var fissures = (await api.GetFissures()).Where(fissure => fissure.active && fissure.isHard).ToList();
-                RichMessageSender(new RichMessages() { new ImageMessage() { Content = ImageRenderHelper.Fissures(fissures, tier) } });
+
+                var command = new FissurePainter().Draw(new FissureData(fissures.ToJsonStringS().JsonDeserializeS<List<FissureData.Fissure>>(), tier)); 
+                SendImage(command.BuildImage());
+
                 return null;
             }
             else
@@ -285,7 +302,7 @@ namespace WFBot.Features.Commands
             var s = WFFormatter.ToString(await api.GetNightWave());
             if (AsyncContext.GetUseImageRendering())
             {
-                SendImage(ImageRenderHelper.SimpleImageRendering(s));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
                 return null;
             }
             else
@@ -311,7 +328,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -337,7 +354,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -353,7 +370,7 @@ namespace WFBot.Features.Commands
                 OutputStringBuilder.Value.AddRemainCallCount().AddPlatformInfo();
                 var s = OutputStringBuilder.Value.ToString();
                 OutputStringBuilder.Value.Clear();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
             }
         }
 
@@ -365,7 +382,7 @@ namespace WFBot.Features.Commands
             if (AsyncContext.GetUseImageRendering())
             {
                 s = s.AddRemainCallCount().AddPlatformInfo();
-                SendImage(ImageRenderHelper.SimpleImageRendering(s, maxLength: 1000));
+                SendImage(KoharuAdapter.SimpleStringRendering(s));
                 return "";
             }
 
